@@ -1,0 +1,33 @@
+{
+  "name": "electron",
+  "version": "1.0.0",
+  "description": "《线性代数的几何意义》知识案例",
+  "main": "src_js/IndexMain.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "chcp 65001 && tsc && electron-forge start",
+    "package": "electron-forge package",
+    "make": "tsc && electron-forge make"
+  },
+  "author": "JIANG三工",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.2.1",
+    "@electron-forge/maker-deb": "^6.2.1",
+    "@electron-forge/maker-rpm": "^6.2.1",
+    "@electron-forge/maker-squirrel": "^6.2.1",
+    "@electron-forge/maker-zip": "^6.2.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
+    "@types/node": "^16.14.2",
+    "electron": "^25.3.1"
+  },
+  "dependencies": {
+    "antd": "^5.7.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.9.3"
+  }
+}

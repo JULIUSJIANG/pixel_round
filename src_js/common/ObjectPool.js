@@ -22,7 +22,10 @@ class objectPool {
             t = type._coll.pop();
         }
         ;
-        type.onPop(t);
+        if (type.onPop) {
+            type.onPop(t);
+        }
+        ;
         return t;
     }
     objectPool.pop = pop;
@@ -48,7 +51,10 @@ class objectPool {
         }
         ;
         type._coll.push(t);
-        type.onPush(t);
+        if (type.onPush) {
+            type.onPush(t);
+        }
+        ;
     }
     objectPool.push = push;
     /**

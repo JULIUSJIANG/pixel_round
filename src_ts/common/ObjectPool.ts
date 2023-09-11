@@ -27,7 +27,9 @@ namespace objectPool {
         else {
             t = type._coll.pop ();
         };
-        type.onPop (t);
+        if (type.onPop) {
+            type.onPop (t);
+        };
         return t;
     }
 
@@ -50,7 +52,9 @@ namespace objectPool {
             return
         };
         type._coll.push (t);
-        type.onPush (t);
+        if (type.onPush) {
+            type.onPush (t);
+        };
     }
 
     /**

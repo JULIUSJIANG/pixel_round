@@ -5,7 +5,7 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
 const TEMP_COUNT = 4;
 
-export default class DomRIghtProps extends ReactComponentExtend <number> {
+export default class DomRightPreviewProps extends ReactComponentExtend <number> {
 
     listChildren = new Array <ReactComponentExtendInstance> ();
 

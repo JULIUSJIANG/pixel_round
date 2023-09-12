@@ -18,18 +18,11 @@ const VERSION = 19;
      */
     MgrDataItem.listItem = new Array();
     /**
-     * 当前案例
+     * 当前的详情状态
      */
-    MgrDataItem.CURRENT_DEMO = new MgrDataItem({
-        key: `CURRENT_DEMO_${VERSION}`,
-        defVal: null
-    });
-    /**
-     * 当前透视角
-     */
-    MgrDataItem.CURRENT_FOV = new MgrDataItem({
-        key: `CURRENT_FOV_${VERSION}`,
-        defVal: 1
+    MgrDataItem.DETAIL_MACHINE_STATUS = new MgrDataItem({
+        key: `DETAIL_MACHINE_STATUS_${VERSION}`,
+        defVal: 0
     });
 })(MgrDataItem || (MgrDataItem = {}));
 export default MgrDataItem;

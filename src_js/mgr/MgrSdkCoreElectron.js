@@ -3,7 +3,7 @@ import NodeModules from "../NodeModules.js";
 /**
  * 存档路径
  */
-const STORAGE_PATH = NodeModules.path.join(`c_sdk_core_electron_storage.json`);
+const STORAGE_PATH = NodeModules.path.join(`mgr_sdk_core_electron_storage.json`);
 /**
  * 主进程希望渲染进程做的异步事情以及渲染进程希望主进程做的异步事情都定义在里面
  * IndexMain 中定义的 ActionRequest 与该 ActionRequest 不一样，具体表现为 “非自己需要实现的 analyse，都直接是 null”

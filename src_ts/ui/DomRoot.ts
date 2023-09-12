@@ -1,7 +1,8 @@
+import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomLeft from "./DomLeft.js";
-import DomRight from "./DomRight.js";
+import DomRightPreview from "./DomRightPreview.js";
 
 /**
  * 根
@@ -37,7 +38,7 @@ export default class DomRoot extends ReactComponentExtend <number> {
                 },
             
                 ReactComponentExtend.instantiateComponent (DomLeft, null),
-                ReactComponentExtend.instantiateComponent (DomRight, null)
+                IndexGlobal.inst.machine.currStatus.onRender ()
             )
         );
     }

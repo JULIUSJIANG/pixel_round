@@ -1,10 +1,9 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomRightImgAfter from "./DomRightImgAfter.js";
-import DomRightImgBefore from "./DomRightImgBefore.js";
+import DomRightPreviewImgAfter from "./DomRightPreviewImgAfter.js";
 
-export default class DomRightImg extends ReactComponentExtend <number> {
+export default class DomRightPreviewImg extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
         return ReactComponentExtend.instantiateTag (
@@ -19,8 +18,8 @@ export default class DomRightImg extends ReactComponentExtend <number> {
                 }
             },
 
-            ReactComponentExtend.instantiateComponent (DomRightImgAfter, null),
-            ReactComponentExtend.instantiateComponent (DomRightImgAfter, null)
+            ReactComponentExtend.instantiateComponent (DomRightPreviewImgAfter, null),
+            ReactComponentExtend.instantiateComponent (DomRightPreviewImgAfter, null)
         )
     };
 }

@@ -8,7 +8,7 @@ import MgrSdkCtxSaveFile from "./MgrSdkCtxSaveFile.js";
 /**
  * 存档路径
  */
-const STORAGE_PATH = NodeModules.path.join (`c_sdk_core_electron_storage.json`);
+const STORAGE_PATH = NodeModules.path.join (`mgr_sdk_core_electron_storage.json`);
 
 /**
  * 主进程希望渲染进程做的异步事情以及渲染进程希望主进程做的异步事情都定义在里面

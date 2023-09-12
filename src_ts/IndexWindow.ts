@@ -1,3 +1,4 @@
+import IndexGlobal from "./IndexGlobal.js";
 import MgrData from "./mgr/MgrData.js";
 import MgrDataItem from "./mgr/MgrDataItem.js";
 import MgrDom from "./mgr/MgrDom.js";
@@ -24,6 +25,7 @@ Promise.resolve ()
     })
     // 告知服务端已就绪
     .then (() => {
+        IndexGlobal.inst.init ();
         // 跟服务端说，我已经就绪了
         return MgrSdk.inst.core.logToMain (`客户端就绪...`);
     })

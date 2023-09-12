@@ -4,13 +4,13 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-const CANVAS_SIZE = 600;
+const CANVAS_SIZE = 300;
 
 const CANVAS_PADDING = 50;
 
 const RATIO = 2;
 
-class DomRightImgBefore extends ReactComponentExtend <DomRightImgBefore.Args> {
+class DomRightPreviewImgAfter extends ReactComponentExtend <DomRightPreviewImgAfter.Args> {
     /**
      * 3d canvas 引用器
      */
@@ -25,11 +25,8 @@ class DomRightImgBefore extends ReactComponentExtend <DomRightImgBefore.Args> {
             MgrDomDefine.TAG_DIV,
             {
                 style: {
-                    [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
+                    [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
                     [MgrDomDefine.STYLE_FLEX_GROW]: 1,
-                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                    [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                    [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
 
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                     [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
@@ -45,7 +42,7 @@ class DomRightImgBefore extends ReactComponentExtend <DomRightImgBefore.Args> {
                         [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                         [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
 
-                        [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_HIDDEN,
+                        [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_SCROLL,
                         [MgrDomDefine.STYLE_OVERFLOW_Y]: MgrDomDefine.STYLE_OVERFLOW_Y_SCROLL
                     }
                 },
@@ -121,7 +118,7 @@ class DomRightImgBefore extends ReactComponentExtend <DomRightImgBefore.Args> {
     }
 }
 
-namespace DomRightImgBefore {
+namespace DomRightPreviewImgAfter {
     export class Args {
 
         static poolType = new ObjectPoolType <Args> ({
@@ -132,4 +129,4 @@ namespace DomRightImgBefore {
     }
 }
 
-export default DomRightImgBefore;
+export default DomRightPreviewImgAfter;

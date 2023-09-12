@@ -4,13 +4,13 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-const CANVAS_SIZE = 300;
+const CANVAS_SIZE = 600;
 
 const CANVAS_PADDING = 50;
 
 const RATIO = 2;
 
-class DomRightImgAfter extends ReactComponentExtend <DomRightImgAfter.Args> {
+class DomRightPreviewImgBefore extends ReactComponentExtend <DomRightPreviewImgBefore.Args> {
     /**
      * 3d canvas 引用器
      */
@@ -25,8 +25,11 @@ class DomRightImgAfter extends ReactComponentExtend <DomRightImgAfter.Args> {
             MgrDomDefine.TAG_DIV,
             {
                 style: {
-                    [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
+                    [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
                     [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                    [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                    [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
 
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                     [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
@@ -42,7 +45,7 @@ class DomRightImgAfter extends ReactComponentExtend <DomRightImgAfter.Args> {
                         [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                         [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
 
-                        [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_SCROLL,
+                        [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_HIDDEN,
                         [MgrDomDefine.STYLE_OVERFLOW_Y]: MgrDomDefine.STYLE_OVERFLOW_Y_SCROLL
                     }
                 },
@@ -118,7 +121,7 @@ class DomRightImgAfter extends ReactComponentExtend <DomRightImgAfter.Args> {
     }
 }
 
-namespace DomRightImgAfter {
+namespace DomRightPreviewImgBefore {
     export class Args {
 
         static poolType = new ObjectPoolType <Args> ({
@@ -129,4 +132,4 @@ namespace DomRightImgAfter {
     }
 }
 
-export default DomRightImgAfter;
+export default DomRightPreviewImgBefore;

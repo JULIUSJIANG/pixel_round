@@ -35,20 +35,13 @@ namespace MgrDataItem {
      * 所有具体记录
      */
     export const listItem: Array <MgrDataItem <unknown>> = new Array ();
-    /**
-     * 当前案例
-     */
-    export const CURRENT_DEMO = new MgrDataItem <string> ({
-        key: `CURRENT_DEMO_${VERSION}`,
-        defVal: null
-    });
 
     /**
-     * 当前透视角
+     * 当前的详情状态
      */
-    export const CURRENT_FOV = new MgrDataItem <number> ({
-        key: `CURRENT_FOV_${VERSION}`,
-        defVal: 1
+    export const DETAIL_MACHINE_STATUS = new MgrDataItem <number> ({
+        key: `DETAIL_MACHINE_STATUS_${VERSION}`,
+        defVal: 0
     });
 }
 

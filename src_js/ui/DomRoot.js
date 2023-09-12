@@ -1,7 +1,7 @@
+import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomLeft from "./DomLeft.js";
-import DomRight from "./DomRight.js";
 /**
  * 根
  */
@@ -25,6 +25,6 @@ export default class DomRoot extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             }
-        }, ReactComponentExtend.instantiateComponent(DomLeft, null), ReactComponentExtend.instantiateComponent(DomRight, null)));
+        }, ReactComponentExtend.instantiateComponent(DomLeft, null), IndexGlobal.inst.machine.currStatus.onRender()));
     }
 }

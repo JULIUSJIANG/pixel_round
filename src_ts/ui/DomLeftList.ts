@@ -1,14 +1,16 @@
 import NodeModules from "../NodeModules.js";
+import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import DomLeftListAdd from "./DomLeftListAdd.js";
 
 /**
  * 列数
  */
 const COLUMN_COUNT = 1;
 
-const ITEM_COUNT = 50;
+const ITEM_COUNT = 0;
 
 export default class DomLeftList extends ReactComponentExtend <number> {
 
@@ -60,6 +62,8 @@ export default class DomLeftList extends ReactComponentExtend <number> {
             ));
         };
 
+        let propsAdd = objectPool.pop (DomLeftListAdd.Args.poolType);
+        propsAdd.init (this.listChildren.length);
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -101,7 +105,8 @@ export default class DomLeftList extends ReactComponentExtend <number> {
                         }
                     },
 
-                    ...this.listChildren
+                    ...this.listChildren,
+                    ReactComponentExtend.instantiateComponent (DomLeftListAdd, propsAdd)
                 )
             )
         )

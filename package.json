@@ -1,7 +1,7 @@
 {
   "name": "electron",
   "version": "1.0.0",
-  "description": "《线性代数的几何意义》知识案例",
+  "description": "像素图平滑化",
   "main": "src_js/IndexMain.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

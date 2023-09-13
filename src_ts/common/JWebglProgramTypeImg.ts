@@ -3,13 +3,14 @@ import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramAttributeVec2 from "./JWebglProgramAttributeVec2.js";
 import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
+import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
 export default class JWebglProgramTypeImg extends JWebglProgram {
 
-    // @JWebglProgram.uniform (JWebglProgramUniformMat4)
-    // uMvp: JWebglProgramUniformMat4;
+    @JWebglProgram.uniform (JWebglProgramUniformMat4)
+    uMvp: JWebglProgramUniformMat4;
 
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uSampler: JWebglProgramUniformSampler2D;
@@ -26,7 +27,7 @@ export default class JWebglProgramTypeImg extends JWebglProgram {
     impGetShaderVTxt (): string {
         return `
 void main() {
-    gl_Position = ${this.aPosition};
+    gl_Position = ${this.uMvp} * ${this.aPosition};
     ${this.vTexCoord} = ${this.aTexCoord};
 }
         `;
@@ -35,13 +36,13 @@ void main() {
     impGetnShaderFTxt (): string {
         return `
 void main() {
-    gl_FragColor = texture2D(${this.uSampler}, ${this.vTexCoord}) + vec4 (${this.vTexCoord}, 0.0, 1.0);
+    gl_FragColor = texture2D(${this.uSampler}, ${this.vTexCoord});
 }
         `;
     }
 
     impGetMode (): JWebglEnum.DrawArraysMode {
-        return JWebglEnum.DrawArraysMode.TRIANGLE_STRIP;
+        return JWebglEnum.DrawArraysMode.TRIANGLES;
     }
 
     private _addLeft = new JWebglMathVector4 ();
@@ -125,9 +126,7 @@ void main() {
             1, 
             
             texCoordX, 
-            texCoordY, 
-            0,
-            0
+            texCoordY
         );
     }
 }

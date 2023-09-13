@@ -57,8 +57,12 @@ class JWebgl {
      * @returns
      */
     init() {
-        this.canvasWebglCtx = this.canvasWebgl.getContext(`webgl`);
+        this.canvasWebglCtx = this.canvasWebgl.getContext(`webgl`, {
+            premultipliedAlpha: false
+        });
         this.canvasWebglCtx.enable(JWebglEnum.EnableCap.DEPTH_TEST);
+        this.canvasWebglCtx.enable(JWebglEnum.EnableCap.BLEND);
+        this.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
         this.canvasWebglCtx.clearColor(0, 0, 0, 0);
         this._attributeBuffer = this.canvasWebglCtx.createBuffer();
         if (this._attributeBuffer == null) {
@@ -89,8 +93,8 @@ class JWebgl {
         this.canvasWebglCtx.useProgram(this._program.program);
     }
     clear() {
-        this.canvasWebglCtx.clear(JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
         this.canvasWebglCtx.viewport(0, 0, this.canvasWebgl.width, this.canvasWebgl.height);
+        this.canvasWebglCtx.clear(JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
     }
     getImg(dataUrl) {
         if (!this._mapStringToImg.has(dataUrl)) {

@@ -24,10 +24,8 @@ export default class CreateMachineStatusLoading extends CreateMachineStatus {
 
     transfer () {
         this.relMachine.img = this.img;
-        this.relMachine.canvasWidth = 400;
-        this.relMachine.canvasHeight = 400;
-        // this.relMachine.canvasWidth = this.relMachine.img.image.width;
-        // this.relMachine.canvasHeight = this.relMachine.img.image.height;
+        this.relMachine.canvasWidth = this.relMachine.img.image.width;
+        this.relMachine.canvasHeight = this.relMachine.img.image.height;
         this.relMachine.enter (this.relMachine.statusIdle);
     }
 

@@ -4,8 +4,8 @@ import CreateMachineStatusLoading from "./CreateMachineStatusLoading.js";
 import CreateMachineStatusUploading from "./CreateMachineStatusUploading.js";
 export default class CreateMachine {
     constructor(indexGlobal) {
-        this.canvasWidth = 400;
-        this.canvasHeight = 400;
+        this.canvasWidth = 1;
+        this.canvasHeight = 1;
         this.relGlobal = indexGlobal;
         this.statusIdle = new CreateMachineStatusIdle(this);
         this.statusUploading = new CreateMachineStatusUploading(this);

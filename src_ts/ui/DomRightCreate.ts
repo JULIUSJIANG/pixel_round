@@ -29,7 +29,7 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
     mat4P: JWebglMathMatrix4 = new JWebglMathMatrix4();
 
     reactComponentExtendOnInit(): void {
-        this.testB (`./resources/sky.jpg`);
+        this.testB (`./resources/pixel_test_1.png`);
         return;
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
@@ -140,8 +140,7 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
             // 正式绘制
             this.jWebgl.canvasWebglCtx.drawArrays(JWebglEnum.DrawArraysMode.TRIANGLE_STRIP, 0, 4);
         };
-        img.src = `./resources/pixel_test_1.png`;
-        img.src = IndexGlobal.inst.createMachine.img.image.src;
+        img.src = `./resources/sky.jpg`;
     }
 
     testB (url: string) {
@@ -373,6 +372,9 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
 
             // Set the texture parameters
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
             // Set the texture image
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 

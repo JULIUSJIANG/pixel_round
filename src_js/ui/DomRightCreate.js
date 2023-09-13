@@ -18,12 +18,13 @@ export default class DomRightCreate extends ReactComponentExtend {
          * 2d canvas 上下文
          */
         this.canvas2dRef = NodeModules.react.createRef();
-        // jWebgl: JWebgl;
         this.mat4M = new JWebglMathMatrix4();
         this.mat4V = new JWebglMathMatrix4();
         this.mat4P = new JWebglMathMatrix4();
     }
     reactComponentExtendOnInit() {
+        this.testB(`./resources/sky.jpg`);
+        return;
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
         this.mat4M.setIdentity();
@@ -31,15 +32,26 @@ export default class DomRightCreate extends ReactComponentExtend {
         // this.testB (`./resources/pixel_test_1.png`);
     }
     reactComponentExtendOnDraw() {
+        return;
         if (IndexGlobal.inst.createMachine.img == null) {
             return;
         }
         ;
+        // 清除画面
+        this.jWebgl.canvasWebglCtx.viewport(0, 0, this.jWebgl.canvasWebgl.width, this.jWebgl.canvasWebgl.height);
+        this.jWebgl.canvasWebglCtx.clear(this.jWebgl.canvasWebglCtx.COLOR_BUFFER_BIT | this.jWebgl.canvasWebglCtx.DEPTH_BUFFER_BIT);
         this.mat4P.setOrtho(-IndexGlobal.inst.createMachine.canvasWidth / 2, IndexGlobal.inst.createMachine.canvasWidth / 2, -IndexGlobal.inst.createMachine.canvasHeight / 2, IndexGlobal.inst.createMachine.canvasHeight / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
         this.jWebgl.programTriangle.uMvp.fill(this.jWebgl.mat4Mvp);
         this.jWebgl.programTriangle.add(new JWebglMathVector4(-IndexGlobal.inst.createMachine.canvasWidth / 2, -IndexGlobal.inst.createMachine.canvasHeight / 2, 0), JWebglColor.COLOR_RED, new JWebglMathVector4(IndexGlobal.inst.createMachine.canvasWidth / 2, -IndexGlobal.inst.createMachine.canvasHeight / 2, 0), JWebglColor.COLOR_GREEN, new JWebglMathVector4(IndexGlobal.inst.createMachine.canvasWidth / 2, IndexGlobal.inst.createMachine.canvasHeight / 2, 0), JWebglColor.COLOR_BLUE);
-        this.jWebgl.programTriangle.add(new JWebglMathVector4(-IndexGlobal.inst.createMachine.canvasWidth / 2, -IndexGlobal.inst.createMachine.canvasHeight / 2, 0), JWebglColor.COLOR_RED, new JWebglMathVector4(IndexGlobal.inst.createMachine.canvasWidth / 2, IndexGlobal.inst.createMachine.canvasHeight / 2, 0), JWebglColor.COLOR_BLUE, new JWebglMathVector4(-IndexGlobal.inst.createMachine.canvasWidth / 2, IndexGlobal.inst.createMachine.canvasHeight / 2, 0), JWebglColor.COLOR_WHITE);
+        // this.jWebgl.programTriangle.add (
+        //     new JWebglMathVector4 (-IndexGlobal.inst.createMachine.canvasWidth / 2, -IndexGlobal.inst.createMachine.canvasHeight / 2, 0),
+        //     JWebglColor.COLOR_RED,
+        //     new JWebglMathVector4 (IndexGlobal.inst.createMachine.canvasWidth / 2, IndexGlobal.inst.createMachine.canvasHeight / 2, 0),
+        //     JWebglColor.COLOR_BLUE,
+        //     new JWebglMathVector4 (-IndexGlobal.inst.createMachine.canvasWidth / 2, IndexGlobal.inst.createMachine.canvasHeight / 2, 0),
+        //     JWebglColor.COLOR_WHITE,
+        // );
         this.jWebgl.programTriangle.draw();
         // let img = this.jWebgl.getImg (IndexGlobal.inst.createMachine.img.src);
         // this.jWebgl.programImg.uSampler.fill (img);

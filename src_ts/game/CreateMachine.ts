@@ -12,9 +12,9 @@ export default class CreateMachine {
 
     relGlobal: IndexGlobal;
 
-    canvasWidth = 1;
+    canvasWidth = 400;
 
-    canvasHeight = 1;
+    canvasHeight = 400;
 
     constructor (indexGlobal: IndexGlobal) {
         this.relGlobal = indexGlobal;

@@ -25,6 +25,6 @@ export default class DomRoot extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             }
-        }, ReactComponentExtend.instantiateComponent(DomLeft, null), IndexGlobal.inst.machine.currStatus.onRender()));
+        }, ReactComponentExtend.instantiateComponent(DomLeft, null), IndexGlobal.inst.detailMachine.currStatus.onRender()));
     }
 }

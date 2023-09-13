@@ -38,7 +38,7 @@ export default class DomRoot extends ReactComponentExtend <number> {
                 },
             
                 ReactComponentExtend.instantiateComponent (DomLeft, null),
-                IndexGlobal.inst.machine.currStatus.onRender ()
+                IndexGlobal.inst.detailMachine.currStatus.onRender ()
             )
         );
     }

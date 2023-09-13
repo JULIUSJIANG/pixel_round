@@ -12,6 +12,7 @@ namespace MgrDomDefine {
     export const TAG_CANVAS = "canvas";
     export const TAG_SPAN = "span";
     export const TAG_INPUT = "input";
+    export const TAG_IMG = "img";
 
     //【样式名以及具体值】
     export const STYLE_WIDTH = "width";

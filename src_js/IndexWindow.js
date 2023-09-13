@@ -1,6 +1,7 @@
 import IndexGlobal from "./IndexGlobal.js";
 import MgrData from "./mgr/MgrData.js";
 import MgrDom from "./mgr/MgrDom.js";
+import MgrRes from "./mgr/MgrRes.js";
 import MgrSdk from "./mgr/MgrSdk.js";
 Promise.resolve()
     // 等待文档加载成功
@@ -16,6 +17,10 @@ Promise.resolve()
     // 初始化数据
     .then(() => {
     return MgrData.inst.init();
+})
+    // 初始化资源
+    .then(() => {
+    return MgrRes.inst.init();
 })
     // 初始化渲染器
     .then(() => {

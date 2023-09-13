@@ -14,7 +14,7 @@ class DomLeftListAdd extends ReactComponentExtend {
             props.style[MgrDomDefine.STYLE_MARGIN_TOP] = MgrDomDefine.CONFIG_TXT_SPACING;
         }
         ;
-        if (IndexGlobal.inst.machine.currStatus == IndexGlobal.inst.machine.statusCreate) {
+        if (IndexGlobal.inst.detailMachine.currStatus == IndexGlobal.inst.detailMachine.statusCreate) {
             props[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         ;

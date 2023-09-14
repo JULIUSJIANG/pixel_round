@@ -2,7 +2,6 @@ import JWebglEnum from "./JWebglEnum.js";
 import JWebglImage from "./JWebglImage.js";
 import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
 import JWebglProgram from "./JWebglProgram.js";
-import JWebglProgramTypeBlur from "./JWebglProgramTypeBlur.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
@@ -128,9 +127,6 @@ class JWebgl {
 
     @program (JWebglProgramTypeImg)
     programImg: JWebglProgramTypeImg;
-
-    @program (JWebglProgramTypeBlur)
-    programBlur: JWebglProgramTypeBlur;
 
     /**
      * mvp 矩阵

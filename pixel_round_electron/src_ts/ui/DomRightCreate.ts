@@ -55,28 +55,16 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
             this.jWebgl.mat4Mvp
         );
 
-        // this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        // this.jWebgl.programImg.uSampler.fill (this.jWebgl.getImg (IndexGlobal.inst.createMachine.img.src));
-        // this.jWebgl.programImg.add (
-        //     JWebglMathVector4.centerO,
-        //     JWebglMathVector4.axisZStart,
-        //     JWebglMathVector4.axisYEnd,
-        //     IndexGlobal.inst.createMachine.canvasWidth,
-        //     IndexGlobal.inst.createMachine.canvasHeight
-        // );
-        // this.jWebgl.programImg.draw ();
-
-        this.jWebgl.programBlur.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programBlur.uSampler.fill (this.jWebgl.getImg (IndexGlobal.inst.createMachine.img.src));
-        this.jWebgl.programBlur.uNoise.fill (this.jWebgl.getImg (`./resources/noise.png`));
-        this.jWebgl.programBlur.add (
+        this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
+        this.jWebgl.programImg.uSampler.fill (this.jWebgl.getImg (IndexGlobal.inst.createMachine.img.src));
+        this.jWebgl.programImg.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,
             JWebglMathVector4.axisYEnd,
             IndexGlobal.inst.createMachine.canvasWidth,
             IndexGlobal.inst.createMachine.canvasHeight
         );
-        this.jWebgl.programBlur.draw ();
+        this.jWebgl.programImg.draw ();
     }
 
     render(): ReactComponentExtendInstance {

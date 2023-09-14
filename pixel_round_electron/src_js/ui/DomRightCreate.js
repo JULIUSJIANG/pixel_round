@@ -32,21 +32,10 @@ export default class DomRightCreate extends ReactComponentExtend {
         this.jWebgl.clear();
         this.mat4P.setOrtho(-IndexGlobal.inst.createMachine.canvasWidth / 2, IndexGlobal.inst.createMachine.canvasWidth / 2, -IndexGlobal.inst.createMachine.canvasHeight / 2, IndexGlobal.inst.createMachine.canvasHeight / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
-        // this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        // this.jWebgl.programImg.uSampler.fill (this.jWebgl.getImg (IndexGlobal.inst.createMachine.img.src));
-        // this.jWebgl.programImg.add (
-        //     JWebglMathVector4.centerO,
-        //     JWebglMathVector4.axisZStart,
-        //     JWebglMathVector4.axisYEnd,
-        //     IndexGlobal.inst.createMachine.canvasWidth,
-        //     IndexGlobal.inst.createMachine.canvasHeight
-        // );
-        // this.jWebgl.programImg.draw ();
-        this.jWebgl.programBlur.uMvp.fill(this.jWebgl.mat4Mvp);
-        this.jWebgl.programBlur.uSampler.fill(this.jWebgl.getImg(IndexGlobal.inst.createMachine.img.src));
-        this.jWebgl.programBlur.uNoise.fill(this.jWebgl.getImg(`./resources/noise.png`));
-        this.jWebgl.programBlur.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, IndexGlobal.inst.createMachine.canvasWidth, IndexGlobal.inst.createMachine.canvasHeight);
-        this.jWebgl.programBlur.draw();
+        this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
+        this.jWebgl.programImg.uSampler.fill(this.jWebgl.getImg(IndexGlobal.inst.createMachine.img.src));
+        this.jWebgl.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, IndexGlobal.inst.createMachine.canvasWidth, IndexGlobal.inst.createMachine.canvasHeight);
+        this.jWebgl.programImg.draw();
     }
     render() {
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {

@@ -36,8 +36,11 @@ void main() {
         return `
 void main() {
     vec4 colorNoise = texture2D (${this.uNoise}, ${this.vTexCoord});
+    float angle = radians (colorNoise.r * 360.0);
     vec4 colorTex = texture2D (${this.uSampler}, ${this.vTexCoord});
-    gl_FragColor = colorTex * colorNoise;
+    vec4 colorBlur = texture2D (${this.uSampler}, ${this.vTexCoord} + vec2 (cos (angle), sin (angle)) * 0.002);
+    float weight = 0.5;
+    gl_FragColor = colorTex * weight + colorBlur * (1.0 - weight);
 }
         `;
     }

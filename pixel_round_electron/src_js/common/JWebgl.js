@@ -7,7 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import JWebglEnum from "./JWebglEnum.js";
 import JWebglImage from "./JWebglImage.js";
 import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
-import JWebglProgramTypeBlur from "./JWebglProgramTypeBlur.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
@@ -128,7 +127,4 @@ __decorate([
 __decorate([
     program(JWebglProgramTypeImg)
 ], JWebgl.prototype, "programImg", void 0);
-__decorate([
-    program(JWebglProgramTypeBlur)
-], JWebgl.prototype, "programBlur", void 0);
 export default JWebgl;

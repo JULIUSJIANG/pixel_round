@@ -50,7 +50,6 @@ export default class DomRightCreate extends ReactComponentExtend {
         this.jWebgl.programBlur.uNoise.fill(this.jWebgl.getImg(`./resources/noise.png`));
         this.jWebgl.programBlur.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, IndexGlobal.inst.createMachine.canvasWidth, IndexGlobal.inst.createMachine.canvasHeight);
         this.jWebgl.programBlur.draw();
-        console.log(`here`);
     }
     render() {
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {

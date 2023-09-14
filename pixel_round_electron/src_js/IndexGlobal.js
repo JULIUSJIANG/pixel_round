@@ -12,6 +12,6 @@ class IndexGlobal {
 (function (IndexGlobal) {
     IndexGlobal.inst = new IndexGlobal();
     IndexGlobal.IMG_MINI_SIZE = 100;
-    IndexGlobal.IMG_LIST_COLUMN_COUNT = 2;
+    IndexGlobal.IMG_LIST_COLUMN_COUNT = 3;
 })(IndexGlobal || (IndexGlobal = {}));
 export default IndexGlobal;

@@ -5,8 +5,6 @@ import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import MgrData from "../mgr/MgrData.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 class DomLeftListImg extends ReactComponentExtend {
     constructor() {
@@ -55,11 +53,6 @@ class DomLeftListImg extends ReactComponentExtend {
     }
     render() {
         let eleWidth = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
-        if (this.props.j == 0 && MgrData.inst.get(MgrDataItem.LIST_IMG_DATA).length == this.props.i + 1) {
-            eleWidth *= 2;
-            eleWidth += MgrDomDefine.CONFIG_NUMBER_SPACING * 3;
-        }
-        ;
         let props = {
             onClick: () => {
             },

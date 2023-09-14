@@ -22,7 +22,7 @@ namespace IndexGlobal {
 
     export const IMG_MINI_SIZE = 100;
 
-    export const IMG_LIST_COLUMN_COUNT = 2;
+    export const IMG_LIST_COLUMN_COUNT = 3;
 }
 
 export default IndexGlobal;

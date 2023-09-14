@@ -1,3 +1,4 @@
+import IndexGlobal from "../IndexGlobal.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
@@ -5,10 +6,6 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomLeftListAdd from "./DomLeftListAdd.js";
 import DomLeftListImg from "./DomLeftListImg.js";
-/**
- * 列数
- */
-const COLUMN_COUNT = 2;
 export default class DomLeftList extends ReactComponentExtend {
     constructor() {
         super(...arguments);
@@ -18,7 +15,7 @@ export default class DomLeftList extends ReactComponentExtend {
     render() {
         this.listChildren.length = 0;
         let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
-        for (let i = 0; i < listImgData.length; i += COLUMN_COUNT) {
+        for (let i = 0; i < listImgData.length; i += IndexGlobal.IMG_LIST_COLUMN_COUNT) {
             let containerProps = {
                 style: {
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX
@@ -29,10 +26,16 @@ export default class DomLeftList extends ReactComponentExtend {
             }
             ;
             this.listChildrenContainer.length = 0;
-            for (let j = 0; j < COLUMN_COUNT; j++) {
+            for (let j = 0; j < IndexGlobal.IMG_LIST_COLUMN_COUNT; j++) {
                 let idx = i + j;
                 if (listImgData.length <= idx) {
-                    break;
+                    this.listChildrenContainer.push(ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+                        style: {
+                            [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 4}px`,
+                            [MgrDomDefine.STYLE_MARGIN_LEFT]: MgrDomDefine.CONFIG_TXT_SPACING
+                        }
+                    }));
+                    continue;
                 }
                 ;
                 let imgData = listImgData[i + j];

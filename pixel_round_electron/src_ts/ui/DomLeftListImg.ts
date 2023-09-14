@@ -79,10 +79,6 @@ class DomLeftListImg extends ReactComponentExtend <DomLeftListImg.Args> {
 
     render (): ReactComponentExtendInstance {
         let eleWidth = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
-        if (this.props.j == 0 && MgrData.inst.get (MgrDataItem.LIST_IMG_DATA).length == this.props.i + 1) {
-            eleWidth *= 2;
-            eleWidth += MgrDomDefine.CONFIG_NUMBER_SPACING * 3;
-        };
         let props = {
             onClick: () => {
 

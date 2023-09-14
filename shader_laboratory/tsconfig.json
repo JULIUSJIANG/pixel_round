@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es2020",
+        "noImplicitAny": false,
+        "sourceMap": false,
+        "outDir": "src_js",
+        "lib": [
+            "dom",
+            "es2020"
+        ],
+        "experimentalDecorators": true
+    },
+    "include": [
+        "src_ts"
+    ]
+} 

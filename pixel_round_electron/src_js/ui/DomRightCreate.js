@@ -7,7 +7,7 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-const SIZE_SCALE = 10;
+const SIZE_SCALE = 8;
 export default class DomRightCreate extends ReactComponentExtend {
     constructor() {
         super(...arguments);

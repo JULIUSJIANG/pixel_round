@@ -9,75 +9,40 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import MgrRes from "../mgr/MgrRes.js";
 
 class DomLeftListImg extends ReactComponentExtend <DomLeftListImg.Args> {
 
-    /**
-     * 3d canvas 引用器
-     */
-    canvasWebglRef = NodeModules.react.createRef();
-
-    jWebgl: JWebgl;
-
-    mat4M: JWebglMathMatrix4 = new JWebglMathMatrix4();
-
-    mat4V: JWebglMathMatrix4 = new JWebglMathMatrix4();
-
-    mat4P: JWebglMathMatrix4 = new JWebglMathMatrix4();
-
-    reactComponentExtendOnInit(): void {
-        this.jWebgl = new JWebgl(this.canvasWebglRef.current);
-        this.jWebgl.init();
-        this.mat4M.setIdentity();
-        this.mat4V.setLookAt(
-            0, 0, 1,
-            0, 0, 0,
-            0, 1, 0
-        );
-    }
-
-    reactComponentExtendOnDraw(): void {
-        let img = this.jWebgl.getImg (this.props.imgData.dataOrigin);
-        // 没加载完，不画
-        if (img.currStatus != img.statusFinished) {
-            return;
-        };
-        // 清除画面
-        this.jWebgl.clear ();
-        this.mat4P.setOrtho (
-            -IndexGlobal.IMG_MINI_SIZE / 2, IndexGlobal.IMG_MINI_SIZE / 2,
-            -IndexGlobal.IMG_MINI_SIZE / 2, IndexGlobal.IMG_MINI_SIZE / 2,
-            0, 2
-        );
-        JWebglMathMatrix4.multiplayMat4List (
-            this.mat4P,
-            this.mat4V,
-            this.mat4M,
-            this.jWebgl.mat4Mvp
-        );
-        this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uSampler.fill (this.jWebgl.getImg (this.props.imgData.dataOrigin));
-        let imgWidth = IndexGlobal.IMG_MINI_SIZE;
-        let imgHeight = IndexGlobal.IMG_MINI_SIZE;
-        // 高瘦型，适应高度
-        if (img.assetsImg.image.width < img.assetsImg.image.height) {
-            imgWidth = imgHeight * img.assetsImg.image.width / img.assetsImg.image.height;
-        };
-        // 矮胖型，适应宽度
-        if (img.assetsImg.image.height < img.assetsImg.image.width) {
-            imgHeight = imgWidth * img.assetsImg.image.height / img.assetsImg.image.width;
-        };
-        this.jWebgl.programImg.add (
-            JWebglMathVector4.centerO,
-            JWebglMathVector4.axisZStart,
-            JWebglMathVector4.axisYEnd,
-            imgWidth,
-            imgHeight
-        );
-        this.jWebgl.programImg.draw ();
-    }
-
     render (): ReactComponentExtendInstance {
+        let img = MgrRes.inst.getImg (this.props.imgData.dataOrigin);
+        let imgInst: ReactComponentExtendInstance;
+        if (img.currStatus == img.statusFinished) {
+            let imgWidth = IndexGlobal.IMG_MINI_SIZE;
+            let imgHeight = IndexGlobal.IMG_MINI_SIZE;
+            if (img.image.width < img.image.height) {
+                imgWidth = img.image.width / img.image.height * imgHeight;
+            };
+            if (img.image.height < img.image.width) {
+                imgHeight = img.image.height / img.image.width * imgWidth;
+            };
+            let marginX = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgWidth) / 2;
+            let marginY = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgHeight) / 2;
+            imgInst = ReactComponentExtend.instantiateTag(
+                MgrDomDefine.TAG_IMG,
+                {
+                    style: {
+                        [MgrDomDefine.STYLE_WIDTH]: `${imgWidth}px`,
+                        [MgrDomDefine.STYLE_HEIGHT]: `${imgHeight}px`,
+                        [MgrDomDefine.STYLE_MARGIN_TOP]: `${marginY}px`,
+                        [MgrDomDefine.STYLE_MARGIN_RIGHT]: `${marginX}px`,
+                        [MgrDomDefine.STYLE_MARGIN_BOTTOM]: `${marginY}px`,
+                        [MgrDomDefine.STYLE_MARGIN_LEFT]: `${marginX}px`,
+                        "imageRendering": `pixelated`,
+                    },
+                    src: img.image.src
+                }
+            )
+        };
         let eleWidth = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
@@ -119,19 +84,7 @@ class DomLeftListImg extends ReactComponentExtend <DomLeftListImg.Args> {
                         }
                     },
     
-                    ReactComponentExtend.instantiateTag(
-                        MgrDomDefine.TAG_CANVAS,
-                        {
-                            ref: this.canvasWebglRef,
-                            width: IndexGlobal.IMG_MINI_SIZE,
-                            height: IndexGlobal.IMG_MINI_SIZE,
-                            style: {
-                                [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE}px`,
-                                [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.IMG_MINI_SIZE}px`,
-                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_SPACING
-                            }
-                        }
-                    )
+                    imgInst
                 )
             )
         );

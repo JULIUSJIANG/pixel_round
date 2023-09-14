@@ -1,8 +1,6 @@
 import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomLeft from "./DomLeft.js";
-import DomRightPreview from "./DomRightPreview.js";
 
 /**
  * 根
@@ -36,8 +34,7 @@ export default class DomRoot extends ReactComponentExtend <number> {
                         [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
                     }
                 },
-            
-                ReactComponentExtend.instantiateComponent (DomLeft, null),
+
                 IndexGlobal.inst.detailMachine.currStatus.onRender ()
             )
         );

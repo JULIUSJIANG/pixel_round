@@ -5,7 +5,14 @@ import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-const SIZE_SCALE = 10;
+/**
+ * 宽
+ */
+const WIDTH = 400;
+/**
+ * 高
+ */
+const HEIGHT = 400;
 export default class DomRightCreate extends ReactComponentExtend {
     constructor() {
         super(...arguments);
@@ -24,10 +31,6 @@ export default class DomRightCreate extends ReactComponentExtend {
         this.mat4V.setLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
     }
     reactComponentExtendOnDraw() {
-        if (IndexGlobal.inst.createMachine.img == null) {
-            return;
-        }
-        ;
         // 清除画面
         this.jWebgl.clear();
         this.mat4P.setOrtho(-IndexGlobal.inst.createMachine.canvasWidth / 2, IndexGlobal.inst.createMachine.canvasWidth / 2, -IndexGlobal.inst.createMachine.canvasHeight / 2, IndexGlobal.inst.createMachine.canvasHeight / 2, 0, 2);
@@ -43,10 +46,11 @@ export default class DomRightCreate extends ReactComponentExtend {
         // );
         // this.jWebgl.programImg.draw ();
         this.jWebgl.programBlur.uMvp.fill(this.jWebgl.mat4Mvp);
-        this.jWebgl.programBlur.uSampler.fill(this.jWebgl.getImg(IndexGlobal.inst.createMachine.img.src));
+        this.jWebgl.programBlur.uSampler.fill(this.jWebgl.getImg(`./resources/sky_256.jpg`));
         this.jWebgl.programBlur.uNoise.fill(this.jWebgl.getImg(`./resources/noise.png`));
         this.jWebgl.programBlur.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, IndexGlobal.inst.createMachine.canvasWidth, IndexGlobal.inst.createMachine.canvasHeight);
         this.jWebgl.programBlur.draw();
+        console.log(`here`);
     }
     render() {
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -80,10 +84,9 @@ export default class DomRightCreate extends ReactComponentExtend {
         // 滚动的列表
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.inst.createMachine.canvasWidth * SIZE_SCALE}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.inst.createMachine.canvasHeight * SIZE_SCALE}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${WIDTH}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${HEIGHT}px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-                [MgrDomDefine.STYLE_DISPLAY]: IndexGlobal.inst.createMachine.img == null ? MgrDomDefine.STYLE_DISPLAY_NONE : MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
@@ -95,52 +98,13 @@ export default class DomRightCreate extends ReactComponentExtend {
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvasWebglRef,
-            width: IndexGlobal.inst.createMachine.canvasWidth * SIZE_SCALE,
-            height: IndexGlobal.inst.createMachine.canvasHeight * SIZE_SCALE,
+            width: WIDTH,
+            height: HEIGHT,
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.inst.createMachine.canvasWidth * SIZE_SCALE}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.inst.createMachine.canvasHeight * SIZE_SCALE}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${WIDTH}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${HEIGHT}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
-        }))))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
-            style: {
-                [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING
-            }
-        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Upload.Dragger, {
-            showUploadList: false,
-            beforeUpload: (file) => {
-                if (!file.type.match(/image/g)) {
-                    NodeModules.antd.message.error(`${file.name} 不是图片文件`);
-                    return false;
-                }
-                ;
-                return true;
-            },
-            onChange: (info) => {
-                if (info.file.status == `uploading`) {
-                    IndexGlobal.inst.createMachine.currStatus.onUploading(info.file.uid);
-                }
-                ;
-                if (info.file.status == `done`) {
-                    const reader = new FileReader();
-                    reader.addEventListener('load', () => {
-                        let dataBase64 = reader.result;
-                        IndexGlobal.inst.createMachine.currStatus.onDone(info.file.uid, dataBase64);
-                    });
-                    reader.readAsDataURL(info.file.originFileObj);
-                }
-                ;
-            },
-        }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
-            style: {
-                [MgrDomDefine.STYLE_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE
-            }
-        }, IndexGlobal.inst.createMachine.currStatus.onDraggerTxt()))), ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
-            style: {
-                [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING
-            }
-        }, `确认创建`));
+        }))))));
     }
 }

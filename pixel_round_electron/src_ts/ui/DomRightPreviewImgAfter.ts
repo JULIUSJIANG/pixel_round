@@ -74,8 +74,8 @@ class DomRightPreviewImgAfter extends ReactComponentExtend <DomRightPreviewImgAf
 
         this.jWebgl.programSmooth1.uMvp.fill (this.jWebgl.mat4Mvp);
         this.jWebgl.programSmooth1.uTexture.fill (img);
-        this.jWebgl.programSmooth1.u_TextureSize.fill (img.assetsImg.image.width / 2, img.assetsImg.image.height / 2);
-        this.jWebgl.programSmooth1.isntLine.fill (0);
+        this.jWebgl.programSmooth1.uTextureSize.fill (img.assetsImg.image.width / 2, img.assetsImg.image.height / 2);
+        this.jWebgl.programSmooth1.uLightFirst.fill (-1);
         this.jWebgl.programSmooth1.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,

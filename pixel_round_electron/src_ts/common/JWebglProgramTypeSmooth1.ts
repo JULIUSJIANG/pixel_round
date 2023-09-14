@@ -16,22 +16,22 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 export default class JWebglProgramTypeSmooth1 extends JWebglProgram {
 
     @JWebglProgram.define (JWEbglProgramDefine, `0.05`)
-    THRESHOLD: JWEbglProgramDefine;
+    dThreshold: JWEbglProgramDefine;
     @JWebglProgram.define (JWEbglProgramDefine, `10000.0`)
-    AA_SCALE: JWEbglProgramDefine;
+    dAAScale: JWEbglProgramDefine;
     @JWebglProgram.define (JWEbglProgramDefine, `0.3535`)
-    TICKNESS_1_1: JWEbglProgramDefine;
+    dTickness1: JWEbglProgramDefine;
     @JWebglProgram.define (JWEbglProgramDefine, `0.2236`)
-    TICKNESS_1_2: JWEbglProgramDefine;
+    dTickness2: JWEbglProgramDefine;
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTexture: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformVec2)
-    u_TextureSize: JWebglProgramUniformVec2;
+    uTextureSize: JWebglProgramUniformVec2;
     @JWebglProgram.uniform (JWebglProgramUniformFloat)
-    isntLine: JWebglProgramUniformFloat;
+    uLightFirst: JWebglProgramUniformFloat;
 
     @JWebglProgram.attribute (JWebglProgramAttributeVec4)
     aPosition: JWebglProgramAttributeVec4;
@@ -54,7 +54,7 @@ void main() {
         return `
 // 通过像素位置对纹理进行取样
 vec4 texelFetch (vec2 texelFetch_uv) {
-  vec2 pos = texelFetch_uv * vec2 (1.0 / ${this.u_TextureSize}.x, 1.0 / ${this.u_TextureSize}.y);
+  vec2 pos = texelFetch_uv * vec2 (1.0 / ${this.uTextureSize}.x, 1.0 / ${this.uTextureSize}.y);
   if (
     pos.x < 0.0 
     || 1.0 < pos.x
@@ -76,7 +76,7 @@ bool checkEqual (vec4 c1, vec4 c2) {
       + abs (c1 [3] - c2 [3])
   )     
   <= 
-  ${this.THRESHOLD};
+  ${this.dThreshold};
 } 
 // 该角是否发生平滑
 bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight) {
@@ -98,7 +98,7 @@ bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight
   // 谁高亮，谁作出妥协
   float weightLeftWithRight = dot (avgLeftWidthRight.rgb, vec3 (1, 1, 1)) * avgLeftWidthRight.a;
   float weightUVWithRelative = dot (avgUVWithRelative.rgb, vec3 (1, 1, 1)) * avgUVWithRelative.a;
-  return weightLeftWithRight * ${this.isntLine} < weightUVWithRelative * ${this.isntLine};
+  return weightLeftWithRight * ${this.uLightFirst} < weightUVWithRelative * ${this.uLightFirst};
 }
 // 如果在阈值内，绘制连接 2 个像素的对角线
 bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
@@ -117,7 +117,7 @@ bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
     // lp 在 dir 上的投影，取值 0 - 1.4142135623730951;
     float shadow = dot (lp, dir);
     // 越靠内权重 l 越大
-    float l = clamp ((tickness - shadow) * ${this.AA_SCALE}, 0.0, 1.0);
+    float l = clamp ((tickness - shadow) * ${this.dAAScale}, 0.0, 1.0);
     // 根据权重，进行取色
     sum = mix (sum, v1, l); 
       return true;
@@ -127,7 +127,7 @@ bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
 // 对角平滑
 vec4 mainImageAngle (in vec2 fragCoord)
 {
-  fragCoord *= ${this.u_TextureSize};
+  fragCoord *= ${this.uTextureSize};
   // 采样位置
   vec2 ip = fragCoord;
   // 以最近像素作为背景
@@ -135,40 +135,40 @@ vec4 mainImageAngle (in vec2 fragCoord)
   // 将周围像素的抗锯齿对角线绘制为前景
   // 如果左、上连接
   if (cornerAble (ip, vec2 (-1, 0), vec2 (-1, 1), vec2 (0, 1))) {
-    if (diag (s, ip, vec2 (-1, 0), vec2 (0, 1), ${this.TICKNESS_1_1})) { 
+    if (diag (s, ip, vec2 (-1, 0), vec2 (0, 1), ${this.dTickness1})) { 
       // 尝试连接左、右上
-      diag (s, ip, vec2 (-1, 0), vec2 (1, 1), ${this.TICKNESS_1_2});
+      diag (s, ip, vec2 (-1, 0), vec2 (1, 1), ${this.dTickness2});
       // 尝试连接左下、上
-      diag (s, ip, vec2 (-1, -1), vec2 (0, 1), ${this.TICKNESS_1_2});
+      diag (s, ip, vec2 (-1, -1), vec2 (0, 1), ${this.dTickness2});
     };
   };
   
   // 如果上、右连接
   if (cornerAble (ip, vec2 (0, 1), vec2 (1, 1), vec2 (1, 0))) {
-    if (diag (s, ip, vec2 (0, 1), vec2 (1, 0), ${this.TICKNESS_1_1})) {
+    if (diag (s, ip, vec2 (0, 1), vec2 (1, 0), ${this.dTickness1})) {
       // 尝试连接右、右下
-      diag (s, ip, vec2 (0, 1), vec2 (1, -1), ${this.TICKNESS_1_2});
+      diag (s, ip, vec2 (0, 1), vec2 (1, -1), ${this.dTickness2});
       // 尝试连接左上、右
-      diag (s, ip, vec2 (-1, 1), vec2 (1, 0), ${this.TICKNESS_1_2});
+      diag (s, ip, vec2 (-1, 1), vec2 (1, 0), ${this.dTickness2});
     };
   };
   // 如果右、下连接
   if (cornerAble (ip, vec2 (1, 0), vec2 (1, -1), vec2 (0, -1))) {
-    if (diag (s, ip, vec2 (1, 0), vec2 (0, -1), ${this.TICKNESS_1_1})) { 
+    if (diag (s, ip, vec2 (1, 0), vec2 (0, -1), ${this.dTickness1})) { 
       // 尝试连接右、左上
-      diag (s, ip, vec2 (1, 0), vec2 (-1, -1), ${this.TICKNESS_1_2});
+      diag (s, ip, vec2 (1, 0), vec2 (-1, -1), ${this.dTickness2});
       // 尝试连接右上、左
-      diag (s, ip, vec2 (1, 1), vec2 (0, -1), ${this.TICKNESS_1_2});
+      diag (s, ip, vec2 (1, 1), vec2 (0, -1), ${this.dTickness2});
     };
   };
   
   // 如果下、左连接
   if (cornerAble (ip, vec2 (0, -1), vec2 (-1, -1), vec2 (-1, 0))) {
-    if (diag (s, ip, vec2 (0, -1), vec2 (-1, 0), ${this.TICKNESS_1_1})) {
+    if (diag (s, ip, vec2 (0, -1), vec2 (-1, 0), ${this.dTickness1})) {
       // 尝试连接下、左上
-         diag (s, ip, vec2 (0, -1), vec2 (-1, 1), ${this.TICKNESS_1_2});
+         diag (s, ip, vec2 (0, -1), vec2 (-1, 1), ${this.dTickness2});
       // 尝试连接右下、左
-      diag (s, ip, vec2 (1, -1), vec2 (-1, 0), ${this.TICKNESS_1_2});
+      diag (s, ip, vec2 (1, -1), vec2 (-1, 0), ${this.dTickness2});
     };
   };
   return s;

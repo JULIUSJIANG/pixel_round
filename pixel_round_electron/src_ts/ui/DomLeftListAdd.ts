@@ -10,14 +10,11 @@ class DomLeftListAdd extends ReactComponentExtend <DomLeftListAdd.Args> {
     render (): ReactComponentExtendInstance {
         let props = {
             onClick: () => {
-                    
+                IndexGlobal.inst.detailMachine.currStatus.onCreate ();
             },
             style: {
 
             }
-        };
-        if (this.props.idx != 0) {
-            props.style [MgrDomDefine.STYLE_MARGIN_TOP] = MgrDomDefine.CONFIG_TXT_SPACING;
         };
         if (IndexGlobal.inst.detailMachine.currStatus == IndexGlobal.inst.detailMachine.statusCreate) {
             props [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
@@ -33,13 +30,7 @@ class DomLeftListAdd extends ReactComponentExtend <DomLeftListAdd.Args> {
 
 namespace DomLeftListAdd {
     export class Args {
-        /**
-         * 在列表中的索引
-         */
-        idx: number;
-
-        init (idx: number) {
-            this.idx = idx;
+        init () {
         }
 
         static poolType = new ObjectPoolType <Args> ({

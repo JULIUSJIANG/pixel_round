@@ -1,3 +1,5 @@
+import MgrData from "../mgr/MgrData.js";
+import MgrDataItem from "../mgr/MgrDataItem.js";
 import DetailMachineStatusCreate from "./DetailMachineStatusCreate.js";
 import DetailMachineStatusPreview from "./DetailMachineStatusPreview.js";
 export default class DetailMachine {
@@ -17,5 +19,6 @@ export default class DetailMachine {
         }
         ;
         this.currStatus.onEnter();
+        MgrData.inst.set(MgrDataItem.DETAIL_MACHINE_STATUS, this.currStatus.id);
     }
 }

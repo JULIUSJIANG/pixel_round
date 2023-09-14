@@ -1,4 +1,6 @@
 import IndexGlobal from "../IndexGlobal.js";
+import MgrData from "../mgr/MgrData.js";
+import MgrDataItem from "../mgr/MgrDataItem.js";
 import DetailMachineStatus from "./DetailMachineStatus.js";
 import DetailMachineStatusCreate from "./DetailMachineStatusCreate.js";
 import DetailMachineStatusPreview from "./DetailMachineStatusPreview.js";
@@ -31,5 +33,6 @@ export default class DetailMachine {
             rec.onExit ();
         };
         this.currStatus.onEnter ();
+        MgrData.inst.set (MgrDataItem.DETAIL_MACHINE_STATUS, this.currStatus.id);
     }
 }

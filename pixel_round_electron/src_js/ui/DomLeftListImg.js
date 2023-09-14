@@ -2,6 +2,8 @@ import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
+import MgrData from "../mgr/MgrData.js";
+import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
 class DomLeftListImg extends ReactComponentExtend {
@@ -38,6 +40,7 @@ class DomLeftListImg extends ReactComponentExtend {
         let eleWidth = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
+                IndexGlobal.inst.detailMachine.currStatus.onImg(this.props.imgData.id);
             },
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: 0,
@@ -47,6 +50,10 @@ class DomLeftListImg extends ReactComponentExtend {
         };
         if (this.props.j != 0) {
             props.style[MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
+        }
+        ;
+        if (IndexGlobal.inst.detailMachine.currStatus == IndexGlobal.inst.detailMachine.statusPreview && this.props.imgData.id == MgrData.inst.get(MgrDataItem.CURRENT_IMG)) {
+            props[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         ;
         return ReactComponentExtend.instantiateTag(NodeModules.antd.Button, props, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {

@@ -149,6 +149,7 @@ export default class DomRightCreate extends ReactComponentExtend {
                 };
                 MgrData.inst.get(MgrDataItem.LIST_IMG_DATA).push(imgData);
                 MgrData.inst.set(MgrDataItem.LIST_SEED, id);
+                IndexGlobal.inst.detailMachine.currStatus.onImg(id);
             }
         }, `确认创建`));
     }

@@ -52,8 +52,6 @@ export default class DomLeftList extends ReactComponentExtend <number> {
             ));
         };
 
-        let propsAdd = objectPool.pop (DomLeftListAdd.Args.poolType);
-        propsAdd.init (this.listChildren.length);
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -95,8 +93,7 @@ export default class DomLeftList extends ReactComponentExtend <number> {
                         }
                     },
 
-                    ...this.listChildren,
-                    ReactComponentExtend.instantiateComponent (DomLeftListAdd, propsAdd)
+                    ...this.listChildren
                 )
             )
         )

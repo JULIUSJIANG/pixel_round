@@ -10,4 +10,8 @@ export default class DetailMachineStatus {
     onRender() {
         return null;
     }
+    onCreate() {
+    }
+    onImg(id) {
+    }
 }

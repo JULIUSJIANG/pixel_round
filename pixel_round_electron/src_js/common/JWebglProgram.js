@@ -1,4 +1,5 @@
 import JWebglEnum from "./JWebglEnum.js";
+import JWEbglProgramDefine from "./JWebglProgramDefine.js";
 /**
  * 着色程序
  */
@@ -8,6 +9,10 @@ class JWebglProgram {
          * 纹理索引
          */
         this.textureIdx = 0;
+        /**
+         * 宏定义的集合
+         */
+        this._listDefine = new Array();
         /**
          * 静态数据的集合
          */
@@ -57,6 +62,14 @@ class JWebglProgram {
     init() {
         // 回填曾经缓存的属性
         let symbolCache = JWebglProgram.getCache(this);
+        symbolCache.mapPropsNameToDefineClass.forEach((defineVal, propsName) => {
+            let shaderDefine = new JWEbglProgramDefine(this, propsName, defineVal);
+            this._listDefine.push(shaderDefine);
+            let defineTxt = `#define ${shaderDefine} ${shaderDefine.val}`;
+            this._listVertexHead.push(defineTxt);
+            this._listFragmentHead.push(defineTxt);
+            this[propsName] = shaderDefine;
+        });
         symbolCache.mapPropsNameToUniformClass.forEach((uniformClass, propsName) => {
             let uniform = new uniformClass(this, propsName);
             this._listUniform.push(uniform);
@@ -268,6 +281,7 @@ class JWebglProgram {
     function getCache(c) {
         if (!c[SYMBOL_KEY]) {
             let cache = {
+                mapPropsNameToDefineClass: new Map(),
                 mapPropsNameToAttributeClass: new Map(),
                 mapPropsNameToUniformClass: new Map(),
                 mapPropsNameToVaryingClass: new Map()
@@ -278,6 +292,19 @@ class JWebglProgram {
         return c[SYMBOL_KEY];
     }
     JWebglProgram.getCache = getCache;
+    /**
+     * 宏定义
+     * @param t
+     * @param val
+     * @returns
+     */
+    function define(t, val) {
+        return function decorator(inst, propsName) {
+            let cache = getCache(inst);
+            cache.mapPropsNameToDefineClass.set(propsName, val);
+        };
+    }
+    JWebglProgram.define = define;
     /**
      * 静态数据
      * @param t

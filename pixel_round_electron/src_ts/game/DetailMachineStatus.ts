@@ -23,4 +23,12 @@ export default class DetailMachineStatus {
     onRender (): ReactComponentExtendInstance {
         return null;
     }
+
+    onCreate () {
+
+    }
+
+    onImg (id: number) {
+
+    }
 }

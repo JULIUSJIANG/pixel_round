@@ -62,6 +62,14 @@ namespace MgrDataItem {
         key: `LIST_IMG_DATA_${VERSION}`,
         defVal: []
     });
+
+    /**
+     * 当前查看的图片
+     */
+    export const CURRENT_IMG = new MgrDataItem <number> ({
+        key: `CURRENT_IMG_${VERSION}`,
+        defVal: 0
+    });
 }
 
 export default MgrDataItem;

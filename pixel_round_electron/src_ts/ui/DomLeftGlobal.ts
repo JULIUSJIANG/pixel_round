@@ -1,3 +1,4 @@
+import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
@@ -7,21 +8,18 @@ const TEMP_COUNT = 4;
 
 export default class DomLeftGlobal extends ReactComponentExtend <number> {
 
-    listChildren = new Array <ReactComponentExtendInstance> ();
-
     render (): ReactComponentExtendInstance {
-        this.listChildren.length = 0;
-        for (let i = 0; i < TEMP_COUNT; i++) {
-            this.listChildren.push (ReactComponentExtend.instantiateTag (
-                NodeModules.antd.Button,
-                {
-                    style: {
-                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                    }
-                },
-
-                `按钮 [${i}]`
-            ))
+        let propsAdd = {
+            onClick: () => {
+                IndexGlobal.inst.detailMachine.currStatus.onCreate ();
+            },
+            style: {
+                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+            }
+        };
+        if (IndexGlobal.inst.detailMachine.currStatus == IndexGlobal.inst.detailMachine.statusCreate) {
+            propsAdd [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         };
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
@@ -37,7 +35,12 @@ export default class DomLeftGlobal extends ReactComponentExtend <number> {
                 }
             },
 
-            ...this.listChildren
+            ReactComponentExtend.instantiateTag (
+                NodeModules.antd.Button,
+                propsAdd,
+    
+                `创建`
+            )
         );
     }
 }

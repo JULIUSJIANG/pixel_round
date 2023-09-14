@@ -7,13 +7,10 @@ class DomLeftListAdd extends ReactComponentExtend {
     render() {
         let props = {
             onClick: () => {
+                IndexGlobal.inst.detailMachine.currStatus.onCreate();
             },
             style: {}
         };
-        if (this.props.idx != 0) {
-            props.style[MgrDomDefine.STYLE_MARGIN_TOP] = MgrDomDefine.CONFIG_TXT_SPACING;
-        }
-        ;
         if (IndexGlobal.inst.detailMachine.currStatus == IndexGlobal.inst.detailMachine.statusCreate) {
             props[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
@@ -23,8 +20,7 @@ class DomLeftListAdd extends ReactComponentExtend {
 }
 (function (DomLeftListAdd) {
     class Args {
-        init(idx) {
-            this.idx = idx;
+        init() {
         }
     }
     Args.poolType = new ObjectPoolType({

@@ -35,5 +35,12 @@ const VERSION = 19;
         key: `LIST_IMG_DATA_${VERSION}`,
         defVal: []
     });
+    /**
+     * 当前查看的图片
+     */
+    MgrDataItem.CURRENT_IMG = new MgrDataItem({
+        key: `CURRENT_IMG_${VERSION}`,
+        defVal: 0
+    });
 })(MgrDataItem || (MgrDataItem = {}));
 export default MgrDataItem;

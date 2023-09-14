@@ -4,6 +4,7 @@ import JWebglProgramUniform from "./JWebglProgramUniform.js";
 import JWebglProgramVarying from "./JWebglProgramVarying.js";
 import JWebglEnum from "./JWebglEnum.js";
 import IndexGlobal from "../IndexGlobal.js";
+import JWEbglProgramDefine from "./JWebglProgramDefine.js";
 
 /**
  * 着色程序
@@ -23,6 +24,10 @@ class JWebglProgram {
      */
     textureIdx = 0;
 
+    /**
+     * 宏定义的集合
+     */
+    _listDefine = new Array <JWEbglProgramDefine> ();
     /**
      * 静态数据的集合
      */
@@ -89,6 +94,14 @@ class JWebglProgram {
     init () {
         // 回填曾经缓存的属性
         let symbolCache = JWebglProgram.getCache (this);
+        symbolCache.mapPropsNameToDefineClass.forEach ((defineVal, propsName) => {
+            let shaderDefine = new JWEbglProgramDefine (this, propsName, defineVal);
+            this._listDefine.push  (shaderDefine);
+            let defineTxt = `#define ${shaderDefine} ${shaderDefine.val}`;
+            this._listVertexHead.push (defineTxt);
+            this._listFragmentHead.push (defineTxt);
+            this [propsName] = shaderDefine;
+        });
         symbolCache.mapPropsNameToUniformClass.forEach ((uniformClass, propsName) => {
             let uniform = new uniformClass (this, propsName);
             this._listUniform.push (uniform);
@@ -322,6 +335,10 @@ namespace JWebglProgram {
      */
     export interface SymbolCache {
         /**
+         * 属性名到宏定义的映射
+         */
+        mapPropsNameToDefineClass: Map <string, string>;
+        /**
          * 属性名到顶点属性类的映射
          */
         mapPropsNameToAttributeClass: Map <string, typeof JWebglProgramAttribute>;
@@ -343,6 +360,7 @@ namespace JWebglProgram {
     export function getCache (c: JWebglProgram): SymbolCache {
         if (!c [SYMBOL_KEY]) {
             let cache: SymbolCache = {
+                mapPropsNameToDefineClass: new Map (),
                 mapPropsNameToAttributeClass: new Map (),
                 mapPropsNameToUniformClass: new Map (),
                 mapPropsNameToVaryingClass: new Map ()
@@ -350,6 +368,19 @@ namespace JWebglProgram {
             c [SYMBOL_KEY] = cache;
         };
         return c [SYMBOL_KEY];
+    }
+
+    /**
+     * 宏定义
+     * @param t 
+     * @param val 
+     * @returns 
+     */
+    export function define <T extends typeof JWEbglProgramDefine> (t: T, val: string) {
+        return function decorator (inst: JWebglProgram, propsName: string) {
+            let cache = getCache (inst);
+            cache.mapPropsNameToDefineClass.set (propsName, val);
+        };
     }
 
     /**

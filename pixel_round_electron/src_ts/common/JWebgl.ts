@@ -4,6 +4,7 @@ import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
+import JWebglProgramTypeSmooth1 from "./JWebglProgramTypeSmooth1.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
@@ -127,6 +128,9 @@ class JWebgl {
 
     @program (JWebglProgramTypeImg)
     programImg: JWebglProgramTypeImg;
+
+    @program (JWebglProgramTypeSmooth1)
+    programSmooth1: JWebglProgramTypeSmooth1;
 
     /**
      * mvp 矩阵

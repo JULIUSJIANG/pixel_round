@@ -37,6 +37,7 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_BACKGROUND_COLOR_WHITE = "white";
     MgrDomDefine.STYLE_BACKGROUND_COLOR_BLACK = "black";
     MgrDomDefine.STYLE_MARGIN = "margin";
+    MgrDomDefine.STYLE_MARGIN_AUTO = "auto";
     MgrDomDefine.STYLE_MARGIN_TOP = "marginTop";
     MgrDomDefine.STYLE_MARGIN_RIGHT = "marginRight";
     MgrDomDefine.STYLE_MARGIN_BOTTOM = "marginBottom";
@@ -74,6 +75,10 @@ class MgrDomDefine {
      * 外边距 - 文本形式
      */
     MgrDomDefine.CONFIG_TXT_SPACING = `${MgrDomDefine.CONFIG_NUMBER_SPACING}px`;
+    /**
+     * 外边距 - 一半
+     */
+    MgrDomDefine.CONFIG_NUMBER_HALF_SPACING = MgrDomDefine.CONFIG_NUMBER_SPACING / 2;
     /**
      * 外边距 - 一半
      */

@@ -43,6 +43,25 @@ namespace MgrDataItem {
         key: `DETAIL_MACHINE_STATUS_${VERSION}`,
         defVal: 0
     });
+
+    /**
+     * 图片数据的 id 种子
+     */
+    export const LIST_SEED = new MgrDataItem <number> ({
+        key: `LIST_SEED_${VERSION}`,
+        defVal: 0
+    });
+    /**
+     * 图片数据
+     */
+    export interface ImgData {
+        id: number;
+        dataOrigin: string
+    }
+    export const LIST_IMG_DATA = new MgrDataItem <Array <ImgData>> ({
+        key: `LIST_IMG_DATA_${VERSION}`,
+        defVal: []
+    });
 }
 
 export default MgrDataItem;

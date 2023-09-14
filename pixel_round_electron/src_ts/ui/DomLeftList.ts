@@ -2,15 +2,16 @@ import NodeModules from "../NodeModules.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
+import MgrData from "../mgr/MgrData.js";
+import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomLeftListAdd from "./DomLeftListAdd.js";
+import DomLeftListImg from "./DomLeftListImg.js";
 
 /**
  * 列数
  */
-const COLUMN_COUNT = 1;
-
-const ITEM_COUNT = 0;
+const COLUMN_COUNT = 2;
 
 export default class DomLeftList extends ReactComponentExtend <number> {
 
@@ -20,7 +21,8 @@ export default class DomLeftList extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
         this.listChildren.length = 0;
-        for (let i = 0; i < ITEM_COUNT; i+= COLUMN_COUNT) {
+        let listImgData = MgrData.inst.get (MgrDataItem.LIST_IMG_DATA);
+        for (let i = 0; i < listImgData.length; i+= COLUMN_COUNT) {
             let containerProps = {
                 style: {
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX
@@ -32,27 +34,13 @@ export default class DomLeftList extends ReactComponentExtend <number> {
             this.listChildrenContainer.length = 0;
             for (let j = 0; j < COLUMN_COUNT; j++) {
                 let idx = i + j;
-                if (ITEM_COUNT <= idx) {
+                if (listImgData.length <= idx) {
                     break;
                 };
-                let propsBtn = {
-                    onClick: () => {
-                        
-                    },
-                    style: {
-                        [MgrDomDefine.STYLE_WIDTH]: 0,
-                        [MgrDomDefine.STYLE_FLEX_GROW]: 1
-                    }
-                };
-                if (j != 0) {
-                    propsBtn.style [MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_HALF_SPACING;
-                };
-                this.listChildrenContainer.push (ReactComponentExtend.instantiateTag (
-                    NodeModules.antd.Button,
-                    propsBtn,
-
-                    `按钮 [${idx}]`
-                ));
+                let imgData = listImgData [i + j];
+                let args = objectPool.pop (DomLeftListImg.Args.poolType);
+                args.init (imgData, i, j);
+                this.listChildrenContainer.push (ReactComponentExtend.instantiateComponent (DomLeftListImg, args));
             };
             this.listChildren.push (ReactComponentExtend.instantiateTag (
                 MgrDomDefine.TAG_DIV,

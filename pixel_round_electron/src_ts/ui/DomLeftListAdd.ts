@@ -13,7 +13,7 @@ class DomLeftListAdd extends ReactComponentExtend <DomLeftListAdd.Args> {
                     
             },
             style: {
-                
+
             }
         };
         if (this.props.idx != 0) {

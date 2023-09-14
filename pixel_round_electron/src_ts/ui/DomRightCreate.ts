@@ -5,6 +5,8 @@ import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
+import MgrData from "../mgr/MgrData.js";
+import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
 const SIZE_SCALE = 10;
@@ -166,7 +168,7 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
                         showUploadList: false,
                         beforeUpload: (file) => {
                             if (!file.type.match(/image/g)) {
-                                NodeModules.antd.message.error(`${file.name} 不是图片文件`);
+                                NodeModules.antd.message.error(`${file.name} 不是图片，请选择图片文件`);
                                 return false;
                             };
                             return true;
@@ -204,6 +206,22 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
                     style: {
                         [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                         [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING
+                    },
+                    onClick: () => {
+                        if (IndexGlobal.inst.createMachine.img == null) {
+                            return NodeModules.antd.message.error (`请先选择图片文件`);
+                        };
+                        if (IndexGlobal.inst.createMachine.currStatus != IndexGlobal.inst.createMachine.statusIdle) {
+                            return NodeModules.antd.message.error (`文件加载中，请稍后`);
+                        };
+                        let id = MgrData.inst.get (MgrDataItem.LIST_SEED);
+                        id++;
+                        let imgData: MgrDataItem.ImgData = {
+                            id: id,
+                            dataOrigin: IndexGlobal.inst.createMachine.img.src
+                        };
+                        MgrData.inst.get (MgrDataItem.LIST_IMG_DATA).push (imgData);
+                        MgrData.inst.set (MgrDataItem.LIST_SEED, id);
                     }
                 },
 

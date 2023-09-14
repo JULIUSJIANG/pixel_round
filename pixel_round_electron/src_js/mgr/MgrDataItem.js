@@ -24,5 +24,16 @@ const VERSION = 19;
         key: `DETAIL_MACHINE_STATUS_${VERSION}`,
         defVal: 0
     });
+    /**
+     * 图片数据的 id 种子
+     */
+    MgrDataItem.LIST_SEED = new MgrDataItem({
+        key: `LIST_SEED_${VERSION}`,
+        defVal: 0
+    });
+    MgrDataItem.LIST_IMG_DATA = new MgrDataItem({
+        key: `LIST_IMG_DATA_${VERSION}`,
+        defVal: []
+    });
 })(MgrDataItem || (MgrDataItem = {}));
 export default MgrDataItem;

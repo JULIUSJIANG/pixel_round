@@ -48,6 +48,7 @@ namespace MgrDomDefine {
     export const STYLE_BACKGROUND_COLOR_BLACK = "black";
     
     export const STYLE_MARGIN = "margin";
+    export const STYLE_MARGIN_AUTO = "auto";
     export const STYLE_MARGIN_TOP = "marginTop";
     export const STYLE_MARGIN_RIGHT = "marginRight";
     export const STYLE_MARGIN_BOTTOM = "marginBottom";
@@ -96,6 +97,10 @@ namespace MgrDomDefine {
      * 外边距 - 文本形式
      */
     export const CONFIG_TXT_SPACING = `${CONFIG_NUMBER_SPACING}px`;
+    /**
+     * 外边距 - 一半
+     */
+    export const CONFIG_NUMBER_HALF_SPACING = CONFIG_NUMBER_SPACING / 2;
     /**
      * 外边距 - 一半
      */

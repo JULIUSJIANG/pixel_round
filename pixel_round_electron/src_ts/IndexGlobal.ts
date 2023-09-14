@@ -19,6 +19,10 @@ class IndexGlobal {
 namespace IndexGlobal {
 
     export const inst = new IndexGlobal ();
+
+    export const IMG_MINI_SIZE = 100;
+
+    export const IMG_LIST_COLUMN_COUNT = 2;
 }
 
 export default IndexGlobal;

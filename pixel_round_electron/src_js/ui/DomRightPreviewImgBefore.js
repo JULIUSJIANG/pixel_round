@@ -11,6 +11,8 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
 import DomInputNumber from "./DomInputNumber.js";
+const Z_GRID = 0.1;
+const Z_MASK = 0.2;
 class DomRightPreviewImgBefore extends ReactComponentExtend {
     constructor() {
         super(...arguments);
@@ -21,14 +23,22 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
         this.mat4M = new JWebglMathMatrix4();
         this.mat4V = new JWebglMathMatrix4();
         this.mat4P = new JWebglMathMatrix4();
-        this.posFrom = new JWebglMathVector4();
-        this.posTo = new JWebglMathVector4();
+        this.posImg = new JWebglMathVector4();
+        this.posFrom = new JWebglMathVector4(0, 0, Z_GRID);
+        this.posTo = new JWebglMathVector4(0, 0, Z_GRID);
+        this.posOutLB = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posOutRB = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posOutLT = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posOutRT = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posInLB = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posInRB = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posInLT = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posInRT = new JWebglMathVector4(0, 0, Z_MASK);
     }
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
         this.mat4M.setIdentity();
-        this.mat4V.setLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
     }
     reactComponentExtendOnDraw() {
         let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
@@ -52,34 +62,74 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
         this.jWebgl.clear();
         let imgWidth = img.assetsImg.image.width;
         let imgHeight = img.assetsImg.image.height;
-        this.mat4P.setOrtho(-imgWidth / 2, imgWidth / 2, -imgHeight / 2, imgHeight / 2, 0, 2);
+        let paddingTop = Math.max(listImgDataInst.offsetTop, 0);
+        let paddingRight = Math.max(listImgDataInst.offsetRight, 0);
+        let paddingBottom = Math.max(listImgDataInst.offsetBottom, 0);
+        let paddingLeft = Math.max(listImgDataInst.offsetLeft, 0);
+        let viewWidth = img.assetsImg.image.width + paddingRight + paddingLeft;
+        let viewHeight = img.assetsImg.image.height + paddingTop + paddingBottom;
+        this.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);
+        this.mat4P.setOrtho(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
+        // 图片
         this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
         this.jWebgl.programImg.uSampler.fill(img);
-        this.jWebgl.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgWidth, imgHeight);
+        this.posImg.elements[0] = imgWidth / 2 + paddingLeft;
+        this.posImg.elements[1] = imgHeight / 2 + paddingBottom;
+        this.jWebgl.programImg.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgWidth, imgHeight);
         this.jWebgl.programImg.draw();
+        // 网格
         this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
-        for (let i = 0; i <= img.assetsImg.image.width; i++) {
-            this.posFrom.elements[0] = i - imgWidth / 2;
-            this.posFrom.elements[1] = -imgHeight / 2;
-            this.posFrom.elements[2] = 0.1;
-            this.posTo.elements[0] = i - imgWidth / 2;
-            this.posTo.elements[1] = imgHeight / 2;
-            this.posTo.elements[2] = 0.1;
-            this.jWebgl.programLine.add(this.posFrom, JWebglColor.COLOR_BLACK, this.posTo, JWebglColor.COLOR_BLACK);
+        let colorGrid = JWebglColor.COLOR_BLACK;
+        for (let i = 0; i <= viewWidth; i++) {
+            this.posFrom.elements[0] = i;
+            this.posFrom.elements[1] = 0;
+            this.posTo.elements[0] = i;
+            this.posTo.elements[1] = viewHeight;
+            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
         }
         ;
-        for (let i = 0; i <= img.assetsImg.image.height; i++) {
-            this.posFrom.elements[0] = -imgWidth / 2;
-            this.posFrom.elements[1] = i - imgHeight / 2;
-            this.posFrom.elements[2] = 0.1;
-            this.posTo.elements[0] = imgWidth / 2;
-            this.posTo.elements[1] = i - imgHeight / 2;
-            this.posTo.elements[2] = 0.1;
-            this.jWebgl.programLine.add(this.posFrom, JWebglColor.COLOR_BLACK, this.posTo, JWebglColor.COLOR_BLACK);
+        for (let i = 0; i <= viewHeight; i++) {
+            this.posFrom.elements[0] = 0;
+            this.posFrom.elements[1] = i;
+            this.posTo.elements[0] = viewWidth;
+            this.posTo.elements[1] = i;
+            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
         }
         ;
         this.jWebgl.programLine.draw();
+        // 裁切
+        this.jWebgl.programTriangle.uMvp.fill(this.jWebgl.mat4Mvp);
+        let posTop = viewHeight + Math.min(listImgDataInst.offsetTop, 0);
+        let posRight = viewWidth + Math.min(listImgDataInst.offsetRight, 0);
+        let posBottom = -Math.min(listImgDataInst.offsetBottom, 0);
+        let posLeft = -Math.min(listImgDataInst.offsetLeft, 0);
+        let colorMask = JWebglColor.COLOR_BLUE_ALPHA;
+        this.posOutLB.elements[0] = 0;
+        this.posOutLB.elements[1] = 0;
+        this.posOutRB.elements[0] = viewWidth;
+        this.posOutRB.elements[1] = 0;
+        this.posOutLT.elements[0] = 0;
+        this.posOutLT.elements[1] = viewHeight;
+        this.posOutRT.elements[0] = viewWidth;
+        this.posOutRT.elements[1] = viewHeight;
+        this.posInLB.elements[0] = posLeft;
+        this.posInLB.elements[1] = posBottom;
+        this.posInRB.elements[0] = posRight;
+        this.posInRB.elements[1] = posBottom;
+        this.posInLT.elements[0] = posLeft;
+        this.posInLT.elements[1] = posTop;
+        this.posInRT.elements[0] = posRight;
+        this.posInRT.elements[1] = posTop;
+        this.jWebgl.programTriangle.add(this.posOutLB, colorMask, this.posInLB, colorMask, this.posOutRB, colorMask);
+        this.jWebgl.programTriangle.add(this.posOutLB, colorMask, this.posInLB, colorMask, this.posInLT, colorMask);
+        this.jWebgl.programTriangle.add(this.posOutRB, colorMask, this.posInRB, colorMask, this.posOutRT, colorMask);
+        this.jWebgl.programTriangle.add(this.posOutRB, colorMask, this.posInRB, colorMask, this.posInLB, colorMask);
+        this.jWebgl.programTriangle.add(this.posOutRT, colorMask, this.posInRT, colorMask, this.posOutLT, colorMask);
+        this.jWebgl.programTriangle.add(this.posOutRT, colorMask, this.posInRT, colorMask, this.posInRB, colorMask);
+        this.jWebgl.programTriangle.add(this.posOutLT, colorMask, this.posInLT, colorMask, this.posOutLB, colorMask);
+        this.jWebgl.programTriangle.add(this.posOutLT, colorMask, this.posInLT, colorMask, this.posInRT, colorMask);
+        this.jWebgl.programTriangle.draw();
     }
     render() {
         let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
@@ -102,8 +152,12 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
         let canvasWidth = 1;
         let canvasHeight = 1;
         if (this.finishedImg != null) {
-            canvasWidth = img.image.width * IndexGlobal.PIXEL_TEX_TO_SCREEN;
-            canvasHeight = img.image.height * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+            let paddingTop = Math.max(listImgDataInst.offsetTop, 0);
+            let paddingRight = Math.max(listImgDataInst.offsetRight, 0);
+            let paddingBottom = Math.max(listImgDataInst.offsetBottom, 0);
+            let paddingLeft = Math.max(listImgDataInst.offsetLeft, 0);
+            canvasWidth = (img.image.width + paddingRight + paddingLeft) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+            canvasHeight = (img.image.height + paddingTop + paddingBottom) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
         }
         ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -166,12 +220,31 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             },
-        }, ReactComponentExtend.instantiateComponent(DomInputNumber, null), ReactComponentExtend.instantiateComponent(DomInputNumber, null), ReactComponentExtend.instantiateComponent(DomInputNumber, null), ReactComponentExtend.instantiateComponent(DomInputNumber, null)), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+        }, ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`左内边距`, listImgDataInst.offsetLeft, (val) => {
+            listImgDataInst.offsetLeft = Math.floor(val);
+            MgrData.inst.callDataChange();
+        })), ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`右内边距`, listImgDataInst.offsetRight, (val) => {
+            listImgDataInst.offsetRight = Math.floor(val);
+            MgrData.inst.callDataChange();
+        }))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             },
-        }, ReactComponentExtend.instantiateComponent(DomInputNumber, null)));
+        }, ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`上内边距`, listImgDataInst.offsetTop, (val) => {
+            listImgDataInst.offsetTop = Math.floor(val);
+            MgrData.inst.callDataChange();
+        })), ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`下内边距`, listImgDataInst.offsetBottom, (val) => {
+            listImgDataInst.offsetBottom = Math.floor(val);
+            MgrData.inst.callDataChange();
+        }))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            style: {
+                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+            },
+        }, ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`颗粒宽`, 0, (val) => {
+        })), ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`颗粒高`, 0, (val) => {
+        }))));
     }
 }
 (function (DomRightPreviewImgBefore) {

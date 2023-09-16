@@ -11,7 +11,7 @@ class MgrDataItem {
 /**
  * 改这个值，整个存档都会重置
  */
-const VERSION = 19;
+const VERSION = 20;
 (function (MgrDataItem) {
     /**
      * 所有具体记录

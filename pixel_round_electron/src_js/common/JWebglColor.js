@@ -57,6 +57,10 @@ let colorData255 = [
      */
     JWebglColor.COLOR_WHITE = new JWebglColor(1, 1, 1, 1);
     /**
+     * 遮罩
+     */
+    JWebglColor.COLOR_MASK = new JWebglColor(0, 0, 0, 0.9);
+    /**
      * 黑色
      */
     JWebglColor.COLOR_BLACK = new JWebglColor(0, 0, 0, 1);
@@ -76,6 +80,10 @@ let colorData255 = [
      * 蓝色
      */
     JWebglColor.COLOR_BLUE = new JWebglColor(0.4039, 0.4039, 0.9254, 1);
+    /**
+     * 蓝色
+     */
+    JWebglColor.COLOR_BLUE_ALPHA = new JWebglColor(0.4039, 0.4039, 0.9254, 0.7);
 })(JWebglColor || (JWebglColor = {}));
 // for (let i = 0; i < colorData01.length; i+=4) {
 //     DemoLifeCycleColor.listColor.push (

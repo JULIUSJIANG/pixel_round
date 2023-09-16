@@ -28,7 +28,7 @@ class MgrDataItem<T> {
 /**
  * 改这个值，整个存档都会重置
  */
-const VERSION = 19;
+const VERSION = 20;
 
 namespace MgrDataItem {
     /**
@@ -56,7 +56,11 @@ namespace MgrDataItem {
      */
     export interface ImgData {
         id: number;
-        dataOrigin: string
+        dataOrigin: string;
+        offsetTop: number;
+        offsetRight: number;
+        offsetBottom: number;
+        offsetLeft: number;
     }
     export const LIST_IMG_DATA = new MgrDataItem <Array <ImgData>> ({
         key: `LIST_IMG_DATA_${VERSION}`,

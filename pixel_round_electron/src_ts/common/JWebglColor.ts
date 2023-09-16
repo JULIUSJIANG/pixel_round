@@ -68,6 +68,10 @@ namespace JWebglColor {
      */
     export const COLOR_WHITE = new JWebglColor (1, 1, 1, 1);
     /**
+     * 遮罩
+     */
+    export const COLOR_MASK = new JWebglColor (0, 0, 0, 0.9);
+    /**
      * 黑色
      */
     export const COLOR_BLACK = new JWebglColor (0, 0, 0, 1);
@@ -88,6 +92,10 @@ namespace JWebglColor {
      * 蓝色
      */
     export const COLOR_BLUE = new JWebglColor (0.4039, 0.4039, 0.9254, 1);
+    /**
+     * 蓝色
+     */
+    export const COLOR_BLUE_ALPHA = new JWebglColor (0.4039, 0.4039, 0.9254, 0.7);
 }
 
 // for (let i = 0; i < colorData01.length; i+=4) {

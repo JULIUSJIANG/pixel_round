@@ -225,7 +225,11 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
                         id++;
                         let imgData: MgrDataItem.ImgData = {
                             id: id,
-                            dataOrigin: IndexGlobal.inst.createMachine.img.src
+                            dataOrigin: IndexGlobal.inst.createMachine.img.src,
+                            offsetTop: 0,
+                            offsetRight: 0,
+                            offsetBottom: 0,
+                            offsetLeft: 0
                         };
                         MgrData.inst.get (MgrDataItem.LIST_IMG_DATA).push (imgData);
                         MgrData.inst.set (MgrDataItem.LIST_SEED, id);

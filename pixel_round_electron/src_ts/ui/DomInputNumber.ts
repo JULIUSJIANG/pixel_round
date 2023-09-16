@@ -41,6 +41,11 @@ class DomInputNumber extends ReactComponentExtend <DomInputNumber.Args> {
             ReactComponentExtend.instantiateTag (
                 NodeModules.antd.InputNumber,
                 {
+                    value: this.props.val,
+                    onChange: (val) => {
+                        this.props.onValChanged (val);
+                    },
+                    step: 1,
                     style: {
                         [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                         [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
@@ -58,11 +63,14 @@ namespace DomInputNumber {
 
         name: string;
 
-        onValChanged: (val: string) => void;
+        val: number;
+
+        onValChanged: (val: number) => void;
         
-        static create (name: string, onValChanged: (val: string) => void) {
+        static create (name: string, val: number, onValChanged: (val: number) => void) {
             let inst = objectPool.pop (Args.poolType);
             inst.name = name;
+            inst.val = val;
             inst.onValChanged = onValChanged;
             return inst;
         }

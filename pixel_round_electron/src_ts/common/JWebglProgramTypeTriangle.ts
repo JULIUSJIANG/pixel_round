@@ -88,7 +88,7 @@ void main() {
             color.data01 [0], 
             color.data01 [1], 
             color.data01 [2],
-            1
+            color.data01 [3]
         );
     }
 }

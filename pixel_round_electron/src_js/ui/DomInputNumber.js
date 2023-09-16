@@ -1,4 +1,6 @@
 import NodeModules from "../NodeModules.js";
+import objectPool from "../common/ObjectPool.js";
+import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 class DomInputNumber extends ReactComponentExtend {
@@ -21,7 +23,12 @@ class DomInputNumber extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                 [MgrDomDefine.STYLE_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE
             }
-        }, "抗锯齿"), ReactComponentExtend.instantiateTag(NodeModules.antd.InputNumber, {
+        }, this.props.name), ReactComponentExtend.instantiateTag(NodeModules.antd.InputNumber, {
+            value: this.props.val,
+            onChange: (val) => {
+                this.props.onValChanged(val);
+            },
+            step: 1,
             style: {
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
@@ -30,4 +37,23 @@ class DomInputNumber extends ReactComponentExtend {
         }));
     }
 }
+(function (DomInputNumber) {
+    class Args {
+        static create(name, val, onValChanged) {
+            let inst = objectPool.pop(Args.poolType);
+            inst.name = name;
+            inst.val = val;
+            inst.onValChanged = onValChanged;
+            return inst;
+        }
+    }
+    Args.poolType = new ObjectPoolType({
+        instantiate: () => {
+            return new Args();
+        },
+        onPop: null,
+        onPush: null
+    });
+    DomInputNumber.Args = Args;
+})(DomInputNumber || (DomInputNumber = {}));
 export default DomInputNumber;

@@ -1,5 +1,7 @@
+import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
+import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
@@ -8,7 +10,7 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
-const SIZE_SCALE = 8;
+import DomInputNumber from "./DomInputNumber.js";
 class DomRightPreviewImgBefore extends ReactComponentExtend {
     constructor() {
         super(...arguments);
@@ -19,6 +21,8 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
         this.mat4M = new JWebglMathMatrix4();
         this.mat4V = new JWebglMathMatrix4();
         this.mat4P = new JWebglMathMatrix4();
+        this.posFrom = new JWebglMathVector4();
+        this.posTo = new JWebglMathVector4();
     }
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
@@ -46,12 +50,36 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
         ;
         // 清除画面
         this.jWebgl.clear();
-        this.mat4P.setOrtho(-this.jWebgl.canvasWebgl.width / 2, this.jWebgl.canvasWebgl.width / 2, -this.jWebgl.canvasWebgl.height / 2, this.jWebgl.canvasWebgl.height / 2, 0, 2);
+        let imgWidth = img.assetsImg.image.width;
+        let imgHeight = img.assetsImg.image.height;
+        this.mat4P.setOrtho(-imgWidth / 2, imgWidth / 2, -imgHeight / 2, imgHeight / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
         this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
         this.jWebgl.programImg.uSampler.fill(img);
-        this.jWebgl.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, this.jWebgl.canvasWebgl.width, this.jWebgl.canvasWebgl.height);
+        this.jWebgl.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgWidth, imgHeight);
         this.jWebgl.programImg.draw();
+        this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
+        for (let i = 0; i <= img.assetsImg.image.width; i++) {
+            this.posFrom.elements[0] = i - imgWidth / 2;
+            this.posFrom.elements[1] = -imgHeight / 2;
+            this.posFrom.elements[2] = 0.1;
+            this.posTo.elements[0] = i - imgWidth / 2;
+            this.posTo.elements[1] = imgHeight / 2;
+            this.posTo.elements[2] = 0.1;
+            this.jWebgl.programLine.add(this.posFrom, JWebglColor.COLOR_BLACK, this.posTo, JWebglColor.COLOR_BLACK);
+        }
+        ;
+        for (let i = 0; i <= img.assetsImg.image.height; i++) {
+            this.posFrom.elements[0] = -imgWidth / 2;
+            this.posFrom.elements[1] = i - imgHeight / 2;
+            this.posFrom.elements[2] = 0.1;
+            this.posTo.elements[0] = imgWidth / 2;
+            this.posTo.elements[1] = i - imgHeight / 2;
+            this.posTo.elements[2] = 0.1;
+            this.jWebgl.programLine.add(this.posFrom, JWebglColor.COLOR_BLACK, this.posTo, JWebglColor.COLOR_BLACK);
+        }
+        ;
+        this.jWebgl.programLine.draw();
     }
     render() {
         let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
@@ -74,14 +102,24 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
         let canvasWidth = 1;
         let canvasHeight = 1;
         if (this.finishedImg != null) {
-            canvasWidth = img.image.width * SIZE_SCALE;
-            canvasHeight = img.image.height * SIZE_SCALE;
+            canvasWidth = img.image.width * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+            canvasHeight = img.image.height * IndexGlobal.PIXEL_TEX_TO_SCREEN;
         }
         ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
+            }
+        }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            style: {
+                [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
+                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
             }
@@ -92,6 +130,8 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                [MgrDomDefine.STYLE_PADDING_RIGHT]: MgrDomDefine.CONFIG_TXT_SPACING,
+                [MgrDomDefine.STYLE_PADDING_BOTTOM]: MgrDomDefine.CONFIG_TXT_SPACING,
                 [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_SCROLL,
                 [MgrDomDefine.STYLE_OVERFLOW_Y]: MgrDomDefine.STYLE_OVERFLOW_Y_SCROLL
             }
@@ -114,14 +154,24 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvasWebglRef,
-            width: canvasWidth,
-            height: canvasHeight,
+            width: canvasWidth * IndexGlobal.ANTINA,
+            height: canvasHeight * IndexGlobal.ANTINA,
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
                 [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
-        })))));
+        }))))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            style: {
+                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+            },
+        }, ReactComponentExtend.instantiateComponent(DomInputNumber, null), ReactComponentExtend.instantiateComponent(DomInputNumber, null), ReactComponentExtend.instantiateComponent(DomInputNumber, null), ReactComponentExtend.instantiateComponent(DomInputNumber, null)), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            style: {
+                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+            },
+        }, ReactComponentExtend.instantiateComponent(DomInputNumber, null)));
     }
 }
 (function (DomRightPreviewImgBefore) {

@@ -7,7 +7,6 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-const SIZE_SCALE = 8;
 export default class DomRightCreate extends ReactComponentExtend {
     constructor() {
         super(...arguments);
@@ -32,14 +31,22 @@ export default class DomRightCreate extends ReactComponentExtend {
         ;
         // 清除画面
         this.jWebgl.clear();
-        this.mat4P.setOrtho(-IndexGlobal.inst.createMachine.canvasWidth / 2, IndexGlobal.inst.createMachine.canvasWidth / 2, -IndexGlobal.inst.createMachine.canvasHeight / 2, IndexGlobal.inst.createMachine.canvasHeight / 2, 0, 2);
+        let img = IndexGlobal.inst.createMachine.img.image;
+        this.mat4P.setOrtho(-img.width / 2, img.width / 2, -img.height / 2, img.height / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
         this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
         this.jWebgl.programImg.uSampler.fill(this.jWebgl.getImg(IndexGlobal.inst.createMachine.img.src));
-        this.jWebgl.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, IndexGlobal.inst.createMachine.canvasWidth, IndexGlobal.inst.createMachine.canvasHeight);
+        this.jWebgl.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, img.width, img.height);
         this.jWebgl.programImg.draw();
     }
     render() {
+        let canvasWidth = 1;
+        let canvasHeight = 1;
+        if (IndexGlobal.inst.createMachine.img != null) {
+            canvasWidth = IndexGlobal.inst.createMachine.img.image.width * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+            canvasHeight = IndexGlobal.inst.createMachine.img.image.height * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+        }
+        ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
@@ -64,6 +71,8 @@ export default class DomRightCreate extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                [MgrDomDefine.STYLE_PADDING_RIGHT]: MgrDomDefine.CONFIG_TXT_SPACING,
+                [MgrDomDefine.STYLE_PADDING_BOTTOM]: MgrDomDefine.CONFIG_TXT_SPACING,
                 [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_SCROLL,
                 [MgrDomDefine.STYLE_OVERFLOW_Y]: MgrDomDefine.STYLE_OVERFLOW_Y_SCROLL
             }
@@ -71,8 +80,8 @@ export default class DomRightCreate extends ReactComponentExtend {
         // 滚动的列表
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.inst.createMachine.canvasWidth * SIZE_SCALE}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.inst.createMachine.canvasHeight * SIZE_SCALE}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_DISPLAY]: IndexGlobal.inst.createMachine.img == null ? MgrDomDefine.STYLE_DISPLAY_NONE : MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
@@ -86,11 +95,11 @@ export default class DomRightCreate extends ReactComponentExtend {
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvasWebglRef,
-            width: IndexGlobal.inst.createMachine.canvasWidth * SIZE_SCALE,
-            height: IndexGlobal.inst.createMachine.canvasHeight * SIZE_SCALE,
+            width: canvasWidth * IndexGlobal.ANTINA,
+            height: canvasHeight * IndexGlobal.ANTINA,
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.inst.createMachine.canvasWidth * SIZE_SCALE}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.inst.createMachine.canvasHeight * SIZE_SCALE}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
         }))))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {

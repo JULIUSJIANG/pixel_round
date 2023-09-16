@@ -55,6 +55,8 @@ namespace MgrDomDefine {
     export const STYLE_MARGIN_LEFT = "marginLeft";
 
     export const STYLE_PADDING = "padding";
+    export const STYLE_PADDING_RIGHT = "paddingRight";
+    export const STYLE_PADDING_BOTTOM = "paddingBottom";
 
     export const STYLE_FLEX = "flex";
 

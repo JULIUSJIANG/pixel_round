@@ -43,6 +43,8 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_MARGIN_BOTTOM = "marginBottom";
     MgrDomDefine.STYLE_MARGIN_LEFT = "marginLeft";
     MgrDomDefine.STYLE_PADDING = "padding";
+    MgrDomDefine.STYLE_PADDING_RIGHT = "paddingRight";
+    MgrDomDefine.STYLE_PADDING_BOTTOM = "paddingBottom";
     MgrDomDefine.STYLE_FLEX = "flex";
     MgrDomDefine.STYLE_OVERFLOW_X = "overflowX";
     MgrDomDefine.STYLE_OVERFLOW_X_HIDDEN = "hidden";

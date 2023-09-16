@@ -1,4 +1,3 @@
-import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
@@ -62,14 +61,4 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
         }, 1, null))));
     }
 }
-(function (DomRightPreviewImgBefore) {
-    class Args {
-    }
-    Args.poolType = new ObjectPoolType({
-        instantiate: () => new Args,
-        onPop: null,
-        onPush: null
-    });
-    DomRightPreviewImgBefore.Args = Args;
-})(DomRightPreviewImgBefore || (DomRightPreviewImgBefore = {}));
 export default DomRightPreviewImgBefore;

@@ -1,19 +1,35 @@
-import JWebgl from "./JWebgl";
-import JWebglEnum from "./JWebglEnum";
+import JWebgl from "./JWebgl.js";
+import JWebglEnum from "./JWebglEnum.js";
 
 class JWebglFrameBuffer {
 
     relWebgl: JWebgl;
 
+    width: number;
+
+    height: number;
+
     renderTexture: WebGLTexture;
 
     frameBuffer: WebGLFramebuffer;
 
-    constructor (relWebgl: JWebgl) {
+    constructor (relWebgl: JWebgl, width: number, height: number) {
         this.relWebgl = relWebgl;
+        this.width = width;
+        this.height = height;
         this.renderTexture = this.relWebgl.canvasWebglCtx.createTexture ();
-        this.relWebgl.canvasWebglCtx.activeTexture (JWebglEnum.ActiveTexture.TEXTURE0);
         this.relWebgl.canvasWebglCtx.bindTexture (JWebglEnum.BindTexture.TEXTURE_2D, this.renderTexture);
+        this.relWebgl.canvasWebglCtx.texImage2D (
+            JWebglEnum.BindTexture.TEXTURE_2D, 
+            0, 
+            JWebglEnum.TexImage2DFormat.RGBA, 
+            width, 
+            height, 
+            0,
+            JWebglEnum.TexImage2DFormat.RGBA,
+            JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE,
+            null
+        );
         this.relWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MIN_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
         this.relWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MAG_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
         this.relWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_S, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);

@@ -16,7 +16,7 @@ import DomInputNumber from "./DomInputNumber.js";
 import DomRightPreviewImgBeforeWebglCutted from "./DomRightPreviewImgBeforeWebglCutted.js";
 import DomRightPreviewImgBeforeWebglOrigin from "./DomRightPreviewImgBeforeWebglOrigin.js";
 
-class DomRightPreviewImgBefore extends ReactComponentExtend <DomRightPreviewImgBefore.Args> {
+class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
     
     finishedImg: MgrResAssetsImage;
 
@@ -142,16 +142,6 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <DomRightPreviewImgB
                 )),
             ),
         );
-    }
-}
-
-namespace DomRightPreviewImgBefore {
-    export class Args {
-        static poolType = new ObjectPoolType <Args> ({
-            instantiate: () => new Args,
-            onPop: null,
-            onPush: null
-        });
     }
 }
 

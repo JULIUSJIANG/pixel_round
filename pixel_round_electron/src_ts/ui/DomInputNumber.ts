@@ -43,6 +43,12 @@ class DomInputNumber extends ReactComponentExtend <DomInputNumber.Args> {
                 {
                     value: this.props.val,
                     onChange: (val) => {
+                        if (this.props.min != null) {
+                            val = Math.max (val, this.props.min);
+                        };
+                        if (this.props.max != null) {
+                            val = Math.min (val, this.props.max);
+                        };
                         this.props.onValChanged (val);
                     },
                     step: 1,

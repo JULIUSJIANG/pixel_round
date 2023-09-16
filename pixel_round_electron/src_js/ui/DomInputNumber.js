@@ -26,6 +26,14 @@ class DomInputNumber extends ReactComponentExtend {
         }, this.props.name), ReactComponentExtend.instantiateTag(NodeModules.antd.InputNumber, {
             value: this.props.val,
             onChange: (val) => {
+                if (this.props.min != null) {
+                    val = Math.max(val, this.props.min);
+                }
+                ;
+                if (this.props.max != null) {
+                    val = Math.min(val, this.props.max);
+                }
+                ;
                 this.props.onValChanged(val);
             },
             step: 1,

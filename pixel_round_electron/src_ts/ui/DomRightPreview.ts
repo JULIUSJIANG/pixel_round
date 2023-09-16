@@ -21,8 +21,8 @@ export default class DomRightPreview extends ReactComponentExtend <number> {
                 }
             },
 
-            ReactComponentExtend.instantiateComponent (DomRightPreviewImg, objectPool.pop (DomRightPreviewImgBefore.Args.poolType)),
-            ReactComponentExtend.instantiateComponent (DomRightPreviewProps, objectPool.pop (DomRightPreviewImgBefore.Args.poolType))
+            ReactComponentExtend.instantiateComponent (DomRightPreviewImg, null),
+            ReactComponentExtend.instantiateComponent (DomRightPreviewProps, null)
         )
     }
 }

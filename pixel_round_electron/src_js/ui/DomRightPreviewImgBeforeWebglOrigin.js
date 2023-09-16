@@ -4,7 +4,6 @@ import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
-import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
@@ -72,7 +71,7 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend {
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
         // 图片
         this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uSampler.fill(img);
+        this.jWebgl.programImg.uSampler.fillByImg(img);
         this.posImg.elements[0] = imgWidth / 2 + paddingLeft;
         this.posImg.elements[1] = imgHeight / 2 + paddingBottom;
         this.jWebgl.programImg.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgWidth, imgHeight);
@@ -210,14 +209,4 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend {
         })))));
     }
 }
-(function (DomRightPreviewImgBeforeWebglOrigin) {
-    class Args {
-    }
-    Args.poolType = new ObjectPoolType({
-        instantiate: () => new Args,
-        onPop: null,
-        onPush: null
-    });
-    DomRightPreviewImgBeforeWebglOrigin.Args = Args;
-})(DomRightPreviewImgBeforeWebglOrigin || (DomRightPreviewImgBeforeWebglOrigin = {}));
 export default DomRightPreviewImgBeforeWebglOrigin;

@@ -116,6 +116,26 @@ class JWebgl {
         this.canvasWebglCtx.useProgram (this._program.program);
     }
 
+    private _currFbo: JWebglFrameBuffer;
+
+    useFbo (fbo: JWebglFrameBuffer) {
+        let sizeWidth = this.canvasWebgl.width;
+        let sizeHeight = this.canvasWebgl.height;
+        if (this._currFbo != fbo) {
+            this._currFbo = fbo;
+            if (this._currFbo != null) {
+                sizeWidth = fbo.width;
+                sizeHeight = fbo.height;
+                this.canvasWebglCtx.bindFramebuffer (JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, this._currFbo.frameBuffer);
+            };
+            if (this._currFbo == null) {
+                this.canvasWebglCtx.bindFramebuffer (JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, null);
+            };
+        };
+        this.canvasWebglCtx.viewport (0, 0, sizeWidth, sizeHeight);
+        this.canvasWebglCtx.clear (JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
+    }
+
     clear () {
         this.canvasWebglCtx.viewport (0, 0, this.canvasWebgl.width, this.canvasWebgl.height);
         this.canvasWebglCtx.clear (JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
@@ -160,8 +180,8 @@ class JWebgl {
         return this._mapStringToImg.get (dataUrl);
     }
 
-    getFbo () {
-        return new JWebglFrameBuffer (this);
+    getFbo (width: number, height: number) {
+        return new JWebglFrameBuffer (this, width, height);
     }
 
     /**

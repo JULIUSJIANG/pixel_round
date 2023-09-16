@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import JWebglEnum from "./JWebglEnum.js";
+import JWebglFrameBuffer from "./JWebglFrameBuffer.js";
 import JWebglImage from "./JWebglImage.js";
 import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
@@ -93,6 +94,26 @@ class JWebgl {
         this._program = program;
         this.canvasWebglCtx.useProgram(this._program.program);
     }
+    useFbo(fbo) {
+        let sizeWidth = this.canvasWebgl.width;
+        let sizeHeight = this.canvasWebgl.height;
+        if (this._currFbo != fbo) {
+            this._currFbo = fbo;
+            if (this._currFbo != null) {
+                sizeWidth = fbo.width;
+                sizeHeight = fbo.height;
+                this.canvasWebglCtx.bindFramebuffer(JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, this._currFbo.frameBuffer);
+            }
+            ;
+            if (this._currFbo == null) {
+                this.canvasWebglCtx.bindFramebuffer(JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, null);
+            }
+            ;
+        }
+        ;
+        this.canvasWebglCtx.viewport(0, 0, sizeWidth, sizeHeight);
+        this.canvasWebglCtx.clear(JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
+    }
     clear() {
         this.canvasWebglCtx.viewport(0, 0, this.canvasWebgl.width, this.canvasWebgl.height);
         this.canvasWebglCtx.clear(JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
@@ -103,6 +124,9 @@ class JWebgl {
         }
         ;
         return this._mapStringToImg.get(dataUrl);
+    }
+    getFbo(width, height) {
+        return new JWebglFrameBuffer(this, width, height);
     }
     /**
      * 输出日志

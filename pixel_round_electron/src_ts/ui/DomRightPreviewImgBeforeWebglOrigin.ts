@@ -19,7 +19,7 @@ const Z_GRID = 0.1;
 
 const Z_MASK = 0.2;
 
-class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <DomRightPreviewImgBefore.Args> {
+class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -99,7 +99,7 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <DomRight
 
         // 图片
         this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uSampler.fill (img);
+        this.jWebgl.programImg.uSampler.fillByImg (img);
         this.posImg.elements [0] = imgWidth / 2 + paddingLeft;
         this.posImg.elements [1] = imgHeight / 2 + paddingBottom;
         this.jWebgl.programImg.add (
@@ -338,16 +338,6 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <DomRight
                 )
             ),
         );
-    }
-}
-
-namespace DomRightPreviewImgBeforeWebglOrigin {
-    export class Args {
-        static poolType = new ObjectPoolType <Args> ({
-            instantiate: () => new Args,
-            onPop: null,
-            onPush: null
-        });
     }
 }
 

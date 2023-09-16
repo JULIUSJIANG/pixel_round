@@ -5,7 +5,7 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-class DomLeftListAdd extends ReactComponentExtend <DomLeftListAdd.Args> {
+class DomLeftListAdd extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
         let props = {
@@ -25,19 +25,6 @@ class DomLeftListAdd extends ReactComponentExtend <DomLeftListAdd.Args> {
 
             `创建`
         );
-    }
-}
-
-namespace DomLeftListAdd {
-    export class Args {
-        init () {
-        }
-
-        static poolType = new ObjectPoolType <Args> ({
-            instantiate: () => new Args,
-            onPop: null,
-            onPush: null
-        });
     }
 }
 

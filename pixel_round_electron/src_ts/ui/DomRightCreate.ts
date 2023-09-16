@@ -41,7 +41,7 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
         };
 
         // 清除画面
-        this.jWebgl.clear ();
+        this.jWebgl.useFbo (null);
         let img = IndexGlobal.inst.createMachine.img.image;
 
         this.mat4P.setOrtho (
@@ -57,7 +57,7 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
         );
 
         this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uSampler.fill (this.jWebgl.getImg (IndexGlobal.inst.createMachine.img.src));
+        this.jWebgl.programImg.uSampler.fillByImg (this.jWebgl.getImg (IndexGlobal.inst.createMachine.img.src));
         this.jWebgl.programImg.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,

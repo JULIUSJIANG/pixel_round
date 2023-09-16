@@ -20,6 +20,7 @@ class objectPool {
         }
         else {
             t = type._coll.pop();
+            type._set.delete(t);
         }
         ;
         if (type.onPop) {
@@ -50,6 +51,12 @@ class objectPool {
             return;
         }
         ;
+        // 已经在对象池里面了
+        if (type._set.has(t)) {
+            return;
+        }
+        ;
+        type._set.add(t);
         type._coll.push(t);
         if (type.onPush) {
             type.onPush(t);

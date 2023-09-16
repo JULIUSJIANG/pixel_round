@@ -8,6 +8,11 @@ export default class ObjectPoolType <T> {
     _coll = new Array <T> ();
 
     /**
+     * 实际容器
+     */
+    _set = new Set <T> ();
+
+    /**
      * 实例化
      */
     instantiate: () => T;

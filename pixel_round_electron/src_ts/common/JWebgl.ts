@@ -1,4 +1,5 @@
 import JWebglEnum from "./JWebglEnum.js";
+import JWebglFrameBuffer from "./JWebglFrameBuffer.js";
 import JWebglImage from "./JWebglImage.js";
 import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
 import JWebglProgram from "./JWebglProgram.js";
@@ -157,6 +158,10 @@ class JWebgl {
             this._mapStringToImg.set (dataUrl, new JWebglImage (this, dataUrl));
         };
         return this._mapStringToImg.get (dataUrl);
+    }
+
+    getFbo () {
+        return new JWebglFrameBuffer (this);
     }
 
     /**

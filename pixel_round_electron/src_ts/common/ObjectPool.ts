@@ -26,6 +26,7 @@ namespace objectPool {
         }
         else {
             t = type._coll.pop ();
+            type._set.delete (t);
         };
         if (type.onPop) {
             type.onPop (t);
@@ -46,11 +47,16 @@ namespace objectPool {
         if (typeof t != TYPE_OBJECT) {
             return;
         };
-        let type = t [SYMBOL];
+        let type = t [SYMBOL] as ObjectPoolType <T>;
         // 非对象池生成出来的，忽略
         if (!type) {
             return
         };
+        // 已经在对象池里面了
+        if (type._set.has (t)) {
+            return;
+        };
+        type._set.add (t);
         type._coll.push (t);
         if (type.onPush) {
             type.onPush (t);

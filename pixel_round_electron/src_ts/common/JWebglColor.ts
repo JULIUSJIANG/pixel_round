@@ -1,3 +1,5 @@
+import ObjectPoolType from "./ObjectPoolType.js";
+
 /**
  * 颜色
  */
@@ -10,16 +12,14 @@ class JWebglColor {
      * 数据，区间 0 - 255
      */
     data255 = new Uint8Array (4);
-    /**
-     * css 专用的文本 - 填充
-     */
-    txtCssMain: string;
-    /**
-     * css 专用的文本 - 描边
-     */
-    txtCssBg: string;
+
+    str16: string;
 
     constructor (r = 1, g = 1, b = 1, a = 1) {
+        this.init (r, g, b, a);
+    }
+
+    init (r: number, g: number, b: number, a: number) {
         this.data01 [0] = r;
         this.data01 [1] = g;
         this.data01 [2] = b;
@@ -28,9 +28,24 @@ class JWebglColor {
         for (let i = 0; i < 4; i++) {
             this.data255 [i] = this.data01 [i] * 255;
         };
-        this.txtCssMain = `rgba(${this.data255 [0]}, ${this.data255 [1]}, ${this.data255 [2]}, ${this.data01 [3]})`;
-        this.txtCssBg = `rgba(${(this.data255 [0] + 127) % 255}, ${(this.data255 [1] + 127) % 255}, ${(this.data255 [2] + 127) % 255}, ${this.data01 [3]})`;
+        this.str16 = `#${this.to16 (this.data255 [0])}${this.to16 (this.data255 [1])}${this.to16 (this.data255 [2])}${this.to16 (this.data255 [3])}`;
     }
+
+    to16 (num: number) {
+        let str = num.toString (16);
+        if (str.length == 1) {
+            return `0${str}`;
+        };
+        return str;
+    }
+
+    static poolType = new ObjectPoolType ({
+        instantiate: () => {
+            return new JWebglColor ();
+        },
+        onPop: null,
+        onPush: null
+    });
 }
 
 /**

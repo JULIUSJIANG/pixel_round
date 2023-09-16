@@ -4,12 +4,18 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import DomRightPreviewColor from "./DomRightPreviewColor.js";
 export default class DomRightPreviewProps extends ReactComponentExtend {
     constructor() {
         super(...arguments);
         this.listChildren = new Array();
     }
     render() {
+        this.listChildren.length = 0;
+        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listColor.length; i++) {
+            this.listChildren.push(ReactComponentExtend.instantiateComponent(DomRightPreviewColor, DomRightPreviewColor.Args.create(i)));
+        }
+        ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
@@ -19,7 +25,12 @@ export default class DomRightPreviewProps extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN,
             }
-        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
+        }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            style: {
+                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+            },
+        }, ...this.listChildren), ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
             onClick: () => {
                 let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
                 let targetIdx;

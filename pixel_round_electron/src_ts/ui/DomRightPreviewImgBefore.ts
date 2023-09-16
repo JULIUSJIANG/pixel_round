@@ -1,20 +1,13 @@
-import IndexGlobal from "../IndexGlobal.js";
-import NodeModules from "../NodeModules.js";
-import JWebgl from "../common/JWebgl.js";
-import JWebglColor from "../common/JWebglColor.js";
-import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
-import JWebglMathVector4 from "../common/JWebglMathVector4.js";
-import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import MgrRes from "../mgr/MgrRes.js";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 import DomInputNumber from "./DomInputNumber.js";
 import DomRightPreviewImgBeforeWebglCutted from "./DomRightPreviewImgBeforeWebglCutted.js";
 import DomRightPreviewImgBeforeWebglOrigin from "./DomRightPreviewImgBeforeWebglOrigin.js";
+import DomRightPreviewImgBeforeWebglPixels from "./DomRightPreviewImgBeforeWebglPixels.js";
 
 class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
     
@@ -49,6 +42,10 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
             ),
             ReactComponentExtend.instantiateComponent (
                 DomRightPreviewImgBeforeWebglCutted,
+                this.props
+            ),
+            ReactComponentExtend.instantiateComponent (
+                DomRightPreviewImgBeforeWebglPixels,
                 this.props
             ),
             ReactComponentExtend.instantiateTag (
@@ -121,7 +118,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                 },
 
                 ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
-                    `颗粒宽`, 
+                    `颗粒宽度`, 
                     listImgDataInst.pixelWidth,
                     (val) => {
                         listImgDataInst.pixelWidth = Math.floor (val);
@@ -131,7 +128,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                     null
                 )),
                 ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
-                    `颗粒高`,
+                    `颗粒高度`,
                     listImgDataInst.pixelHeight, 
                     (val) => {
                         listImgDataInst.pixelHeight = Math.floor (val);

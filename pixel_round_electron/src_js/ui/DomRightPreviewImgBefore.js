@@ -5,6 +5,7 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomInputNumber from "./DomInputNumber.js";
 import DomRightPreviewImgBeforeWebglCutted from "./DomRightPreviewImgBeforeWebglCutted.js";
 import DomRightPreviewImgBeforeWebglOrigin from "./DomRightPreviewImgBeforeWebglOrigin.js";
+import DomRightPreviewImgBeforeWebglPixels from "./DomRightPreviewImgBeforeWebglPixels.js";
 class DomRightPreviewImgBefore extends ReactComponentExtend {
     render() {
         let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
@@ -25,7 +26,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
             }
-        }, ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglOrigin, this.props), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglCutted, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+        }, ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglOrigin, this.props), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglCutted, this.props), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglPixels, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
@@ -52,10 +53,10 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             },
-        }, ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`颗粒宽`, listImgDataInst.pixelWidth, (val) => {
+        }, ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`颗粒宽度`, listImgDataInst.pixelWidth, (val) => {
             listImgDataInst.pixelWidth = Math.floor(val);
             MgrData.inst.callDataChange();
-        }, 1, null)), ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`颗粒高`, listImgDataInst.pixelHeight, (val) => {
+        }, 1, null)), ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`颗粒高度`, listImgDataInst.pixelHeight, (val) => {
             listImgDataInst.pixelHeight = Math.floor(val);
             MgrData.inst.callDataChange();
         }, 1, null))));

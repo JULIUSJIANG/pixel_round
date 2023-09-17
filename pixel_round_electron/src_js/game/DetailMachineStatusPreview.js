@@ -1,16 +1,20 @@
-import JWebglColor from "../common/JWebglColor.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import DomRightPreview from "../ui/DomRightPreview.js";
 import DetailMachineStatus from "./DetailMachineStatus.js";
+import DetailMachineStatusPreviewColor from "./DetailMachineStatusPreviewColor.js";
 export default class DetailMachineStatusPreview extends DetailMachineStatus {
     constructor() {
         super(...arguments);
+        this.pixelWidth = 1;
+        this.pixelHeight = 1;
+        this.pixelBin = new Uint32Array(1);
         this.colorTableCurrent = new Array();
         this.colorTableTemp = new Array();
         this.listColor = new Array();
+        this.mapNumToColor = new Map();
     }
     onExit() {
         this.clearCache();
@@ -24,6 +28,24 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     }
     onRender() {
         return ReactComponentExtend.instantiateComponent(DomRightPreview, null);
+    }
+    onPixels(width, height, dataColor) {
+        this.pixelWidth = width;
+        this.pixelHeight = height;
+        if (this.pixelBin.length < dataColor.length) {
+            let size = this.pixelBin.length;
+            while (size < dataColor.length) {
+                size *= 2;
+            }
+            ;
+            this.pixelBin = new Uint32Array(size);
+        }
+        ;
+        let count = this.pixelWidth * this.pixelHeight;
+        for (let i = 0; i < count; i++) {
+            this.pixelBin[i] = dataColor[i];
+        }
+        ;
     }
     onColorTable(colorSet) {
         this.colorTableTemp.length = 0;
@@ -46,6 +68,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         }
         ;
         this.listColor.length = 0;
+        // 初始化颜色表对象
         for (let i = 0; i < this.colorTableCurrent.length; i++) {
             let colorTableCurrentI = this.colorTableCurrent[i];
             let a = colorTableCurrentI % 256;
@@ -55,13 +78,19 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
             let g = colorTableCurrentI % 256;
             colorTableCurrentI = colorTableCurrentI >> 8;
             let r = colorTableCurrentI % 256;
-            let colorInst = objectPool.pop(JWebglColor.poolType);
-            colorInst.init(r / 255, g / 255, b / 255, a / 255);
+            let colorInst = objectPool.pop(DetailMachineStatusPreviewColor.poolType);
+            colorInst.init(this.colorTableCurrent[i], i, r / 255, g / 255, b / 255, a / 255);
             this.listColor.push(colorInst);
         }
         ;
+        // 记录下 id 到实例的索引
+        this.mapNumToColor.clear();
+        for (let i = 0; i < this.listColor.length; i++) {
+            let listColorI = this.listColor[i];
+            this.mapNumToColor.set(listColorI.id, listColorI);
+        }
+        ;
         MgrData.inst.callDataChange();
-        console.log(`this.colorTableCurrent.length[${this.colorTableCurrent.length}]`, this.colorTableCurrent, this.listColor);
     }
     checkEqual() {
         // 长度不一致，肯定不一样

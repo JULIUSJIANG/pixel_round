@@ -12,6 +12,8 @@ class MgrDomDefine {
     MgrDomDefine.TAG_INPUT = "input";
     MgrDomDefine.TAG_IMG = "img";
     //【样式名以及具体值】
+    MgrDomDefine.STYLE_TEXT_ALIGN = "textAlign";
+    MgrDomDefine.STYLE_TEXT_ALIGN_CENTER = "center";
     MgrDomDefine.STYLE_WIDTH = "width";
     MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0 = "0%";
     MgrDomDefine.STYLE_WIDTH_PERCENTAGE_100 = "100%";

@@ -12,8 +12,14 @@ class JWebglColor {
      * 数据，区间 0 - 255
      */
     data255 = new Uint8Array (4);
-
+    /**
+     * #ffffffff 格式
+     */
     str16: string;
+    /**
+     * css 专用的文本 - 填充
+     */
+    str2dText: string;
 
     constructor (r = 1, g = 1, b = 1, a = 1) {
         this.init (r, g, b, a);
@@ -29,6 +35,7 @@ class JWebglColor {
             this.data255 [i] = this.data01 [i] * 255;
         };
         this.str16 = `#${this.to16 (this.data255 [0])}${this.to16 (this.data255 [1])}${this.to16 (this.data255 [2])}${this.to16 (this.data255 [3])}`;
+        this.str2dText = `rgba(${this.data255 [0]}, ${this.data255 [1]}, ${this.data255 [2]}, ${this.data01 [3]})`;
     }
 
     to16 (num: number) {

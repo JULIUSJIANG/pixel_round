@@ -33,10 +33,20 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
 
     fbo: JWebglFrameBuffer;
 
+    /**
+     * 2d canvas 引用器
+     */
+    canvas2dRef = NodeModules.react.createRef ();
+    canvas2d: HTMLCanvasElement;
+    canvas2dCtx: CanvasRenderingContext2D;
+
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
         this.mat4M.setIdentity();
+
+        this.canvas2d = this.canvas2dRef.current;
+        this.canvas2dCtx = this.canvas2d.getContext (`2d`);
     }
 
     initFbo (width: number, height: number) {
@@ -181,6 +191,27 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
             );
         };
         this.jWebgl.programLine.draw ();
+
+        // 色号
+        if (IndexGlobal.inst.detailMachine.statusPreview.listColor.length == 0) {
+            return;
+        };
+        this.canvas2dCtx.clearRect (0, 0, this.canvas2d.width, this.canvas2d.height);
+        // this.canvas2dCtx.font = `bold 14px Microsoft YaHei`;
+        this.canvas2dCtx.font = `10px Microsoft YaHei`;
+        this.canvas2dCtx.textAlign = "center";
+        this.canvas2dCtx.textBaseline = `middle`;
+        for (let x = 0; x < IndexGlobal.inst.detailMachine.statusPreview.pixelWidth; x++) {
+            for (let y = 0; y < IndexGlobal.inst.detailMachine.statusPreview.pixelHeight; y++) {
+                let colorId = IndexGlobal.inst.detailMachine.statusPreview.pixelBin [y * IndexGlobal.inst.detailMachine.statusPreview.pixelWidth + x];
+                let colorInst = IndexGlobal.inst.detailMachine.statusPreview.mapNumToColor.get (colorId);
+                if (colorInst == null) {
+                    continue;
+                };
+                this.canvas2dCtx.fillStyle = colorInst.colorRel.str2dText;
+                this.canvas2dCtx.fillText (`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, ((IndexGlobal.inst.detailMachine.statusPreview.pixelHeight - y) - 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
+            };
+        };
     }
 
     finishedImg: MgrResAssetsImage;
@@ -269,6 +300,32 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
                                 ref: this.canvasWebglRef,
                                 width: canvasWidth * IndexGlobal.ANTINA,
                                 height: canvasHeight * IndexGlobal.ANTINA,
+                                style: {
+                                    [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
+                                    [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
+                                    [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
+                                }
+                            }
+                        )
+                    ),
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_WIDTH]: 0,
+                                [MgrDomDefine.STYLE_HEIGHT]: 0,
+                                [MgrDomDefine.STYLE_POSITION]: MgrDomDefine.STYLE_POSITION_RELATIVE,
+                                [MgrDomDefine.STYLE_LEFT]: 0,
+                                [MgrDomDefine.STYLE_TOP]: 0,
+                            }
+                        },
+                    
+                        ReactComponentExtend.instantiateTag (
+                            MgrDomDefine.TAG_CANVAS,
+                            {
+                                ref: this.canvas2dRef,
+                                width: canvasWidth,
+                                height: canvasHeight,
                                 style: {
                                     [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
                                     [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,

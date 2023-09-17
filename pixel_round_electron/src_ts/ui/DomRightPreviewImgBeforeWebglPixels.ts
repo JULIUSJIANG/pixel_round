@@ -188,7 +188,9 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend <number> 
             };
             this.fboColorSet.add (this.fboColor [i]);
         };
-        console.log (`width[${viewWidth}] height[${viewHeight}]`);
+        // 接收所有像素数据
+        IndexGlobal.inst.detailMachine.statusPreview.onPixels (viewWidth, viewHeight, this.fboColor);
+        // 接收所有颜色数据
         IndexGlobal.inst.detailMachine.statusPreview.onColorTable (this.fboColorSet);
         return;
 

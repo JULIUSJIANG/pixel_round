@@ -24,6 +24,7 @@ class JWebglColor {
         }
         ;
         this.str16 = `#${this.to16(this.data255[0])}${this.to16(this.data255[1])}${this.to16(this.data255[2])}${this.to16(this.data255[3])}`;
+        this.str2dText = `rgba(${this.data255[0]}, ${this.data255[1]}, ${this.data255[2]}, ${this.data01[3]})`;
     }
     to16(num) {
         let str = num.toString(16);

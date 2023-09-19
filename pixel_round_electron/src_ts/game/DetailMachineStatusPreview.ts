@@ -1,5 +1,3 @@
-import JWebglColor from "../common/JWebglColor.js";
-import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrData from "../mgr/MgrData.js";
@@ -8,6 +6,7 @@ import DomRightPreview from "../ui/DomRightPreview.js";
 import DetailMachineStatus from "./DetailMachineStatus.js";
 import DetailMachineStatusPreviewColor from "./DetailMachineStatusPreviewColor.js";
 import ImgMachine from "./ImgMachine.js";
+import ImgPixelGroup from "./ImgPixelGroup.js";
 
 export default class DetailMachineStatusPreview extends DetailMachineStatus {
 
@@ -64,4 +63,13 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * 标识到具体颜色的映射
      */
     mapIdToColor = new Map <number, DetailMachineStatusPreviewColor> ();
+
+    /**
+     * 存储分块信息的集合，与位置相关
+     */
+    listImgPixelGroup = new Array <ImgPixelGroup> ();
+    /**
+     * 仅关注类型
+     */
+    listImgPixelGroupAll = new Array <ImgPixelGroup> ();
 }

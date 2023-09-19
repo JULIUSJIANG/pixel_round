@@ -28,6 +28,8 @@ DetailMachineStatusPreviewColor.poolType = new ObjectPoolType({
     instantiate: () => {
         return new DetailMachineStatusPreviewColor();
     },
-    onPop: null,
-    onPush: null
+    onPop: (t) => {
+    },
+    onPush: (t) => {
+    }
 });

@@ -33,6 +33,14 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
          * 标识到具体颜色的映射
          */
         this.mapIdToColor = new Map();
+        /**
+         * 存储分块信息的集合，与位置相关
+         */
+        this.listImgPixelGroup = new Array();
+        /**
+         * 仅关注类型
+         */
+        this.listImgPixelGroupAll = new Array();
     }
     onEnter() {
         this.onImg(MgrData.inst.get(MgrDataItem.CURRENT_IMG));

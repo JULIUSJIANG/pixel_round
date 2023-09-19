@@ -3,6 +3,7 @@ import objectPool from "../common/ObjectPool.js";
 import MgrData from "../mgr/MgrData.js";
 import DetailMachineStatusPreviewColor from "./DetailMachineStatusPreviewColor.js";
 import ImgMachineStatus from "./ImgMachineStatus.js";
+import ImgPixelGroup from "./ImgPixelGroup.js";
 class ImgMachineStatusIdle extends ImgMachineStatus {
     constructor() {
         super(...arguments);
@@ -10,10 +11,25 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
          * 用于颜色去重
          */
         this._setColor = new Set();
+        this._analyseListOffset = [-1, 0, 1];
     }
     onPixelDrawed(jWebgl, width, height) {
         this.relMachine.rel.imgWidth = width;
         this.relMachine.rel.imgHeight = height;
+        // 回收颜色对象
+        for (let i = 0; i < this.relMachine.rel.listColor.length; i++) {
+            let listColorI = this.relMachine.rel.listColor[i];
+            objectPool.push(listColorI);
+        }
+        ;
+        this.relMachine.rel.listColor.length = 0;
+        // 回收分块记录
+        for (let i = 0; i < this.relMachine.rel.listImgPixelGroupAll.length; i++) {
+            let listImgPixelGroupAllI = this.relMachine.rel.listImgPixelGroupAll[i];
+            objectPool.push(listImgPixelGroupAllI);
+        }
+        ;
+        this.relMachine.rel.listImgPixelGroupAll.length = 0;
         this.relMachine.rel.binRgbaSize = this.relMachine.rel.imgWidth * this.relMachine.rel.imgHeight * 4;
         let binRgbaLength = this.relMachine.rel.binRgba.length;
         // 尺寸不够，扩容
@@ -54,13 +70,6 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
             this._setColor.add(binColorI);
         }
         ;
-        // 回收颜色对象
-        for (let i = 0; i < this.relMachine.rel.listColor.length; i++) {
-            let listColorI = this.relMachine.rel.listColor[i];
-            objectPool.push(listColorI);
-        }
-        ;
-        this.relMachine.rel.listColor.length = 0;
         // 初始化颜色表对象
         this._setColor.forEach((color) => {
             let colorBackup = color;
@@ -92,8 +101,76 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
             this.relMachine.rel.mapIdToColor.set(listColorI.id, listColorI);
         }
         ;
+        // 更新分块
+        this.relMachine.rel.listImgPixelGroup.length = this.relMachine.rel.binColorSize;
+        this.relMachine.rel.listImgPixelGroup.fill(null);
+        for (let x = 0; x < width; x++) {
+            for (let y = 0; y < height; y++) {
+                // 索引
+                let idx = y * width + x;
+                // 当前组
+                let currentGroup = this.relMachine.rel.listImgPixelGroup[idx];
+                // 已有当前组，忽略
+                if (currentGroup != null) {
+                    continue;
+                }
+                ;
+                // 为该块创建颜色组，并且开始蔓延
+                let color = this.relMachine.rel.binColor[idx];
+                currentGroup = ImgPixelGroup.create(color);
+                this.relMachine.rel.listImgPixelGroupAll.push(currentGroup);
+                this.paintBucket(x, y, currentGroup);
+            }
+            ;
+        }
+        ;
+        console.log(`颜色分块数量 [${this.relMachine.rel.listImgPixelGroupAll.length}]`);
         this.relMachine.enter(this.relMachine.statusInited);
         MgrData.inst.callDataChange();
+    }
+    /**
+     * 进行油漆桶解析
+     * @param x 油漆桶位置 x
+     * @param y 油漆桶位置 y
+     * @param colorTarget 油漆桶蔓延的目标颜色
+     * @returns
+     */
+    paintBucket(x, y, colorGroup) {
+        // x 越界，忽略
+        if (x < 0 || this.relMachine.rel.imgWidth <= x) {
+            return;
+        }
+        ;
+        // y 越界，忽略
+        if (y < 0 || this.relMachine.rel.imgHeight <= y) {
+            return;
+        }
+        ;
+        // 内存索引
+        let idx = y * this.relMachine.rel.imgWidth + x;
+        // 已被其他油漆桶蔓延
+        if (this.relMachine.rel.listImgPixelGroup[idx] != null) {
+            return;
+        }
+        ;
+        // 该位置的颜色不对的话，忽略
+        let color = this.relMachine.rel.binColor[y * this.relMachine.rel.imgWidth + x];
+        if (color != colorGroup.color) {
+            return;
+        }
+        ;
+        // 否则进行组标记
+        this.relMachine.rel.listImgPixelGroup[idx] = colorGroup;
+        // 尝试对临近的 9 格进行蔓延
+        for (let i = 0; i < this._analyseListOffset.length; i++) {
+            let analyseListOffsetI = this._analyseListOffset[i];
+            for (let j = 0; j < this._analyseListOffset.length; j++) {
+                let analyseListOffsetJ = this._analyseListOffset[j];
+                this.paintBucket(x + analyseListOffsetI, y + analyseListOffsetJ, colorGroup);
+            }
+            ;
+        }
+        ;
     }
 }
 export default ImgMachineStatusIdle;

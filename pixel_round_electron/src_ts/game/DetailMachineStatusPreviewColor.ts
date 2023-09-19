@@ -35,7 +35,11 @@ export default class DetailMachineStatusPreviewColor {
         instantiate: () => {
             return new DetailMachineStatusPreviewColor ();
         },
-        onPop: null,
-        onPush: null
+        onPop: (t) => {
+
+        },
+        onPush: (t) => {
+            
+        }
     });
 }

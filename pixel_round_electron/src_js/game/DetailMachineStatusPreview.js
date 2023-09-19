@@ -1,115 +1,24 @@
-import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import DomRightPreview from "../ui/DomRightPreview.js";
 import DetailMachineStatus from "./DetailMachineStatus.js";
-import DetailMachineStatusPreviewColor from "./DetailMachineStatusPreviewColor.js";
+import ImgMachine from "./ImgMachine.js";
 export default class DetailMachineStatusPreview extends DetailMachineStatus {
-    constructor() {
-        super(...arguments);
-        this.pixelWidth = 1;
-        this.pixelHeight = 1;
-        this.pixelBin = new Uint32Array(1);
-        this.colorTableCurrent = new Array();
-        this.colorTableTemp = new Array();
-        this.listColor = new Array();
-        this.mapNumToColor = new Map();
-    }
-    onExit() {
-        this.clearCache();
-    }
     onCreate() {
         this.relMachine.enter(this.relMachine.statusCreate);
     }
     onImg(id) {
         MgrData.inst.set(MgrDataItem.CURRENT_IMG, id);
-        this.clearCache();
+        let rec = this.imgMachine;
+        this.imgMachine = new ImgMachine(id);
+        if (rec) {
+            rec.onDestroy();
+        }
+        ;
+        this.imgMachine.onCreate();
     }
     onRender() {
         return ReactComponentExtend.instantiateComponent(DomRightPreview, null);
-    }
-    onPixels(width, height, dataColor) {
-        this.pixelWidth = width;
-        this.pixelHeight = height;
-        if (this.pixelBin.length < dataColor.length) {
-            let size = this.pixelBin.length;
-            while (size < dataColor.length) {
-                size *= 2;
-            }
-            ;
-            this.pixelBin = new Uint32Array(size);
-        }
-        ;
-        let count = this.pixelWidth * this.pixelHeight;
-        for (let i = 0; i < count; i++) {
-            this.pixelBin[i] = dataColor[i];
-        }
-        ;
-    }
-    onColorTable(colorSet) {
-        this.colorTableTemp.length = 0;
-        colorSet.forEach((val) => {
-            this.colorTableTemp.push(val);
-        });
-        this.colorTableTemp.sort((a, b) => {
-            return a - b;
-        });
-        if (this.checkEqual()) {
-            return;
-        }
-        ;
-        this.colorTableCurrent.length = 0;
-        this.colorTableCurrent.push(...this.colorTableTemp);
-        // 正式更新颜色表
-        for (let i = 0; i < this.listColor.length; i++) {
-            let listColorI = this.listColor[i];
-            objectPool.push(listColorI);
-        }
-        ;
-        this.listColor.length = 0;
-        // 初始化颜色表对象
-        for (let i = 0; i < this.colorTableCurrent.length; i++) {
-            let colorTableCurrentI = this.colorTableCurrent[i];
-            let a = colorTableCurrentI % 256;
-            colorTableCurrentI = colorTableCurrentI >> 8;
-            let b = colorTableCurrentI % 256;
-            colorTableCurrentI = colorTableCurrentI >> 8;
-            let g = colorTableCurrentI % 256;
-            colorTableCurrentI = colorTableCurrentI >> 8;
-            let r = colorTableCurrentI % 256;
-            let colorInst = objectPool.pop(DetailMachineStatusPreviewColor.poolType);
-            colorInst.init(this.colorTableCurrent[i], i, r / 255, g / 255, b / 255, a / 255);
-            this.listColor.push(colorInst);
-        }
-        ;
-        // 记录下 id 到实例的索引
-        this.mapNumToColor.clear();
-        for (let i = 0; i < this.listColor.length; i++) {
-            let listColorI = this.listColor[i];
-            this.mapNumToColor.set(listColorI.id, listColorI);
-        }
-        ;
-        MgrData.inst.callDataChange();
-    }
-    checkEqual() {
-        // 长度不一致，肯定不一样
-        if (this.colorTableCurrent.length != this.colorTableTemp.length) {
-            return false;
-        }
-        ;
-        // 其中某个不一样
-        let count = this.colorTableCurrent.length;
-        for (let i = 0; i < count; i++) {
-            if (this.colorTableCurrent[i] != this.colorTableTemp[i]) {
-                return false;
-            }
-            ;
-        }
-        ;
-        return true;
-    }
-    clearCache() {
-        this.colorTableCurrent.length = 0;
     }
 }

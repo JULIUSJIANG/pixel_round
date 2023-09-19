@@ -120,26 +120,25 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend {
         ;
         this.jWebgl.programLine.draw();
         // 色号
-        if (IndexGlobal.inst.detailMachine.statusPreview.listColor.length == 0) {
+        if (IndexGlobal.inst.detailMachine.statusPreview.imgMachine.listColor.length == 0) {
             return;
         }
         ;
-        console.log(`重绘文本`);
         this.canvas2dCtx.clearRect(0, 0, this.canvas2d.width, this.canvas2d.height);
         // this.canvas2dCtx.font = `bold 14px Microsoft YaHei`;
         this.canvas2dCtx.font = `10px Microsoft YaHei`;
         this.canvas2dCtx.textAlign = "center";
         this.canvas2dCtx.textBaseline = `middle`;
-        for (let x = 0; x < IndexGlobal.inst.detailMachine.statusPreview.pixelWidth; x++) {
-            for (let y = 0; y < IndexGlobal.inst.detailMachine.statusPreview.pixelHeight; y++) {
-                let colorId = IndexGlobal.inst.detailMachine.statusPreview.pixelBin[y * IndexGlobal.inst.detailMachine.statusPreview.pixelWidth + x];
-                let colorInst = IndexGlobal.inst.detailMachine.statusPreview.mapNumToColor.get(colorId);
+        for (let x = 0; x < IndexGlobal.inst.detailMachine.statusPreview.imgMachine.imgWidth; x++) {
+            for (let y = 0; y < IndexGlobal.inst.detailMachine.statusPreview.imgMachine.imgHeight; y++) {
+                let colorId = IndexGlobal.inst.detailMachine.statusPreview.imgMachine.binColor[y * IndexGlobal.inst.detailMachine.statusPreview.imgMachine.imgWidth + x];
+                let colorInst = IndexGlobal.inst.detailMachine.statusPreview.imgMachine.mapIdToColor.get(colorId);
                 if (colorInst == null) {
                     continue;
                 }
                 ;
                 this.canvas2dCtx.fillStyle = colorInst.colorRel.str2dText;
-                this.canvas2dCtx.fillText(`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, ((IndexGlobal.inst.detailMachine.statusPreview.pixelHeight - y) - 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
+                this.canvas2dCtx.fillText(`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, ((IndexGlobal.inst.detailMachine.statusPreview.imgMachine.imgHeight - y) - 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
             }
             ;
         }

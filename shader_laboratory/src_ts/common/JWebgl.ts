@@ -5,6 +5,7 @@ import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramTypeBlur from "./JWebglProgramTypeBlur.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
+import JWebglProgramTypeRound from "./JWebglProgramTypeRound.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
@@ -131,6 +132,9 @@ class JWebgl {
 
     @program (JWebglProgramTypeBlur)
     programBlur: JWebglProgramTypeBlur;
+
+    @program (JWebglProgramTypeRound)
+    programRound: JWebglProgramTypeRound;
 
     /**
      * mvp 矩阵

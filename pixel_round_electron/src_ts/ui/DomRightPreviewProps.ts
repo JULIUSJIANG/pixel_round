@@ -14,7 +14,7 @@ export default class DomRightPreviewProps extends ReactComponentExtend <number> 
     render (): ReactComponentExtendInstance {
 
         this.listChildren.length = 0;
-        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listColor.length; i++) {
+        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.imgMachine.listColor.length; i++) {
             this.listChildren.push (ReactComponentExtend.instantiateComponent (
                 DomRightPreviewColor,
                 DomRightPreviewColor.Args.create (i)

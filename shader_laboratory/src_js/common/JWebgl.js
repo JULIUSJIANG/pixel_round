@@ -10,6 +10,7 @@ import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
 import JWebglProgramTypeBlur from "./JWebglProgramTypeBlur.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
+import JWebglProgramTypeRound from "./JWebglProgramTypeRound.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
@@ -131,4 +132,7 @@ __decorate([
 __decorate([
     program(JWebglProgramTypeBlur)
 ], JWebgl.prototype, "programBlur", void 0);
+__decorate([
+    program(JWebglProgramTypeRound)
+], JWebgl.prototype, "programRound", void 0);
 export default JWebgl;

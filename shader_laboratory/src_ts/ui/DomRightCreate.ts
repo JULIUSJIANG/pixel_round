@@ -1,20 +1,23 @@
 import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
+import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
+const PIXEL_TO_SCREEN = 16;
+
 /**
  * 宽
  */
-const WIDTH = 400;
+const WIDTH = 49;
 /**
  * 高
  */
-const HEIGHT = 400;
+const HEIGHT = 49;
 
 export default class DomRightCreate extends ReactComponentExtend<number> {
 
@@ -30,6 +33,10 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
     mat4V: JWebglMathMatrix4 = new JWebglMathMatrix4();
 
     mat4P: JWebglMathMatrix4 = new JWebglMathMatrix4();
+
+    posFrom = new JWebglMathVector4 ();
+
+    posTo = new JWebglMathVector4 ();
 
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
@@ -47,8 +54,8 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
         this.jWebgl.clear ();
 
         this.mat4P.setOrtho (
-            -IndexGlobal.inst.createMachine.canvasWidth / 2, IndexGlobal.inst.createMachine.canvasWidth / 2,
-            -IndexGlobal.inst.createMachine.canvasHeight / 2, IndexGlobal.inst.createMachine.canvasHeight / 2,
+            -WIDTH / 2, WIDTH / 2,
+            -HEIGHT / 2, HEIGHT / 2,
             0, 2
         );
         JWebglMathMatrix4.multiplayMat4List (
@@ -58,28 +65,47 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
             this.jWebgl.mat4Mvp
         );
 
-        // this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        // this.jWebgl.programImg.uSampler.fill (this.jWebgl.getImg (IndexGlobal.inst.createMachine.img.src));
-        // this.jWebgl.programImg.add (
-        //     JWebglMathVector4.centerO,
-        //     JWebglMathVector4.axisZStart,
-        //     JWebglMathVector4.axisYEnd,
-        //     IndexGlobal.inst.createMachine.canvasWidth,
-        //     IndexGlobal.inst.createMachine.canvasHeight
-        // );
-        // this.jWebgl.programImg.draw ();
-
-        this.jWebgl.programBlur.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programBlur.uSampler.fill (this.jWebgl.getImg (`./resources/sky_256.jpg`));
-        this.jWebgl.programBlur.uNoise.fill (this.jWebgl.getImg (`./resources/noise.png`));
-        this.jWebgl.programBlur.add (
+        this.jWebgl.programRound.uMvp.fill (this.jWebgl.mat4Mvp);
+        this.jWebgl.programRound.uPixelCount.fill (WIDTH);
+        this.jWebgl.programRound.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,
             JWebglMathVector4.axisYEnd,
-            IndexGlobal.inst.createMachine.canvasWidth,
-            IndexGlobal.inst.createMachine.canvasHeight
+            WIDTH,
+            HEIGHT
         );
-        this.jWebgl.programBlur.draw ();
+        this.jWebgl.programRound.draw ();
+
+        this.posFrom.elements [2] = 0.1;
+        this.posTo.elements [2] = 0.1;
+        this.jWebgl.programLine.uMvp.fill (this.jWebgl.mat4Mvp);
+        for (let i = 0; i <= WIDTH; i++) {
+            this.posFrom.elements [0] = i - WIDTH / 2;
+            this.posFrom.elements [1] = - HEIGHT / 2;
+            this.posTo.elements [0] = i - WIDTH / 2;
+            this.posTo.elements [1] = HEIGHT / 2;
+            this.jWebgl.programLine.add (
+                this.posFrom,
+                JWebglColor.COLOR_BLACK,
+                this.posTo,
+                JWebglColor.COLOR_BLACK
+            );
+        };
+        this.jWebgl.programLine.draw ();
+
+        for (let i = 0; i <= HEIGHT; i++) {
+            this.posFrom.elements [0] = - WIDTH / 2;
+            this.posFrom.elements [1] = i - HEIGHT / 2;
+            this.posTo.elements [0] = WIDTH / 2;
+            this.posTo.elements [1] = i - HEIGHT / 2;
+            this.jWebgl.programLine.add (
+                this.posFrom,
+                JWebglColor.COLOR_BLACK,
+                this.posTo,
+                JWebglColor.COLOR_BLACK
+            );
+        };
+        this.jWebgl.programLine.draw ();
     }
 
     render(): ReactComponentExtendInstance {
@@ -130,8 +156,8 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
                         MgrDomDefine.TAG_DIV,
                         {
                             style: {
-                                [MgrDomDefine.STYLE_WIDTH]: `${WIDTH}px`,
-                                [MgrDomDefine.STYLE_HEIGHT]: `${HEIGHT}px`,
+                                [MgrDomDefine.STYLE_WIDTH]: `${WIDTH * PIXEL_TO_SCREEN}px`,
+                                [MgrDomDefine.STYLE_HEIGHT]: `${HEIGHT * PIXEL_TO_SCREEN}px`,
                                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                             }
                         },
@@ -152,11 +178,11 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
                                 MgrDomDefine.TAG_CANVAS,
                                 {
                                     ref: this.canvasWebglRef,
-                                    width: WIDTH,
-                                    height: HEIGHT,
+                                    width: WIDTH * PIXEL_TO_SCREEN,
+                                    height: HEIGHT * PIXEL_TO_SCREEN,
                                     style: {
-                                        [MgrDomDefine.STYLE_WIDTH]: `${WIDTH}px`,
-                                        [MgrDomDefine.STYLE_HEIGHT]: `${HEIGHT}px`,
+                                        [MgrDomDefine.STYLE_WIDTH]: `${WIDTH * PIXEL_TO_SCREEN}px`,
+                                        [MgrDomDefine.STYLE_HEIGHT]: `${HEIGHT * PIXEL_TO_SCREEN}px`,
                                         [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                     }
                                 }

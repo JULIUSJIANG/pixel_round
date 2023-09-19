@@ -1,8 +1,6 @@
 import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
-import JWebglColor from "../common/JWebglColor.js";
-import JWebglEnum from "../common/JWebglEnum.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
@@ -22,11 +20,6 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend {
         this.mat4M = new JWebglMathMatrix4();
         this.mat4V = new JWebglMathMatrix4();
         this.mat4P = new JWebglMathMatrix4();
-        this.fboColor = new Uint32Array(1);
-        this.fboColorLen = 1;
-        this.fboPixels = new Uint8Array(4);
-        this.fboPixelsLen = 4;
-        this.fboColorSet = new Set();
         this.posImg = new JWebglMathVector4();
         this.posFrom = new JWebglMathVector4(0, 0, Z_GRID);
         this.posTo = new JWebglMathVector4(0, 0, Z_GRID);
@@ -47,28 +40,6 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend {
     initFbo(width, height) {
         if (this.fbo == null || this.fbo.width != width || this.fbo.height != height) {
             this.fbo = this.jWebgl.getFbo(width, height);
-        }
-        ;
-        this.fboColorLen = width * height;
-        // 存储空间不够，扩容
-        if (this.fboColor.length < this.fboColorLen) {
-            let size = this.fboColor.length;
-            while (size < this.fboColorLen) {
-                size *= 2;
-            }
-            ;
-            this.fboColor = new Uint32Array(size);
-        }
-        ;
-        this.fboPixelsLen = width * height * 4;
-        // 存储空间不够，扩容
-        if (this.fboPixels.length < this.fboPixelsLen) {
-            let size = this.fboPixels.length;
-            while (size < this.fboPixelsLen) {
-                size *= 2;
-            }
-            ;
-            this.fboPixels = new Uint8Array(size);
         }
         ;
     }
@@ -121,42 +92,8 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend {
         this.posImg.elements[1] = viewHeight / 2;
         this.jWebgl.programImg.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, viewWidth, viewHeight);
         this.jWebgl.programImg.draw();
-        this.fboColorSet.clear();
-        this.jWebgl.canvasWebglCtx.readPixels(0, 0, viewWidth, viewHeight, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, this.fboPixels);
-        for (let i = 0; i < this.fboColorLen; i++) {
-            this.fboColor[i] = 0;
-            for (let j = 0; j < 4; j++) {
-                this.fboColor[i] += this.fboPixels[i * 4 + j] * 2 ** (8 * (3 - j));
-            }
-            ;
-            this.fboColorSet.add(this.fboColor[i]);
-        }
-        ;
-        // 接收所有像素数据
-        IndexGlobal.inst.detailMachine.statusPreview.onPixels(viewWidth, viewHeight, this.fboColor);
-        // 接收所有颜色数据
-        IndexGlobal.inst.detailMachine.statusPreview.onColorTable(this.fboColorSet);
-        return;
-        // 网格
-        this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
-        let colorGrid = JWebglColor.COLOR_BLACK;
-        for (let i = 0; i <= viewWidth; i++) {
-            this.posFrom.elements[0] = i;
-            this.posFrom.elements[1] = 0;
-            this.posTo.elements[0] = i;
-            this.posTo.elements[1] = viewHeight;
-            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
-        }
-        ;
-        for (let i = 0; i <= viewHeight; i++) {
-            this.posFrom.elements[0] = 0;
-            this.posFrom.elements[1] = i;
-            this.posTo.elements[0] = viewWidth;
-            this.posTo.elements[1] = i;
-            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
-        }
-        ;
-        this.jWebgl.programLine.draw();
+        // 告知简略图已经绘制完毕
+        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onPixelDrawed(this.jWebgl, viewWidth, viewHeight);
     }
     render() {
         let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);

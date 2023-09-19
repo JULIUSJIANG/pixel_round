@@ -1,3 +1,4 @@
+import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrData from "../mgr/MgrData.js";
@@ -62,7 +63,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                     listImgDataInst.paddingLeft,
                     (val) => {
                         listImgDataInst.paddingLeft = Math.floor (val);
-                        MgrData.inst.callDataChange ();
+                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
                     },
                     null,
                     null
@@ -72,7 +73,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                     listImgDataInst.paddingRight,
                     (val) => {
                         listImgDataInst.paddingRight = Math.floor (val);
-                        MgrData.inst.callDataChange ();
+                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
                     },
                     null,
                     null
@@ -92,7 +93,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                     listImgDataInst.paddingTop,
                     (val) => {
                         listImgDataInst.paddingTop = Math.floor (val);
-                        MgrData.inst.callDataChange ();
+                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
                     },
                     null,
                     null
@@ -102,7 +103,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                     listImgDataInst.paddingBottom,
                     (val) => {
                         listImgDataInst.paddingBottom = Math.floor (val);
-                        MgrData.inst.callDataChange ();
+                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
                     },
                     null,
                     null
@@ -122,7 +123,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                     listImgDataInst.pixelWidth,
                     (val) => {
                         listImgDataInst.pixelWidth = Math.floor (val);
-                        MgrData.inst.callDataChange ();
+                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
                     },
                     1,
                     null
@@ -132,7 +133,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                     listImgDataInst.pixelHeight, 
                     (val) => {
                         listImgDataInst.pixelHeight = Math.floor (val);
-                        MgrData.inst.callDataChange ();
+                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
                     },
                     1,
                     null

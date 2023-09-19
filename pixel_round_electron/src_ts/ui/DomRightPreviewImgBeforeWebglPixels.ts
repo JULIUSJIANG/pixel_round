@@ -33,11 +33,6 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend <number> 
     mat4P = new JWebglMathMatrix4();
 
     fbo: JWebglFrameBuffer;
-    fboColor = new Uint32Array (1);
-    fboColorLen = 1;
-    fboPixels = new Uint8Array (4);
-    fboPixelsLen = 4;
-    fboColorSet = new Set <number> ();
 
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
@@ -48,26 +43,6 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend <number> 
     initFbo (width: number, height: number) {
         if (this.fbo == null || this.fbo.width != width || this.fbo.height != height) {
             this.fbo = this.jWebgl.getFbo (width, height);
-        };
-
-        this.fboColorLen = width * height;
-        // 存储空间不够，扩容
-        if (this.fboColor.length < this.fboColorLen) {
-            let size = this.fboColor.length;
-            while (size < this.fboColorLen) {
-                size *= 2;
-            };
-            this.fboColor = new Uint32Array (size);
-        };
-
-        this.fboPixelsLen = width * height * 4;
-        // 存储空间不够，扩容
-        if (this.fboPixels.length < this.fboPixelsLen) {
-            let size = this.fboPixels.length;
-            while (size < this.fboPixelsLen) {
-                size *= 2;
-            };
-            this.fboPixels = new Uint8Array (size);
         };
     }
 
@@ -179,49 +154,8 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend <number> 
         );
         this.jWebgl.programImg.draw ();
 
-        this.fboColorSet.clear ();
-        this.jWebgl.canvasWebglCtx.readPixels (0, 0, viewWidth, viewHeight, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, this.fboPixels);
-        for (let i = 0; i < this.fboColorLen; i++) {
-            this.fboColor [i] = 0;
-            for (let j = 0; j < 4; j++) {
-                this.fboColor [i] += this.fboPixels [i * 4 + j] * 2 ** (8 * (3 - j));
-            };
-            this.fboColorSet.add (this.fboColor [i]);
-        };
-        // 接收所有像素数据
-        IndexGlobal.inst.detailMachine.statusPreview.onPixels (viewWidth, viewHeight, this.fboColor);
-        // 接收所有颜色数据
-        IndexGlobal.inst.detailMachine.statusPreview.onColorTable (this.fboColorSet);
-        return;
-
-        // 网格
-        this.jWebgl.programLine.uMvp.fill (this.jWebgl.mat4Mvp);
-        let colorGrid = JWebglColor.COLOR_BLACK;
-        for (let i = 0; i <= viewWidth; i++) {
-            this.posFrom.elements [0] = i;
-            this.posFrom.elements [1] = 0;
-            this.posTo.elements [0] = i;
-            this.posTo.elements [1] = viewHeight;
-            this.jWebgl.programLine.add (
-                this.posFrom,
-                colorGrid,
-                this.posTo,
-                colorGrid
-            );
-        };
-        for (let i = 0; i <= viewHeight; i++) {
-            this.posFrom.elements [0] = 0;
-            this.posFrom.elements [1] = i;
-            this.posTo.elements [0] = viewWidth;
-            this.posTo.elements [1] = i;
-            this.jWebgl.programLine.add (
-                this.posFrom,
-                colorGrid,
-                this.posTo,
-                colorGrid
-            );
-        };
-        this.jWebgl.programLine.draw ();
+        // 告知简略图已经绘制完毕
+        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onPixelDrawed (this.jWebgl, viewWidth, viewHeight);
     }
 
     finishedImg: MgrResAssetsImage;

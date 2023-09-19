@@ -11,6 +11,10 @@ import ImgMachine from "./ImgMachine.js";
 
 export default class DetailMachineStatusPreview extends DetailMachineStatus {
 
+    onEnter (): void {
+        this.onImg (MgrData.inst.get (MgrDataItem.CURRENT_IMG));
+    }
+
     onCreate (): void {
         this.relMachine.enter (this.relMachine.statusCreate);
     }
@@ -20,7 +24,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     onImg (id: number): void {
         MgrData.inst.set (MgrDataItem.CURRENT_IMG, id);
         let rec = this.imgMachine;
-        this.imgMachine = new ImgMachine (id);
+        this.imgMachine = new ImgMachine (this, id);
         if (rec) {
             rec.onDestroy ();
         };
@@ -30,4 +34,34 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     onRender(): ReactComponentExtendInstance {
         return ReactComponentExtend.instantiateComponent (DomRightPreview, null);
     }
+
+    /**
+     * 图片宽
+     */
+    imgWidth: number = 1;
+    /**
+     * 图片高
+     */
+    imgHeight: number = 1;
+
+    /**
+     * 每四个数字代表一个颜色
+     */
+    binRgba = new Uint8Array (1);
+    binRgbaSize = 4;
+
+    /**
+     * 每个数字代表一个颜色
+     */
+    binColor = new Uint32Array (1);
+    binColorSize = 1;
+
+    /**
+     * 所有颜色
+     */
+    listColor = new Array <DetailMachineStatusPreviewColor> ();
+    /**
+     * 标识到具体颜色的映射
+     */
+    mapIdToColor = new Map <number, DetailMachineStatusPreviewColor> ();
 }

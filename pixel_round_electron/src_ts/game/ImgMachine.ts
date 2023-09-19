@@ -1,4 +1,4 @@
-import { List } from "../../node_modules/antd/es/index.js";
+import DetailMachineStatusPreview from "./DetailMachineStatusPreview.js";
 import DetailMachineStatusPreviewColor from "./DetailMachineStatusPreviewColor.js";
 import ImgMachineStatus from "./ImgMachineStatus.js";
 import ImgMachineStatusIdle from "./ImgMachineStatusIdle.js";
@@ -6,9 +6,12 @@ import ImgMachineStatusInited from "./ImgMachineStatusInited.js";
 
 class ImgMachine {
 
+    rel: DetailMachineStatusPreview;
+
     relId: number;
 
-    constructor (relId: number) {
+    constructor (rel: DetailMachineStatusPreview, relId: number) {
+        this.rel = rel;
         this.relId = relId;
         this.statusIdle = new ImgMachineStatusIdle (this);
         this.statusInited = new ImgMachineStatusInited (this);
@@ -36,36 +39,6 @@ class ImgMachine {
     onDestroy () {
 
     }
-
-    /**
-     * 图片宽
-     */
-    imgWidth: number;
-    /**
-     * 图片高
-     */
-    imgHeight: number;
-
-    /**
-     * 每四个数字代表一个颜色
-     */
-    binRgba = new Uint8Array (1);
-    binRgbaSize = 4;
-
-    /**
-     * 每个数字代表一个颜色
-     */
-    binColor = new Uint32Array (1);
-    binColorSize = 1;
-
-    /**
-     * 所有颜色
-     */
-    listColor = new Array <DetailMachineStatusPreviewColor> ();
-    /**
-     * 标识到具体颜色的映射
-     */
-    mapIdToColor = new Map <number, DetailMachineStatusPreviewColor> ();
 }
 
 export default ImgMachine;

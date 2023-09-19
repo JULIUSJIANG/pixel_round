@@ -12,85 +12,84 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
         this._setColor = new Set();
     }
     onPixelDrawed(jWebgl, width, height) {
-        console.log(`刷新缓存`);
-        this.relMachine.imgWidth = width;
-        this.relMachine.imgHeight = height;
-        this.relMachine.binRgbaSize = this.relMachine.imgWidth * this.relMachine.imgHeight * 4;
-        let binRgbaLength = this.relMachine.binRgba.length;
+        this.relMachine.rel.imgWidth = width;
+        this.relMachine.rel.imgHeight = height;
+        this.relMachine.rel.binRgbaSize = this.relMachine.rel.imgWidth * this.relMachine.rel.imgHeight * 4;
+        let binRgbaLength = this.relMachine.rel.binRgba.length;
         // 尺寸不够，扩容
-        if (binRgbaLength < this.relMachine.binRgbaSize) {
-            while (binRgbaLength < this.relMachine.binRgbaSize) {
+        if (binRgbaLength < this.relMachine.rel.binRgbaSize) {
+            while (binRgbaLength < this.relMachine.rel.binRgbaSize) {
                 binRgbaLength *= 2;
             }
             ;
-            this.relMachine.binRgba = new Uint8Array(binRgbaLength);
+            this.relMachine.rel.binRgba = new Uint8Array(binRgbaLength);
         }
         ;
-        jWebgl.canvasWebglCtx.readPixels(0, 0, this.relMachine.imgWidth, this.relMachine.imgHeight, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, this.relMachine.binRgba);
-        this.relMachine.binColorSize = this.relMachine.imgWidth * this.relMachine.imgHeight;
-        let binColorLength = this.relMachine.binColor.length;
+        jWebgl.canvasWebglCtx.readPixels(0, 0, this.relMachine.rel.imgWidth, this.relMachine.rel.imgHeight, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, this.relMachine.rel.binRgba);
+        this.relMachine.rel.binColorSize = this.relMachine.rel.imgWidth * this.relMachine.rel.imgHeight;
+        let binColorLength = this.relMachine.rel.binColor.length;
         // 尺寸不够，扩容
-        if (binColorLength < this.relMachine.binColorSize) {
-            while (binColorLength < this.relMachine.binColorSize) {
+        if (binColorLength < this.relMachine.rel.binColorSize) {
+            while (binColorLength < this.relMachine.rel.binColorSize) {
                 binColorLength *= 2;
             }
             ;
-            this.relMachine.binColor = new Uint32Array(binColorLength);
+            this.relMachine.rel.binColor = new Uint32Array(binColorLength);
         }
         ;
         // 合并颜色值到一个数上面去
-        for (let i = 0; i < this.relMachine.binColorSize; i++) {
-            this.relMachine.binColor[i] = 0;
+        for (let i = 0; i < this.relMachine.rel.binColorSize; i++) {
+            this.relMachine.rel.binColor[i] = 0;
             for (let j = 0; j < 4; j++) {
-                this.relMachine.binColor[i] << 8;
-                this.relMachine.binColor[i] += this.relMachine.binColor[i * 4 + j];
+                this.relMachine.rel.binColor[i] <<= 8;
+                this.relMachine.rel.binColor[i] += this.relMachine.rel.binRgba[i * 4 + j];
             }
             ;
         }
         ;
         // 颜色去重，保留下来的颜色都各不一样
         this._setColor.clear();
-        for (let i = 0; i < this.relMachine.binColorSize; i++) {
-            let binColorI = this.relMachine.binColor[i];
+        for (let i = 0; i < this.relMachine.rel.binColorSize; i++) {
+            let binColorI = this.relMachine.rel.binColor[i];
             this._setColor.add(binColorI);
         }
         ;
         // 回收颜色对象
-        for (let i = 0; i < this.relMachine.listColor.length; i++) {
-            let listColorI = this.relMachine.listColor[i];
+        for (let i = 0; i < this.relMachine.rel.listColor.length; i++) {
+            let listColorI = this.relMachine.rel.listColor[i];
             objectPool.push(listColorI);
         }
         ;
-        this.relMachine.listColor.length = 0;
+        this.relMachine.rel.listColor.length = 0;
         // 初始化颜色表对象
         this._setColor.forEach((color) => {
             let colorBackup = color;
             let colorA = color % 256;
-            color >> 8;
+            color >>= 8;
             let colorB = color % 256;
-            color >> 8;
+            color >>= 8;
             let colorG = color % 256;
-            color >> 8;
+            color >>= 8;
             let colorR = color % 256;
-            color >> 8;
+            color >>= 8;
             let colorInst = objectPool.pop(DetailMachineStatusPreviewColor.poolType);
             colorInst.init(colorBackup, 0, colorR / 255, colorG / 255, colorB / 255, colorA / 255);
-            this.relMachine.listColor.push(colorInst);
+            this.relMachine.rel.listColor.push(colorInst);
         });
         // 更新序号
-        this.relMachine.listColor.sort((a, b) => {
+        this.relMachine.rel.listColor.sort((a, b) => {
             return a.id - b.id;
         });
-        for (let i = 0; i < this.relMachine.listColor.length; i++) {
-            let listColorI = this.relMachine.listColor[i];
+        for (let i = 0; i < this.relMachine.rel.listColor.length; i++) {
+            let listColorI = this.relMachine.rel.listColor[i];
             listColorI.idx = i;
         }
         ;
         // 更新索引
-        this.relMachine.mapIdToColor.clear();
-        for (let i = 0; i < this.relMachine.listColor.length; i++) {
-            let listColorI = this.relMachine.listColor[i];
-            this.relMachine.mapIdToColor.set(listColorI.id, listColorI);
+        this.relMachine.rel.mapIdToColor.clear();
+        for (let i = 0; i < this.relMachine.rel.listColor.length; i++) {
+            let listColorI = this.relMachine.rel.listColor[i];
+            this.relMachine.rel.mapIdToColor.set(listColorI.id, listColorI);
         }
         ;
         this.relMachine.enter(this.relMachine.statusInited);

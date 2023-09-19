@@ -12,7 +12,7 @@ export default class DomRightPreviewProps extends ReactComponentExtend {
     }
     render() {
         this.listChildren.length = 0;
-        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.imgMachine.listColor.length; i++) {
+        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listColor.length; i++) {
             this.listChildren.push(ReactComponentExtend.instantiateComponent(DomRightPreviewColor, DomRightPreviewColor.Args.create(i)));
         }
         ;
@@ -46,7 +46,7 @@ export default class DomRightPreviewProps extends ReactComponentExtend {
                 listImgData.splice(targetIdx, 1);
                 targetIdx = Math.min(targetIdx, listImgData.length - 1);
                 if (0 <= targetIdx) {
-                    MgrData.inst.set(MgrDataItem.CURRENT_IMG, listImgData[targetIdx].id);
+                    IndexGlobal.inst.detailMachine.currStatus.onImg(listImgData[targetIdx].id);
                 }
                 else {
                     IndexGlobal.inst.detailMachine.currStatus.onCreate();

@@ -28,7 +28,6 @@ class DomRightStep3Smooth extends ReactComponentExtend <number> {
     mat4P = new JWebglMathMatrix4();
 
     fboCurrent: JWebglFrameBuffer;
-    fboSmooth: JWebglFrameBuffer;
 
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
@@ -39,7 +38,6 @@ class DomRightStep3Smooth extends ReactComponentExtend <number> {
     initFbo (width: number, height: number) {
         if (this.fboCurrent == null || this.fboCurrent.width != width || this.fboCurrent.height != height) {
             this.fboCurrent = this.jWebgl.getFbo (width, height);
-            this.fboSmooth = this.jWebgl.getFbo (width * IndexGlobal.PIXEL_TEX_TO_SCREEN, height * IndexGlobal.PIXEL_TEX_TO_SCREEN);
         };
     }
 
@@ -90,8 +88,6 @@ class DomRightStep3Smooth extends ReactComponentExtend <number> {
         // 清空画布
         this.jWebgl.useFbo (this.fboCurrent);
         this.jWebgl.clear ();
-        this.jWebgl.useFbo (this.fboSmooth);
-        this.jWebgl.clear ();
         this.jWebgl.useFbo (null);
         this.jWebgl.clear ();
 
@@ -125,8 +121,8 @@ class DomRightStep3Smooth extends ReactComponentExtend <number> {
             for (let j = 0; j < listImgPixelGroupAllI.listPos.length; j += 2) {
                 let x = listImgPixelGroupAllI.listPos [j + 0];
                 let y = listImgPixelGroupAllI.listPos [j + 1];
-                this.posPoint.elements [0] = x + 1 + listImgDataInst.paddingLeft;
-                this.posPoint.elements [1] = y + 1 + listImgDataInst.paddingBottom;
+                this.posPoint.elements [0] = x + 1;
+                this.posPoint.elements [1] = y + 1;
                 this.jWebgl.programPoint.add (this.posPoint);
             };
             this.jWebgl.programPoint.draw ();

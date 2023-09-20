@@ -124,8 +124,8 @@ class DomRightStep1Split extends ReactComponentExtend <number> {
             for (let j = 0; j < listImgPixelGroupAllI.listPos.length; j += 2) {
                 let x = listImgPixelGroupAllI.listPos [j + 0];
                 let y = listImgPixelGroupAllI.listPos [j + 1];
-                this.posPoint.elements [0] = x + 1 + listImgDataInst.paddingLeft;
-                this.posPoint.elements [1] = y + 1 + listImgDataInst.paddingBottom;
+                this.posPoint.elements [0] = x + 1;
+                this.posPoint.elements [1] = y + 1;
                 this.jWebgl.programPoint.add (this.posPoint);
             };
             this.jWebgl.programPoint.draw ();

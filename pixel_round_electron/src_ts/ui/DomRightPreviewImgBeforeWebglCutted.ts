@@ -113,7 +113,6 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
             this.mat4M,
             this.jWebgl.mat4Mvp
         );
-
         // 图片
         this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
         this.jWebgl.programImg.uSampler.fillByImg (img);

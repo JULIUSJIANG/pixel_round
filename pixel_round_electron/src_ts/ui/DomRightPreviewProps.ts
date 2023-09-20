@@ -9,17 +9,9 @@ import DomRightPreviewColor from "./DomRightPreviewColor.js";
 
 export default class DomRightPreviewProps extends ReactComponentExtend <number> {
 
-    listChildren = new Array <ReactComponentExtendInstance> ();
 
     render (): ReactComponentExtendInstance {
 
-        this.listChildren.length = 0;
-        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listColor.length; i++) {
-            this.listChildren.push (ReactComponentExtend.instantiateComponent (
-                DomRightPreviewColor,
-                DomRightPreviewColor.Args.create (i)
-            ));
-        };
 
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
@@ -35,17 +27,6 @@ export default class DomRightPreviewProps extends ReactComponentExtend <number> 
                 }
             },
 
-            ReactComponentExtend.instantiateTag (
-                MgrDomDefine.TAG_DIV,
-                {
-                    style: {
-                        [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                    },
-                },
-
-                ...this.listChildren
-            ),
             ReactComponentExtend.instantiateTag (
                 NodeModules.antd.Button,
                 {

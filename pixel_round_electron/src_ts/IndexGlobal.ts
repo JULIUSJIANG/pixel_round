@@ -2,6 +2,7 @@ import CreateMachine from "./game/CreateMachine.js";
 import DetailMachine from "./game/DetailMachine.js";
 import MgrData from "./mgr/MgrData.js";
 import MgrDataItem from "./mgr/MgrDataItem.js";
+import DomRightStepRS from "./ui/DomRightStepRS.js";
 
 class IndexGlobal {
 
@@ -13,6 +14,18 @@ class IndexGlobal {
         this.detailMachine = new DetailMachine (this);
         this.detailMachine.enter (this.detailMachine.mapIdToStatus.get (MgrData.inst.get (MgrDataItem.DETAIL_MACHINE_STATUS)));
         this.createMachine = new CreateMachine (this);
+
+        this.stepRSCurrent = DomRightStepRS.step4Merge;
+    }
+
+    stepRSCurrent: DomRightStepRS <any>;
+
+    onStep (stepRS: DomRightStepRS <any>) {
+        if (this.stepRSCurrent == stepRS) {
+            return;
+        };
+        this.stepRSCurrent = stepRS;
+        MgrData.inst.callDataChange ();
     }
 }
 

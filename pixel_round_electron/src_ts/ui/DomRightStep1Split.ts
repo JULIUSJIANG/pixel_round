@@ -15,9 +15,8 @@ import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 
 const Z_GRID = 0.1;
 
-const Z_MASK = 0.2;
 
-class DomRightPreviewImgSplit extends ReactComponentExtend <number> {
+class DomRightStep1Split extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -49,10 +48,6 @@ class DomRightPreviewImgSplit extends ReactComponentExtend <number> {
     posTo = new JWebglMathVector4 (0, 0, Z_GRID);
 
     posPoint = new JWebglMathVector4 ();
-
-    posA = new JWebglMathVector4 ();
-    posB = new JWebglMathVector4 ();
-    posC = new JWebglMathVector4 ();
 
     reactComponentExtendOnDraw(): void {
         let listImgData = MgrData.inst.get (MgrDataItem.LIST_IMG_DATA);
@@ -122,23 +117,6 @@ class DomRightPreviewImgSplit extends ReactComponentExtend <number> {
                 this.mat4M,
                 this.jWebgl.mat4Mvp
             );
-            
-            // this.jWebgl.programTriangle.uMvp.fill (this.jWebgl.mat4Mvp);
-            // this.posA.elements [0] = 0;
-            // this.posA.elements [1] = 0;
-            // this.posB.elements [0] = fboWidth;
-            // this.posB.elements [1] = 0;
-            // this.posC.elements [0] = fboWidth;
-            // this.posC.elements [1] = fboHeight;
-            // this.jWebgl.programTriangle.add (
-            //     this.posA,
-            //     JWebglColor.COLOR_RED,
-            //     this.posB,
-            //     JWebglColor.COLOR_GREEN,
-            //     this.posC,
-            //     JWebglColor.COLOR_BLUE,
-            // );
-            // this.jWebgl.programTriangle.draw ();
 
             this.jWebgl.programPoint.uMvp.fill (this.jWebgl.mat4Mvp);
             this.jWebgl.programPoint.uColor.fill (listImgPixelGroupAllI.colorObj.data01);
@@ -262,8 +240,7 @@ class DomRightPreviewImgSplit extends ReactComponentExtend <number> {
         if (this.finishedImg != null && 0 < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length) {
             let fboWidth = Math.ceil ((img.image.width + listImgDataInst.paddingRight + listImgDataInst.paddingLeft) / listImgDataInst.pixelWidth);
             let fboHeight = Math.ceil ((img.image.height + listImgDataInst.paddingTop + listImgDataInst.paddingBottom) / listImgDataInst.pixelHeight);
-            // let scale = IndexGlobal.PIXEL_TEX_TO_SCREEN;
-            let scale = 8;
+            let scale = IndexGlobal.PIXEL_TEX_TO_SCREEN;
             canvasWidth = fboWidth * scale;
             canvasHeight = fboHeight * IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length * scale;
         };
@@ -272,7 +249,7 @@ class DomRightPreviewImgSplit extends ReactComponentExtend <number> {
             MgrDomDefine.TAG_DIV,
             {
                 style: {
-                    [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
+                    [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
                     [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                     [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                     [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
@@ -327,8 +304,8 @@ class DomRightPreviewImgSplit extends ReactComponentExtend <number> {
                             MgrDomDefine.TAG_CANVAS,
                             {
                                 ref: this.canvasWebglRef,
-                                width: canvasWidth * IndexGlobal.ANTINA,
-                                height: canvasHeight * IndexGlobal.ANTINA,
+                                width: canvasWidth,
+                                height: canvasHeight,
                                 style: {
                                     [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
                                     [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
@@ -343,4 +320,4 @@ class DomRightPreviewImgSplit extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightPreviewImgSplit;
+export default DomRightStep1Split;

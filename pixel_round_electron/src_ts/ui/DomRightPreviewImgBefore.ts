@@ -6,13 +6,14 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 import DomInputNumber from "./DomInputNumber.js";
+import DomRightPreviewColor from "./DomRightPreviewColor.js";
 import DomRightPreviewImgBeforeWebglCutted from "./DomRightPreviewImgBeforeWebglCutted.js";
 import DomRightPreviewImgBeforeWebglOrigin from "./DomRightPreviewImgBeforeWebglOrigin.js";
 import DomRightPreviewImgBeforeWebglPixels from "./DomRightPreviewImgBeforeWebglPixels.js";
 
 class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
-    
-    finishedImg: MgrResAssetsImage;
+
+    listChildren = new Array <ReactComponentExtendInstance> ();
 
     render (): ReactComponentExtendInstance {
         let listImgData = MgrData.inst.get (MgrDataItem.LIST_IMG_DATA);
@@ -23,6 +24,14 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                 listImgDataInst = listImgDataI;
                 break;
             };
+        };
+        
+        this.listChildren.length = 0;
+        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listColor.length; i++) {
+            this.listChildren.push (ReactComponentExtend.instantiateComponent (
+                DomRightPreviewColor,
+                DomRightPreviewColor.Args.create (i)
+            ));
         };
 
         return ReactComponentExtend.instantiateTag (
@@ -48,6 +57,21 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
             ReactComponentExtend.instantiateComponent (
                 DomRightPreviewImgBeforeWebglPixels,
                 this.props
+            ),
+            ReactComponentExtend.instantiateTag (
+                MgrDomDefine.TAG_DIV,
+                {
+                    style: {
+                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                        [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                        [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+
+                        [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                    }
+                },
+
+                ...this.listChildren
             ),
             ReactComponentExtend.instantiateTag (
                 MgrDomDefine.TAG_DIV,

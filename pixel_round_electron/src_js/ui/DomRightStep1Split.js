@@ -10,8 +10,7 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
 const Z_GRID = 0.1;
-const Z_MASK = 0.2;
-class DomRightPreviewImgSplit extends ReactComponentExtend {
+class DomRightStep1Split extends ReactComponentExtend {
     constructor() {
         super(...arguments);
         /**
@@ -25,9 +24,6 @@ class DomRightPreviewImgSplit extends ReactComponentExtend {
         this.posFrom = new JWebglMathVector4(0, 0, Z_GRID);
         this.posTo = new JWebglMathVector4(0, 0, Z_GRID);
         this.posPoint = new JWebglMathVector4();
-        this.posA = new JWebglMathVector4();
-        this.posB = new JWebglMathVector4();
-        this.posC = new JWebglMathVector4();
     }
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
@@ -180,7 +176,7 @@ class DomRightPreviewImgSplit extends ReactComponentExtend {
         ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
+                [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                 [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
@@ -229,4 +225,4 @@ class DomRightPreviewImgSplit extends ReactComponentExtend {
         })))));
     }
 }
-export default DomRightPreviewImgSplit;
+export default DomRightStep1Split;

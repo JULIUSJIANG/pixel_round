@@ -2,7 +2,6 @@ import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomLeft from "./DomLeft.js";
-import DomRightPreview from "./DomRightPreview.js";
 
 /**
  * 根

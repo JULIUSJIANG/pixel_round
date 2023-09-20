@@ -2,6 +2,7 @@ import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
+import JWebglEnum from "../common/JWebglEnum.js";
 import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
@@ -83,10 +84,6 @@ class DomRightStep4Merge extends ReactComponentExtend <number> {
         // 绘制 fbo
         this.initFbo (fboWidth, fboHeight);
 
-        // 相机宽高
-        let cameraWidth = fboWidth;
-        let cameraHeight = fboHeight * IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length;
-
         // 清空画布
         this.jWebgl.useFbo (this.fboCurrent);
         this.jWebgl.clear ();
@@ -96,8 +93,7 @@ class DomRightStep4Merge extends ReactComponentExtend <number> {
         for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length; i++) {
             let idx = i;
             let listImgPixelGroupAllI = IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty [idx];
-            let yBase = (IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length - idx - 1) * fboHeight;
-
+            
             // 把分块绘制到帧缓冲区里面
             this.jWebgl.useFbo (this.fboCurrent);
             this.mat4V.setLookAt(
@@ -161,90 +157,23 @@ class DomRightStep4Merge extends ReactComponentExtend <number> {
 
             // 把平滑缓冲区内容绘制到画布中
             this.jWebgl.useFbo (null);
-            this.mat4V.setLookAt(
-                cameraWidth / 2, cameraHeight / 2, 1,
-                cameraWidth / 2, cameraHeight / 2, 0,
-                0, 1, 0
-            );
-            this.mat4P.setOrtho (
-                -cameraWidth / 2, cameraWidth / 2,
-                -cameraHeight / 2, cameraHeight / 2,
-                0, 2
-            );
-            JWebglMathMatrix4.multiplayMat4List (
-                this.mat4P,
-                this.mat4V,
-                this.mat4M,
-                this.jWebgl.mat4Mvp
-            );
             this.jWebgl.programSmooth1.uMvp.fill (this.jWebgl.mat4Mvp);
             this.jWebgl.programSmooth1.uTexture.fillByFbo (this.fboSmooth);
             this.jWebgl.programSmooth1.uTextureSize.fill (fboWidth, fboHeight);
             this.jWebgl.programSmooth1.uLightFirst.fill (-1);
-            this.posImg.elements [0] = fboWidth / 2;
-            this.posImg.elements [1] = fboHeight / 2 + yBase;
+            this.posImg.elements [0] = 0;
+            this.posImg.elements [1] = 0;
+            this.posImg.elements [2] = i / IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length;
             this.jWebgl.programSmooth1.add (
                 this.posImg,
                 JWebglMathVector4.axisZStart,
                 JWebglMathVector4.axisYEnd,
-                fboWidth,
-                fboHeight
+                2,
+                2
             );
+            this.jWebgl.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.ONE_MINUS_DST_ALPHA, JWebglEnum.BlendFunc.DST_ALPHA);
             this.jWebgl.programSmooth1.draw ();
-        };
-
-        this.jWebgl.useFbo (null);
-        this.mat4V.setLookAt(
-            cameraWidth / 2, cameraHeight / 2, 1,
-            cameraWidth / 2, cameraHeight / 2, 0,
-            0, 1, 0
-        );
-        this.mat4P.setOrtho (
-            -cameraWidth / 2, cameraWidth / 2,
-            -cameraHeight / 2, cameraHeight / 2,
-            0, 2
-        );
-        JWebglMathMatrix4.multiplayMat4List (
-            this.mat4P,
-            this.mat4V,
-            this.mat4M,
-            this.jWebgl.mat4Mvp
-        );
-        // 网格
-        this.jWebgl.programLine.uMvp.fill (this.jWebgl.mat4Mvp);
-        let colorGrid = JWebglColor.COLOR_BLACK;
-        for (let i = 0; i <= cameraWidth; i++) {
-            if (i != 0 && i != cameraWidth) {
-                continue;
-            };
-            this.posFrom.elements [0] = i;
-            this.posFrom.elements [1] = 0;
-            this.posTo.elements [0] = i;
-            this.posTo.elements [1] = cameraHeight;
-            this.jWebgl.programLine.add (
-                this.posFrom,
-                colorGrid,
-                this.posTo,
-                colorGrid
-            );
-        };
-        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length; i++) {
-            for (let j = 0; j <= fboHeight; j++) {
-                if (j != 0 && j != fboHeight) {
-                    continue;
-                };
-                this.posFrom.elements [0] = 0;
-                this.posFrom.elements [1] = i * fboHeight + j;
-                this.posTo.elements [0] = fboWidth;
-                this.posTo.elements [1] = i * fboHeight + j;
-                this.jWebgl.programLine.add (
-                    this.posFrom,
-                    colorGrid,
-                    this.posTo,
-                    colorGrid
-                );
-            };
-            this.jWebgl.programLine.draw ();
+            this.jWebgl.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
         };
     }
 
@@ -273,7 +202,7 @@ class DomRightStep4Merge extends ReactComponentExtend <number> {
             let fboHeight = Math.ceil ((img.image.height + listImgDataInst.paddingTop + listImgDataInst.paddingBottom) / listImgDataInst.pixelHeight);
             let scale = IndexGlobal.PIXEL_TEX_TO_SCREEN;
             canvasWidth = fboWidth * scale;
-            canvasHeight = fboHeight * IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length * scale;
+            canvasHeight = fboHeight * scale;
         };
 
         return ReactComponentExtend.instantiateTag (

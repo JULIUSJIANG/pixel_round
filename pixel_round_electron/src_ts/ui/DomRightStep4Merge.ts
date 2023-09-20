@@ -15,7 +15,7 @@ import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 
 const Z_GRID = 0.1;
 
-class DomRightStep3Smooth extends ReactComponentExtend <number> {
+class DomRightStep4Merge extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -351,4 +351,4 @@ class DomRightStep3Smooth extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightStep3Smooth;
+export default DomRightStep4Merge;

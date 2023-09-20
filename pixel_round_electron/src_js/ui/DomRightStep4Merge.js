@@ -10,7 +10,7 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
 const Z_GRID = 0.1;
-class DomRightStep3Smooth extends ReactComponentExtend {
+class DomRightStep4Merge extends ReactComponentExtend {
     constructor() {
         super(...arguments);
         /**
@@ -238,4 +238,4 @@ class DomRightStep3Smooth extends ReactComponentExtend {
         })))));
     }
 }
-export default DomRightStep3Smooth;
+export default DomRightStep4Merge;

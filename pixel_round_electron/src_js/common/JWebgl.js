@@ -10,6 +10,7 @@ import JWebglImage from "./JWebglImage.js";
 import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
+import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmooth1 from "./JWebglProgramTypeSmooth1.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
@@ -112,10 +113,8 @@ class JWebgl {
         }
         ;
         this.canvasWebglCtx.viewport(0, 0, sizeWidth, sizeHeight);
-        this.canvasWebglCtx.clear(JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
     }
     clear() {
-        this.canvasWebglCtx.viewport(0, 0, this.canvasWebgl.width, this.canvasWebgl.height);
         this.canvasWebglCtx.clear(JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
     }
     getImg(dataUrl) {
@@ -155,4 +154,7 @@ __decorate([
 __decorate([
     program(JWebglProgramTypeSmooth1)
 ], JWebgl.prototype, "programSmooth1", void 0);
+__decorate([
+    program(JWebglProgramTypePoint)
+], JWebgl.prototype, "programPoint", void 0);
 export default JWebgl;

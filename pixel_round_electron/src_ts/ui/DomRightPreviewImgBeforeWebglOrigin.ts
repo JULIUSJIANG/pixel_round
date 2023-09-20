@@ -70,6 +70,7 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> 
         };
 
         // 清除画面
+        this.jWebgl.useFbo (null);
         this.jWebgl.clear ();
         let imgWidth = img.assetsImg.image.width;
         let imgHeight = img.assetsImg.image.height;

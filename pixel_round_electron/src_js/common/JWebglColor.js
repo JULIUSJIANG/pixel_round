@@ -15,12 +15,12 @@ class JWebglColor {
         this.init(r, g, b, a);
     }
     init(r, g, b, a) {
-        this.data01[0] = r;
-        this.data01[1] = g;
-        this.data01[2] = b;
-        this.data01[3] = a;
+        this.data255[0] = r * 255;
+        this.data255[1] = g * 255;
+        this.data255[2] = b * 255;
+        this.data255[3] = a * 255;
         for (let i = 0; i < 4; i++) {
-            this.data255[i] = this.data01[i] * 255;
+            this.data01[i] = this.data255[i] / 255;
         }
         ;
         this.str16 = `#${this.to16(this.data255[0])}${this.to16(this.data255[1])}${this.to16(this.data255[2])}${this.to16(this.data255[3])}`;

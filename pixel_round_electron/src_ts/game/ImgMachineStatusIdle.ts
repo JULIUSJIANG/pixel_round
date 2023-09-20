@@ -121,7 +121,32 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
                 this.paintBucket (x, y, currentGroup);
             };
         };
-        console.log (`颜色分块数量 [${this.relMachine.rel.listImgPixelGroupAll.length}]`);
+
+        // 分块数据的缓存
+        for (let x = 0; x < width; x++) {
+            for (let y = 0; y < height; y++) {
+                // 索引
+                let idx = y * width + x;
+                // 当前组
+                let currentGroup = this.relMachine.rel.listImgPixelGroup [idx];
+                currentGroup.addPos (x, y);
+            };
+        };
+        for (let i = 0; i < this.relMachine.rel.listImgPixelGroupAll.length; i++) {
+            let listImgPixelGroupAllI = this.relMachine.rel.listImgPixelGroupAll [i];
+            listImgPixelGroupAllI.cache ();
+        };
+        this.relMachine.rel.listImgPixelGroupAll.sort ((a, b) => {
+            return a.areaVolume - b.areaVolume;
+        });
+        this.relMachine.rel.listImgPixelGroupAllNotEmpty.length = 0;
+        for (let i = 0; i < this.relMachine.rel.listImgPixelGroupAll.length; i++) {
+            let listImgPixelGroupAllI = this.relMachine.rel.listImgPixelGroupAll [i];
+            if (listImgPixelGroupAllI.colorObj.data255 [3] == 0) {
+                continue;
+            };
+            this.relMachine.rel.listImgPixelGroupAllNotEmpty.push (listImgPixelGroupAllI);
+        };
 
         this.relMachine.enter (this.relMachine.statusInited);
         MgrData.inst.callDataChange ();
@@ -153,7 +178,7 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
         };
         // 该位置的颜色不对的话，忽略
         let color = this.relMachine.rel.binColor [y * this.relMachine.rel.imgWidth + x];
-        if (color != colorGroup.color) {
+        if (color != colorGroup.colorId) {
             return;
         };
         // 否则进行组标记

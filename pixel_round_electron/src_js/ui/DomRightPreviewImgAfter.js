@@ -62,13 +62,19 @@ class DomRightPreviewImgAfter extends ReactComponentExtend {
             return;
         }
         ;
+        // 图片尺寸
         let imgWidth = img.assetsImg.image.width;
         let imgHeight = img.assetsImg.image.height;
+        // 视图尺寸
         let viewWidth = (img.assetsImg.image.width + listImgDataInst.paddingLeft + listImgDataInst.paddingRight);
         let viewHeight = (img.assetsImg.image.height + listImgDataInst.paddingBottom + listImgDataInst.paddingTop);
+        // 帧缓冲区尺寸
+        let fboWidth = Math.ceil(viewWidth / listImgDataInst.pixelWidth);
+        let fboHeight = Math.ceil(viewHeight / listImgDataInst.pixelHeight);
         // 绘制 fbo
-        this.initFbo(Math.ceil(viewWidth / listImgDataInst.pixelWidth), Math.ceil(viewHeight / listImgDataInst.pixelHeight));
+        this.initFbo(fboWidth, fboHeight);
         this.jWebgl.useFbo(this.fbo);
+        this.jWebgl.clear();
         this.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);
         this.mat4P.setOrtho(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
@@ -81,8 +87,9 @@ class DomRightPreviewImgAfter extends ReactComponentExtend {
         this.jWebgl.programImg.draw();
         // 绘制屏幕
         this.jWebgl.useFbo(null);
-        viewWidth = Math.ceil(viewWidth / listImgDataInst.pixelWidth);
-        viewHeight = Math.ceil(viewHeight / listImgDataInst.pixelHeight);
+        this.jWebgl.clear();
+        viewWidth = fboWidth;
+        viewHeight = fboHeight;
         this.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);
         this.mat4P.setOrtho(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);

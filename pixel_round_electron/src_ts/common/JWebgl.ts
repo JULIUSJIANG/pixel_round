@@ -5,6 +5,7 @@ import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
+import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmooth1 from "./JWebglProgramTypeSmooth1.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 
@@ -133,11 +134,9 @@ class JWebgl {
             };
         };
         this.canvasWebglCtx.viewport (0, 0, sizeWidth, sizeHeight);
-        this.canvasWebglCtx.clear (JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
     }
 
     clear () {
-        this.canvasWebglCtx.viewport (0, 0, this.canvasWebgl.width, this.canvasWebgl.height);
         this.canvasWebglCtx.clear (JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
     }
 
@@ -152,6 +151,9 @@ class JWebgl {
 
     @program (JWebglProgramTypeSmooth1)
     programSmooth1: JWebglProgramTypeSmooth1;
+
+    @program (JWebglProgramTypePoint)
+    programPoint: JWebglProgramTypePoint;
 
     /**
      * mvp 矩阵

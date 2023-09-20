@@ -31,6 +31,7 @@ export default class DomRightCreate extends ReactComponentExtend {
         ;
         // 清除画面
         this.jWebgl.useFbo(null);
+        this.jWebgl.clear();
         let img = IndexGlobal.inst.createMachine.img.image;
         this.mat4P.setOrtho(-img.width / 2, img.width / 2, -img.height / 2, img.height / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);

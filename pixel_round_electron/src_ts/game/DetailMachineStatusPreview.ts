@@ -72,4 +72,8 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * 仅关注类型
      */
     listImgPixelGroupAll = new Array <ImgPixelGroup> ();
+    /**
+     * 仅关注类型 - 不为空
+     */
+    listImgPixelGroupAllNotEmpty = new Array <ImgPixelGroup> ();
 }

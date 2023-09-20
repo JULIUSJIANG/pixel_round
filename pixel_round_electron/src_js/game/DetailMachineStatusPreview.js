@@ -41,6 +41,10 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
          * 仅关注类型
          */
         this.listImgPixelGroupAll = new Array();
+        /**
+         * 仅关注类型 - 不为空
+         */
+        this.listImgPixelGroupAllNotEmpty = new Array();
     }
     onEnter() {
         this.onImg(MgrData.inst.get(MgrDataItem.CURRENT_IMG));

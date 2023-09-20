@@ -95,6 +95,7 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
         // 绘制 fbo
         this.initFbo (Math.ceil (viewWidth / listImgDataInst.pixelWidth), Math.ceil (viewHeight / listImgDataInst.pixelHeight));
         this.jWebgl.useFbo (this.fbo);
+        this.jWebgl.clear ();
 
         this.mat4V.setLookAt(
             viewWidth / 2, viewHeight / 2, 1,
@@ -129,6 +130,7 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
 
         // 绘制屏幕
         this.jWebgl.useFbo (null);
+        this.jWebgl.clear ();
         viewWidth = Math.ceil (viewWidth / listImgDataInst.pixelWidth);
         viewHeight = Math.ceil (viewHeight / listImgDataInst.pixelHeight);
 

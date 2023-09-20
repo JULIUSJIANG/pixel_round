@@ -3,6 +3,7 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomRightPreviewImgAfter from "./DomRightPreviewImgAfter.js";
 import DomRightPreviewImgBefore from "./DomRightPreviewImgBefore.js";
+import DomRightPreviewImgSplit from "./DomRightPreviewImgSplit.js";
 
 export default class DomRightPreviewImg extends ReactComponentExtend <number> {
 
@@ -20,7 +21,8 @@ export default class DomRightPreviewImg extends ReactComponentExtend <number> {
             },
 
             ReactComponentExtend.instantiateComponent (DomRightPreviewImgBefore, null),
-            ReactComponentExtend.instantiateComponent (DomRightPreviewImgAfter, null)
+            // ReactComponentExtend.instantiateComponent (DomRightPreviewImgAfter, null),
+            ReactComponentExtend.instantiateComponent (DomRightPreviewImgSplit, null),
         )
     };
 }

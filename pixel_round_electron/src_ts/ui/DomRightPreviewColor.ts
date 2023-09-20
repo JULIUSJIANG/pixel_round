@@ -8,7 +8,7 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 class DomRightPreviewColor extends ReactComponentExtend <DomRightPreviewColor.Args> {
 
     render (): ReactComponentExtendInstance {
-        let colorInst = IndexGlobal.inst.detailMachine.statusPreview.listColor [this.props.idx]
+        let colorInst = IndexGlobal.inst.detailMachine.statusPreview.listColor [this.props.idx];
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {

@@ -1,7 +1,7 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomRightPreviewImgAfter from "./DomRightPreviewImgAfter.js";
 import DomRightPreviewImgBefore from "./DomRightPreviewImgBefore.js";
+import DomRightPreviewImgSplit from "./DomRightPreviewImgSplit.js";
 export default class DomRightPreviewImg extends ReactComponentExtend {
     render() {
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -11,7 +11,9 @@ export default class DomRightPreviewImg extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             }
-        }, ReactComponentExtend.instantiateComponent(DomRightPreviewImgBefore, null), ReactComponentExtend.instantiateComponent(DomRightPreviewImgAfter, null));
+        }, ReactComponentExtend.instantiateComponent(DomRightPreviewImgBefore, null), 
+        // ReactComponentExtend.instantiateComponent (DomRightPreviewImgAfter, null),
+        ReactComponentExtend.instantiateComponent(DomRightPreviewImgSplit, null));
     }
     ;
 }

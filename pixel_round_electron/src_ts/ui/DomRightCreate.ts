@@ -42,6 +42,7 @@ export default class DomRightCreate extends ReactComponentExtend<number> {
 
         // 清除画面
         this.jWebgl.useFbo (null);
+        this.jWebgl.clear ();
         let img = IndexGlobal.inst.createMachine.img.image;
 
         this.mat4P.setOrtho (

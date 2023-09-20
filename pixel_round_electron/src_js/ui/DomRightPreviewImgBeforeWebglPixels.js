@@ -68,6 +68,7 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend {
         // 绘制 fbo
         this.initFbo(Math.ceil(viewWidth / listImgDataInst.pixelWidth), Math.ceil(viewHeight / listImgDataInst.pixelHeight));
         this.jWebgl.useFbo(this.fbo);
+        this.jWebgl.clear();
         this.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);
         this.mat4P.setOrtho(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
@@ -80,6 +81,7 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend {
         this.jWebgl.programImg.draw();
         // 绘制屏幕
         this.jWebgl.useFbo(null);
+        this.jWebgl.clear();
         viewWidth = Math.ceil(viewWidth / listImgDataInst.pixelWidth);
         viewHeight = Math.ceil(viewHeight / listImgDataInst.pixelHeight);
         this.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);

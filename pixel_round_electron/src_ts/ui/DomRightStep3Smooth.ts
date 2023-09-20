@@ -15,7 +15,7 @@ import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 
 const Z_GRID = 0.1;
 
-class DomRightStep2Reduce extends ReactComponentExtend <number> {
+class DomRightStep3Smooth extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -28,6 +28,7 @@ class DomRightStep2Reduce extends ReactComponentExtend <number> {
     mat4P = new JWebglMathMatrix4();
 
     fboCurrent: JWebglFrameBuffer;
+    fboSmooth: JWebglFrameBuffer;
 
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
@@ -38,6 +39,7 @@ class DomRightStep2Reduce extends ReactComponentExtend <number> {
     initFbo (width: number, height: number) {
         if (this.fboCurrent == null || this.fboCurrent.width != width || this.fboCurrent.height != height) {
             this.fboCurrent = this.jWebgl.getFbo (width, height);
+            this.fboSmooth = this.jWebgl.getFbo (width * IndexGlobal.PIXEL_TEX_TO_SCREEN, height * IndexGlobal.PIXEL_TEX_TO_SCREEN);
         };
     }
 
@@ -87,6 +89,8 @@ class DomRightStep2Reduce extends ReactComponentExtend <number> {
 
         // 清空画布
         this.jWebgl.useFbo (this.fboCurrent);
+        this.jWebgl.clear ();
+        this.jWebgl.useFbo (this.fboSmooth);
         this.jWebgl.clear ();
         this.jWebgl.useFbo (null);
         this.jWebgl.clear ();
@@ -319,4 +323,4 @@ class DomRightStep2Reduce extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightStep2Reduce;
+export default DomRightStep3Smooth;

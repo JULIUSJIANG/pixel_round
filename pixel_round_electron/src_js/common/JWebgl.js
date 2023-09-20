@@ -9,6 +9,7 @@ import JWebglFrameBuffer from "./JWebglFrameBuffer.js";
 import JWebglImage from "./JWebglImage.js";
 import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
+import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmooth1 from "./JWebglProgramTypeSmooth1.js";
@@ -151,6 +152,9 @@ __decorate([
 __decorate([
     program(JWebglProgramTypeImg)
 ], JWebgl.prototype, "programImg", void 0);
+__decorate([
+    program(JWebglProgramTypeImgDyeing)
+], JWebgl.prototype, "programImgDyeing", void 0);
 __decorate([
     program(JWebglProgramTypeSmooth1)
 ], JWebgl.prototype, "programSmooth1", void 0);

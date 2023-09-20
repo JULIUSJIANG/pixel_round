@@ -10,7 +10,7 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
 const Z_GRID = 0.1;
-class DomRightStep2Reduce extends ReactComponentExtend {
+class DomRightStep3Smooth extends ReactComponentExtend {
     constructor() {
         super(...arguments);
         /**
@@ -33,6 +33,7 @@ class DomRightStep2Reduce extends ReactComponentExtend {
     initFbo(width, height) {
         if (this.fboCurrent == null || this.fboCurrent.width != width || this.fboCurrent.height != height) {
             this.fboCurrent = this.jWebgl.getFbo(width, height);
+            this.fboSmooth = this.jWebgl.getFbo(width * IndexGlobal.PIXEL_TEX_TO_SCREEN, height * IndexGlobal.PIXEL_TEX_TO_SCREEN);
         }
         ;
     }
@@ -72,6 +73,8 @@ class DomRightStep2Reduce extends ReactComponentExtend {
         let cameraHeight = fboHeight * IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length;
         // 清空画布
         this.jWebgl.useFbo(this.fboCurrent);
+        this.jWebgl.clear();
+        this.jWebgl.useFbo(this.fboSmooth);
         this.jWebgl.clear();
         this.jWebgl.useFbo(null);
         this.jWebgl.clear();
@@ -226,4 +229,4 @@ class DomRightStep2Reduce extends ReactComponentExtend {
         })))));
     }
 }
-export default DomRightStep2Reduce;
+export default DomRightStep3Smooth;

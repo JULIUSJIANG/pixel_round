@@ -4,6 +4,7 @@ import JWebglImage from "./JWebglImage.js";
 import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
+import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmooth1 from "./JWebglProgramTypeSmooth1.js";
@@ -148,6 +149,9 @@ class JWebgl {
 
     @program (JWebglProgramTypeImg)
     programImg: JWebglProgramTypeImg;
+
+    @program (JWebglProgramTypeImgDyeing)
+    programImgDyeing: JWebglProgramTypeImgDyeing;
 
     @program (JWebglProgramTypeSmooth1)
     programSmooth1: JWebglProgramTypeSmooth1;

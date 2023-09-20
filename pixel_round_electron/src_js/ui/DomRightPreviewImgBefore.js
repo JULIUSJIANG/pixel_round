@@ -44,15 +44,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
             }
-        }, ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglCutted, this.props), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglPixels, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
-            style: {
-                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
-                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
-            }
-        }, ...this.listChildren), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+        }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
@@ -74,7 +66,15 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
         }, null, null)), ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`下内边距`, listImgDataInst.paddingBottom, (val) => {
             listImgDataInst.paddingBottom = Math.floor(val);
             IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged();
-        }, null, null))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+        }, null, null))), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglCutted, this.props), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglPixels, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            style: {
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+            }
+        }, ...this.listChildren), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW

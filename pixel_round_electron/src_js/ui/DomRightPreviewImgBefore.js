@@ -37,7 +37,14 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
             }
-        }, ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglOrigin, this.props), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglCutted, this.props), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglPixels, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+        }, ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglOrigin, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            style: {
+                [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
+                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
+            }
+        }, ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglCutted, this.props), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglPixels, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                 [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
@@ -78,7 +85,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
         }, 1, null)), ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`颗粒高度`, listImgDataInst.pixelHeight, (val) => {
             listImgDataInst.pixelHeight = Math.floor(val);
             IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged();
-        }, 1, null))));
+        }, 1, null)))));
     }
 }
 export default DomRightPreviewImgBefore;

@@ -50,118 +50,132 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                 DomRightPreviewImgBeforeWebglOrigin,
                 this.props
             ),
-            ReactComponentExtend.instantiateComponent (
-                DomRightPreviewImgBeforeWebglCutted,
-                this.props
-            ),
-            ReactComponentExtend.instantiateComponent (
-                DomRightPreviewImgBeforeWebglPixels,
-                this.props
-            ),
+
             ReactComponentExtend.instantiateTag (
                 MgrDomDefine.TAG_DIV,
                 {
                     style: {
-                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                        [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                        [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
-
+                        [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
+                        [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                        
                         [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
                     }
                 },
 
-                ...this.listChildren
-            ),
-            ReactComponentExtend.instantiateTag (
-                MgrDomDefine.TAG_DIV,
-                {
-                    style: {
-                        [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                ReactComponentExtend.instantiateComponent (
+                    DomRightPreviewImgBeforeWebglCutted,
+                    this.props
+                ),
+                ReactComponentExtend.instantiateComponent (
+                    DomRightPreviewImgBeforeWebglPixels,
+                    this.props
+                ),
+                ReactComponentExtend.instantiateTag (
+                    MgrDomDefine.TAG_DIV,
+                    {
+                        style: {
+                            [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                            [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                            [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+    
+                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                        }
                     },
-                },
-
-                ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
-                    `左内边距`, 
-                    listImgDataInst.paddingLeft,
-                    (val) => {
-                        listImgDataInst.paddingLeft = Math.floor (val);
-                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+    
+                    ...this.listChildren
+                ),
+                ReactComponentExtend.instantiateTag (
+                    MgrDomDefine.TAG_DIV,
+                    {
+                        style: {
+                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                        },
                     },
-                    null,
-                    null
-                )),
-                ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
-                    `右内边距`, 
-                    listImgDataInst.paddingRight,
-                    (val) => {
-                        listImgDataInst.paddingRight = Math.floor (val);
-                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+    
+                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                        `左内边距`, 
+                        listImgDataInst.paddingLeft,
+                        (val) => {
+                            listImgDataInst.paddingLeft = Math.floor (val);
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                        },
+                        null,
+                        null
+                    )),
+                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                        `右内边距`, 
+                        listImgDataInst.paddingRight,
+                        (val) => {
+                            listImgDataInst.paddingRight = Math.floor (val);
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                        },
+                        null,
+                        null
+                    )),
+                ),
+                ReactComponentExtend.instantiateTag (
+                    MgrDomDefine.TAG_DIV,
+                    {
+                        style: {
+                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                        },
                     },
-                    null,
-                    null
-                )),
-            ),
-            ReactComponentExtend.instantiateTag (
-                MgrDomDefine.TAG_DIV,
-                {
-                    style: {
-                        [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+    
+                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                        `上内边距`,
+                        listImgDataInst.paddingTop,
+                        (val) => {
+                            listImgDataInst.paddingTop = Math.floor (val);
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                        },
+                        null,
+                        null
+                    )),
+                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                        `下内边距`, 
+                        listImgDataInst.paddingBottom,
+                        (val) => {
+                            listImgDataInst.paddingBottom = Math.floor (val);
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                        },
+                        null,
+                        null
+                    )),
+                ),
+                ReactComponentExtend.instantiateTag (
+                    MgrDomDefine.TAG_DIV,
+                    {
+                        style: {
+                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                        },
                     },
-                },
-
-                ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
-                    `上内边距`,
-                    listImgDataInst.paddingTop,
-                    (val) => {
-                        listImgDataInst.paddingTop = Math.floor (val);
-                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
-                    },
-                    null,
-                    null
-                )),
-                ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
-                    `下内边距`, 
-                    listImgDataInst.paddingBottom,
-                    (val) => {
-                        listImgDataInst.paddingBottom = Math.floor (val);
-                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
-                    },
-                    null,
-                    null
-                )),
-            ),
-            ReactComponentExtend.instantiateTag (
-                MgrDomDefine.TAG_DIV,
-                {
-                    style: {
-                        [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
-                    },
-                },
-
-                ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
-                    `颗粒宽度`, 
-                    listImgDataInst.pixelWidth,
-                    (val) => {
-                        listImgDataInst.pixelWidth = Math.floor (val);
-                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
-                    },
-                    1,
-                    null
-                )),
-                ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
-                    `颗粒高度`,
-                    listImgDataInst.pixelHeight, 
-                    (val) => {
-                        listImgDataInst.pixelHeight = Math.floor (val);
-                        IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
-                    },
-                    1,
-                    null
-                )),
+    
+                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                        `颗粒宽度`, 
+                        listImgDataInst.pixelWidth,
+                        (val) => {
+                            listImgDataInst.pixelWidth = Math.floor (val);
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                        },
+                        1,
+                        null
+                    )),
+                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                        `颗粒高度`,
+                        listImgDataInst.pixelHeight, 
+                        (val) => {
+                            listImgDataInst.pixelHeight = Math.floor (val);
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                        },
+                        1,
+                        null
+                    )),
+                ),
             ),
         );
     }

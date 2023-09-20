@@ -2,6 +2,7 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import DomRightPreviewImgAfter from "./DomRightStep0SmoothOrdinary.js";
 import DomRightStep0Mask from "./DomRightStep0Mask.js";
 import DomRightStep1Split from "./DomRightStep1Split.js";
+import DomRightStep2Reduce from "./DomRightStep2Reduce.js";
 
 type ReactComponentExtendType <T> = (new (state, t: T) => ReactComponentExtend <T>);
 
@@ -41,7 +42,7 @@ namespace DomRightStepRS {
     export const step2Reduce = new DomRightStepRS ({
         id: 1,
         name: `步骤 2: 迭代`,
-        comGetter: () => DomRightStep0Mask
+        comGetter: () => DomRightStep2Reduce
     });
     export const step3Smooth = new DomRightStepRS ({
         id: 2,

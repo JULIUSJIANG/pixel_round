@@ -124,7 +124,7 @@ const createWindow = () => {
     win.maximize();
     win.setMenu(null);
     win.loadFile(`./src_js/IndexWindow.html`);
-    // win.openDevTools ();
+    win.openDevTools();
     win.webContents.session.on('will-download', (event, item, webContents) => {
         if (!filePath) {
             return;

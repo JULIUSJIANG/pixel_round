@@ -69,6 +69,10 @@ class ImgPixelGroup {
      * 面积
      */
     areaVolume: number;
+    /**
+     * 尺寸
+     */
+    areaSize: number;
 
     /**
      * 进行数据缓存
@@ -77,6 +81,7 @@ class ImgPixelGroup {
         this.areaWidth = this.borderRight - this.borderLeft + 1;
         this.areaHeight = this.borderTop - this.borderBottom + 1;
         this.areaVolume = this.areaWidth * this.areaHeight;
+        this.areaSize = Math.max (this.areaWidth, this.areaHeight);
     }
 
     static create (color: number) {

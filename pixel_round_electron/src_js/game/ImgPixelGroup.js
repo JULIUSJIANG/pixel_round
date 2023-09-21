@@ -46,6 +46,7 @@ class ImgPixelGroup {
         this.areaWidth = this.borderRight - this.borderLeft + 1;
         this.areaHeight = this.borderTop - this.borderBottom + 1;
         this.areaVolume = this.areaWidth * this.areaHeight;
+        this.areaSize = Math.max(this.areaWidth, this.areaHeight);
     }
     static create(color) {
         let val = objectPool.pop(this.poolType);

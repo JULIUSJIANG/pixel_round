@@ -136,6 +136,9 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
             let listImgPixelGroupAllI = this.relMachine.rel.listImgPixelGroupAll [i];
             listImgPixelGroupAllI.cache ();
         };
+        // this.relMachine.rel.listImgPixelGroupAll.sort ((a, b) => {
+        //     return a.areaVolume - b.areaVolume;
+        // });
         this.relMachine.rel.listImgPixelGroupAll.sort ((a, b) => {
             return a.areaVolume - b.areaVolume;
         });

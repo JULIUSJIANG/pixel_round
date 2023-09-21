@@ -82,6 +82,7 @@ bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight
   vec4 colorUVLeft = texelFetch(uv + offsetLeft);
   vec4 colorUVRelative = texelFetch(uv + offsetRelative);
   vec4 colorUVRight = texelFetch(uv + offsetRight);
+
   // 存在其中一组不造成同类别颜色，那么没问题
   if (!checkEqual (colorUV, colorUVRelative) || !checkEqual (colorUVLeft, colorUVRight)) {
     return true;
@@ -93,10 +94,9 @@ bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight
   if (checkEqual (avgUVWithRelative, avgLeftWidthRight)) {
     return true;
   };
+
   // 谁高亮，谁作出妥协
-  float weightLeftWithRight = dot (avgLeftWidthRight.rgb, vec3 (1, 1, 1)) * avgLeftWidthRight.a;
-  float weightUVWithRelative = dot (avgUVWithRelative.rgb, vec3 (1, 1, 1)) * avgUVWithRelative.a;
-  return weightLeftWithRight < weightUVWithRelative;
+  return avgLeftWidthRight.a > avgUVWithRelative.a;
 }
 // 如果在阈值内，绘制连接 2 个像素的对角线
 bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {

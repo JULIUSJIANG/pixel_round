@@ -21,6 +21,7 @@ namespace MgrDomDefine {
     export const STYLE_WIDTH = "width";
     export const STYLE_WIDTH_PERCENTAGE_0 = "0%";
     export const STYLE_WIDTH_PERCENTAGE_100 = "100%";
+    export const STYLE_WIDTH_FIT_CONTENT = "fit-content";
 
     export const STYLE_TOP = "top";
     export const STYLE_RIGHT = "right";
@@ -38,6 +39,7 @@ namespace MgrDomDefine {
     export const STYLE_DISPLAY = "display";
     export const STYLE_DISPLAY_FLEX = "flex";
     export const STYLE_DISPLAY_BLOCK = "block";
+    export const STYLE_DISPLAY_INLINE_BLOCK = "inline-block";
     export const STYLE_DISPLAY_NONE = "none";
 
     export const STYLE_FLEX_DIRECTION = "flexDirection";

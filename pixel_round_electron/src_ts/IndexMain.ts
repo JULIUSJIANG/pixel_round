@@ -1,4 +1,5 @@
 const _electron = require (`electron`);
+const _fs = require (`fs`);
 const {app, BrowserWindow, dialog} = _electron;
 const path = require (`path`);
 
@@ -142,6 +143,30 @@ namespace MgrSdkCoreElectronRequest {
         analyse: (ctx) => {
             win.webContents.openDevTools ();
             return Promise.resolve ({});
+        }
+    });
+
+    export interface ClientFetchSaveTxtI {
+        fileName: string;
+        txt: string
+    };
+    export interface ClientFetchSaveTxtO {
+
+    };
+    export const CLIENT_FETCH_SAVE_TXT = new MgrSdkCoreElectronRequest <ClientFetchSaveTxtI, ClientFetchSaveTxtO> ({
+        code: 1005,
+        analyse: (ctx) => {
+            return new Promise <ClientFetchSaveTxtO> ((resolve, reject) => {
+                _fs.writeFile (ctx.fileName, ctx.txt, (err) => {
+                    if (err) {
+                        reject (err);
+                        return;
+                    };
+                    resolve ({
+                        isSuccessed: true
+                    });
+                });
+            }); 
         }
     });
 }

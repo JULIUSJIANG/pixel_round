@@ -17,6 +17,7 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_WIDTH = "width";
     MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0 = "0%";
     MgrDomDefine.STYLE_WIDTH_PERCENTAGE_100 = "100%";
+    MgrDomDefine.STYLE_WIDTH_FIT_CONTENT = "fit-content";
     MgrDomDefine.STYLE_TOP = "top";
     MgrDomDefine.STYLE_RIGHT = "right";
     MgrDomDefine.STYLE_BOTTOM = "bottom";
@@ -30,6 +31,7 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_DISPLAY = "display";
     MgrDomDefine.STYLE_DISPLAY_FLEX = "flex";
     MgrDomDefine.STYLE_DISPLAY_BLOCK = "block";
+    MgrDomDefine.STYLE_DISPLAY_INLINE_BLOCK = "inline-block";
     MgrDomDefine.STYLE_DISPLAY_NONE = "none";
     MgrDomDefine.STYLE_FLEX_DIRECTION = "flexDirection";
     MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN = "column";

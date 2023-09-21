@@ -17,7 +17,7 @@ const Z_GRID = 0.1;
 
 const Z_MASK = 0.2;
 
-class DomRightPreviewImgAfter extends ReactComponentExtend <number> {
+class DomRightSmooth1Ordinary extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -290,4 +290,4 @@ class DomRightPreviewImgAfter extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightPreviewImgAfter;
+export default DomRightSmooth1Ordinary;

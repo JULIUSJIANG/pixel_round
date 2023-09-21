@@ -5,7 +5,7 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomRightStepRS from "./DomRightStepRS.js";
 
-class DomRightStep extends ReactComponentExtend <number> {
+class DomRightSmooth extends ReactComponentExtend <number> {
 
     listChildren = new Array <ReactComponentExtendInstance> ();
 
@@ -68,4 +68,4 @@ class DomRightStep extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightStep;
+export default DomRightSmooth;

@@ -51,6 +51,12 @@ class MgrSdkCoreElectronRequest {
         code: 1004,
         analyse: null
     });
+    ;
+    ;
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_TXT = new MgrSdkCoreElectronRequest({
+        code: 1005,
+        analyse: null
+    });
 })(MgrSdkCoreElectronRequest || (MgrSdkCoreElectronRequest = {}));
 NodeModules.electron.ipcRenderer.on(MgrSdkCoreElectronRequest.EVT_NAME_SERVER_ACTIVE, (evt, args) => {
     // 解析得到具体策略
@@ -67,6 +73,15 @@ NodeModules.electron.ipcRenderer.on(MgrSdkCoreElectronRequest.EVT_NAME_SERVER_AC
  */
 class MgrSdkCoreElectron extends MgrSdkCore {
     set(txt) {
+        return this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_TXT, {
+            fileName: STORAGE_PATH,
+            txt: txt
+        })
+            .then(() => {
+            return {
+                isSuccessed: true
+            };
+        });
         let folder = NodeModules.path.dirname(STORAGE_PATH);
         return Promise.resolve()
             // 检查文件目录是否存在
@@ -110,6 +125,7 @@ class MgrSdkCoreElectron extends MgrSdkCore {
                         return;
                     }
                     ;
+                    this.logToMain(`保存文本为:${txt}`);
                     resolve({
                         isSuccessed: true
                     });

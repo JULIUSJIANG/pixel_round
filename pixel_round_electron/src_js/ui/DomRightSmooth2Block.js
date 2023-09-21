@@ -9,11 +9,11 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
-import DomRightStep4MergeReduce from "./DomRightStep4MergeReduce.js";
-import DomRightStep4MergeSmooth from "./DomRightStep4MergeSmooth.js";
-import DomRightStep4MergeSplit from "./DomRightStep4MergeSplit.js";
+import DomRightSmooth2BlockStep2Reduce from "./DomRightSmooth2BlockStep2Reduce.js";
+import DomRightSmooth2BlockStep3Smooth from "./DomRightSmooth2BlockStep3Smooth.js";
+import DomRightSmooth2BlockStep1Split from "./DomRightSmooth2BlockStep1Split.js";
 const Z_GRID = 0.1;
-class DomRightStep4Merge extends ReactComponentExtend {
+class DomRightSmooth2Block extends ReactComponentExtend {
     constructor() {
         super(...arguments);
         /**
@@ -178,7 +178,7 @@ class DomRightStep4Merge extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_FIT_CONTENT
             }
-        }, ReactComponentExtend.instantiateComponent(DomRightStep4MergeSplit, null), ReactComponentExtend.instantiateComponent(DomRightStep4MergeReduce, null), ReactComponentExtend.instantiateComponent(DomRightStep4MergeSmooth, null), ReactComponentExtend.instantiateComponent(DomRightStep4MergeSmooth, null), ReactComponentExtend.instantiateComponent(DomRightStep4MergeSmooth, null), 
+        }, ReactComponentExtend.instantiateComponent(DomRightSmooth2BlockStep1Split, null), ReactComponentExtend.instantiateComponent(DomRightSmooth2BlockStep2Reduce, null), ReactComponentExtend.instantiateComponent(DomRightSmooth2BlockStep3Smooth, null), 
         // 滚动的列表
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
@@ -207,4 +207,4 @@ class DomRightStep4Merge extends ReactComponentExtend {
         }))))));
     }
 }
-export default DomRightStep4Merge;
+export default DomRightSmooth2Block;

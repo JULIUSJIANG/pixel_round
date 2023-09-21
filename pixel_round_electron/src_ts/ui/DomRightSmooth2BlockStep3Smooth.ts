@@ -15,7 +15,7 @@ import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 
 const Z_GRID = 0.1;
 
-class DomRightStep2Reduce extends ReactComponentExtend <number> {
+class DomRightSmooth2BlockStep3Smooth extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -28,6 +28,7 @@ class DomRightStep2Reduce extends ReactComponentExtend <number> {
     mat4P = new JWebglMathMatrix4();
 
     fboCurrent: JWebglFrameBuffer;
+    fboSmooth: JWebglFrameBuffer;
 
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
@@ -38,6 +39,7 @@ class DomRightStep2Reduce extends ReactComponentExtend <number> {
     initFbo (width: number, height: number) {
         if (this.fboCurrent == null || this.fboCurrent.width != width || this.fboCurrent.height != height) {
             this.fboCurrent = this.jWebgl.getFbo (width, height);
+            this.fboSmooth = this.jWebgl.getFbo (width, height);
         };
     }
 
@@ -114,7 +116,6 @@ class DomRightStep2Reduce extends ReactComponentExtend <number> {
                 this.mat4M,
                 this.jWebgl.mat4Mvp
             );
-
             this.jWebgl.programPoint.uMvp.fill (this.jWebgl.mat4Mvp);
             this.jWebgl.programPoint.uColor.fill (listImgPixelGroupAllI.colorObj.data01);
             this.jWebgl.programPoint.uSize.fill (1);
@@ -127,7 +128,38 @@ class DomRightStep2Reduce extends ReactComponentExtend <number> {
             };
             this.jWebgl.programPoint.draw ();
 
-            // 把帧缓冲区内容作为图片绘制到画布上面
+            // 把分块内容绘制到平滑缓冲区里面
+            this.jWebgl.useFbo (this.fboSmooth);
+            this.jWebgl.clear ();
+            this.mat4V.setLookAt (
+                0, 0, 1,
+                0, 0, 0,
+                0, 1, 0
+            );
+            this.mat4P.setOrtho (
+                -1, 1,
+                -1, 1,
+                0, 2
+            );
+            JWebglMathMatrix4.multiplayMat4List (
+                this.mat4P,
+                this.mat4V,
+                this.mat4M,
+                this.jWebgl.mat4Mvp
+            );
+            this.jWebgl.programImgDyeing.uMvp.fill (this.jWebgl.mat4Mvp);
+            this.jWebgl.programImgDyeing.uSampler.fillByFbo (this.fboCurrent);
+            this.jWebgl.programImgDyeing.uColor.fill (listImgPixelGroupAllI.colorObj.data01);
+            this.jWebgl.programImgDyeing.add (
+                JWebglMathVector4.centerO,
+                JWebglMathVector4.axisZStart,
+                JWebglMathVector4.axisYEnd,
+                2,
+                2
+            );
+            this.jWebgl.programImgDyeing.draw ();
+
+            // 把平滑缓冲区内容绘制到画布中
             this.jWebgl.useFbo (null);
             this.mat4V.setLookAt(
                 cameraWidth / 2, cameraHeight / 2, 1,
@@ -145,20 +177,20 @@ class DomRightStep2Reduce extends ReactComponentExtend <number> {
                 this.mat4M,
                 this.jWebgl.mat4Mvp
             );
-            this.jWebgl.programImg.draw ();
-            this.jWebgl.programImgDyeing.uMvp.fill (this.jWebgl.mat4Mvp);
-            this.jWebgl.programImgDyeing.uSampler.fillByFbo (this.fboCurrent);
-            this.jWebgl.programImgDyeing.uColor.fill (listImgPixelGroupAllI.colorObj.data01);
+            this.jWebgl.programSmooth1.uMvp.fill (this.jWebgl.mat4Mvp);
+            this.jWebgl.programSmooth1.uTexture.fillByFbo (this.fboSmooth);
+            this.jWebgl.programSmooth1.uTextureSize.fill (fboWidth, fboHeight);
+            this.jWebgl.programSmooth1.uLightFirst.fill (-1);
             this.posImg.elements [0] = fboWidth / 2;
             this.posImg.elements [1] = fboHeight / 2 + yBase;
-            this.jWebgl.programImgDyeing.add (
+            this.jWebgl.programSmooth1.add (
                 this.posImg,
                 JWebglMathVector4.axisZStart,
                 JWebglMathVector4.axisYEnd,
                 fboWidth,
                 fboHeight
             );
-            this.jWebgl.programImgDyeing.draw ();
+            this.jWebgl.programSmooth1.draw ();
         };
 
         this.jWebgl.useFbo (null);
@@ -248,75 +280,41 @@ class DomRightStep2Reduce extends ReactComponentExtend <number> {
             MgrDomDefine.TAG_DIV,
             {
                 style: {
-                    [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
-                    [MgrDomDefine.STYLE_FLEX_GROW]: 1,
-                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                    [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                    [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
-
-                    [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                    [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
+                    [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
+                    [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
+                    [MgrDomDefine.STYLE_FLEX_GROW]: 0,
+                    [MgrDomDefine.STYLE_DISPLAY]: this.finishedImg == null ? MgrDomDefine.STYLE_DISPLAY_NONE : MgrDomDefine.STYLE_DISPLAY_BLOCK
                 }
             },
-
-            // 滚动视图的遮罩
+        
             ReactComponentExtend.instantiateTag (
                 MgrDomDefine.TAG_DIV,
                 {
                     style: {
-                        [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
-                        [MgrDomDefine.STYLE_FLEX_GROW]: 1,
-                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                        [MgrDomDefine.STYLE_PADDING_RIGHT]: MgrDomDefine.CONFIG_TXT_SPACING,
-                        [MgrDomDefine.STYLE_PADDING_BOTTOM]: MgrDomDefine.CONFIG_TXT_SPACING,
-
-                        [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_SCROLL,
-                        [MgrDomDefine.STYLE_OVERFLOW_Y]: MgrDomDefine.STYLE_OVERFLOW_Y_SCROLL
+                        [MgrDomDefine.STYLE_WIDTH]: 0,
+                        [MgrDomDefine.STYLE_HEIGHT]: 0,
+                        [MgrDomDefine.STYLE_POSITION]: MgrDomDefine.STYLE_POSITION_RELATIVE,
+                        [MgrDomDefine.STYLE_LEFT]: 0,
+                        [MgrDomDefine.STYLE_TOP]: 0,
                     }
                 },
-
-                // 滚动的列表
+            
                 ReactComponentExtend.instantiateTag (
-                    MgrDomDefine.TAG_DIV,
+                    MgrDomDefine.TAG_CANVAS,
                     {
+                        ref: this.canvasWebglRef,
+                        width: canvasWidth,
+                        height: canvasHeight,
                         style: {
                             [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
                             [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
-                            [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-                            [MgrDomDefine.STYLE_DISPLAY]: this.finishedImg == null ? MgrDomDefine.STYLE_DISPLAY_NONE : MgrDomDefine.STYLE_DISPLAY_BLOCK
+                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                         }
-                    },
-                
-                    ReactComponentExtend.instantiateTag (
-                        MgrDomDefine.TAG_DIV,
-                        {
-                            style: {
-                                [MgrDomDefine.STYLE_WIDTH]: 0,
-                                [MgrDomDefine.STYLE_HEIGHT]: 0,
-                                [MgrDomDefine.STYLE_POSITION]: MgrDomDefine.STYLE_POSITION_RELATIVE,
-                                [MgrDomDefine.STYLE_LEFT]: 0,
-                                [MgrDomDefine.STYLE_TOP]: 0,
-                            }
-                        },
-                    
-                        ReactComponentExtend.instantiateTag (
-                            MgrDomDefine.TAG_CANVAS,
-                            {
-                                ref: this.canvasWebglRef,
-                                width: canvasWidth,
-                                height: canvasHeight,
-                                style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
-                                    [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
-                                }
-                            }
-                        )
-                    )
+                    }
                 )
-            ),
+            )
         );
     }
 }
 
-export default DomRightStep2Reduce;
+export default DomRightSmooth2BlockStep3Smooth;

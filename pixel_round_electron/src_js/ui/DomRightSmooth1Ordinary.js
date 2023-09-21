@@ -1,7 +1,7 @@
 import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
-import JWebglEnum from "../common/JWebglEnum.js";
+import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
@@ -9,11 +9,9 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
-import DomRightStep4MergeReduce from "./DomRightStep4MergeReduce.js";
-import DomRightStep4MergeSmooth from "./DomRightStep4MergeSmooth.js";
-import DomRightStep4MergeSplit from "./DomRightStep4MergeSplit.js";
 const Z_GRID = 0.1;
-class DomRightStep4Merge extends ReactComponentExtend {
+const Z_MASK = 0.2;
+class DomRightSmooth1Ordinary extends ReactComponentExtend {
     constructor() {
         super(...arguments);
         /**
@@ -26,7 +24,14 @@ class DomRightStep4Merge extends ReactComponentExtend {
         this.posImg = new JWebglMathVector4();
         this.posFrom = new JWebglMathVector4(0, 0, Z_GRID);
         this.posTo = new JWebglMathVector4(0, 0, Z_GRID);
-        this.posPoint = new JWebglMathVector4();
+        this.posOutLB = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posOutRB = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posOutLT = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posOutRT = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posInLB = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posInRB = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posInLT = new JWebglMathVector4(0, 0, Z_MASK);
+        this.posInRT = new JWebglMathVector4(0, 0, Z_MASK);
     }
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
@@ -34,9 +39,8 @@ class DomRightStep4Merge extends ReactComponentExtend {
         this.mat4M.setIdentity();
     }
     initFbo(width, height) {
-        if (this.fboCurrent == null || this.fboCurrent.width != width || this.fboCurrent.height != height) {
-            this.fboCurrent = this.jWebgl.getFbo(width, height);
-            this.fboSmooth = this.jWebgl.getFbo(width, height);
+        if (this.fbo == null || this.fbo.width != width || this.fbo.height != height) {
+            this.fbo = this.jWebgl.getFbo(width, height);
         }
         ;
     }
@@ -58,12 +62,10 @@ class DomRightStep4Merge extends ReactComponentExtend {
             return;
         }
         ;
-        // 没分块完的不画
-        if (IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length == 0) {
-            return;
-        }
-        ;
-        // 计算视图尺寸
+        // 图片尺寸
+        let imgWidth = img.assetsImg.image.width;
+        let imgHeight = img.assetsImg.image.height;
+        // 视图尺寸
         let viewWidth = (img.assetsImg.image.width + listImgDataInst.paddingLeft + listImgDataInst.paddingRight);
         let viewHeight = (img.assetsImg.image.height + listImgDataInst.paddingBottom + listImgDataInst.paddingTop);
         // 帧缓冲区尺寸
@@ -71,57 +73,55 @@ class DomRightStep4Merge extends ReactComponentExtend {
         let fboHeight = Math.ceil(viewHeight / listImgDataInst.pixelHeight);
         // 绘制 fbo
         this.initFbo(fboWidth, fboHeight);
-        // 清空画布
-        this.jWebgl.useFbo(this.fboCurrent);
+        this.jWebgl.useFbo(this.fbo);
         this.jWebgl.clear();
+        this.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);
+        this.mat4P.setOrtho(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0, 2);
+        JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
+        // 图片
+        this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
+        this.jWebgl.programImg.uSampler.fillByImg(img);
+        this.posImg.elements[0] = imgWidth / 2 + listImgDataInst.paddingLeft;
+        this.posImg.elements[1] = imgHeight / 2 + listImgDataInst.paddingBottom;
+        this.jWebgl.programImg.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgWidth, imgHeight);
+        this.jWebgl.programImg.draw();
+        // 绘制屏幕
         this.jWebgl.useFbo(null);
         this.jWebgl.clear();
-        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length; i++) {
-            let idx = i;
-            let listImgPixelGroupAllI = IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty[idx];
-            // 把分块绘制到帧缓冲区里面
-            this.jWebgl.useFbo(this.fboCurrent);
-            this.mat4V.setLookAt(fboWidth / 2, fboHeight / 2, 1, fboWidth / 2, fboHeight / 2, 0, 0, 1, 0);
-            this.mat4P.setOrtho(-fboWidth / 2, fboWidth / 2, -fboHeight / 2, fboHeight / 2, 0, 2);
-            JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
-            this.jWebgl.programPoint.uMvp.fill(this.jWebgl.mat4Mvp);
-            this.jWebgl.programPoint.uColor.fill(listImgPixelGroupAllI.colorObj.data01);
-            this.jWebgl.programPoint.uSize.fill(1);
-            for (let j = 0; j < listImgPixelGroupAllI.listPos.length; j += 2) {
-                let x = listImgPixelGroupAllI.listPos[j + 0];
-                let y = listImgPixelGroupAllI.listPos[j + 1];
-                this.posPoint.elements[0] = x + 1;
-                this.posPoint.elements[1] = y + 1;
-                this.jWebgl.programPoint.add(this.posPoint);
-            }
-            ;
-            this.jWebgl.programPoint.draw();
-            // 把分块内容绘制到平滑缓冲区里面
-            this.jWebgl.useFbo(this.fboSmooth);
-            this.jWebgl.clear();
-            this.mat4V.setLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
-            this.mat4P.setOrtho(-1, 1, -1, 1, 0, 2);
-            JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
-            this.jWebgl.programImgDyeing.uMvp.fill(this.jWebgl.mat4Mvp);
-            this.jWebgl.programImgDyeing.uSampler.fillByFbo(this.fboCurrent);
-            this.jWebgl.programImgDyeing.uColor.fill(listImgPixelGroupAllI.colorObj.data01);
-            this.jWebgl.programImgDyeing.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
-            this.jWebgl.programImgDyeing.draw();
-            // 把平滑缓冲区内容绘制到画布中
-            this.jWebgl.useFbo(null);
-            this.jWebgl.programSmooth1.uMvp.fill(this.jWebgl.mat4Mvp);
-            this.jWebgl.programSmooth1.uTexture.fillByFbo(this.fboSmooth);
-            this.jWebgl.programSmooth1.uTextureSize.fill(fboWidth, fboHeight);
-            this.jWebgl.programSmooth1.uLightFirst.fill(-1);
-            this.posImg.elements[0] = 0;
-            this.posImg.elements[1] = 0;
-            this.posImg.elements[2] = i / IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length;
-            this.jWebgl.programSmooth1.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
-            this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE_MINUS_DST_ALPHA, JWebglEnum.BlendFunc.DST_ALPHA);
-            this.jWebgl.programSmooth1.draw();
-            this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
+        viewWidth = fboWidth;
+        viewHeight = fboHeight;
+        this.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);
+        this.mat4P.setOrtho(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0, 2);
+        JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
+        // 图片
+        this.jWebgl.programSmooth1.uMvp.fill(this.jWebgl.mat4Mvp);
+        this.jWebgl.programSmooth1.uTexture.fillByFbo(this.fbo);
+        this.jWebgl.programSmooth1.uTextureSize.fill(viewWidth, viewHeight);
+        this.jWebgl.programSmooth1.uLightFirst.fill(-1);
+        this.posImg.elements[0] = viewWidth / 2;
+        this.posImg.elements[1] = viewHeight / 2;
+        this.jWebgl.programSmooth1.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, viewWidth, viewHeight);
+        this.jWebgl.programSmooth1.draw();
+        // 网格
+        this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
+        let colorGrid = JWebglColor.COLOR_BLACK;
+        for (let i = 0; i <= viewWidth; i++) {
+            this.posFrom.elements[0] = i;
+            this.posFrom.elements[1] = 0;
+            this.posTo.elements[0] = i;
+            this.posTo.elements[1] = viewHeight;
+            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
         }
         ;
+        for (let i = 0; i <= viewHeight; i++) {
+            this.posFrom.elements[0] = 0;
+            this.posFrom.elements[1] = i;
+            this.posTo.elements[0] = viewWidth;
+            this.posTo.elements[1] = i;
+            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
+        }
+        ;
+        this.jWebgl.programLine.draw();
     }
     render() {
         let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
@@ -143,12 +143,9 @@ class DomRightStep4Merge extends ReactComponentExtend {
         ;
         let canvasWidth = 1;
         let canvasHeight = 1;
-        if (this.finishedImg != null && 0 < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length) {
-            let fboWidth = Math.ceil((img.image.width + listImgDataInst.paddingRight + listImgDataInst.paddingLeft) / listImgDataInst.pixelWidth);
-            let fboHeight = Math.ceil((img.image.height + listImgDataInst.paddingTop + listImgDataInst.paddingBottom) / listImgDataInst.pixelHeight);
-            let scale = IndexGlobal.PIXEL_TEX_TO_SCREEN;
-            canvasWidth = fboWidth * scale;
-            canvasHeight = fboHeight * scale;
+        if (this.finishedImg != null) {
+            canvasWidth = Math.ceil((img.image.width + listImgDataInst.paddingRight + listImgDataInst.paddingLeft) / listImgDataInst.pixelWidth) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+            canvasHeight = Math.ceil((img.image.height + listImgDataInst.paddingTop + listImgDataInst.paddingBottom) / listImgDataInst.pixelHeight) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
         }
         ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -173,12 +170,7 @@ class DomRightStep4Merge extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_SCROLL,
                 [MgrDomDefine.STYLE_OVERFLOW_Y]: MgrDomDefine.STYLE_OVERFLOW_Y_SCROLL
             }
-        }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
-            style: {
-                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_FIT_CONTENT
-            }
-        }, ReactComponentExtend.instantiateComponent(DomRightStep4MergeSplit, null), ReactComponentExtend.instantiateComponent(DomRightStep4MergeReduce, null), ReactComponentExtend.instantiateComponent(DomRightStep4MergeSmooth, null), ReactComponentExtend.instantiateComponent(DomRightStep4MergeSmooth, null), ReactComponentExtend.instantiateComponent(DomRightStep4MergeSmooth, null), 
+        }, 
         // 滚动的列表
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
@@ -197,14 +189,14 @@ class DomRightStep4Merge extends ReactComponentExtend {
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvasWebglRef,
-            width: canvasWidth,
-            height: canvasHeight,
+            width: canvasWidth * IndexGlobal.ANTINA,
+            height: canvasHeight * IndexGlobal.ANTINA,
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
                 [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
-        }))))));
+        })))));
     }
 }
-export default DomRightStep4Merge;
+export default DomRightSmooth1Ordinary;

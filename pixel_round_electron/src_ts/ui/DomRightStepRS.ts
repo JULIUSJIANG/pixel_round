@@ -1,10 +1,6 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import DomRightPreviewImgAfter from "./DomRightStep0SmoothOrdinary.js";
-import DomRightStep0Mask from "./DomRightStep0Mask.js";
-import DomRightStep1Split from "./DomRightStep1Split.js";
-import DomRightStep2Reduce from "./DomRightStep2Reduce.js";
-import DomRightStep3Smooth from "./DomRightStep3Smooth.js";
-import DomRightStep4Merge from "./DomRightStep4Merge.js";
+import DomRightSmooth1Ordinary from "./DomRightSmooth1Ordinary.js";
+import DomRightSmooth2Block from "./DomRightSmooth2Block.js";
 
 type ReactComponentExtendType <T> = (new (state, t: T) => ReactComponentExtend <T>);
 
@@ -37,30 +33,14 @@ namespace DomRightStepRS {
     export const listInst = new Array <DomRightStepRS <any>> ();
 
     export const step0Smooth0 = new DomRightStepRS ({
-        id: 2001,
+        id: 1,
         name: `经典平滑`,
-        comGetter: () => DomRightPreviewImgAfter
-    });
-
-    export const step1Split = new DomRightStepRS ({
-        id: 1001,
-        name: `步骤 1: 分割`,
-        comGetter: () => DomRightStep1Split
-    });
-    export const step2Reduce = new DomRightStepRS ({
-        id: 1002,
-        name: `步骤 2: 迭代`,
-        comGetter: () => DomRightStep2Reduce
-    });
-    export const step3Smooth = new DomRightStepRS ({
-        id: 1003,
-        name: `步骤 3: 平滑`,
-        comGetter: () => DomRightStep3Smooth
+        comGetter: () => DomRightSmooth1Ordinary
     });
     export const step4Merge = new DomRightStepRS ({
-        id: 1004,
-        name: `步骤 4: 合并`,
-        comGetter: () => DomRightStep4Merge
+        id: 2,
+        name: `分块平滑`,
+        comGetter: () => DomRightSmooth2Block
     });
 }
 

@@ -74,7 +74,8 @@ class MgrData {
      * @returns
      */
     save() {
-        return MgrSdk.inst.core.set(JSON.stringify(this._data, null, 1));
+        let txtData = JSON.stringify(this._data, null, 0);
+        return MgrSdk.inst.core.set(txtData);
     }
     /**
      * 通知数据发生变化

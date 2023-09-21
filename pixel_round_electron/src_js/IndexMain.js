@@ -1,4 +1,5 @@
 const _electron = require(`electron`);
+const _fs = require(`fs`);
 const { app, BrowserWindow, dialog } = _electron;
 const path = require(`path`);
 /**
@@ -89,6 +90,25 @@ class MgrSdkCoreElectronRequest {
         analyse: (ctx) => {
             win.webContents.openDevTools();
             return Promise.resolve({});
+        }
+    });
+    ;
+    ;
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_TXT = new MgrSdkCoreElectronRequest({
+        code: 1005,
+        analyse: (ctx) => {
+            return new Promise((resolve, reject) => {
+                _fs.writeFile(ctx.fileName, ctx.txt, (err) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    ;
+                    resolve({
+                        isSuccessed: true
+                    });
+                });
+            });
         }
     });
 })(MgrSdkCoreElectronRequest || (MgrSdkCoreElectronRequest = {}));

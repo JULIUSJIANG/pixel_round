@@ -82,63 +82,6 @@ class MgrSdkCoreElectron extends MgrSdkCore {
                 isSuccessed: true
             };
         });
-        let folder = NodeModules.path.dirname(STORAGE_PATH);
-        return Promise.resolve()
-            // 检查文件目录是否存在
-            .then(() => {
-            return new Promise((resolve) => {
-                NodeModules.fs.stat(folder, (err, stat) => {
-                    if (err) {
-                        resolve(false);
-                        return;
-                    }
-                    ;
-                    resolve(true);
-                });
-            });
-        })
-            // 目录不存在的话，就新建一个
-            .then((isExist) => {
-            if (isExist) {
-                return;
-            }
-            ;
-            return new Promise((resolve, reject) => {
-                NodeModules.fs.mkdir(folder, {
-                    recursive: true
-                }, (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    ;
-                    resolve(null);
-                });
-            });
-        })
-            // 正式写入文件
-            .then(() => {
-            return new Promise((resolve, reject) => {
-                NodeModules.fs.writeFile(STORAGE_PATH, txt, (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    ;
-                    this.logToMain(`保存文本为:${txt}`);
-                    resolve({
-                        isSuccessed: true
-                    });
-                });
-            });
-        })
-            // 有任何异常，视为执行失败
-            .catch((err) => {
-            console.log(`存档失败`, err);
-            return Promise.resolve({
-                isSuccessed: false
-            });
-        });
     }
     get() {
         return new Promise((resolve) => {

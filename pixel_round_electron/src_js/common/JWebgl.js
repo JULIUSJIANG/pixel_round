@@ -13,6 +13,7 @@ import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmooth1 from "./JWebglProgramTypeSmooth1.js";
+import JWebglProgramTypeSmooth2 from "./JWebglProgramTypeSmooth2.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
@@ -156,9 +157,12 @@ __decorate([
     program(JWebglProgramTypeImgDyeing)
 ], JWebgl.prototype, "programImgDyeing", void 0);
 __decorate([
+    program(JWebglProgramTypePoint)
+], JWebgl.prototype, "programPoint", void 0);
+__decorate([
     program(JWebglProgramTypeSmooth1)
 ], JWebgl.prototype, "programSmooth1", void 0);
 __decorate([
-    program(JWebglProgramTypePoint)
-], JWebgl.prototype, "programPoint", void 0);
+    program(JWebglProgramTypeSmooth2)
+], JWebgl.prototype, "programSmooth2", void 0);
 export default JWebgl;

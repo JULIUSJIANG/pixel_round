@@ -106,16 +106,15 @@ class DomRightSmooth2BlockStep5Result extends ReactComponentExtend {
             this.jWebgl.programImgDyeing.draw();
             // 把平滑缓冲区内容绘制到画布中
             this.jWebgl.useFbo(null);
-            this.jWebgl.programSmooth1.uMvp.fill(this.jWebgl.mat4Mvp);
-            this.jWebgl.programSmooth1.uTexture.fillByFbo(this.fboSmooth);
-            this.jWebgl.programSmooth1.uTextureSize.fill(fboWidth, fboHeight);
-            this.jWebgl.programSmooth1.uLightFirst.fill(-1);
+            this.jWebgl.programSmooth2.uMvp.fill(this.jWebgl.mat4Mvp);
+            this.jWebgl.programSmooth2.uTexture.fillByFbo(this.fboSmooth);
+            this.jWebgl.programSmooth2.uTextureSize.fill(fboWidth, fboHeight);
             this.posImg.elements[0] = 0;
             this.posImg.elements[1] = 0;
             this.posImg.elements[2] = i / IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length;
-            this.jWebgl.programSmooth1.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
+            this.jWebgl.programSmooth2.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
             this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE_MINUS_DST_ALPHA, JWebglEnum.BlendFunc.DST_ALPHA);
-            this.jWebgl.programSmooth1.draw();
+            this.jWebgl.programSmooth2.draw();
             this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
         }
         ;

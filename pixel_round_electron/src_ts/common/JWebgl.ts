@@ -8,6 +8,7 @@ import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmooth1 from "./JWebglProgramTypeSmooth1.js";
+import JWebglProgramTypeSmooth2 from "./JWebglProgramTypeSmooth2.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
@@ -153,11 +154,14 @@ class JWebgl {
     @program (JWebglProgramTypeImgDyeing)
     programImgDyeing: JWebglProgramTypeImgDyeing;
 
+    @program (JWebglProgramTypePoint)
+    programPoint: JWebglProgramTypePoint;
+
     @program (JWebglProgramTypeSmooth1)
     programSmooth1: JWebglProgramTypeSmooth1;
 
-    @program (JWebglProgramTypePoint)
-    programPoint: JWebglProgramTypePoint;
+    @program (JWebglProgramTypeSmooth2)
+    programSmooth2: JWebglProgramTypeSmooth2;
 
     /**
      * mvp 矩阵

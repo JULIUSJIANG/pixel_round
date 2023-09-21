@@ -113,14 +113,13 @@ class DomRightSmooth2BlockStep3Smooth extends ReactComponentExtend {
             this.mat4V.setLookAt(cameraWidth / 2, cameraHeight / 2, 1, cameraWidth / 2, cameraHeight / 2, 0, 0, 1, 0);
             this.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
             JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
-            this.jWebgl.programSmooth1.uMvp.fill(this.jWebgl.mat4Mvp);
-            this.jWebgl.programSmooth1.uTexture.fillByFbo(this.fboSmooth);
-            this.jWebgl.programSmooth1.uTextureSize.fill(fboWidth, fboHeight);
-            this.jWebgl.programSmooth1.uLightFirst.fill(-1);
+            this.jWebgl.programSmooth2.uMvp.fill(this.jWebgl.mat4Mvp);
+            this.jWebgl.programSmooth2.uTexture.fillByFbo(this.fboSmooth);
+            this.jWebgl.programSmooth2.uTextureSize.fill(fboWidth, fboHeight);
             this.posImg.elements[0] = fboWidth / 2;
             this.posImg.elements[1] = fboHeight / 2 + yBase;
-            this.jWebgl.programSmooth1.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, fboWidth, fboHeight);
-            this.jWebgl.programSmooth1.draw();
+            this.jWebgl.programSmooth2.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, fboWidth, fboHeight);
+            this.jWebgl.programSmooth2.draw();
         }
         ;
         this.jWebgl.useFbo(null);

@@ -177,20 +177,19 @@ class DomRightSmooth2BlockStep3Smooth extends ReactComponentExtend <number> {
                 this.mat4M,
                 this.jWebgl.mat4Mvp
             );
-            this.jWebgl.programSmooth1.uMvp.fill (this.jWebgl.mat4Mvp);
-            this.jWebgl.programSmooth1.uTexture.fillByFbo (this.fboSmooth);
-            this.jWebgl.programSmooth1.uTextureSize.fill (fboWidth, fboHeight);
-            this.jWebgl.programSmooth1.uLightFirst.fill (-1);
+            this.jWebgl.programSmooth2.uMvp.fill (this.jWebgl.mat4Mvp);
+            this.jWebgl.programSmooth2.uTexture.fillByFbo (this.fboSmooth);
+            this.jWebgl.programSmooth2.uTextureSize.fill (fboWidth, fboHeight);
             this.posImg.elements [0] = fboWidth / 2;
             this.posImg.elements [1] = fboHeight / 2 + yBase;
-            this.jWebgl.programSmooth1.add (
+            this.jWebgl.programSmooth2.add (
                 this.posImg,
                 JWebglMathVector4.axisZStart,
                 JWebglMathVector4.axisYEnd,
                 fboWidth,
                 fboHeight
             );
-            this.jWebgl.programSmooth1.draw ();
+            this.jWebgl.programSmooth2.draw ();
         };
 
         this.jWebgl.useFbo (null);

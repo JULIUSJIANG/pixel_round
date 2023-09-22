@@ -14,6 +14,9 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
  * 经典平滑
  */
 export default class JWebglProgramTypeSmooth2 extends JWebglProgram {
+    @JWebglProgram.define (JWEbglProgramDefine, `0.7071`)
+    dHalfSqrt2: JWEbglProgramDefine;
+
     @JWebglProgram.define (JWEbglProgramDefine, `0.3535`)
     dTickness1: JWEbglProgramDefine;
     @JWebglProgram.define (JWEbglProgramDefine, `0.2236`)
@@ -77,9 +80,9 @@ bool checkEqual (vec4 c1, vec4 c2) {
 bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight) {
   // 获取纹理颜色
   vec4 colorUV = texelFetch(${this.uTextureMain}, uv);
-  vec4 colorUVLeft = texelFetch(${this.uTextureMain}, uv + offsetLeft);
-  vec4 colorUVRelative = texelFetch(${this.uTextureMain}, uv + offsetRelative);
-  vec4 colorUVRight = texelFetch(${this.uTextureMain}, uv + offsetRight);
+  vec4 colorUVLeft = texelFetch(${this.uTextureMain}, offsetLeft);
+  vec4 colorUVRelative = texelFetch(${this.uTextureMain}, offsetRelative);
+  vec4 colorUVRight = texelFetch(${this.uTextureMain}, offsetRight);
 
   // 不是 2 个对角线分别为俩种颜色的情况，按照正常流程进行平滑
   if (!checkEqual (colorUV, colorUVRelative) || !checkEqual (colorUVLeft, colorUVRight)) {
@@ -93,9 +96,9 @@ bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight
 
   // 获取分组标号
   vec4 markUV = texelFetch(${this.uTextureMark}, uv);
-  vec4 markUVLeft = texelFetch(${this.uTextureMark}, uv + offsetLeft);
-  vec4 markUVRelative = texelFetch(${this.uTextureMark}, uv + offsetRelative);
-  vec4 markUVRight = texelFetch(${this.uTextureMark}, uv + offsetRight);
+  vec4 markUVLeft = texelFetch(${this.uTextureMark}, offsetLeft);
+  vec4 markUVRelative = texelFetch(${this.uTextureMark}, offsetRelative);
+  vec4 markUVRight = texelFetch(${this.uTextureMark}, offsetRight);
 
   // uv 位置为不透明块
   if (colorUV.a != 0.0) {
@@ -112,9 +115,9 @@ bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight
 // 如果在阈值内，绘制连接 2 个像素的对角线
 bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
   // 采样 p1
-  vec4 v1 = texelFetch (${this.uTextureMain}, uv + p1);
+  vec4 v1 = texelFetch (${this.uTextureMain}, p1);
   // 采样 p2
-  vec4 v2 = texelFetch (${this.uTextureMain}, uv + p2);
+  vec4 v2 = texelFetch (${this.uTextureMain}, p2);
   // p1、p2 颜色一致
   if (checkEqual (v1, v2)) {
     // 向量: p1 -> p2
@@ -122,7 +125,7 @@ bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
     // 向量: p1 -> p2 顺时针旋转 90 度
     dir = normalize (vec2 (dir.y, -dir.x));
     // 向量: p1 像素点中心 -> uv
-    vec2 lp = uv - (floor (uv + p1) + 0.5);
+    vec2 lp = uv - (floor (p1) + 0.5);
     // lp 在 dir 上的投影，取值 0 - 1.4142135623730951;
     float shadow = dot (lp, dir);
     // 准线以内，对颜色进行替换
@@ -133,6 +136,25 @@ bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
   };
   return false;
 }
+// 进行平滑
+void smooth (inout vec4 s, vec2 ip, vec2 dirForward) {
+  dirForward *= 0.5;
+  vec2 dirRight = vec2 (dirForward.y, -dirForward.x);
+  vec2 dirLeft = -dirRight;
+  vec2 posRightFar = ip + dirRight * 2.0;
+  vec2 posRightNear = ip + dirRight + dirForward;
+  vec2 posForward = ip + dirForward * 2.0;
+  vec2 posLeftNear = ip + dirLeft + dirForward;
+  vec2 posLeftFar = ip + dirLeft * 2.0;
+  // 允许为平滑作出妥协
+  if (cornerAble (ip, posLeftNear, posForward, posRightNear)) {
+    // 尝试平滑左、上
+    if (diag (s, ip, posLeftNear, posRightNear, ${this.dTickness1})) {
+      diag (s, ip, posLeftNear, posRightFar, ${this.dTickness2});
+      diag (s, ip, posLeftFar, posRightNear, ${this.dTickness2});
+    };
+  };
+}
 // 对角平滑
 vec4 mainImageAngle (in vec2 fragCoord)
 {
@@ -141,45 +163,10 @@ vec4 mainImageAngle (in vec2 fragCoord)
   vec2 ip = fragCoord;
   // 以最近像素作为背景
   vec4 s = texelFetch (${this.uTextureMain}, ip);
-  // 将周围像素的抗锯齿对角线绘制为前景
-  // 如果左、上连接
-  if (cornerAble (ip, vec2 (-1, 0), vec2 (-1, 1), vec2 (0, 1))) {
-    if (diag (s, ip, vec2 (-1, 0), vec2 (0, 1), ${this.dTickness1})) { 
-      // 尝试连接左、右上
-      diag (s, ip, vec2 (-1, 0), vec2 (1, 1), ${this.dTickness2});
-      // 尝试连接左下、上
-      diag (s, ip, vec2 (-1, -1), vec2 (0, 1), ${this.dTickness2});
-    };
-  };
-  
-  // 如果上、右连接
-  if (cornerAble (ip, vec2 (0, 1), vec2 (1, 1), vec2 (1, 0))) {
-    if (diag (s, ip, vec2 (0, 1), vec2 (1, 0), ${this.dTickness1})) {
-      // 尝试连接右、右下
-      diag (s, ip, vec2 (0, 1), vec2 (1, -1), ${this.dTickness2});
-      // 尝试连接左上、右
-      diag (s, ip, vec2 (-1, 1), vec2 (1, 0), ${this.dTickness2});
-    };
-  };
-  // 如果右、下连接
-  if (cornerAble (ip, vec2 (1, 0), vec2 (1, -1), vec2 (0, -1))) {
-    if (diag (s, ip, vec2 (1, 0), vec2 (0, -1), ${this.dTickness1})) { 
-      // 尝试连接右、左上
-      diag (s, ip, vec2 (1, 0), vec2 (-1, -1), ${this.dTickness2});
-      // 尝试连接右上、左
-      diag (s, ip, vec2 (1, 1), vec2 (0, -1), ${this.dTickness2});
-    };
-  };
-  
-  // 如果下、左连接
-  if (cornerAble (ip, vec2 (0, -1), vec2 (-1, -1), vec2 (-1, 0))) {
-    if (diag (s, ip, vec2 (0, -1), vec2 (-1, 0), ${this.dTickness1})) {
-      // 尝试连接下、左上
-         diag (s, ip, vec2 (0, -1), vec2 (-1, 1), ${this.dTickness2});
-      // 尝试连接右下、左
-      diag (s, ip, vec2 (1, -1), vec2 (-1, 0), ${this.dTickness2});
-    };
-  };
+  smooth (s, ip, vec2 (-1,  1));
+  smooth (s, ip, vec2 ( 1,  1));
+  smooth (s, ip, vec2 ( 1, -1));
+  smooth (s, ip, vec2 (-1, -1));
   return s;
 }
 

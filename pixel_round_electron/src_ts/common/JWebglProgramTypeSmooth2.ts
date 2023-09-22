@@ -14,9 +14,6 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
  * 经典平滑
  */
 export default class JWebglProgramTypeSmooth2 extends JWebglProgram {
-    @JWebglProgram.define (JWEbglProgramDefine, `0.7071`)
-    dHalfSqrt2: JWEbglProgramDefine;
-
     @JWebglProgram.define (JWEbglProgramDefine, `0.3535`)
     dTickness1: JWEbglProgramDefine;
     @JWebglProgram.define (JWEbglProgramDefine, `0.2236`)
@@ -51,8 +48,8 @@ void main() {
     impGetnShaderFTxt (): string {
         return `
 // 通过像素位置对纹理进行取样
-vec4 texelFetch (sampler2D tex, vec2 texelFetch_uv) {
-  vec2 pos = texelFetch_uv * vec2 (1.0 / ${this.uTextureSize}.x, 1.0 / ${this.uTextureSize}.y);
+vec4 getTextureRGBA (sampler2D tex, vec2 getTextureRGBA_uv) {
+  vec2 pos = getTextureRGBA_uv * vec2 (1.0 / ${this.uTextureSize}.x, 1.0 / ${this.uTextureSize}.y);
   if (
     pos.x < 0.0 
     || 1.0 < pos.x
@@ -79,10 +76,10 @@ bool checkEqual (vec4 c1, vec4 c2) {
 // 该角是否发生平滑
 bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight) {
   // 获取纹理颜色
-  vec4 colorUV = texelFetch(${this.uTextureMain}, uv);
-  vec4 colorUVLeft = texelFetch(${this.uTextureMain}, offsetLeft);
-  vec4 colorUVRelative = texelFetch(${this.uTextureMain}, offsetRelative);
-  vec4 colorUVRight = texelFetch(${this.uTextureMain}, offsetRight);
+  vec4 colorUV = getTextureRGBA(${this.uTextureMain}, uv);
+  vec4 colorUVLeft = getTextureRGBA(${this.uTextureMain}, offsetLeft);
+  vec4 colorUVRelative = getTextureRGBA(${this.uTextureMain}, offsetRelative);
+  vec4 colorUVRight = getTextureRGBA(${this.uTextureMain}, offsetRight);
 
   // 不是 2 个对角线分别为俩种颜色的情况，按照正常流程进行平滑
   if (!checkEqual (colorUV, colorUVRelative) || !checkEqual (colorUVLeft, colorUVRight)) {
@@ -95,10 +92,10 @@ bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight
   };
 
   // 获取分组标号
-  vec4 markUV = texelFetch(${this.uTextureMark}, uv);
-  vec4 markUVLeft = texelFetch(${this.uTextureMark}, offsetLeft);
-  vec4 markUVRelative = texelFetch(${this.uTextureMark}, offsetRelative);
-  vec4 markUVRight = texelFetch(${this.uTextureMark}, offsetRight);
+  vec4 markUV = getTextureRGBA(${this.uTextureMark}, uv);
+  vec4 markUVLeft = getTextureRGBA(${this.uTextureMark}, offsetLeft);
+  vec4 markUVRelative = getTextureRGBA(${this.uTextureMark}, offsetRelative);
+  vec4 markUVRight = getTextureRGBA(${this.uTextureMark}, offsetRight);
 
   // uv 位置为不透明块
   if (colorUV.a != 0.0) {
@@ -113,45 +110,73 @@ bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight
   return false;
 }
 // 如果在阈值内，绘制连接 2 个像素的对角线
-bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
+void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
   // 采样 p1
-  vec4 v1 = texelFetch (${this.uTextureMain}, p1);
+  vec4 v1 = getTextureRGBA (${this.uTextureMain}, p1);
   // 采样 p2
-  vec4 v2 = texelFetch (${this.uTextureMain}, p2);
-  // p1、p2 颜色一致
-  if (checkEqual (v1, v2)) {
-    // 向量: p1 -> p2
-    vec2 dir = p2 - p1;
-    // 向量: p1 -> p2 顺时针旋转 90 度
-    dir = normalize (vec2 (dir.y, -dir.x));
-    // 向量: p1 像素点中心 -> uv
-    vec2 lp = uv - (floor (p1) + 0.5);
-    // lp 在 dir 上的投影，取值 0 - 1.4142135623730951;
-    float shadow = dot (lp, dir);
-    // 准线以内，对颜色进行替换
-    float l = step (shadow, tickness);
-    // 根据权重，进行取色
-    sum = mix (sum, v1, l); 
-    return true;
-  };
-  return false;
+  vec4 v2 = getTextureRGBA (${this.uTextureMain}, p2);
+  // 向量: p1 -> p2
+  vec2 dir = p2 - p1;
+  // 向量: p1 -> p2 顺时针旋转 90 度
+  dir = normalize (vec2 (dir.y, -dir.x));
+  // 向量: p1 像素点中心 -> uv
+  vec2 lp = uv - (floor (p1) + 0.5);
+  // lp 在 dir 上的投影，取值 0 - 1.4142135623730951;
+  float shadow = dot (lp, dir);
+  // 准线以内，对颜色进行替换
+  float l = step (shadow, tickness);
+  // 根据权重，进行取色
+  sum = mix (sum, v1, l); 
 }
 // 进行平滑
 void smooth (inout vec4 s, vec2 ip, vec2 dirForward) {
+  // 方向
   dirForward *= 0.5;
   vec2 dirRight = vec2 (dirForward.y, -dirForward.x);
   vec2 dirLeft = -dirRight;
-  vec2 posRightFar = ip + dirRight * 2.0;
-  vec2 posRightNear = ip + dirRight + dirForward;
+
+  // 位置
+  vec2 posRightBack = ip + dirRight - dirForward;
+  vec2 posRight = ip + dirRight * 2.0;
+  vec2 posRightForward = ip + dirRight + dirForward;
   vec2 posForward = ip + dirForward * 2.0;
-  vec2 posLeftNear = ip + dirLeft + dirForward;
-  vec2 posLeftFar = ip + dirLeft * 2.0;
+  vec2 posLeftForward = ip + dirLeft + dirForward;
+  vec2 posLeft = ip + dirLeft * 2.0;
+  vec2 posLeftBack = ip + dirLeft - dirForward;
+
+  // 颜色
+  vec4 colorRightBack = getTextureRGBA (${this.uTextureMain}, posRightBack);
+  vec4 colorRight = getTextureRGBA (${this.uTextureMain}, posRight);
+  vec4 colorRightForward = getTextureRGBA (${this.uTextureMain}, posRightForward);
+  vec4 colorForward = getTextureRGBA (${this.uTextureMain}, posForward);
+  vec4 colorLeftForward = getTextureRGBA (${this.uTextureMain}, posLeftForward);
+  vec4 colorLeft = getTextureRGBA (${this.uTextureMain}, posLeft);
+  vec4 colorLeftBack = getTextureRGBA (${this.uTextureMain}, posLeftBack);
+
   // 允许为平滑作出妥协
-  if (cornerAble (ip, posLeftNear, posForward, posRightNear)) {
-    // 尝试平滑左、上
-    if (diag (s, ip, posLeftNear, posRightNear, ${this.dTickness1})) {
-      diag (s, ip, posLeftNear, posRightFar, ${this.dTickness2});
-      diag (s, ip, posLeftFar, posRightNear, ${this.dTickness2});
+  if (cornerAble (ip, posLeftForward, posForward, posRightForward)) {
+    // 左前、右前颜色一致，正式开始平滑流程
+    if (checkEqual (colorLeftForward, colorRightForward)) {
+      // 先给前方来个小平滑总没错
+      connect (s, ip, posLeftForward, posRightForward, ${this.dTickness1} / 2.0);
+      float connectCount = 0.0;
+      // 左前以及右方的平滑判断
+      if (checkEqual (colorLeftForward, colorRight)) {
+        connectCount++;
+        if (!checkEqual (colorLeftForward, colorRightBack)) {
+          connect (s, ip, posLeftForward, posRight, ${this.dTickness2});
+        };
+      };
+      // 右前以及左方的平滑判断
+      if (checkEqual (colorLeft, colorRightForward)) {
+        connectCount++;
+        if (!checkEqual (colorLeftBack, colorRightForward)) {
+          connect (s, ip, posLeft, posRightForward, ${this.dTickness2});
+        };
+      };
+      if (0.0 == connectCount) {
+        connect (s, ip, posLeftForward, posRightForward, ${this.dTickness1});
+      };
     };
   };
 }
@@ -162,7 +187,7 @@ vec4 mainImageAngle (in vec2 fragCoord)
   // 采样位置
   vec2 ip = fragCoord;
   // 以最近像素作为背景
-  vec4 s = texelFetch (${this.uTextureMain}, ip);
+  vec4 s = getTextureRGBA (${this.uTextureMain}, ip);
   smooth (s, ip, vec2 (-1,  1));
   smooth (s, ip, vec2 ( 1,  1));
   smooth (s, ip, vec2 ( 1, -1));

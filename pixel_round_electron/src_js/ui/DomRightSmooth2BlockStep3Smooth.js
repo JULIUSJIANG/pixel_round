@@ -4,6 +4,7 @@ import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
+import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
@@ -32,6 +33,7 @@ class DomRightSmooth2BlockStep3Smooth extends ReactComponentExtend {
     }
     initFbo(width, height) {
         if (this.fboCurrent == null || this.fboCurrent.width != width || this.fboCurrent.height != height) {
+            this.fboGroupMark = this.jWebgl.getFbo(width, height);
             this.fboCurrent = this.jWebgl.getFbo(width, height);
             this.fboSmooth = this.jWebgl.getFbo(width, height);
         }
@@ -71,7 +73,33 @@ class DomRightSmooth2BlockStep3Smooth extends ReactComponentExtend {
         // 相机宽高
         let cameraWidth = fboWidth;
         let cameraHeight = fboHeight * IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length;
-        // 清空画布
+        // 绘制组标记图
+        this.jWebgl.useFbo(this.fboGroupMark);
+        this.jWebgl.clear();
+        let groupCount = IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length;
+        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length; i++) {
+            let idx = i;
+            let listImgPixelGroupAllI = IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty[idx];
+            this.mat4V.setLookAt(fboWidth / 2, fboHeight / 2, 1, fboWidth / 2, fboHeight / 2, 0, 0, 1, 0);
+            this.mat4P.setOrtho(-fboWidth / 2, fboWidth / 2, -fboHeight / 2, fboHeight / 2, 0, 2);
+            JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
+            this.jWebgl.programPoint.uMvp.fill(this.jWebgl.mat4Mvp);
+            let color = objectPool.pop(JWebglColor.poolType);
+            color.init((i + 1) / groupCount, (i + 1) / groupCount, (i + 1) / groupCount, 1);
+            this.jWebgl.programPoint.uColor.fill(color.data01);
+            objectPool.push(color);
+            this.jWebgl.programPoint.uSize.fill(1);
+            for (let j = 0; j < listImgPixelGroupAllI.listPos.length; j += 2) {
+                let x = listImgPixelGroupAllI.listPos[j + 0];
+                let y = listImgPixelGroupAllI.listPos[j + 1];
+                this.posPoint.elements[0] = x + 1;
+                this.posPoint.elements[1] = y + 1;
+                this.jWebgl.programPoint.add(this.posPoint);
+            }
+            ;
+            this.jWebgl.programPoint.draw();
+        }
+        ;
         this.jWebgl.useFbo(this.fboCurrent);
         this.jWebgl.clear();
         this.jWebgl.useFbo(null);
@@ -114,7 +142,8 @@ class DomRightSmooth2BlockStep3Smooth extends ReactComponentExtend {
             this.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
             JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
             this.jWebgl.programSmooth2.uMvp.fill(this.jWebgl.mat4Mvp);
-            this.jWebgl.programSmooth2.uTexture.fillByFbo(this.fboSmooth);
+            this.jWebgl.programSmooth2.uTextureMark.fillByFbo(this.fboGroupMark);
+            this.jWebgl.programSmooth2.uTextureMain.fillByFbo(this.fboSmooth);
             this.jWebgl.programSmooth2.uTextureSize.fill(fboWidth, fboHeight);
             this.posImg.elements[0] = fboWidth / 2;
             this.posImg.elements[1] = fboHeight / 2 + yBase;

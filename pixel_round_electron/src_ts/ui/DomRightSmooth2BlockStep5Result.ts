@@ -157,7 +157,7 @@ class DomRightSmooth2BlockStep5Result extends ReactComponentExtend <number> {
             // 把平滑缓冲区内容绘制到画布中
             this.jWebgl.useFbo (null);
             this.jWebgl.programSmooth2.uMvp.fill (this.jWebgl.mat4Mvp);
-            this.jWebgl.programSmooth2.uTexture.fillByFbo (this.fboSmooth);
+            this.jWebgl.programSmooth2.uTextureMain.fillByFbo (this.fboSmooth);
             this.jWebgl.programSmooth2.uTextureSize.fill (fboWidth, fboHeight);
             this.posImg.elements [0] = 0;
             this.posImg.elements [1] = 0;

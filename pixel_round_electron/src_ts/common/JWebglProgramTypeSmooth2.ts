@@ -15,7 +15,7 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
  */
 export default class JWebglProgramTypeSmooth2 extends JWebglProgram {
 
-    @JWebglProgram.define (JWEbglProgramDefine, `0.05`)
+    @JWebglProgram.define (JWEbglProgramDefine, `0.0`)
     dThreshold: JWEbglProgramDefine;
     @JWebglProgram.define (JWEbglProgramDefine, `10000.0`)
     dAAScale: JWEbglProgramDefine;
@@ -27,7 +27,9 @@ export default class JWebglProgramTypeSmooth2 extends JWebglProgram {
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTexture: JWebglProgramUniformSampler2D;
+    uTextureMain: JWebglProgramUniformSampler2D;
+    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
+    uTextureMark: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformVec2)
     uTextureSize: JWebglProgramUniformVec2;
 
@@ -51,7 +53,7 @@ void main() {
     impGetnShaderFTxt (): string {
         return `
 // 通过像素位置对纹理进行取样
-vec4 texelFetch (vec2 texelFetch_uv) {
+vec4 texelFetch (sampler2D tex, vec2 texelFetch_uv) {
   vec2 pos = texelFetch_uv * vec2 (1.0 / ${this.uTextureSize}.x, 1.0 / ${this.uTextureSize}.y);
   if (
     pos.x < 0.0 
@@ -62,7 +64,7 @@ vec4 texelFetch (vec2 texelFetch_uv) {
   {
     return vec4 (0, 0, 0, 0);
   };
-  return texture2D (${this.uTexture}, pos);
+  return texture2D (tex, pos);
 }
 // 判断颜色是否一致
 bool checkEqual (vec4 c1, vec4 c2) {
@@ -78,32 +80,44 @@ bool checkEqual (vec4 c1, vec4 c2) {
 } 
 // 该角是否发生平滑
 bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight) {
-  vec4 colorUV = texelFetch(uv);
-  vec4 colorUVLeft = texelFetch(uv + offsetLeft);
-  vec4 colorUVRelative = texelFetch(uv + offsetRelative);
-  vec4 colorUVRight = texelFetch(uv + offsetRight);
+  vec4 colorUV = texelFetch(${this.uTextureMain}, uv);
+  vec4 colorUVLeft = texelFetch(${this.uTextureMain}, uv + offsetLeft);
+  vec4 colorUVRelative = texelFetch(${this.uTextureMain}, uv + offsetRelative);
+  vec4 colorUVRight = texelFetch(${this.uTextureMain}, uv + offsetRight);
 
-  // 存在其中一组不造成同类别颜色，那么没问题
+  // 不是 2 个对角线分别为俩种颜色的情况，按照正常流程进行平滑
   if (!checkEqual (colorUV, colorUVRelative) || !checkEqual (colorUVLeft, colorUVRight)) {
     return true;
   };
 
-  vec4 avgUVWithRelative = (colorUV + colorUVRelative) * 0.5;
-  vec4 avgLeftWidthRight = (colorUVLeft + colorUVRight) * 0.5;
-  // 4 个位置颜色同类别，那么没问题
-  if (checkEqual (avgUVWithRelative, avgLeftWidthRight)) {
-    return true;
+  // 4 个位置颜色一致，不必平滑
+  if (checkEqual (colorUV, colorUVLeft)) {
+    return false;
   };
 
-  // 谁高亮，谁作出妥协
-  return avgLeftWidthRight.a > avgUVWithRelative.a;
+  vec4 markUV = texelFetch(${this.uTextureMark}, uv);
+  vec4 markUVLeft = texelFetch(${this.uTextureMark}, uv + offsetLeft);
+  vec4 markUVRelative = texelFetch(${this.uTextureMark}, uv + offsetRelative);
+  vec4 markUVRight = texelFetch(${this.uTextureMark}, uv + offsetRight);
+
+  // uv 位置为不透明块
+  if (colorUV.a != 0.0) {
+    // 当自身不为同标记的组时候允许平滑
+    return markUV.r != markUVRelative.r;
+  };
+  // uv 位置为透明块
+  if (colorUV.a == 0.0) {
+    // 当俩侧为同标记的组时候允许平滑
+    return markUVLeft.r == markUVRight.r;
+  };
+  return false;
 }
 // 如果在阈值内，绘制连接 2 个像素的对角线
 bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
   // 采样 p1
-  vec4 v1 = texelFetch (uv + p1);
+  vec4 v1 = texelFetch (${this.uTextureMain}, uv + p1);
   // 采样 p2
-  vec4 v2 = texelFetch (uv + p2);
+  vec4 v2 = texelFetch (${this.uTextureMain}, uv + p2);
   // p1、p2 颜色一致
   if (checkEqual (v1, v2)) {
     // 向量: p1 -> p2
@@ -118,7 +132,7 @@ bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
     float l = clamp ((tickness - shadow) * ${this.dAAScale}, 0.0, 1.0);
     // 根据权重，进行取色
     sum = mix (sum, v1, l); 
-      return true;
+    return true;
   };
   return false;
 }
@@ -129,7 +143,7 @@ vec4 mainImageAngle (in vec2 fragCoord)
   // 采样位置
   vec2 ip = fragCoord;
   // 以最近像素作为背景
-  vec4 s = texelFetch (ip);
+  vec4 s = texelFetch (${this.uTextureMain}, ip);
   // 将周围像素的抗锯齿对角线绘制为前景
   // 如果左、上连接
   if (cornerAble (ip, vec2 (-1, 0), vec2 (-1, 1), vec2 (0, 1))) {

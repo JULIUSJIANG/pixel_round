@@ -37,7 +37,7 @@ class DomRightSmooth2BlockStep4Merge extends ReactComponentExtend {
             this.fboGroupMark = this.jWebgl.getFbo(width, height);
             this.fboCurrent = this.jWebgl.getFbo(width, height);
             this.fboSmooth = this.jWebgl.getFbo(width, height);
-            this.fboReduce = this.jWebgl.getFbo(width * IndexGlobal.PIXEL_TEX_TO_SCREEN, height * IndexGlobal.PIXEL_TEX_TO_SCREEN);
+            this.fboReduce = this.jWebgl.getFbo(width * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA * 2, height * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA * 2);
         }
         ;
     }

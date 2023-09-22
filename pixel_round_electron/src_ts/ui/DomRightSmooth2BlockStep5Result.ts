@@ -230,8 +230,8 @@ class DomRightSmooth2BlockStep5Result extends ReactComponentExtend <number> {
                     MgrDomDefine.TAG_CANVAS,
                     {
                         ref: this.canvasWebglRef,
-                        width: canvasWidth,
-                        height: canvasHeight,
+                        width: canvasWidth * IndexGlobal.ANTINA,
+                        height: canvasHeight * IndexGlobal.ANTINA,
                         style: {
                             [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
                             [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,

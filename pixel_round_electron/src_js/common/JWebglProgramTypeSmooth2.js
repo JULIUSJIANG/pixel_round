@@ -57,16 +57,17 @@ vec4 texelFetch (sampler2D tex, vec2 texelFetch_uv) {
 bool checkEqual (vec4 c1, vec4 c2) {
   // 各分量差值和小于阈值
   return (
-        abs (c1 [0] * c1 [3] - c2 [0] * c2 [3]) 
-      + abs (c1 [1] * c1 [3] - c2 [1] * c2 [3]) 
-      + abs (c1 [2] * c1 [3] - c2 [2] * c2 [3])
+        abs (c1 [0] - c2 [0]) 
+      + abs (c1 [1] - c2 [1]) 
+      + abs (c1 [2] - c2 [2])
       + abs (c1 [3] - c2 [3])
   )     
   <= 
-  ${this.dThreshold};
+  0.0;
 } 
 // 该角是否发生平滑
 bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight) {
+  // 获取纹理颜色
   vec4 colorUV = texelFetch(${this.uTextureMain}, uv);
   vec4 colorUVLeft = texelFetch(${this.uTextureMain}, uv + offsetLeft);
   vec4 colorUVRelative = texelFetch(${this.uTextureMain}, uv + offsetRelative);
@@ -82,6 +83,7 @@ bool cornerAble (vec2 uv, vec2 offsetLeft, vec2 offsetRelative, vec2 offsetRight
     return false;
   };
 
+  // 获取分组标号
   vec4 markUV = texelFetch(${this.uTextureMark}, uv);
   vec4 markUVLeft = texelFetch(${this.uTextureMark}, uv + offsetLeft);
   vec4 markUVRelative = texelFetch(${this.uTextureMark}, uv + offsetRelative);
@@ -108,15 +110,15 @@ bool diag (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
   // p1、p2 颜色一致
   if (checkEqual (v1, v2)) {
     // 向量: p1 -> p2
-      vec2 dir = p2 - p1;
+    vec2 dir = p2 - p1;
     // 向量: p1 -> p2 顺时针旋转 90 度
     dir = normalize (vec2 (dir.y, -dir.x));
     // 向量: p1 像素点中心 -> uv
     vec2 lp = uv - (floor (uv + p1) + 0.5);
     // lp 在 dir 上的投影，取值 0 - 1.4142135623730951;
     float shadow = dot (lp, dir);
-    // 越靠内权重 l 越大
-    float l = clamp ((tickness - shadow) * ${this.dAAScale}, 0.0, 1.0);
+    // 准线以内，对颜色进行替换
+    float l = step (shadow, tickness);
     // 根据权重，进行取色
     sum = mix (sum, v1, l); 
     return true;
@@ -224,12 +226,6 @@ void main() {
         return this._addAttributeData(pos.elements[0], pos.elements[1], pos.elements[2], 1, texCoordX, texCoordY);
     }
 }
-__decorate([
-    JWebglProgram.define(JWEbglProgramDefine, `0.0`)
-], JWebglProgramTypeSmooth2.prototype, "dThreshold", void 0);
-__decorate([
-    JWebglProgram.define(JWEbglProgramDefine, `10000.0`)
-], JWebglProgramTypeSmooth2.prototype, "dAAScale", void 0);
 __decorate([
     JWebglProgram.define(JWEbglProgramDefine, `0.3535`)
 ], JWebglProgramTypeSmooth2.prototype, "dTickness1", void 0);

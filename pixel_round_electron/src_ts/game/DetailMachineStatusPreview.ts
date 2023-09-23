@@ -4,9 +4,9 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import DomRightPreview from "../ui/DomRightPreview.js";
 import DetailMachineStatus from "./DetailMachineStatus.js";
-import DetailMachineStatusPreviewColor from "./DetailMachineStatusPreviewColor.js";
+import TextureColor from "./TextureColor.js";
 import ImgMachine from "./ImgMachine.js";
-import ImgPixelGroup from "./ImgPixelGroup.js";
+import TextureGroup from "./TextureGroup.js";
 
 export default class DetailMachineStatusPreview extends DetailMachineStatus {
 
@@ -58,22 +58,22 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     /**
      * 所有颜色
      */
-    listColor = new Array <DetailMachineStatusPreviewColor> ();
+    listColor = new Array <TextureColor> ();
     /**
      * 标识到具体颜色的映射
      */
-    mapIdToColor = new Map <number, DetailMachineStatusPreviewColor> ();
+    mapIdToColor = new Map <number, TextureColor> ();
 
     /**
      * 存储分块信息的集合，与位置相关
      */
-    listImgPixelGroup = new Array <ImgPixelGroup> ();
+    listImgPixelGroup = new Array <TextureGroup> ();
     /**
      * 仅关注类型
      */
-    listImgPixelGroupAll = new Array <ImgPixelGroup> ();
+    listImgPixelGroupAll = new Array <TextureGroup> ();
     /**
      * 仅关注类型 - 不为空
      */
-    listImgPixelGroupAllNotEmpty = new Array <ImgPixelGroup> ();
+    listImgPixelGroupAllNotEmpty = new Array <TextureGroup> ();
 }

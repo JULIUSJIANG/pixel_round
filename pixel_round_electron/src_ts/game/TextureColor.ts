@@ -1,7 +1,7 @@
 import JWebglColor from "../common/JWebglColor.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
 
-export default class DetailMachineStatusPreviewColor {
+export default class TextureColor {
     /**
      * 标识
      */
@@ -31,9 +31,9 @@ export default class DetailMachineStatusPreviewColor {
         };
     }
 
-    static poolType = new ObjectPoolType <DetailMachineStatusPreviewColor> ({
+    static poolType = new ObjectPoolType <TextureColor> ({
         instantiate: () => {
-            return new DetailMachineStatusPreviewColor ();
+            return new TextureColor ();
         },
         onPop: (t) => {
 

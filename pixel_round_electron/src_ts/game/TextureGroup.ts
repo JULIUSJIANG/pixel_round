@@ -5,7 +5,7 @@ import ObjectPoolType from "../common/ObjectPoolType.js";
 /**
  * 像素块的分组
  */
-class ImgPixelGroup {
+class TextureGroup {
     /**
      * 颜色 id
      */
@@ -106,11 +106,11 @@ class ImgPixelGroup {
         return val;
     }
 
-    public static poolType = new ObjectPoolType <ImgPixelGroup> ({
-        instantiate: () => new ImgPixelGroup,
+    public static poolType = new ObjectPoolType <TextureGroup> ({
+        instantiate: () => new TextureGroup,
         onPop: null,
         onPush: null
     });
 }
 
-export default ImgPixelGroup;
+export default TextureGroup;

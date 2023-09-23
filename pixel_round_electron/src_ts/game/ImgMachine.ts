@@ -1,5 +1,5 @@
 import DetailMachineStatusPreview from "./DetailMachineStatusPreview.js";
-import DetailMachineStatusPreviewColor from "./DetailMachineStatusPreviewColor.js";
+import TextureColor from "./TextureColor.js";
 import ImgMachineStatus from "./ImgMachineStatus.js";
 import ImgMachineStatusIdle from "./ImgMachineStatusIdle.js";
 import ImgMachineStatusInited from "./ImgMachineStatusInited.js";

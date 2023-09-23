@@ -2,9 +2,9 @@ import JWebgl from "../common/JWebgl.js";
 import JWebglEnum from "../common/JWebglEnum.js";
 import objectPool from "../common/ObjectPool.js";
 import MgrData from "../mgr/MgrData.js";
-import DetailMachineStatusPreviewColor from "./DetailMachineStatusPreviewColor.js";
+import TextureColor from "./TextureColor.js";
 import ImgMachineStatus from "./ImgMachineStatus.js";
-import ImgPixelGroup from "./ImgPixelGroup.js";
+import TextureGroup from "./TextureGroup.js";
 
 class ImgMachineStatusIdle extends ImgMachineStatus {
 
@@ -80,7 +80,7 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
             let colorR = color % 256;
             color >>= 8;
 
-            let colorInst = objectPool.pop (DetailMachineStatusPreviewColor.poolType);
+            let colorInst = objectPool.pop (TextureColor.poolType);
             colorInst.init (colorBackup, 0, colorR / 255, colorG / 255, colorB / 255, colorA / 255);
             this.relMachine.rel.listColor.push (colorInst);
         });
@@ -116,7 +116,7 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
                 };
                 // 为该块创建颜色组，并且开始蔓延
                 let color = this.relMachine.rel.binColor [idx];
-                currentGroup = ImgPixelGroup.create (color);
+                currentGroup = TextureGroup.create (color);
                 this.relMachine.rel.listImgPixelGroupAll.push (currentGroup);
                 this.paintBucket (x, y, currentGroup);
             };
@@ -161,7 +161,7 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
      * @param colorTarget 油漆桶蔓延的目标颜色
      * @returns 
      */
-    paintBucket (x: number, y: number, colorGroup: ImgPixelGroup) {
+    paintBucket (x: number, y: number, colorGroup: TextureGroup) {
         // x 越界，忽略
         if (x < 0 || this.relMachine.rel.imgWidth <= x) {
             return;

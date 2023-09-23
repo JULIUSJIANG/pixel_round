@@ -1,6 +1,7 @@
 import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
+import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
@@ -8,6 +9,11 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
+// 00000000 00000000 00000000 00000000
+/**
+ * 线的深度
+ */
+const Z_GRID = 0.1;
 /**
  * 尝试更为灵魂的平滑
  */
@@ -21,11 +27,29 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
         this.mat4M = new JWebglMathMatrix4();
         this.mat4V = new JWebglMathMatrix4();
         this.mat4P = new JWebglMathMatrix4();
+        /**
+         * 图片位置
+         */
+        this.posImg = new JWebglMathVector4();
+        /**
+         * 线的起始位置
+         */
+        this.posFrom = new JWebglMathVector4(0, 0, Z_GRID);
+        /**
+         * 线的结束位置
+         */
+        this.posTo = new JWebglMathVector4(0, 0, Z_GRID);
     }
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
         this.mat4M.setIdentity();
+    }
+    initFbo(width, height) {
+        if (this.fbo == null || this.fbo.width != width || this.fbo.height != height) {
+            this.fbo = this.jWebgl.getFbo(width, height);
+        }
+        ;
     }
     reactComponentExtendOnDraw() {
         if (this.finishedData == null) {
@@ -38,15 +62,65 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
             return;
         }
         ;
-        this.jWebgl.useFbo(null);
+        // 图片尺寸
+        let imgWidth = img.assetsImg.image.width;
+        let imgHeight = img.assetsImg.image.height;
+        // 视图尺寸
+        let viewWidth = (img.assetsImg.image.width + this.finishedData.paddingLeft + this.finishedData.paddingRight);
+        let viewHeight = (img.assetsImg.image.height + this.finishedData.paddingBottom + this.finishedData.paddingTop);
+        // 帧缓冲区尺寸
+        let fboWidth = Math.ceil(viewWidth / this.finishedData.pixelWidth);
+        let fboHeight = Math.ceil(viewHeight / this.finishedData.pixelHeight);
+        this.initFbo(fboWidth, fboHeight);
+        // 把经过裁切、缩放的内容绘制到 fbo 上
+        this.jWebgl.useFbo(this.fbo);
         this.jWebgl.clear();
-        this.mat4V.setLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
-        this.mat4P.setOrtho(-1, 1, -1, 1, 0, 2);
+        this.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);
+        this.mat4P.setOrtho(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
         this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
         this.jWebgl.programImg.uSampler.fillByImg(img);
-        this.jWebgl.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
+        this.posImg.elements[0] = imgWidth / 2 + this.finishedData.paddingLeft;
+        this.posImg.elements[1] = imgHeight / 2 + this.finishedData.paddingBottom;
+        this.jWebgl.programImg.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgWidth, imgHeight);
         this.jWebgl.programImg.draw();
+        // 把 fbo 的内容绘制到屏幕上
+        let cameraWidth = fboWidth;
+        let cameraHeight = fboHeight;
+        this.jWebgl.useFbo(null);
+        this.jWebgl.clear();
+        this.mat4V.setLookAt(cameraWidth / 2, cameraHeight / 2, 1, cameraWidth / 2, cameraHeight / 2, 0, 0, 1, 0);
+        this.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
+        JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
+        this.jWebgl.programSmooth3Step1.uVecForward.fill(-1, 1);
+        this.jWebgl.programSmooth3Step1.uVecRight.fill(1, 1);
+        this.jWebgl.programSmooth3Step1.uTexture.fillByFbo(this.fbo);
+        this.jWebgl.programSmooth3Step1.uTextureSize.fill(fboWidth, fboHeight);
+        this.jWebgl.programSmooth3Step1.uMvp.fill(this.jWebgl.mat4Mvp);
+        this.posImg.elements[0] = fboWidth / 2;
+        this.posImg.elements[1] = fboHeight / 2;
+        this.jWebgl.programSmooth3Step1.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, fboWidth, fboHeight);
+        this.jWebgl.programSmooth3Step1.draw();
+        // 网格
+        let colorGrid = JWebglColor.COLOR_BLACK;
+        this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
+        for (let i = 0; i <= cameraWidth; i++) {
+            this.posFrom.elements[0] = i;
+            this.posFrom.elements[1] = 0;
+            this.posTo.elements[0] = i;
+            this.posTo.elements[1] = cameraHeight;
+            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
+        }
+        ;
+        for (let i = 0; i <= cameraHeight; i++) {
+            this.posFrom.elements[0] = 0;
+            this.posFrom.elements[1] = i;
+            this.posTo.elements[0] = cameraWidth;
+            this.posTo.elements[1] = i;
+            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
+        }
+        ;
+        this.jWebgl.programLine.draw();
     }
     render() {
         let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);

@@ -128,7 +128,7 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend {
         this.canvas2dCtx.textBaseline = `middle`;
         for (let x = 0; x < IndexGlobal.inst.detailMachine.statusPreview.imgWidth; x++) {
             for (let y = 0; y < IndexGlobal.inst.detailMachine.statusPreview.imgHeight; y++) {
-                let colorId = IndexGlobal.inst.detailMachine.statusPreview.binColor[y * IndexGlobal.inst.detailMachine.statusPreview.imgWidth + x];
+                let colorId = IndexGlobal.inst.detailMachine.statusPreview.binXYToColor[y * IndexGlobal.inst.detailMachine.statusPreview.imgWidth + x];
                 let colorInst = IndexGlobal.inst.detailMachine.statusPreview.mapIdToColor.get(colorId);
                 if (colorInst == null) {
                     continue;

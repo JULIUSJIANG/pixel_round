@@ -1,7 +1,7 @@
 import JWebglColor from "../common/JWebglColor.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
 
-export default class TextureColor {
+class TextureColor {
     /**
      * 标识
      */
@@ -43,3 +43,5 @@ export default class TextureColor {
         }
     });
 }
+
+export default TextureColor;

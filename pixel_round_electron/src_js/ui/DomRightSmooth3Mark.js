@@ -46,19 +46,27 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
         this.mat4M.setIdentity();
     }
     initFbo(width, height) {
-        if (this.fbo == null || this.fbo.width != width || this.fbo.height != height) {
-            this.fbo = this.jWebgl.getFbo(width, height);
+        if (this.fboImg == null || this.fboImg.width != width || this.fboImg.height != height) {
+            this.fboImg = this.jWebgl.getFbo(width, height);
+            this.fboCorner = this.jWebgl.getFbo(width, height);
         }
         ;
     }
     reactComponentExtendOnDraw() {
+        // 没有加载完毕的数据，不对 canvas 进行改动
         if (this.finishedData == null) {
             return;
         }
         ;
-        // 没加载完的不画
+        // 没加载完，不对 canvvas 进行改动
         let img = this.jWebgl.getImg(this.finishedData.dataOrigin);
         if (img.currStatus != img.statusFinished) {
+            return;
+        }
+        ;
+        // 未缓存完毕，不对 canvas 进行改动
+        let imgMachine = IndexGlobal.inst.detailMachine.statusPreview.imgMachine;
+        if (imgMachine.currStatus != imgMachine.statusInited) {
             return;
         }
         ;
@@ -66,14 +74,15 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
         let imgWidth = img.assetsImg.image.width;
         let imgHeight = img.assetsImg.image.height;
         // 视图尺寸
-        let viewWidth = (img.assetsImg.image.width + this.finishedData.paddingLeft + this.finishedData.paddingRight);
-        let viewHeight = (img.assetsImg.image.height + this.finishedData.paddingBottom + this.finishedData.paddingTop);
+        let viewWidth = (imgWidth + this.finishedData.paddingLeft + this.finishedData.paddingRight);
+        let viewHeight = (imgHeight + this.finishedData.paddingBottom + this.finishedData.paddingTop);
         // 帧缓冲区尺寸
         let fboWidth = Math.ceil(viewWidth / this.finishedData.pixelWidth);
         let fboHeight = Math.ceil(viewHeight / this.finishedData.pixelHeight);
+        // 初始化帧缓冲区
         this.initFbo(fboWidth, fboHeight);
         // 把经过裁切、缩放的内容绘制到 fbo 上
-        this.jWebgl.useFbo(this.fbo);
+        this.jWebgl.useFbo(this.fboImg);
         this.jWebgl.clear();
         this.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);
         this.mat4P.setOrtho(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0, 2);
@@ -84,7 +93,24 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
         this.posImg.elements[1] = imgHeight / 2 + this.finishedData.paddingBottom;
         this.jWebgl.programImg.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgWidth, imgHeight);
         this.jWebgl.programImg.draw();
-        // 把 fbo 的内容绘制到屏幕上
+        // 使用标记信息生成纹理
+        this.jWebgl.useFbo(this.fboCorner);
+        this.jWebgl.clear();
+        this.mat4V.setLookAt(fboWidth / 2, fboHeight / 2, 1, fboWidth / 2, fboHeight / 2, 0, 0, 1, 0);
+        this.mat4P.setOrtho(-fboWidth / 2, fboWidth / 2, -fboHeight / 2, fboHeight / 2, 0, 2);
+        JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
+        this.jWebgl.programSmooth3Step1Mark.uMvp.fill(this.jWebgl.mat4Mvp);
+        for (let x = 0; x < fboWidth; x++) {
+            for (let y = 0; y < fboHeight; y++) {
+                let idx = y * fboWidth + x;
+                let pixel = IndexGlobal.inst.detailMachine.statusPreview.listXYToTexturePixel[idx];
+                this.jWebgl.programSmooth3Step1Mark.add(x + 0.5, y + 0.5, 0, pixel.cornerLT.rsBoth.id / 4.0, pixel.cornerRT.rsBoth.id / 4.0, pixel.cornerRB.rsBoth.id / 4.0, pixel.cornerLB.rsBoth.id / 4.0);
+            }
+            ;
+        }
+        ;
+        this.jWebgl.programSmooth3Step1Mark.draw();
+        // 绘制最终内容
         let cameraWidth = fboWidth;
         let cameraHeight = fboHeight;
         this.jWebgl.useFbo(null);
@@ -92,15 +118,13 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
         this.mat4V.setLookAt(cameraWidth / 2, cameraHeight / 2, 1, cameraWidth / 2, cameraHeight / 2, 0, 0, 1, 0);
         this.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
-        this.jWebgl.programSmooth3Step1.uVecForward.fill(-1, 1);
-        this.jWebgl.programSmooth3Step1.uVecRight.fill(1, 1);
-        this.jWebgl.programSmooth3Step1.uTexture.fillByFbo(this.fbo);
-        this.jWebgl.programSmooth3Step1.uTextureSize.fill(fboWidth, fboHeight);
-        this.jWebgl.programSmooth3Step1.uMvp.fill(this.jWebgl.mat4Mvp);
+        this.jWebgl.programSmooth3Step2Smooth.uMvp.fill(this.jWebgl.mat4Mvp);
+        this.jWebgl.programSmooth3Step2Smooth.uTextureMain.fillByFbo(this.fboImg);
+        this.jWebgl.programSmooth3Step2Smooth.uTextureMark.fillByFbo(this.fboCorner);
         this.posImg.elements[0] = fboWidth / 2;
         this.posImg.elements[1] = fboHeight / 2;
-        this.jWebgl.programSmooth3Step1.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, fboWidth, fboHeight);
-        this.jWebgl.programSmooth3Step1.draw();
+        this.jWebgl.programSmooth3Step2Smooth.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, fboWidth, fboHeight);
+        this.jWebgl.programSmooth3Step2Smooth.draw();
         // 网格
         let colorGrid = JWebglColor.COLOR_BLACK;
         this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
@@ -134,7 +158,7 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
             ;
         }
         ;
-        // 没加载完的不画
+        // 尺寸为最后加载完的图片的尺寸
         let img = MgrRes.inst.getImg(listImgDataInst.dataOrigin);
         if (img.currStatus == img.statusFinished) {
             this.finishedImg = img;
@@ -144,8 +168,8 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
         let canvasWidth = 1;
         let canvasHeight = 1;
         if (this.finishedImg != null) {
-            canvasWidth = Math.ceil((img.image.width + listImgDataInst.paddingRight + listImgDataInst.paddingLeft) / listImgDataInst.pixelWidth) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
-            canvasHeight = Math.ceil((img.image.height + listImgDataInst.paddingTop + listImgDataInst.paddingBottom) / listImgDataInst.pixelHeight) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+            canvasWidth = Math.ceil((this.finishedImg.image.width + listImgDataInst.paddingRight + listImgDataInst.paddingLeft) / listImgDataInst.pixelWidth) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+            canvasHeight = Math.ceil((this.finishedImg.image.height + listImgDataInst.paddingTop + listImgDataInst.paddingBottom) / listImgDataInst.pixelHeight) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
         }
         ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {

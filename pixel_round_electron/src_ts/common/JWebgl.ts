@@ -9,7 +9,8 @@ import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmooth1 from "./JWebglProgramTypeSmooth1.js";
 import JWebglProgramTypeSmooth2 from "./JWebglProgramTypeSmooth2.js";
-import JWebglProgramTypeSmooth3Step1 from "./JWebglProgramTypeSmooth3Step1.js";
+import JWebglProgramTypeSmooth3Step1Mark from "./JWebglProgramTypeSmooth3Step1Mark.js";
+import JWebglProgramTypeSmooth3Step2Smooth from "./JWebglProgramTypeSmooth3Step2Smooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
@@ -164,8 +165,11 @@ class JWebgl {
     @program (JWebglProgramTypeSmooth2)
     programSmooth2: JWebglProgramTypeSmooth2;
 
-    @program (JWebglProgramTypeSmooth3Step1)
-    programSmooth3Step1: JWebglProgramTypeSmooth3Step1;
+    @program (JWebglProgramTypeSmooth3Step1Mark)
+    programSmooth3Step1Mark: JWebglProgramTypeSmooth3Step1Mark;
+
+    @program (JWebglProgramTypeSmooth3Step2Smooth)
+    programSmooth3Step2Smooth: JWebglProgramTypeSmooth3Step2Smooth;
 
     /**
      * mvp 矩阵

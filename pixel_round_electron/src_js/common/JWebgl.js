@@ -14,7 +14,8 @@ import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmooth1 from "./JWebglProgramTypeSmooth1.js";
 import JWebglProgramTypeSmooth2 from "./JWebglProgramTypeSmooth2.js";
-import JWebglProgramTypeSmooth3Step1 from "./JWebglProgramTypeSmooth3Step1.js";
+import JWebglProgramTypeSmooth3Step1Mark from "./JWebglProgramTypeSmooth3Step1Mark.js";
+import JWebglProgramTypeSmooth3Step2Smooth from "./JWebglProgramTypeSmooth3Step2Smooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
@@ -167,6 +168,9 @@ __decorate([
     program(JWebglProgramTypeSmooth2)
 ], JWebgl.prototype, "programSmooth2", void 0);
 __decorate([
-    program(JWebglProgramTypeSmooth3Step1)
-], JWebgl.prototype, "programSmooth3Step1", void 0);
+    program(JWebglProgramTypeSmooth3Step1Mark)
+], JWebgl.prototype, "programSmooth3Step1Mark", void 0);
+__decorate([
+    program(JWebglProgramTypeSmooth3Step2Smooth)
+], JWebgl.prototype, "programSmooth3Step2Smooth", void 0);
 export default JWebgl;

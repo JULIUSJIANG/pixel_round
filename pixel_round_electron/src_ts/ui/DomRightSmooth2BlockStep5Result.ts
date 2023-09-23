@@ -68,7 +68,7 @@ class DomRightSmooth2BlockStep5Result extends ReactComponentExtend <number> {
         };
 
         // 没分块完的不画
-        if (IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length == 0) {
+        if (IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length == 0) {
             return;
         };
 
@@ -89,9 +89,9 @@ class DomRightSmooth2BlockStep5Result extends ReactComponentExtend <number> {
         this.jWebgl.useFbo (null);
         this.jWebgl.clear ();
 
-        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length; i++) {
+        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length; i++) {
             let idx = i;
-            let listImgPixelGroupAllI = IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty [idx];
+            let listImgPixelGroupAllI = IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty [idx];
             
             // 把分块绘制到帧缓冲区里面
             this.jWebgl.useFbo (this.fboCurrent);
@@ -161,7 +161,7 @@ class DomRightSmooth2BlockStep5Result extends ReactComponentExtend <number> {
             this.jWebgl.programSmooth2.uTextureSize.fill (fboWidth, fboHeight);
             this.posImg.elements [0] = 0;
             this.posImg.elements [1] = 0;
-            this.posImg.elements [2] = i / IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length;
+            this.posImg.elements [2] = i / IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length;
             this.jWebgl.programSmooth2.add (
                 this.posImg,
                 JWebglMathVector4.axisZStart,
@@ -195,7 +195,7 @@ class DomRightSmooth2BlockStep5Result extends ReactComponentExtend <number> {
         };
         let canvasWidth = 1;
         let canvasHeight = 1;
-        if (this.finishedImg != null && 0 < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length) {
+        if (this.finishedImg != null && 0 < IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length) {
             let fboWidth = Math.ceil ((img.image.width + listImgDataInst.paddingRight + listImgDataInst.paddingLeft) / listImgDataInst.pixelWidth);
             let fboHeight = Math.ceil ((img.image.height + listImgDataInst.paddingTop + listImgDataInst.paddingBottom) / listImgDataInst.pixelHeight);
             let scale = IndexGlobal.PIXEL_TEX_TO_SCREEN;

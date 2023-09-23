@@ -7,8 +7,21 @@ import DetailMachineStatus from "./DetailMachineStatus.js";
 import TextureColor from "./TextureColor.js";
 import ImgMachine from "./ImgMachine.js";
 import TextureGroup from "./TextureGroup.js";
+import TexturePixel from "./TexturePixel.js";
+import DetailMachine from "./DetailMachine.js";
+import CornerMachine from "./CornerMachine.js";
 
 export default class DetailMachineStatusPreview extends DetailMachineStatus {
+
+    /**
+     * 角状态机
+     */
+    private _cornerMachine: CornerMachine;
+
+    constructor (machine: DetailMachine, id: number) {
+        super (machine, id);
+        this._cornerMachine = new CornerMachine (this);
+    }
 
     onEnter (): void {
         this.onImg (MgrData.inst.get (MgrDataItem.CURRENT_IMG));
@@ -46,14 +59,14 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     /**
      * 每四个数字代表一个颜色
      */
-    binRgba = new Uint8Array (1);
-    binRgbaSize = 4;
+    binXYToRgba = new Uint8Array (1);
+    binXYToRgbaSize = 4;
 
     /**
      * 每个数字代表一个颜色
      */
-    binColor = new Uint32Array (1);
-    binColorSize = 1;
+    binXYToColor = new Uint32Array (1);
+    binXYToColorSize = 1;
 
     /**
      * 所有颜色
@@ -67,13 +80,57 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     /**
      * 存储分块信息的集合，与位置相关
      */
-    listImgPixelGroup = new Array <TextureGroup> ();
+    listXYToTextureGroup = new Array <TextureGroup> ();
     /**
      * 仅关注类型
      */
-    listImgPixelGroupAll = new Array <TextureGroup> ();
+    listTextureGroup = new Array <TextureGroup> ();
     /**
      * 仅关注类型 - 不为空
      */
-    listImgPixelGroupAllNotEmpty = new Array <TextureGroup> ();
+    listTextureGroupNotEmpty = new Array <TextureGroup> ();
+
+    /**
+     * 所有像素的记录
+     */
+    listXYToTexturePixel = new Array <TexturePixel> ();
+
+    /**
+     * 获取角的裁切类型
+     * @param posCurrentX 
+     * @param posCurrentY 
+     */
+    getCornerType (
+        posCurrentX: number, 
+        posCurrentY: number, 
+        
+        vecForwardX: number,
+        vecForwardY: number
+    )
+    {
+        let vecRightX = vecForwardX;
+        let vecRightY = -vecForwardY;
+
+        let rsSideLeft = this._cornerMachine.getCornerType (
+            posCurrentX,
+            posCurrentY,
+
+            vecForwardX,
+            vecForwardY,
+
+            vecRightX,
+            vecRightY
+        );
+        let rsSideRight = this._cornerMachine.getCornerType (
+            posCurrentX,
+            posCurrentY,
+
+            vecForwardX,
+            vecForwardY,
+
+            - vecRightX,
+            - vecRightY
+        );
+        return rsSideLeft.onRight (rsSideRight);
+    }
 }

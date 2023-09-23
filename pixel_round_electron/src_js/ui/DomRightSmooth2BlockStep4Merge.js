@@ -60,7 +60,7 @@ class DomRightSmooth2BlockStep4Merge extends ReactComponentExtend {
         }
         ;
         // 没分块完的不画
-        if (IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length == 0) {
+        if (IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length == 0) {
             return;
         }
         ;
@@ -74,14 +74,14 @@ class DomRightSmooth2BlockStep4Merge extends ReactComponentExtend {
         this.initFbo(fboWidth, fboHeight);
         // 相机宽高
         let cameraWidth = fboWidth;
-        let cameraHeight = fboHeight * IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length;
+        let cameraHeight = fboHeight * IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length;
         // 绘制组标记图
         this.jWebgl.useFbo(this.fboGroupMark);
         this.jWebgl.clear();
-        let groupCount = IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length;
-        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length; i++) {
+        let groupCount = IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length;
+        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length; i++) {
             let idx = i;
-            let listImgPixelGroupAllI = IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty[idx];
+            let listImgPixelGroupAllI = IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty[idx];
             this.mat4V.setLookAt(fboWidth / 2, fboHeight / 2, 1, fboWidth / 2, fboHeight / 2, 0, 0, 1, 0);
             this.mat4P.setOrtho(-fboWidth / 2, fboWidth / 2, -fboHeight / 2, fboHeight / 2, 0, 2);
             JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
@@ -111,10 +111,10 @@ class DomRightSmooth2BlockStep4Merge extends ReactComponentExtend {
         this.jWebgl.clear();
         this.jWebgl.useFbo(null);
         this.jWebgl.clear();
-        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length; i++) {
+        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length; i++) {
             let idx = i;
-            let listImgPixelGroupAllI = IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty[idx];
-            let yBase = (IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length - idx - 1) * fboHeight;
+            let listImgPixelGroupAllI = IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty[idx];
+            let yBase = (IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length - idx - 1) * fboHeight;
             // 把分块绘制到帧缓冲区里面
             this.jWebgl.useFbo(this.fboCurrent);
             this.mat4V.setLookAt(fboWidth / 2, fboHeight / 2, 1, fboWidth / 2, fboHeight / 2, 0, 0, 1, 0);
@@ -185,7 +185,7 @@ class DomRightSmooth2BlockStep4Merge extends ReactComponentExtend {
             this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
         }
         ;
-        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length; i++) {
+        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length; i++) {
             for (let j = 0; j <= fboHeight; j++) {
                 if (j != 0 && j != fboHeight) {
                     continue;
@@ -222,12 +222,12 @@ class DomRightSmooth2BlockStep4Merge extends ReactComponentExtend {
         ;
         let canvasWidth = 1;
         let canvasHeight = 1;
-        if (this.finishedImg != null && 0 < IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length) {
+        if (this.finishedImg != null && 0 < IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length) {
             let fboWidth = Math.ceil((img.image.width + listImgDataInst.paddingRight + listImgDataInst.paddingLeft) / listImgDataInst.pixelWidth);
             let fboHeight = Math.ceil((img.image.height + listImgDataInst.paddingTop + listImgDataInst.paddingBottom) / listImgDataInst.pixelHeight);
             let scale = IndexGlobal.PIXEL_TEX_TO_SCREEN;
             canvasWidth = fboWidth * scale;
-            canvasHeight = fboHeight * IndexGlobal.inst.detailMachine.statusPreview.listImgPixelGroupAllNotEmpty.length * scale;
+            canvasHeight = fboHeight * IndexGlobal.inst.detailMachine.statusPreview.listTextureGroupNotEmpty.length * scale;
         }
         ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {

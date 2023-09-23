@@ -12,6 +12,7 @@ import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
 import JWEbglProgramDefine from "./JWebglProgramDefine.js";
 import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
+import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 export default class JWebglProgramTypeSmooth3Step2Smooth extends JWebglProgram {
     constructor() {
@@ -35,13 +36,76 @@ void main() {
     }
     impGetnShaderFTxt() {
         return `
-float match (float current, float target) {
-    return step (abs (current - target), ${this.dBound});
+// 通过像素位置对纹理进行取样
+vec4 getTextureRGBA (sampler2D tex, vec2 getTextureRGBA_uv) {
+  vec2 pos = getTextureRGBA_uv * vec2 (1.0 / ${this.uTextureSize}.x, 1.0 / ${this.uTextureSize}.y);
+  if (
+    pos.x < 0.0 
+    || 1.0 < pos.x
+    || pos.y < 0.0
+    || 1.0 < pos.y
+  )
+  {
+    return vec4 (0, 0, 0, 0);
+  };
+  return texture2D (tex, pos);
+}
+// 如果在阈值内，绘制连接 2 个像素的对角线
+void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
+  // 采样 p1
+  vec4 v1 = getTextureRGBA (${this.uTextureMain}, p1);
+  // 采样 p2
+  vec4 v2 = getTextureRGBA (${this.uTextureMain}, p2);
+  // 向量: p1 -> p2
+  vec2 dir = p2 - p1;
+  // 向量: p1 -> p2 顺时针旋转 90 度
+  dir = normalize (vec2 (dir.y, -dir.x));
+  // 向量: p1 像素点中心 -> uv
+  vec2 lp = uv - (floor (p1) + 0.5);
+  // lp 在 dir 上的投影，取值 0 - 1.4142135623730951;
+  float shadow = dot (lp, dir);
+  // 准线以内，对颜色进行替换
+  float l = step (shadow, tickness);
+  // 根据权重，进行取色
+  sum = mix (sum, v1, l); 
+}
+// 2 个数是否匹配
+bool match (float current, float target) {
+    return abs (current - target) < 0.5;
+}
+// 处理一个角
+void corner (inout vec4 colorMain, float mark, vec2 pos, vec2 dirForward) {
+    vec2 dirRight = vec2 (dirForward.y, -dirForward.x);
+
+    vec2 posRight = pos + dirRight * 2.0;
+    vec2 posRightForward = pos + dirRight + dirForward;
+    vec2 posLeft = pos - dirRight * 2.0;
+    vec2 posLeftForward = pos - dirRight + dirForward;
+
+    if (match (mark, 1.0)) {
+        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dTickness1});
+    };
+    if (match (mark, 2.0) || match (mark, 4.0)) {
+        connect (colorMain, pos, posLeft, posRightForward, ${this.dTickness2});
+    };
+    if (match (mark, 3.0) || match (mark, 4.0)) {
+        connect (colorMain, pos, posLeftForward, posRight, ${this.dTickness2});
+    };
 }
 void main () {
     vec4 colorMain = texture2D (${this.uTextureMain}, ${this.vTexCoord});
-    vec4 colorMark = texture2D (${this.uTextureMark}, ${this.vTexCoord});
-    gl_FragColor = vec4 (colorMark.r, 0.0, 0.0, 1.0);
+    vec4 colorMark = texture2D (${this.uTextureMark}, ${this.vTexCoord}) * ${this.dSmoothIdMax};
+
+    // if (match (colorMark.a, 4.0)) {
+    //     gl_FragColor = vec4 (1);
+    // };
+
+    vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
+    corner (colorMain, colorMark.r, pos, vec2 (- 0.5,   0.5));
+    corner (colorMain, colorMark.g, pos, vec2 (  0.5,   0.5));
+    corner (colorMain, colorMark.b, pos, vec2 (  0.5, - 0.5));
+    corner (colorMain, colorMark.a, pos, vec2 (- 0.5, - 0.5));
+    gl_FragColor = colorMain;
 }
         `;
     }
@@ -92,8 +156,14 @@ void main () {
     }
 }
 __decorate([
-    JWebglProgram.define(JWEbglProgramDefine, `0.1`)
-], JWebglProgramTypeSmooth3Step2Smooth.prototype, "dBound", void 0);
+    JWebglProgram.define(JWEbglProgramDefine, `0.3535`)
+], JWebglProgramTypeSmooth3Step2Smooth.prototype, "dTickness1", void 0);
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `0.2236`)
+], JWebglProgramTypeSmooth3Step2Smooth.prototype, "dTickness2", void 0);
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `4.0`)
+], JWebglProgramTypeSmooth3Step2Smooth.prototype, "dSmoothIdMax", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformMat4)
 ], JWebglProgramTypeSmooth3Step2Smooth.prototype, "uMvp", void 0);
@@ -103,6 +173,9 @@ __decorate([
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
 ], JWebglProgramTypeSmooth3Step2Smooth.prototype, "uTextureMark", void 0);
+__decorate([
+    JWebglProgram.uniform(JWebglProgramUniformVec2)
+], JWebglProgramTypeSmooth3Step2Smooth.prototype, "uTextureSize", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec4)
 ], JWebglProgramTypeSmooth3Step2Smooth.prototype, "aPosition", void 0);

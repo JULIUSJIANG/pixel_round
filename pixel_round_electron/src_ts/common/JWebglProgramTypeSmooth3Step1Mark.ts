@@ -2,10 +2,13 @@ import JWebglEnum from "./JWebglEnum.js";
 import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
+import JWEbglProgramDefine from "./JWebglProgramDefine.js";
 import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramVaryingVec4 from "./JWebglProgramVaryingVec4.js";
 
 export default class JWebglProgramTypeSmooth3Step1Mark extends JWebglProgram {
+    @JWebglProgram.define (JWEbglProgramDefine, `4.0`)
+    dSmoothIdMax: JWEbglProgramDefine;
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
@@ -23,6 +26,7 @@ export default class JWebglProgramTypeSmooth3Step1Mark extends JWebglProgram {
         return `
 void main() {
     gl_Position = ${this.uMvp} * ${this.aPosition};
+    gl_PointSize = 1.0;
     ${this.vCorner} = ${this.aCorner};
 }
         `;
@@ -31,7 +35,7 @@ void main() {
     impGetnShaderFTxt (): string {
         return `
 void main() {
-    gl_FragColor = ${this.vCorner};
+    gl_FragColor = ${this.vCorner} / ${this.dSmoothIdMax};
 }
         `;
     }

@@ -6,6 +6,7 @@ import CornerMachineStatusResultSide from "./CornerMachineStatusResultSide.js";
 import CornerMachineStatusMayBeForward from "./CornerMachineStatusMayBeForward.js";
 import DetailMachineStatusPreview from "./DetailMachineStatusPreview.js";
 import CornerMachineStatusMayBeSide from "./CornerMachineStatusMayBeSide.js";
+import CornerTypeRSSide from "./CornerTypeRSSide.js";
 
 /**
  * 角状态机
@@ -77,7 +78,7 @@ class CornerMachine {
             colorId = 0;
         }
         else {
-            let idx = y + this.dataSrc.imgWidth + x;
+            let idx = y * this.dataSrc.imgWidth + x;
             colorId = this.dataSrc.binXYToColor [idx]; 
         };
         // 返回颜色索引
@@ -93,6 +94,9 @@ class CornerMachine {
     colorLF: number;
     colorRB: number;
     colorLB: number;
+
+    posCurrentX: number;
+    posCurrentY: number; 
 
     /**
      * 获取角的裁切类型
@@ -110,6 +114,9 @@ class CornerMachine {
         vecRightY: number
     ) 
     {
+        this.posCurrentX = posCurrentX;
+        this.posCurrentY = posCurrentY;
+
         // 位置
         let posForwardX = posCurrentX + vecForwardX * 2.0;
         let posForwardY = posCurrentY + vecForwardY * 2.0;
@@ -147,7 +154,8 @@ class CornerMachine {
         this.colorLB = this.getColor (posLBX, posLBY);
 
         this.enter (this.statusIdle);
-        return this.currStatus.onGetCornerType ();
+        let cornerType = this.currStatus.onGetCornerType ();
+        return cornerType;
     }
 }
 

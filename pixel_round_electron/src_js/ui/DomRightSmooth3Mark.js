@@ -2,6 +2,7 @@ import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
+import JWebglEnum from "../common/JWebglEnum.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
@@ -100,16 +101,25 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
         this.mat4P.setOrtho(-fboWidth / 2, fboWidth / 2, -fboHeight / 2, fboHeight / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
         this.jWebgl.programSmooth3Step1Mark.uMvp.fill(this.jWebgl.mat4Mvp);
+        // 绘制点有数量限制，这里让程序每一定数量的点绘制一次
+        let pointCount = 0;
+        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
         for (let x = 0; x < fboWidth; x++) {
             for (let y = 0; y < fboHeight; y++) {
                 let idx = y * fboWidth + x;
                 let pixel = IndexGlobal.inst.detailMachine.statusPreview.listXYToTexturePixel[idx];
-                this.jWebgl.programSmooth3Step1Mark.add(x + 0.5, y + 0.5, 0, pixel.cornerLT.rsBoth.id / 4.0, pixel.cornerRT.rsBoth.id / 4.0, pixel.cornerRB.rsBoth.id / 4.0, pixel.cornerLB.rsBoth.id / 4.0);
+                this.jWebgl.programSmooth3Step1Mark.add(x + 1, y + 1, 0, pixel.cornerLT.rsBoth.id, pixel.cornerRT.rsBoth.id, pixel.cornerRB.rsBoth.id, pixel.cornerLB.rsBoth.id);
+                pointCount++;
+                if (10 < pointCount) {
+                    this.jWebgl.programSmooth3Step1Mark.draw();
+                }
+                ;
             }
             ;
         }
         ;
         this.jWebgl.programSmooth3Step1Mark.draw();
+        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
         // 绘制最终内容
         let cameraWidth = fboWidth;
         let cameraHeight = fboHeight;
@@ -121,6 +131,7 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
         this.jWebgl.programSmooth3Step2Smooth.uMvp.fill(this.jWebgl.mat4Mvp);
         this.jWebgl.programSmooth3Step2Smooth.uTextureMain.fillByFbo(this.fboImg);
         this.jWebgl.programSmooth3Step2Smooth.uTextureMark.fillByFbo(this.fboCorner);
+        this.jWebgl.programSmooth3Step2Smooth.uTextureSize.fill(fboWidth, fboHeight);
         this.posImg.elements[0] = fboWidth / 2;
         this.posImg.elements[1] = fboHeight / 2;
         this.jWebgl.programSmooth3Step2Smooth.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, fboWidth, fboHeight);

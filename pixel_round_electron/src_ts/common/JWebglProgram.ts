@@ -239,11 +239,11 @@ class JWebglProgram {
     /**
      * 索引数据
      */
-    private _dataIndex = new Uint8Array (1);
+    _dataIndex = new Uint8Array (1);
     /**
      * 当前存储的索引
      */
-    private _dataIndexStorageIdx = 0;
+    _dataIndexStorageIdx = 0;
     /**
      * 添加索引数据
      * @param data 

@@ -77,8 +77,8 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param posCurrentY
      */
     getCornerType(posCurrentX, posCurrentY, vecForwardX, vecForwardY) {
-        let vecRightX = vecForwardX;
-        let vecRightY = -vecForwardY;
+        let vecRightX = vecForwardY;
+        let vecRightY = -vecForwardX;
         let rsSideLeft = this._cornerMachine.getCornerType(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
         let rsSideRight = this._cornerMachine.getCornerType(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
         return rsSideLeft.onRight(rsSideRight);

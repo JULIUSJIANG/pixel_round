@@ -108,8 +108,8 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         vecForwardY: number
     )
     {
-        let vecRightX = vecForwardX;
-        let vecRightY = -vecForwardY;
+        let vecRightX = vecForwardY;
+        let vecRightY = -vecForwardX;
 
         let rsSideLeft = this._cornerMachine.getCornerType (
             posCurrentX,

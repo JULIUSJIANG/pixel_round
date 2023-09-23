@@ -38,7 +38,7 @@ class CornerMachine {
             colorId = 0;
         }
         else {
-            let idx = y + this.dataSrc.imgWidth + x;
+            let idx = y * this.dataSrc.imgWidth + x;
             colorId = this.dataSrc.binXYToColor[idx];
         }
         ;
@@ -51,6 +51,8 @@ class CornerMachine {
      * @param posCurrentY
      */
     getCornerType(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
+        this.posCurrentX = posCurrentX;
+        this.posCurrentY = posCurrentY;
         // 位置
         let posForwardX = posCurrentX + vecForwardX * 2.0;
         let posForwardY = posCurrentY + vecForwardY * 2.0;
@@ -79,7 +81,8 @@ class CornerMachine {
         this.colorRB = this.getColor(posRBX, posRBY);
         this.colorLB = this.getColor(posLBX, posLBY);
         this.enter(this.statusIdle);
-        return this.currStatus.onGetCornerType();
+        let cornerType = this.currStatus.onGetCornerType();
+        return cornerType;
     }
 }
 export default CornerMachine;

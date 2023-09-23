@@ -6,6 +6,7 @@ import TextureColor from "./TextureColor.js";
 import ImgMachineStatus from "./ImgMachineStatus.js";
 import TextureGroup from "./TextureGroup.js";
 import TexturePixel from "./TexturePixel.js";
+import CornerTypeRSBoth from "./CornerTypeRSBoth.js";
 
 class ImgMachineStatusIdle extends ImgMachineStatus {
 

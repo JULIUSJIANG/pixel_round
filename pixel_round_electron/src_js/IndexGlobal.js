@@ -8,7 +8,7 @@ class IndexGlobal {
         this.detailMachine = new DetailMachine(this);
         this.detailMachine.enter(this.detailMachine.mapIdToStatus.get(MgrData.inst.get(MgrDataItem.DETAIL_MACHINE_STATUS)));
         this.createMachine = new CreateMachine(this);
-        this.stepRSCurrent = DomRightStepRS.step4Merge;
+        this.stepRSCurrent = DomRightStepRS.smooth2;
     }
     onStep(stepRS) {
         if (this.stepRSCurrent == stepRS) {

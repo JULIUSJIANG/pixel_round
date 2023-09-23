@@ -6,8 +6,14 @@ import DomRightSmooth2BlockStep3Smooth from "./DomRightSmooth2BlockStep3Smooth.j
 import DomRightSmooth2BlockStep1Split from "./DomRightSmooth2BlockStep1Split.js";
 import DomRightSmooth2BlockStep4Merge from "./DomRightSmooth2BlockStep4Merge.js";
 
-const Z_GRID = 0.1;
-
+/**
+ * 基于核心平滑方案的改进版本
+ * 优点:    
+ *      1. 所有连贯的边缘像素都能得到平滑
+ * 
+ * 缺点:
+ *      1. 部分平滑效果很机械化，没有灵魂
+ */
 class DomRightSmooth2Block extends ReactComponentExtend <number> {
     render (): ReactComponentExtendInstance {
         return ReactComponentExtend.instantiateTag (

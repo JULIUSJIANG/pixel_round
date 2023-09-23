@@ -1,6 +1,7 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import DomRightSmooth1Ordinary from "./DomRightSmooth1Ordinary.js";
 import DomRightSmooth2Block from "./DomRightSmooth2Block.js";
+import DomRightSmooth3Mark from "./DomRightSmooth3Mark.js";
 
 type ReactComponentExtendType <T> = (new (state, t: T) => ReactComponentExtend <T>);
 
@@ -32,15 +33,20 @@ namespace DomRightStepRS {
 
     export const listInst = new Array <DomRightStepRS <any>> ();
 
-    export const step0Smooth0 = new DomRightStepRS ({
+    export const smooth0 = new DomRightStepRS ({
         id: 1,
         name: `经典平滑`,
         comGetter: () => DomRightSmooth1Ordinary
     });
-    export const step4Merge = new DomRightStepRS ({
+    export const smooth1 = new DomRightStepRS ({
         id: 2,
         name: `分块平滑`,
         comGetter: () => DomRightSmooth2Block
+    });
+    export const smooth2 = new DomRightStepRS ({
+        id: 3,
+        name: `定制平滑`,
+        comGetter: () => DomRightSmooth3Mark
     });
 }
 

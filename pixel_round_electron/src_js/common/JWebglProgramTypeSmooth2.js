@@ -150,7 +150,7 @@ void smooth (inout vec4 s, vec2 ip, vec2 dirForward) {
     // 左前、右前颜色一致，正式开始平滑流程
     if (checkEqual (colorLeftForward, colorRightForward)) {
       // 先给前方来个小平滑总没错
-      connect (s, ip, posLeftForward, posRightForward, ${this.dTickness1} / 2.0);
+      connect (s, ip, posLeftForward, posRightForward, ${this.dTickness1});
       float connectCount = 0.0;
       // 左前以及右方的平滑判断
       if (checkEqual (colorLeftForward, colorRight)) {
@@ -165,9 +165,6 @@ void smooth (inout vec4 s, vec2 ip, vec2 dirForward) {
         if (!checkEqual (colorLeftBack, colorRightForward)) {
           connect (s, ip, posLeft, posRightForward, ${this.dTickness2});
         };
-      };
-      if (0.0 == connectCount) {
-        connect (s, ip, posLeftForward, posRightForward, ${this.dTickness1});
       };
     };
   };

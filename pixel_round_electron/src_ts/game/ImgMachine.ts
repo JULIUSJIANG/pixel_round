@@ -32,10 +32,16 @@ class ImgMachine {
         this.currStatus.onEnter ();
     }
 
+    /**
+     * 事件派发 - 创建
+     */
     onCreate () {
 
     }
 
+    /**
+     * 事件派发 - 销毁
+     */
     onDestroy () {
 
     }

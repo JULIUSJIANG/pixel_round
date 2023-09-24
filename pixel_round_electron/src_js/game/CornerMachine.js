@@ -4,6 +4,7 @@ import CornerMachineStatusResultNone from "./CornerMachineStatusResultNone.js";
 import CornerMachineStatusResultSide from "./CornerMachineStatusResultSide.js";
 import CornerMachineStatusMayBeForward from "./CornerMachineStatusMayBeForward.js";
 import CornerMachineStatusMayBeSide from "./CornerMachineStatusMayBeSide.js";
+import CornerTypeRSSide from "./CornerTypeRSSide.js";
 /**
  * 角状态机
  */
@@ -50,7 +51,7 @@ class CornerMachine {
      * @param posCurrentX
      * @param posCurrentY
      */
-    getCornerType(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
+    getCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
         this.posCurrentX = posCurrentX;
         this.posCurrentY = posCurrentY;
         // 位置
@@ -80,6 +81,31 @@ class CornerMachine {
         this.colorLF = this.getColor(posLFX, posLFY);
         this.colorRB = this.getColor(posRBX, posRBY);
         this.colorLB = this.getColor(posLBX, posLBY);
+        // 左前颜色与中心颜色一致，不用平滑
+        if (this.colorLF == this.colorCurrent) {
+            return CornerTypeRSSide.none;
+        }
+        // 颜色不一致，保留可能
+        else {
+            // 左前以及右前颜色一致，前方平滑，但是也有侧方平滑的可能
+            if (this.colorLF == this.colorRF) {
+                // 左方以及右前颜色一致，侧方平滑
+                if (this.colorLeft == this.colorRF) {
+                    return CornerTypeRSSide.side;
+                }
+                // 否则只是前方平滑
+                else {
+                    return CornerTypeRSSide.forward;
+                }
+                ;
+            }
+            // 否则不用平滑
+            else {
+                return CornerTypeRSSide.none;
+            }
+            ;
+        }
+        ;
         this.enter(this.statusIdle);
         let cornerType = this.currStatus.onGetCornerType();
         return cornerType;

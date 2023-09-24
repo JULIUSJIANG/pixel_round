@@ -18,6 +18,9 @@ namespace MgrDomDefine {
     export const STYLE_TEXT_ALIGN = "textAlign";
     export const STYLE_TEXT_ALIGN_CENTER = "center";
 
+    export const STYLE_VERTICAL_ALIGN = "verticalAlign";
+    export const STYLE_VERTICAL_ALIGN_MIDDLE = "middle";
+
     export const STYLE_WIDTH = "width";
     export const STYLE_WIDTH_PERCENTAGE_0 = "0%";
     export const STYLE_WIDTH_PERCENTAGE_100 = "100%";
@@ -60,8 +63,10 @@ namespace MgrDomDefine {
     export const STYLE_MARGIN_LEFT = "marginLeft";
 
     export const STYLE_PADDING = "padding";
+    export const STYLE_PADDING_TOP = "paddingTop";
     export const STYLE_PADDING_RIGHT = "paddingRight";
     export const STYLE_PADDING_BOTTOM = "paddingBottom";
+    export const STYLE_PADDING_LEFT = "paddingLeft";
 
     export const STYLE_FLEX = "flex";
 
@@ -78,6 +83,7 @@ namespace MgrDomDefine {
 
     export const STYLE_JUSTIFY_CONTENT = "justifyContent";
     export const STYLE_JUSTIFY_CONTENT_CENTER = "center";
+    export const STYLE_JUSTIFY_CONTENT_SPACE_BETWEEN = "space-between";
 
     export const STYLE_FONT_SIZE = "fontSize";
     export const STYLE_FONT_SIZE_14 = "14px";

@@ -27,7 +27,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
         };
         
         this.listChildren.length = 0;
-        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listColor.length; i++) {
+        for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listColor.length - 1; i++) {
             this.listChildren.push (ReactComponentExtend.instantiateComponent (
                 DomRightPreviewColor,
                 DomRightPreviewColor.Args.create (i)
@@ -138,13 +138,23 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                             [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                             [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                             [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
-    
-                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
                         }
                     },
-    
-                    ...this.listChildren
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                [MgrDomDefine.STYLE_PADDING_BOTTOM]: MgrDomDefine.CONFIG_TXT_SPACING,
+        
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                                [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_SCROLL
+                            }
+                        },
+        
+                        ...this.listChildren
+                    ),
                 ),
                 ReactComponentExtend.instantiateTag (
                     MgrDomDefine.TAG_DIV,

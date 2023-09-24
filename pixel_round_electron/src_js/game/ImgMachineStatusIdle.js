@@ -5,6 +5,7 @@ import TextureColor from "./TextureColor.js";
 import ImgMachineStatus from "./ImgMachineStatus.js";
 import TextureGroup from "./TextureGroup.js";
 import TexturePixel from "./TexturePixel.js";
+import CornerTypeRSBoth from "./CornerTypeRSBoth.js";
 class ImgMachineStatusIdle extends ImgMachineStatus {
     constructor() {
         super(...arguments);
@@ -186,10 +187,47 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
                 // 索引
                 let idx = y * width + x;
                 let texturePixel = this.relMachine.rel.listXYToTexturePixel[idx];
-                texturePixel.cornerLT.rsBoth = this.relMachine.rel.getCornerType(x, y, -0.5, 0.5);
-                texturePixel.cornerRT.rsBoth = this.relMachine.rel.getCornerType(x, y, 0.5, 0.5);
-                texturePixel.cornerRB.rsBoth = this.relMachine.rel.getCornerType(x, y, 0.5, -0.5);
-                texturePixel.cornerLB.rsBoth = this.relMachine.rel.getCornerType(x, y, -0.5, -0.5);
+                texturePixel.cornerLT.rsBoth = this.relMachine.rel.getCornerTypeBoth(x, y, -0.5, 0.5);
+                texturePixel.cornerRT.rsBoth = this.relMachine.rel.getCornerTypeBoth(x, y, 0.5, 0.5);
+                texturePixel.cornerRB.rsBoth = this.relMachine.rel.getCornerTypeBoth(x, y, 0.5, -0.5);
+                texturePixel.cornerLB.rsBoth = this.relMachine.rel.getCornerTypeBoth(x, y, -0.5, -0.5);
+            }
+            ;
+        }
+        ;
+        // 修复对角交叉的平滑问题
+        for (let x = 0; x < width; x++) {
+            for (let y = 0; y < height; y++) {
+                let recCurrent = this.relMachine.rel.getTexturePixel(x, y);
+                let recRight = this.relMachine.rel.getTexturePixel(x + 1, y);
+                let recTop = this.relMachine.rel.getTexturePixel(x, y + 1);
+                let recRT = this.relMachine.rel.getTexturePixel(x + 1, y + 1);
+                // 越界，忽略
+                if (recRight == null || recTop == null) {
+                    continue;
+                }
+                ;
+                // 非交叉情况，忽略
+                if (recCurrent.cornerRT.rsBoth == CornerTypeRSBoth.none) {
+                    continue;
+                }
+                ;
+                if (recRT.cornerLB.rsBoth == CornerTypeRSBoth.none) {
+                    continue;
+                }
+                ;
+                if (recRight.cornerLT.rsBoth == CornerTypeRSBoth.none) {
+                    continue;
+                }
+                ;
+                if (recTop.cornerRB.rsBoth == CornerTypeRSBoth.none) {
+                    continue;
+                }
+                ;
+                recCurrent.cornerRT.rsBoth = CornerTypeRSBoth.none;
+                recRT.cornerLB.rsBoth = CornerTypeRSBoth.none;
+                recRight.cornerLT.rsBoth = CornerTypeRSBoth.none;
+                recTop.cornerRB.rsBoth = CornerTypeRSBoth.none;
             }
             ;
         }

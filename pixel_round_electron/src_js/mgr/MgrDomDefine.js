@@ -14,6 +14,8 @@ class MgrDomDefine {
     //【样式名以及具体值】
     MgrDomDefine.STYLE_TEXT_ALIGN = "textAlign";
     MgrDomDefine.STYLE_TEXT_ALIGN_CENTER = "center";
+    MgrDomDefine.STYLE_VERTICAL_ALIGN = "verticalAlign";
+    MgrDomDefine.STYLE_VERTICAL_ALIGN_MIDDLE = "middle";
     MgrDomDefine.STYLE_WIDTH = "width";
     MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0 = "0%";
     MgrDomDefine.STYLE_WIDTH_PERCENTAGE_100 = "100%";
@@ -47,8 +49,10 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_MARGIN_BOTTOM = "marginBottom";
     MgrDomDefine.STYLE_MARGIN_LEFT = "marginLeft";
     MgrDomDefine.STYLE_PADDING = "padding";
+    MgrDomDefine.STYLE_PADDING_TOP = "paddingTop";
     MgrDomDefine.STYLE_PADDING_RIGHT = "paddingRight";
     MgrDomDefine.STYLE_PADDING_BOTTOM = "paddingBottom";
+    MgrDomDefine.STYLE_PADDING_LEFT = "paddingLeft";
     MgrDomDefine.STYLE_FLEX = "flex";
     MgrDomDefine.STYLE_OVERFLOW_X = "overflowX";
     MgrDomDefine.STYLE_OVERFLOW_X_HIDDEN = "hidden";
@@ -60,6 +64,7 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER = "center";
     MgrDomDefine.STYLE_JUSTIFY_CONTENT = "justifyContent";
     MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER = "center";
+    MgrDomDefine.STYLE_JUSTIFY_CONTENT_SPACE_BETWEEN = "space-between";
     MgrDomDefine.STYLE_FONT_SIZE = "fontSize";
     MgrDomDefine.STYLE_FONT_SIZE_14 = "14px";
     MgrDomDefine.STYLE_FONT_FAMILY = "fontFamily";

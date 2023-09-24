@@ -6,10 +6,10 @@ import DomRightStepRS from "./DomRightStepRS.js";
 class DomRightSmooth extends ReactComponentExtend {
     constructor() {
         super(...arguments);
-        this.listChildren = new Array();
+        this.listChildrenBtnType = new Array();
     }
     render() {
-        this.listChildren.length = 0;
+        this.listChildrenBtnType.length = 0;
         for (let i = 0; i < DomRightStepRS.listInst.length; i++) {
             let listInstI = DomRightStepRS.listInst[i];
             let props = {
@@ -27,7 +27,7 @@ class DomRightSmooth extends ReactComponentExtend {
             }
             ;
             let child = ReactComponentExtend.instantiateTag(NodeModules.antd.Button, props, listInstI.name);
-            this.listChildren.push(child);
+            this.listChildrenBtnType.push(child);
         }
         ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -45,7 +45,7 @@ class DomRightSmooth extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
                 [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR
             }
-        }, ...this.listChildren));
+        }, ...this.listChildrenBtnType));
     }
 }
 export default DomRightSmooth;

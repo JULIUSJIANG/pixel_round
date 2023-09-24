@@ -7,10 +7,10 @@ import DomRightStepRS from "./DomRightStepRS.js";
 
 class DomRightSmooth extends ReactComponentExtend <number> {
 
-    listChildren = new Array <ReactComponentExtendInstance> ();
+    listChildrenBtnType = new Array <ReactComponentExtendInstance> ();
 
     render (): ReactComponentExtendInstance {
-        this.listChildren.length = 0;
+        this.listChildrenBtnType.length = 0;
         for (let i = 0; i < DomRightStepRS.listInst.length; i++) {
             let listInstI = DomRightStepRS.listInst [i];
             let props = {
@@ -32,7 +32,7 @@ class DomRightSmooth extends ReactComponentExtend <number> {
 
                 listInstI.name
             );
-            this.listChildren.push (child);
+            this.listChildrenBtnType.push (child);
         };
 
         return ReactComponentExtend.instantiateTag (
@@ -62,7 +62,7 @@ class DomRightSmooth extends ReactComponentExtend <number> {
                     }
                 },
 
-                ...this.listChildren
+                ...this.listChildrenBtnType
             )
         )
     }

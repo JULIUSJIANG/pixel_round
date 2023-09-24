@@ -37,7 +37,7 @@ class DomLeftListImg extends ReactComponentExtend {
             });
         }
         ;
-        let eleWidth = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
+        let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
                 IndexGlobal.inst.detailMachine.currStatus.onImg(this.props.imgData.id);
@@ -45,7 +45,7 @@ class DomLeftListImg extends ReactComponentExtend {
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: 0,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,
-                [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 4}px`
+                [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
             }
         };
         if (this.props.j != 0) {
@@ -54,6 +54,9 @@ class DomLeftListImg extends ReactComponentExtend {
         ;
         if (IndexGlobal.inst.detailMachine.currStatus == IndexGlobal.inst.detailMachine.statusPreview && this.props.imgData.id == MgrData.inst.get(MgrDataItem.CURRENT_IMG)) {
             props[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
+        }
+        else {
+            props.style[MgrDomDefine.STYLE_BACKGROUND_COLOR] = MgrDomDefine.CONFIG_TXT_BG_COLOR;
         }
         ;
         return ReactComponentExtend.instantiateTag(NodeModules.antd.Button, props, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -64,11 +67,11 @@ class DomLeftListImg extends ReactComponentExtend {
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
-                [MgrDomDefine.STYLE_WIDTH]: `${eleWidth}px`,
-                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+                [MgrDomDefine.STYLE_HEIGHT]: `${eleSize}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${eleSize}px`,
+                // [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
                 [MgrDomDefine.STYLE_POSITION]: MgrDomDefine.STYLE_POSITION_RELATIVE,
-                [MgrDomDefine.STYLE_LEFT]: `${-eleWidth / 2}px`,
+                [MgrDomDefine.STYLE_LEFT]: `${-eleSize / 2}px`,
                 [MgrDomDefine.STYLE_TOP]: `${-(IndexGlobal.IMG_MINI_SIZE / 2 + MgrDomDefine.CONFIG_NUMBER_SPACING)}px`,
             }
         }, imgInst)));

@@ -18,7 +18,7 @@ const Z_GRID = 0.1;
 /**
  * 尝试更为灵魂的平滑
  */
-class DomRightSmooth3Mark extends ReactComponentExtend {
+class DomRightSmoothWebgl extends ReactComponentExtend {
     constructor() {
         super(...arguments);
         /**
@@ -234,4 +234,4 @@ class DomRightSmooth3Mark extends ReactComponentExtend {
         })))));
     }
 }
-export default DomRightSmooth3Mark;
+export default DomRightSmoothWebgl;

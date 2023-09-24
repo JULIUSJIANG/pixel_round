@@ -4,9 +4,9 @@ import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomRightPreviewColorControl from "./DomRightPreviewColorControl.js";
+import DomRightPreviewColorTableItemCheckbox from "./DomRightPreviewColorTableItemCheckbox.js";
 
-class DomRightPreviewColor extends ReactComponentExtend <DomRightPreviewColor.Args> {
+class DomRightPreviewColorTableItem extends ReactComponentExtend <DomRightPreviewColorTableItem.Args> {
 
     listChildrenControl = new Array <ReactComponentExtendInstance> ();
 
@@ -57,8 +57,8 @@ class DomRightPreviewColor extends ReactComponentExtend <DomRightPreviewColor.Ar
             )
         ));
         for (let i = this.props.idx + 1; i < IndexGlobal.inst.detailMachine.statusPreview.listColor.length; i++) {
-            let args = DomRightPreviewColorControl.Args.create (i);
-            this.listChildrenControl.push (ReactComponentExtend.instantiateComponent (DomRightPreviewColorControl, args));
+            let args = DomRightPreviewColorTableItemCheckbox.Args.create (i);
+            this.listChildrenControl.push (ReactComponentExtend.instantiateComponent (DomRightPreviewColorTableItemCheckbox, args));
         };
 
         let props = {
@@ -81,7 +81,7 @@ class DomRightPreviewColor extends ReactComponentExtend <DomRightPreviewColor.Ar
     }
 }
 
-namespace DomRightPreviewColor {
+namespace DomRightPreviewColorTableItem {
     export class Args {
 
         idx: number;
@@ -100,4 +100,4 @@ namespace DomRightPreviewColor {
     }
 }
 
-export default DomRightPreviewColor;
+export default DomRightPreviewColorTableItem;

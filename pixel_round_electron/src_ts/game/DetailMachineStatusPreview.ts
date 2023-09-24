@@ -123,6 +123,9 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         y: number
     )
     {
+        if (x < 0 || this.imgWidth <= x || y < 0 || this.imgHeight <= y) {
+            return null;
+        };
         let idx = y * this.imgWidth + x;
         return this.listXYToTexturePixel [idx];
     }

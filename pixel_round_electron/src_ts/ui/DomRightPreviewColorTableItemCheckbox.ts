@@ -6,7 +6,7 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-class DomRightPreviewColorControl extends ReactComponentExtend <DomRightPreviewColorControl.Args> {
+class DomRightPreviewColorTableItemCheckbox extends ReactComponentExtend <DomRightPreviewColorTableItemCheckbox.Args> {
 
     render (): ReactComponentExtendInstance {
         let colorInst = IndexGlobal.inst.detailMachine.statusPreview.listColor [this.props.idx];
@@ -48,7 +48,7 @@ class DomRightPreviewColorControl extends ReactComponentExtend <DomRightPreviewC
     }
 }
 
-namespace DomRightPreviewColorControl {
+namespace DomRightPreviewColorTableItemCheckbox {
     export class Args {
 
         idx: number;
@@ -67,4 +67,4 @@ namespace DomRightPreviewColorControl {
     }
 }
 
-export default DomRightPreviewColorControl;
+export default DomRightPreviewColorTableItemCheckbox;

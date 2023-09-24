@@ -4,7 +4,7 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomRightPreviewColorFirst from "./DomRightPreviewColorFirst.js";
+import DomRightPreviewColorTable from "./DomRightPreviewColorTable.js";
 export default class DomRightPreviewProps extends ReactComponentExtend {
     render() {
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -16,7 +16,7 @@ export default class DomRightPreviewProps extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN,
             }
-        }, ReactComponentExtend.instantiateComponent(DomRightPreviewColorFirst, null), ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
+        }, ReactComponentExtend.instantiateComponent(DomRightPreviewColorTable, null), ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
             onClick: () => {
                 let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
                 let targetIdx;

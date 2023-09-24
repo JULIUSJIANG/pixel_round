@@ -6,7 +6,7 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 import DomInputNumber from "./DomInputNumber.js";
-import DomRightPreviewColor from "./DomRightPreviewColor.js";
+import DomRightPreviewColorTableItem from "./DomRightPreviewColorTableItem.js";
 import DomRightPreviewImgBeforeWebglCutted from "./DomRightPreviewImgBeforeWebglCutted.js";
 import DomRightPreviewImgBeforeWebglOrigin from "./DomRightPreviewImgBeforeWebglOrigin.js";
 import DomRightPreviewImgBeforeWebglPixels from "./DomRightPreviewImgBeforeWebglPixels.js";

@@ -24,7 +24,7 @@ const Z_GRID = 0.1;
 /**
  * 尝试更为灵魂的平滑
  */
-class DomRightSmooth3Mark extends ReactComponentExtend <number> {
+class DomRightSmoothWebgl extends ReactComponentExtend <number> {
 
     /**
      * 3d canvas 引用器
@@ -355,4 +355,4 @@ class DomRightSmooth3Mark extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightSmooth3Mark;
+export default DomRightSmoothWebgl;

@@ -2,9 +2,9 @@ import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomRightPreviewColor from "./DomRightPreviewColor.js";
+import DomRightPreviewColorTableItem from "./DomRightPreviewColorTableItem.js";
 
-class DomRightPreviewColorFirst extends ReactComponentExtend <number> {
+class DomRightPreviewColorTable extends ReactComponentExtend <number> {
 
     listChildren = new Array <ReactComponentExtendInstance> ();
 
@@ -12,8 +12,8 @@ class DomRightPreviewColorFirst extends ReactComponentExtend <number> {
         this.listChildren.length = 0;
         for (let i = 0; i < IndexGlobal.inst.detailMachine.statusPreview.listColor.length - 1; i++) {
             this.listChildren.push (ReactComponentExtend.instantiateComponent (
-                DomRightPreviewColor,
-                DomRightPreviewColor.Args.create (i)
+                DomRightPreviewColorTableItem,
+                DomRightPreviewColorTableItem.Args.create (i)
             ));
         };
 
@@ -45,4 +45,4 @@ class DomRightPreviewColorFirst extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightPreviewColorFirst;
+export default DomRightPreviewColorTable;

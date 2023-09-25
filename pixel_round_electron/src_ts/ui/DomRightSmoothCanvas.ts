@@ -10,6 +10,10 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
+const HORIZON_COUNT = 3;
+
+const VERTICAL_COUNT = 2;
+
 /**
  * 线的深度
  */
@@ -75,6 +79,79 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         dataSrc.drawImgPadding (this.jWebgl, this.fboImg);
         this.jWebgl.fillFbo (null, this.fboImg);
 
+        // 清除一遍画布
+        this.jWebgl.useFbo (null);
+        this.jWebgl.clear ();
+
+        // 绘制图片
+        dataSrc.step1CornerBase ();
+        this.drawImg (0, 0);
+        dataSrc.step2FixX ();
+        this.drawImg (1, 0);
+        dataSrc.step3Addition ();
+        this.drawImg (2, 0);
+
+        // 网格
+        let cameraWidth = dataSrc.imgWidthPaddingScaled * HORIZON_COUNT;
+        let cameraHeight = dataSrc.imgHeightPaddingScaled * VERTICAL_COUNT;
+        this.jWebgl.mat4V.setLookAt(
+            cameraWidth / 2, cameraHeight / 2, 1,
+            cameraWidth / 2, cameraHeight / 2, 0,
+            0, 1, 0
+        );
+        this.jWebgl.mat4P.setOrtho (
+            - cameraWidth / 2, cameraWidth / 2,
+            - cameraHeight / 2, cameraHeight / 2,
+            0, 2
+        );
+        this.jWebgl.refreshMat4Mvp ();
+        this.jWebgl.programLine.uMvp.fill (this.jWebgl.mat4Mvp);
+        let colorGrid = JWebglColor.COLOR_BLACK;
+        let count = 0;
+        for (let i = 0; i <= cameraWidth; i++) {
+            this.posFrom.elements [0] = i;
+            this.posFrom.elements [1] = 0;
+            this.posTo.elements [0] = i;
+            this.posTo.elements [1] = cameraHeight;
+            this.jWebgl.programLine.add (
+                this.posFrom,
+                colorGrid,
+                this.posTo,
+                colorGrid
+            );
+            count ++;
+            if (count < 10) {
+                count = 0;
+                this.jWebgl.programLine.draw ();
+            };
+        };
+        for (let i = 0; i <= cameraHeight; i++) {
+            this.posFrom.elements [0] = 0;
+            this.posFrom.elements [1] = i;
+            this.posTo.elements [0] = cameraWidth;
+            this.posTo.elements [1] = i;
+            this.jWebgl.programLine.add (
+                this.posFrom,
+                colorGrid,
+                this.posTo,
+                colorGrid
+            );
+            count ++;
+            if (count < 10) {
+                count = 0;
+                this.jWebgl.programLine.draw ();
+            };
+        };
+        this.jWebgl.programLine.draw ();
+    }
+
+    /**
+     * 绘制图片
+     * @param x 
+     * @param y 
+     */
+    drawImg (x: number, y: number) {
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
         // 使用标记信息生成纹理
         this.jWebgl.useFbo (this.fboCorner);
         this.jWebgl.clear ();
@@ -121,10 +198,9 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
 
         // 绘制最终内容
-        let cameraWidth = dataSrc.imgWidthPaddingScaled;
-        let cameraHeight = dataSrc.imgHeightPaddingScaled;
+        let cameraWidth = dataSrc.imgWidthPaddingScaled * HORIZON_COUNT;
+        let cameraHeight = dataSrc.imgHeightPaddingScaled * VERTICAL_COUNT;
         this.jWebgl.useFbo (null);
-        this.jWebgl.clear ();
         this.jWebgl.mat4V.setLookAt (
             cameraWidth / 2, cameraHeight / 2, 1,
             cameraWidth / 2, cameraHeight / 2, 0,
@@ -140,8 +216,8 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothStep2Smooth.uTextureMain.fillByFbo (this.fboImg);
         this.jWebgl.programSmoothStep2Smooth.uTextureMark.fillByFbo (this.fboCorner);
         this.jWebgl.programSmoothStep2Smooth.uTextureSize.fill (dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
-        this.posImg.elements [0] = dataSrc.imgWidthPaddingScaled / 2;
-        this.posImg.elements [1] = dataSrc.imgHeightPaddingScaled / 2;
+        this.posImg.elements [0] = dataSrc.imgWidthPaddingScaled * (0.5 + x);
+        this.posImg.elements [1] = dataSrc.imgHeightPaddingScaled * (VERTICAL_COUNT - 1 + 0.5 - y);
         this.jWebgl.programSmoothStep2Smooth.add (
             this.posImg,
             JWebglMathVector4.axisZStart,
@@ -150,46 +226,6 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             dataSrc.imgHeightPaddingScaled
         );
         this.jWebgl.programSmoothStep2Smooth.draw ();
-
-        // 网格
-        this.jWebgl.mat4V.setLookAt(
-            dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 1,
-            dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0,
-            0, 1, 0
-        );
-        this.jWebgl.mat4P.setOrtho (
-            - dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgWidthPaddingScaled / 2,
-            - dataSrc.imgHeightPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2,
-            0, 2
-        );
-        this.jWebgl.refreshMat4Mvp ();
-        this.jWebgl.programLine.uMvp.fill (this.jWebgl.mat4Mvp);
-        let colorGrid = JWebglColor.COLOR_BLACK;
-        for (let i = 0; i <= cameraWidth; i++) {
-            this.posFrom.elements [0] = i;
-            this.posFrom.elements [1] = 0;
-            this.posTo.elements [0] = i;
-            this.posTo.elements [1] = cameraHeight;
-            this.jWebgl.programLine.add (
-                this.posFrom,
-                colorGrid,
-                this.posTo,
-                colorGrid
-            );
-        };
-        for (let i = 0; i <= cameraHeight; i++) {
-            this.posFrom.elements [0] = 0;
-            this.posFrom.elements [1] = i;
-            this.posTo.elements [0] = cameraWidth;
-            this.posTo.elements [1] = i;
-            this.jWebgl.programLine.add (
-                this.posFrom,
-                colorGrid,
-                this.posTo,
-                colorGrid
-            );
-        };
-        this.jWebgl.programLine.draw ();
     }
 
     render (): ReactComponentExtendInstance {
@@ -230,8 +266,8 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * HORIZON_COUNT}px`,
+                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * VERTICAL_COUNT}px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                         }
                     },
@@ -252,11 +288,11 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
                             MgrDomDefine.TAG_CANVAS,
                             {
                                 ref: this.canvasWebglRef,
-                                width: dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
-                                height: dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+                                width: dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * HORIZON_COUNT * IndexGlobal.ANTINA,
+                                height: dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * VERTICAL_COUNT * IndexGlobal.ANTINA,
                                 style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * HORIZON_COUNT}px`,
+                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * VERTICAL_COUNT}px`,
                                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                 }
                             }

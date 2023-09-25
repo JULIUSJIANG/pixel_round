@@ -321,7 +321,13 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * 刷新角平滑的处理
      */
     refreshCorner () {
-        // 确定各个角的基准平滑类型
+
+    }
+
+    /**
+     * 确定各个角的基准平滑类型
+     */
+    step1CornerBase () {
         for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
             for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
                 // 索引
@@ -339,7 +345,12 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
                 };
             };
         };
-        // 修复对角交叉的平滑问题
+    }
+
+    /**
+     * 修复对角交叉的平滑问题
+     */
+    step2FixX () {
         for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
             for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
                 let recCurrent = this.getTexturePixel (x, y);
@@ -376,7 +387,12 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
                 };
             };
         };
-        // 确定各个角的基准平滑类型
+    }
+
+    /**
+     * 补充一些平滑，以让形状看起来自然
+     */
+    step3Addition () {
         for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
             for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
                 // 索引
@@ -509,6 +525,16 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     {
         // 当前位置的记录
         let textureCurrent = this.getTexturePixel (posCurrentX, posCurrentY);
+
+        let cornerRightType = TexturePixel.getCorner (textureCurrent, vecRightX, vecRightY).rsBoth.namedByAxis (vecForwardX, vecForwardY, vecRightX, vecRightY);
+        if (cornerRightType == CornerTypeRSBoth.left || cornerRightType == CornerTypeRSBoth.bothSide) {
+            return false;
+        };
+
+        let cornerLeftType = TexturePixel.getCorner (textureCurrent, - vecRightX, - vecRightY).rsBoth.namedByAxis (vecForwardX, vecForwardY, vecRightX, vecRightY);
+        if (cornerLeftType == CornerTypeRSBoth.right || cornerLeftType == CornerTypeRSBoth.bothSide) {
+            return false;
+        };
 
         // 右上方位置
         let posRFX = posCurrentX + vecRightX / 2 + vecForwardX / 2;

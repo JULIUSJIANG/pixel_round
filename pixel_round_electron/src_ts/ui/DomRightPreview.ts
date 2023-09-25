@@ -1,9 +1,7 @@
-import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomRightPreviewImg from "./DomRightPreviewImg.js";
-import DomRightPreviewImgBefore from "./DomRightPreviewImgBefore.js";
 import DomRightPreviewPixelDataCache from "./DomRightPreviewPixelDataCache.js";
 import DomRightPreviewProps from "./DomRightPreviewProps.js";
 

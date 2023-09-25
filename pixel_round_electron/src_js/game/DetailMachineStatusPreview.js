@@ -4,6 +4,7 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import DomRightPreview from "../ui/DomRightPreview.js";
 import DetailMachineStatus from "./DetailMachineStatus.js";
 import ImgMachine from "./ImgMachine.js";
+import TexturePixel from "./TexturePixel.js";
 import CornerTypeRSSide from "./CornerTypeRSSide.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
@@ -124,22 +125,22 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      */
     getCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
         // 位置
-        let posForwardX = posCurrentX + vecForwardX * 2.0;
+        let posForwardX = posCurrentX + vecForwardX;
         let posForwardY = posCurrentY + vecForwardY * 2.0;
-        let posBackX = posCurrentX - vecForwardX * 2.0;
-        let posBackY = posCurrentY - vecForwardY * 2.0;
-        let posRightX = posCurrentX + vecRightX * 2.0;
-        let posRightY = posCurrentY + vecRightY * 2.0;
-        let posLeftX = posCurrentX - vecRightX * 2.0;
-        let posLeftY = posCurrentY - vecRightY * 2.0;
-        let posRFX = posCurrentX + vecRightX + vecForwardX;
-        let posRFY = posCurrentY + vecRightY + vecForwardY;
-        let posLFX = posCurrentX - vecRightX + vecForwardX;
-        let posLFY = posCurrentY - vecRightY + vecForwardY;
-        let posRBX = posCurrentX + vecRightX - vecForwardX;
-        let posRBY = posCurrentY + vecRightY - vecForwardY;
-        let posLBX = posCurrentX - vecRightX - vecForwardX;
-        let posLBY = posCurrentY - vecRightY - vecForwardY;
+        let posBackX = posCurrentX - vecForwardX;
+        let posBackY = posCurrentY - vecForwardY;
+        let posRightX = posCurrentX + vecRightX;
+        let posRightY = posCurrentY + vecRightY;
+        let posLeftX = posCurrentX - vecRightX;
+        let posLeftY = posCurrentY - vecRightY;
+        let posRFX = posCurrentX + vecRightX / 2 + vecForwardX / 2;
+        let posRFY = posCurrentY + vecRightY / 2 + vecForwardY / 2;
+        let posLFX = posCurrentX - vecRightX / 2 + vecForwardX / 2;
+        let posLFY = posCurrentY - vecRightY / 2 + vecForwardY / 2;
+        let posRBX = posCurrentX + vecRightX / 2 - vecForwardX / 2;
+        let posRBY = posCurrentY + vecRightY / 2 - vecForwardY / 2;
+        let posLBX = posCurrentX - vecRightX / 2 - vecForwardX / 2;
+        let posLBY = posCurrentY - vecRightY / 2 - vecForwardY / 2;
         // 颜色
         let colorCurrent = this.getColor(posCurrentX, posCurrentY);
         let colorForward = this.getColor(posForwardX, posForwardY);
@@ -205,10 +206,17 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
                 // 索引
                 let idx = y * this.imgWidthPaddingScaled + x;
                 let texturePixel = this.listXYToTexturePixel[idx];
-                texturePixel.cornerLT.rsBoth = this.getCornerTypeBoth(x, y, -0.5, 0.5);
-                texturePixel.cornerRT.rsBoth = this.getCornerTypeBoth(x, y, 0.5, 0.5);
-                texturePixel.cornerRB.rsBoth = this.getCornerTypeBoth(x, y, 0.5, -0.5);
-                texturePixel.cornerLB.rsBoth = this.getCornerTypeBoth(x, y, -0.5, -0.5);
+                // 确定平滑方向
+                for (let i = 0; i < TexturePixel.listCornerX.length; i++) {
+                    let listCornerXI = TexturePixel.listCornerX[i];
+                    for (let j = 0; j < TexturePixel.listCornerY.length; j++) {
+                        let listCornerYJ = TexturePixel.listCornerY[j];
+                        let corner = TexturePixel.getCorner(texturePixel, listCornerXI, listCornerYJ);
+                        corner.rsBoth = this.getCornerTypeBoth(x, y, listCornerXI, listCornerYJ);
+                    }
+                    ;
+                }
+                ;
             }
             ;
         }
@@ -256,6 +264,62 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
                 ;
             }
             ;
+        }
+        ;
+        // 补充斜角平滑
+        // for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
+        //     for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
+        //         // 索引
+        //         let idx = y * this.imgWidthPaddingScaled + x;
+        //         let texturePixel = this.listXYToTexturePixel [idx];
+        //         texturePixel.cornerLT.rsBoth = this.getCornerTypeBoth (x, y, - 0.5,   0.5);
+        //         texturePixel.cornerRT.rsBoth = this.getCornerTypeBoth (x, y,   0.5,   0.5);
+        //         texturePixel.cornerRB.rsBoth = this.getCornerTypeBoth (x, y,   0.5, - 0.5);
+        //         texturePixel.cornerLB.rsBoth = this.getCornerTypeBoth (x, y, - 0.5, - 0.5);
+        //     };
+        // };
+    }
+    /**
+     * 考虑到线条连贯所以才增加的平滑
+     * @param x
+     * @param y
+     * @param vecForwardX
+     * @param vecForwardY
+     */
+    getAdditionSmoothBoth(posCurrentX, posCurrentY, currBothRS, vecForwardX, vecForwardY) {
+        return currBothRS;
+        if (currBothRS != CornerTypeRSBoth.none) {
+            return currBothRS;
+        }
+        ;
+        let vecRightX = vecForwardY;
+        let vecRightY = -vecForwardX;
+        let rsSideLeft = this.getAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
+        let rsSideRight = this.getAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
+        return currBothRS;
+    }
+    /**
+     * 考虑到线条连贯所以才增加的平滑
+     * @param posCurrentX
+     * @param posCurrentY
+     * @param vecForwardX
+     * @param vecForwardY
+     * @param vecRightX
+     * @param vecRightY
+     */
+    getAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
+        let posRFX = posCurrentX + vecRightX + vecForwardX;
+        let posRFY = posCurrentY + vecRightY + vecForwardY;
+        let textureCurrent = this.getTexturePixel(posCurrentX, posCurrentY);
+        let textureRF = this.getTexturePixel(posRFX, posRFY);
+        // 越界，那么不新增平滑
+        if (!textureRF) {
+            return CornerTypeRSSide.none;
+        }
+        ;
+        let colorCurrent = this.getColor(posCurrentX, posCurrentY);
+        let colorRF = this.getColor(posRFX, posRFY);
+        if (textureRF) {
         }
         ;
     }

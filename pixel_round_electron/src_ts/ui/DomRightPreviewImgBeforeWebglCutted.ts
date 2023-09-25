@@ -3,17 +3,10 @@ import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
 import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
-import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
-import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
-import MgrData from "../mgr/MgrData.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import MgrRes from "../mgr/MgrRes.js";
-import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
-import DomRightPreviewImgBefore from "./DomRightPreviewImgBefore.js";
 
 const Z_GRID = 0.1;
 
@@ -46,8 +39,6 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
-        this.mat4M.setIdentity();
-
         this.canvas2d = this.canvas2dRef.current;
         this.canvas2dCtx = this.canvas2d.getContext (`2d`);
     }
@@ -65,7 +56,7 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
         let imgMachine = dataSrc.imgMachine;
         // 没加载完毕，不对画布进行改动
-        if (imgMachine == null || imgMachine.currStatus == imgMachine.statusIdle) {
+        if (imgMachine.currStatus == imgMachine.statusIdle) {
             return;
         };
 
@@ -79,6 +70,17 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
         this.jWebgl.fillFbo (null, this.fbo);
 
         // 网格
+        this.jWebgl.mat4V.setLookAt(
+            dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 1,
+            dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0,
+            0, 1, 0
+        );
+        this.jWebgl.mat4P.setOrtho (
+            - dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgWidthPaddingScaled / 2,
+            - dataSrc.imgHeightPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2,
+            0, 2
+        );
+        this.jWebgl.refreshMat4Mvp ();
         this.jWebgl.programLine.uMvp.fill (this.jWebgl.mat4Mvp);
         let colorGrid = JWebglColor.COLOR_BLACK;
         for (let i = 0; i <= dataSrc.imgWidthPaddingScaled; i++) {
@@ -165,7 +167,6 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
                             [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                             [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-                            [MgrDomDefine.STYLE_DISPLAY]: this.finishedImg == null ? MgrDomDefine.STYLE_DISPLAY_NONE : MgrDomDefine.STYLE_DISPLAY_BLOCK
                         }
                     },
                 

@@ -1,63 +1,58 @@
-import MgrData from "../mgr/MgrData.js";
 import ImgMachineStatus from "./ImgMachineStatus.js";
-
 /**
  * 状态 - 图像信息缓存完毕
  */
 class ImgMachineStatusCached extends ImgMachineStatus {
-
-    onSizeChanged (): void {
-        this.relMachine.enter (this.relMachine.statusLoaded);
+    onSizeChanged() {
+        this.relMachine.enter(this.relMachine.statusLoaded);
     }
-
     /**
      * 收到数据 - 左内边距
-     * @param val 
+     * @param val
      */
-    onValPaddingLeft (val: number) {
+    onValPaddingLeft(val) {
         this.relMachine.dataInst.paddingLeft = val;
-        this.onSizeChanged ();
+        this.onSizeChanged();
     }
     /**
      * 收到数据 - 右内边距
-     * @param val 
+     * @param val
      */
-    onValPaddingRight (val: number) {
+    onValPaddingRight(val) {
         this.relMachine.dataInst.paddingRight = val;
-        this.onSizeChanged ();
+        this.onSizeChanged();
     }
     /**
      * 收到数据 - 上内边距
-     * @param val 
+     * @param val
      */
-    onValPaddingTop (val: number) {
+    onValPaddingTop(val) {
         this.relMachine.dataInst.paddingTop = val;
-        this.onSizeChanged ();
+        this.onSizeChanged();
     }
     /**
      * 收到数据 - 下内边距
-     * @param val 
+     * @param val
      */
-    onValPaddingBottom (val: number) {
+    onValPaddingBottom(val) {
         this.relMachine.dataInst.paddingBottom = val;
-        this.onSizeChanged ();
+        this.onSizeChanged();
     }
     /**
      * 收到数据 - 颗粒宽度
-     * @param val 
+     * @param val
      */
-    onValPixelWidth (val: number) {
+    onValPixelWidth(val) {
         this.relMachine.dataInst.pixelWidth = val;
-        this.onSizeChanged ();
+        this.onSizeChanged();
     }
     /**
      * 收到数据 - 颗粒高度
-     * @param val 
+     * @param val
      */
-    onValPixelHeight (val: number) {
+    onValPixelHeight(val) {
         this.relMachine.dataInst.pixelHeight = val;
-        this.onSizeChanged ();
+        this.onSizeChanged();
     }
 }
-
 export default ImgMachineStatusCached;

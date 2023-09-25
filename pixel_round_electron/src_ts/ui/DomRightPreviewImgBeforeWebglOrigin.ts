@@ -24,14 +24,9 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> 
 
     jWebgl: JWebgl;
 
-    mat4M = new JWebglMathMatrix4();
-    mat4V = new JWebglMathMatrix4();
-    mat4P = new JWebglMathMatrix4();
-
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
-        this.mat4M.setIdentity();
     }
 
     posImg = new JWebglMathVector4 ();
@@ -53,7 +48,7 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> 
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
         let imgMachine = dataSrc.imgMachine;
         // 没加载完毕，不对画布进行改动
-        if (imgMachine == null || imgMachine.currStatus == imgMachine.statusIdle) {
+        if (imgMachine.currStatus == imgMachine.statusIdle) {
             return;
         };
 
@@ -69,22 +64,17 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> 
         let viewWidth = imgMachine.assetsImg.image.width + paddingRight + paddingLeft;
         let viewHeight = imgMachine.assetsImg.image.height + paddingTop + paddingBottom;
 
-        this.mat4V.setLookAt(
+        this.jWebgl.mat4V.setLookAt(
             viewWidth / 2, viewHeight / 2, 1,
             viewWidth / 2, viewHeight / 2, 0,
             0, 1, 0
         );
-        this.mat4P.setOrtho (
+        this.jWebgl.mat4P.setOrtho (
             -viewWidth / 2, viewWidth / 2,
             -viewHeight / 2, viewHeight / 2,
             0, 2
         );
-        JWebglMathMatrix4.multiplayMat4List (
-            this.mat4P,
-            this.mat4V,
-            this.mat4M,
-            this.jWebgl.mat4Mvp
-        );
+        this.jWebgl.refreshMat4Mvp ();
 
         // 图片
         this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);

@@ -6,7 +6,6 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomInputNumber from "./DomInputNumber.js";
 import DomRightPreviewImgBeforeWebglCutted from "./DomRightPreviewImgBeforeWebglCutted.js";
 import DomRightPreviewImgBeforeWebglOrigin from "./DomRightPreviewImgBeforeWebglOrigin.js";
-import DomRightPreviewImgBeforeWebglPixels from "./DomRightPreviewImgBeforeWebglPixels.js";
 class DomRightPreviewImgBefore extends ReactComponentExtend {
     render() {
         let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
@@ -40,33 +39,28 @@ class DomRightPreviewImgBefore extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             },
         }, ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`左内边距`, listImgDataInst.paddingLeft, (val) => {
-            listImgDataInst.paddingLeft = Math.floor(val);
-            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged();
+            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPaddingLeft(Math.floor(val));
         }, null, null)), ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`右内边距`, listImgDataInst.paddingRight, (val) => {
-            listImgDataInst.paddingRight = Math.floor(val);
-            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged();
+            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPaddingRight(Math.floor(val));
         }, null, null))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             },
         }, ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`上内边距`, listImgDataInst.paddingTop, (val) => {
-            listImgDataInst.paddingTop = Math.floor(val);
-            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged();
+            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPaddingTop(Math.floor(val));
         }, null, null)), ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`下内边距`, listImgDataInst.paddingBottom, (val) => {
-            listImgDataInst.paddingBottom = Math.floor(val);
-            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged();
-        }, null, null))), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglCutted, this.props), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglPixels, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPaddingBottom(Math.floor(val));
+        }, null, null))), ReactComponentExtend.instantiateComponent(DomRightPreviewImgBeforeWebglCutted, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             },
         }, ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`颗粒宽度`, listImgDataInst.pixelWidth, (val) => {
             listImgDataInst.pixelWidth = Math.floor(val);
-            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged();
+            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPixelWidth(Math.floor(val));
         }, 1, null)), ReactComponentExtend.instantiateComponent(DomInputNumber, DomInputNumber.Args.create(`颗粒高度`, listImgDataInst.pixelHeight, (val) => {
-            listImgDataInst.pixelHeight = Math.floor(val);
-            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged();
+            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPixelHeight(Math.floor(val));
         }, 1, null)))));
     }
 }

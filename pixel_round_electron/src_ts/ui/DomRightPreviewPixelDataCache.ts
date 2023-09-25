@@ -10,9 +10,10 @@ import CornerTypeRSBoth from "../game/CornerTypeRSBoth.js";
 import TextureColor from "../game/TextureColor.js";
 import TextureGroup from "../game/TextureGroup.js";
 import TexturePixel from "../game/TexturePixel.js";
+import MgrData from "../mgr/MgrData.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend <number> {
+class DomRightPreviewPixelDataCache extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -42,7 +43,7 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend <number> 
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
         let imgMachine = dataSrc.imgMachine;
         // 只有加载完毕等待缓存的时候才进行下述的缓存内容
-        if (imgMachine == null || imgMachine.currStatus != imgMachine.statusLoaded) {
+        if (imgMachine.currStatus != imgMachine.statusLoaded) {
             return;
         };
         
@@ -374,4 +375,4 @@ class DomRightPreviewImgBeforeWebglPixels extends ReactComponentExtend <number> 
     }
 }
 
-export default DomRightPreviewImgBeforeWebglPixels;
+export default DomRightPreviewPixelDataCache;

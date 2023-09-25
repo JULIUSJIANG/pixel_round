@@ -1,6 +1,6 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomRightSmoothWebgl from "./DomRightSmooth3Mark.js";
+import DomRightSmoothCanvas from "./DomRightSmoothCanvas.js";
 class DomRightSmooth extends ReactComponentExtend {
     render() {
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -10,7 +10,7 @@ class DomRightSmooth extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
             }
-        }, ReactComponentExtend.instantiateComponent(DomRightSmoothWebgl, null));
+        }, ReactComponentExtend.instantiateComponent(DomRightSmoothCanvas, null));
     }
 }
 export default DomRightSmooth;

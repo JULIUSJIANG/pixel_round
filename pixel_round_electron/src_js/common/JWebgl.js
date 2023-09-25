@@ -8,6 +8,7 @@ import JWebglEnum from "./JWebglEnum.js";
 import JWebglFrameBuffer from "./JWebglFrameBuffer.js";
 import JWebglImage from "./JWebglImage.js";
 import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
+import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
@@ -17,6 +18,7 @@ import JWebglProgramTypeSmooth2 from "./JWebglProgramTypeSmooth2.js";
 import JWebglProgramTypeSmooth3Step1Mark from "./JWebglProgramTypeSmooth3Step1Mark.js";
 import JWebglProgramTypeSmooth3Step2Smooth from "./JWebglProgramTypeSmooth3Step2Smooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
+import objectPool from "./ObjectPool.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
  * 获取原型上的缓存
@@ -50,6 +52,18 @@ class JWebgl {
          */
         this._listProgram = new Array();
         /**
+         * 模型矩阵
+         */
+        this.mat4M = new JWebglMathMatrix4();
+        /**
+         * 视图矩阵
+         */
+        this.mat4V = new JWebglMathMatrix4();
+        /**
+         * 投影矩阵
+         */
+        this.mat4P = new JWebglMathMatrix4();
+        /**
          * mvp 矩阵
          */
         this.mat4Mvp = new JWebglMathMatrix4;
@@ -64,6 +78,10 @@ class JWebgl {
      * @returns
      */
     init() {
+        this.mat4M.setIdentity();
+        this.mat4V.setIdentity();
+        this.mat4P.setIdentity();
+        this.refreshMat4Mvp();
         this.canvasWebglCtx = this.canvasWebgl.getContext(`webgl`, {
             premultipliedAlpha: false
         });
@@ -121,6 +139,17 @@ class JWebgl {
     clear() {
         this.canvasWebglCtx.clear(JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
     }
+    /**
+     * 刷新模型 - 视图 - 投影矩阵
+     */
+    refreshMat4Mvp() {
+        JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.mat4Mvp);
+    }
+    /**
+     * 获取图片资源
+     * @param dataUrl
+     * @returns
+     */
     getImg(dataUrl) {
         if (!this._mapStringToImg.has(dataUrl)) {
             this._mapStringToImg.set(dataUrl, new JWebglImage(this, dataUrl));
@@ -128,6 +157,12 @@ class JWebgl {
         ;
         return this._mapStringToImg.get(dataUrl);
     }
+    /**
+     * 获取帧缓冲区
+     * @param width
+     * @param height
+     * @returns
+     */
     getFbo(width, height) {
         return new JWebglFrameBuffer(this, width, height);
     }
@@ -144,6 +179,28 @@ class JWebgl {
      */
     error(...args) {
         console.error(...args);
+    }
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay
+     * @param fboSrc
+     */
+    fillFbo(fboDisplay, fboSrc) {
+        this.useFbo(fboDisplay);
+        this.clear();
+        let mat4M = objectPool.pop(JWebglMathMatrix4.poolType);
+        mat4M.setIdentity();
+        let mat4V = objectPool.pop(JWebglMathMatrix4.poolType);
+        mat4V.setLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
+        let mat4P = objectPool.pop(JWebglMathMatrix4.poolType);
+        mat4P.setOrtho(-1, 1, -1, 1, 0, 2);
+        let mat4Mvp = objectPool.pop(JWebglMathMatrix4.poolType);
+        JWebglMathMatrix4.multiplayMat4List(mat4P, mat4V, mat4M, mat4Mvp);
+        this.programImg.uMvp.fill(mat4Mvp);
+        this.programImg.uSampler.fillByFbo(fboSrc);
+        this.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
+        this.programImg.draw();
+        objectPool.push(mat4M, mat4V, mat4P, mat4Mvp);
     }
 }
 __decorate([

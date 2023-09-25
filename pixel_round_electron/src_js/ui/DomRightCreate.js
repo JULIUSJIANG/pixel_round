@@ -1,7 +1,6 @@
 import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
-import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
@@ -14,15 +13,13 @@ export default class DomRightCreate extends ReactComponentExtend {
          * 3d canvas 引用器
          */
         this.canvasWebglRef = NodeModules.react.createRef();
-        this.mat4M = new JWebglMathMatrix4();
-        this.mat4V = new JWebglMathMatrix4();
-        this.mat4P = new JWebglMathMatrix4();
     }
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
-        this.mat4M.setIdentity();
-        this.mat4V.setLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
+        this.jWebgl.mat4V.setLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
+        this.jWebgl.mat4P.setOrtho(-1, 1, -1, 1, 0, 2);
+        this.jWebgl.refreshMat4Mvp();
     }
     reactComponentExtendOnDraw() {
         if (IndexGlobal.inst.createMachine.img == null) {
@@ -32,12 +29,9 @@ export default class DomRightCreate extends ReactComponentExtend {
         // 清除画面
         this.jWebgl.useFbo(null);
         this.jWebgl.clear();
-        let img = IndexGlobal.inst.createMachine.img.image;
-        this.mat4P.setOrtho(-img.width / 2, img.width / 2, -img.height / 2, img.height / 2, 0, 2);
-        JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.jWebgl.mat4Mvp);
         this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
         this.jWebgl.programImg.uSampler.fillByImg(this.jWebgl.getImg(IndexGlobal.inst.createMachine.img.src));
-        this.jWebgl.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, img.width, img.height);
+        this.jWebgl.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
         this.jWebgl.programImg.draw();
     }
     render() {

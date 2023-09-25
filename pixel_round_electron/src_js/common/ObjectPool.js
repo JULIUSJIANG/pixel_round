@@ -32,9 +32,22 @@ class objectPool {
     objectPool.pop = pop;
     /**
      * 存储对象池实例
-     * @param t
+     * @param listT
      */
-    function push(t) {
+    function push(...listT) {
+        for (let i = 0; i < listT.length; i++) {
+            let listTI = listT[i];
+            doPush(listTI);
+        }
+        ;
+    }
+    objectPool.push = push;
+    /**
+     * 执行回收
+     * @param t
+     * @returns
+     */
+    function doPush(t) {
         // 空对象，忽略
         if (t == null) {
             return;
@@ -63,7 +76,6 @@ class objectPool {
         }
         ;
     }
-    objectPool.push = push;
     /**
      * 类型 - 列表
      */

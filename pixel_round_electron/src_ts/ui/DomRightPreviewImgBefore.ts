@@ -4,12 +4,9 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 import DomInputNumber from "./DomInputNumber.js";
-import DomRightPreviewColorTableItem from "./DomRightPreviewColorTableItem.js";
 import DomRightPreviewImgBeforeWebglCutted from "./DomRightPreviewImgBeforeWebglCutted.js";
 import DomRightPreviewImgBeforeWebglOrigin from "./DomRightPreviewImgBeforeWebglOrigin.js";
-import DomRightPreviewImgBeforeWebglPixels from "./DomRightPreviewPixelDataCache.js";
 
 class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
 
@@ -66,8 +63,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                         `左内边距`, 
                         listImgDataInst.paddingLeft,
                         (val) => {
-                            listImgDataInst.paddingLeft = Math.floor (val);
-                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPaddingLeft (Math.floor (val));
                         },
                         null,
                         null
@@ -76,8 +72,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                         `右内边距`, 
                         listImgDataInst.paddingRight,
                         (val) => {
-                            listImgDataInst.paddingRight = Math.floor (val);
-                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPaddingRight (Math.floor (val));
                         },
                         null,
                         null
@@ -96,8 +91,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                         `上内边距`,
                         listImgDataInst.paddingTop,
                         (val) => {
-                            listImgDataInst.paddingTop = Math.floor (val);
-                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPaddingTop (Math.floor (val));
                         },
                         null,
                         null
@@ -106,8 +100,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                         `下内边距`, 
                         listImgDataInst.paddingBottom,
                         (val) => {
-                            listImgDataInst.paddingBottom = Math.floor (val);
-                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPaddingBottom (Math.floor (val));
                         },
                         null,
                         null
@@ -115,10 +108,6 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                 ),
                 ReactComponentExtend.instantiateComponent (
                     DomRightPreviewImgBeforeWebglCutted,
-                    this.props
-                ),
-                ReactComponentExtend.instantiateComponent (
-                    DomRightPreviewImgBeforeWebglPixels,
                     this.props
                 ),
                 ReactComponentExtend.instantiateTag (
@@ -135,7 +124,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                         listImgDataInst.pixelWidth,
                         (val) => {
                             listImgDataInst.pixelWidth = Math.floor (val);
-                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPixelWidth (Math.floor (val));
                         },
                         1,
                         null
@@ -144,8 +133,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                         `颗粒高度`,
                         listImgDataInst.pixelHeight, 
                         (val) => {
-                            listImgDataInst.pixelHeight = Math.floor (val);
-                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onSizeChanged ();
+                            IndexGlobal.inst.detailMachine.statusPreview.imgMachine.currStatus.onValPixelHeight (Math.floor (val));
                         },
                         1,
                         null

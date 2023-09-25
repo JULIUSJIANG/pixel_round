@@ -52,9 +52,45 @@ class ImgMachineStatus {
     }
 
     /**
-     * 事件派发 - 尺寸参数发生变化
+     * 收到数据 - 左内边距
+     * @param val 
      */
-    onSizeChanged () {
+    onValPaddingLeft (val: number) {
+
+    }
+    /**
+     * 收到数据 - 右内边距
+     * @param val 
+     */
+    onValPaddingRight (val: number) {
+
+    }
+    /**
+     * 收到数据 - 上内边距
+     * @param val 
+     */
+    onValPaddingTop (val: number) {
+
+    }
+    /**
+     * 收到数据 - 下内边距
+     * @param val 
+     */
+    onValPaddingBottom (val: number) {
+
+    }
+    /**
+     * 收到数据 - 颗粒宽度
+     * @param val 
+     */
+    onValPixelWidth (val: number) {
+
+    }
+    /**
+     * 收到数据 - 颗粒高度
+     * @param val 
+     */
+    onValPixelHeight (val: number) {
 
     }
 }

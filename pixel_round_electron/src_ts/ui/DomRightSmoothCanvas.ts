@@ -8,11 +8,7 @@ import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
-import MgrData from "../mgr/MgrData.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import MgrRes from "../mgr/MgrRes.js";
-import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 
 /**
  * 线的深度
@@ -48,13 +44,6 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
      */
     fboCorner: JWebglFrameBuffer;
 
-    initFbo (width: number, height: number) {
-        if (this.fboImg == null || this.fboImg.width != width || this.fboImg.height != height) {
-            this.fboImg = this.jWebgl.getFbo (width, height);
-            this.fboCorner = this.jWebgl.getFbo (width, height);
-        };
-    }
-
     /**
      * 图片位置
      */
@@ -73,17 +62,19 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
         let imgMachine = dataSrc.imgMachine;
         // 只有加载完毕等待缓存的时候才进行下述的缓存内容
-        if (imgMachine == null || imgMachine.currStatus != imgMachine.statusLoaded) {
+        if (imgMachine.currStatus == imgMachine.statusIdle) {
             return;
         };
 
         // 绘制 fbo
-        if (this.fbo == null || this.fbo.width != dataSrc.imgWidthPaddingScaled || this.fbo.height != dataSrc.imgHeightPaddingScaled) {
-            this.fbo = this.jWebgl.getFbo (dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
+        if (this.fboImg == null || this.fboImg.width != dataSrc.imgWidthPaddingScaled || this.fboImg.height != dataSrc.imgHeightPaddingScaled) {
+            this.fboImg = this.jWebgl.getFbo (dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
+            this.fboCorner = this.jWebgl.getFbo (dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
         };
         
         // 得到简略图
-        dataSrc.drawImgPadding (this.jWebgl, this.fbo);
+        dataSrc.drawImgPadding (this.jWebgl, this.fboImg);
+        this.jWebgl.fillFbo (null, this.fboImg);
 
         // 使用标记信息生成纹理
         this.jWebgl.useFbo (this.fboCorner);
@@ -162,8 +153,19 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmooth3Step2Smooth.draw ();
 
         // 网格
-        let colorGrid = JWebglColor.COLOR_BLACK;
+        this.jWebgl.mat4V.setLookAt(
+            dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 1,
+            dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0,
+            0, 1, 0
+        );
+        this.jWebgl.mat4P.setOrtho (
+            - dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgWidthPaddingScaled / 2,
+            - dataSrc.imgHeightPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2,
+            0, 2
+        );
+        this.jWebgl.refreshMat4Mvp ();
         this.jWebgl.programLine.uMvp.fill (this.jWebgl.mat4Mvp);
+        let colorGrid = JWebglColor.COLOR_BLACK;
         for (let i = 0; i <= cameraWidth; i++) {
             this.posFrom.elements [0] = i;
             this.posFrom.elements [1] = 0;
@@ -232,7 +234,6 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
                             [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                             [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-                            [MgrDomDefine.STYLE_DISPLAY]: this.finishedImg == null ? MgrDomDefine.STYLE_DISPLAY_NONE : MgrDomDefine.STYLE_DISPLAY_BLOCK
                         }
                     },
                 

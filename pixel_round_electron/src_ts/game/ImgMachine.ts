@@ -79,6 +79,7 @@ class ImgMachine {
             rec.onExit ();
         };
         this.currStatus.onEnter ();
+        MgrData.inst.callDataChange ();
     }
 
     /**

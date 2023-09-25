@@ -31,7 +31,8 @@ class DomRightPreviewColorTableItem extends ReactComponentExtend <DomRightPrevie
                     style: {
                         [MgrDomDefine.STYLE_TEXT_ALIGN]: MgrDomDefine.STYLE_TEXT_ALIGN_CENTER,
                         [MgrDomDefine.STYLE_VERTICAL_ALIGN]: MgrDomDefine.STYLE_VERTICAL_ALIGN_MIDDLE,
-                        [MgrDomDefine.STYLE_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE
+                        [MgrDomDefine.STYLE_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
+                        [MgrDomDefine.STYLE_FONT_SIZE]: MgrDomDefine.STYLE_FONT_SIZE_14
                     }
                 },
 
@@ -44,8 +45,8 @@ class DomRightPreviewColorTableItem extends ReactComponentExtend <DomRightPrevie
                         [MgrDomDefine.STYLE_MARGIN_TOP]: MgrDomDefine.CONFIG_TXT_SPACING,
                         [MgrDomDefine.STYLE_PADDING_TOP]: MgrDomDefine.CONFIG_TXT_SPACING,
                         [MgrDomDefine.STYLE_PADDING_BOTTOM]: MgrDomDefine.CONFIG_TXT_SPACING,
-                        [MgrDomDefine.STYLE_PADDING_LEFT]: MgrDomDefine.CONFIG_TXT_DOUBLE_SPACING,
-                        [MgrDomDefine.STYLE_PADDING_RIGHT]: MgrDomDefine.CONFIG_TXT_DOUBLE_SPACING,
+                        [MgrDomDefine.STYLE_PADDING_LEFT]: `${MgrDomDefine.CONFIG_NUMBER_SPACING * 3}px`,
+                        [MgrDomDefine.STYLE_PADDING_RIGHT]: `${MgrDomDefine.CONFIG_NUMBER_SPACING * 3}px`,
                         [MgrDomDefine.STYLE_COLOR]: colorInst.colorRel.str16,
                         [MgrDomDefine.STYLE_BACKGROUND_COLOR]: colorInst.colorMain.str16,
                         [MgrDomDefine.STYLE_TEXT_ALIGN]: MgrDomDefine.STYLE_TEXT_ALIGN_CENTER,

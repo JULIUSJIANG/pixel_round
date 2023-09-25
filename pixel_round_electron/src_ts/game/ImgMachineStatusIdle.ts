@@ -14,12 +14,10 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
     onEnter (): void {
         if (this.relMachine.assetsImg.currStatus == this.relMachine.assetsImg.statusFinished) {
             this.relMachine.enter (this.relMachine.statusLoaded);
-            MgrData.inst.callDataChange ();
         }
         else {
             this._listenId = this.relMachine.assetsImg.evterFinished.on (() => {
                 this.relMachine.enter (this.relMachine.statusLoaded);
-                MgrData.inst.callDataChange ();
             });
         };
     }

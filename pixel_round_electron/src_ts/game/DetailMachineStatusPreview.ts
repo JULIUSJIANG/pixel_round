@@ -14,6 +14,7 @@ import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
+import CornerTypeRSBoth from "./CornerTypeRSBoth.js";
 
 export default class DetailMachineStatusPreview extends DetailMachineStatus {
 
@@ -131,7 +132,6 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         y: number
     )
     {
-        let idx = y * this.imgWidthPaddingScaled + x;
         let colorId: number;
         if (x < 0 || this.imgWidthPaddingScaled <= x || y < 0 || this.imgHeightPaddingScaled <= y) {
             colorId = 0;
@@ -315,5 +315,60 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
             this.imgHeight
         );
         jWebgl.programImg.draw ();
+    }
+
+    /**
+     * 刷新角平滑的处理
+     */
+    refreshCorner () {
+        // 确定各个角的平滑类型
+        for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
+            for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
+                // 索引
+                let idx = y * this.imgWidthPaddingScaled + x;
+                let texturePixel = this.listXYToTexturePixel [idx];
+                texturePixel.cornerLT.rsBoth = this.getCornerTypeBoth (x, y, - 0.5,   0.5);
+                texturePixel.cornerRT.rsBoth = this.getCornerTypeBoth (x, y,   0.5,   0.5);
+                texturePixel.cornerRB.rsBoth = this.getCornerTypeBoth (x, y,   0.5, - 0.5);
+                texturePixel.cornerLB.rsBoth = this.getCornerTypeBoth (x, y, - 0.5, - 0.5);
+            };
+        };
+        // 修复对角交叉的平滑问题
+        for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
+            for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
+                let recCurrent = this.getTexturePixel (x, y);
+                let recRight = this.getTexturePixel (x + 1, y);
+                let recTop = this.getTexturePixel (x, y + 1);
+                let recRT = this.getTexturePixel (x + 1, y + 1);
+                // 越界，忽略
+                if (recRight == null || recTop == null) {
+                    continue;
+                };
+                // 非交叉情况，忽略
+                if (recCurrent.cornerRT.rsBoth == CornerTypeRSBoth.none) {
+                    continue;
+                };
+                if (recRT.cornerLB.rsBoth == CornerTypeRSBoth.none) {
+                    continue;
+                };
+                if (recRight.cornerLT.rsBoth == CornerTypeRSBoth.none) {
+                    continue;
+                };
+                if (recTop.cornerRB.rsBoth == CornerTypeRSBoth.none) {
+                    continue;
+                };
+                let colorCurrent = this.getColor (x, y);
+                let colorRight = this.getColor (x + 1, y);
+                let smoothFirst = this.imgMachine.getColorFirst (colorCurrent.id, colorRight.id);
+                if (smoothFirst) {
+                    recCurrent.cornerRT.rsBoth = CornerTypeRSBoth.none;
+                    recRT.cornerLB.rsBoth = CornerTypeRSBoth.none;
+                }
+                else {
+                    recRight.cornerLT.rsBoth = CornerTypeRSBoth.none;
+                    recTop.cornerRB.rsBoth = CornerTypeRSBoth.none;
+                };
+            };
+        };
     }
 }

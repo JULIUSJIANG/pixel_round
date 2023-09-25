@@ -9,7 +9,14 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 class DomRightPreviewColorTableItemCheckbox extends ReactComponentExtend <DomRightPreviewColorTableItemCheckbox.Args> {
 
     render (): ReactComponentExtendInstance {
-        let colorInst = IndexGlobal.inst.detailMachine.statusPreview.listColor [this.props.idx];
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let colorInstContainer = IndexGlobal.inst.detailMachine.statusPreview.listColor [this.props.idxContainer];
+        let colorInstSelf = IndexGlobal.inst.detailMachine.statusPreview.listColor [this.props.idxSelf];
+        let value = false;
+        if (colorInstContainer && colorInstSelf) 
+        {
+            value = dataSrc.imgMachine.getColorFirst (colorInstContainer.id, colorInstSelf.id);
+        };
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -27,20 +34,24 @@ class DomRightPreviewColorTableItemCheckbox extends ReactComponentExtend <DomRig
                 {
                     style: {
                         [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_SPACING,
-                        [MgrDomDefine.STYLE_COLOR]: colorInst.colorRel.str16,
-                        [MgrDomDefine.STYLE_BACKGROUND_COLOR]: colorInst.colorMain.str16,
+                        [MgrDomDefine.STYLE_COLOR]: colorInstSelf.colorRel.str16,
+                        [MgrDomDefine.STYLE_BACKGROUND_COLOR]: colorInstSelf.colorMain.str16,
                         [MgrDomDefine.STYLE_TEXT_ALIGN]: MgrDomDefine.STYLE_TEXT_ALIGN_CENTER,
-                        [`border`]: `1px solid ${colorInst.colorRel.str16}`
+                        [`border`]: `1px solid ${colorInstSelf.colorRel.str16}`
                     }
                 },
 
-                `${this.props.idx}`
+                `${this.props.idxSelf}`
             ),
             ReactComponentExtend.instantiateTag (
                 NodeModules.antd.Checkbox,
                 {
                     style: {
 
+                    },
+                    checked: value,
+                    onChange: (val) => {
+                        dataSrc.imgMachine.currStatus.onValColorFirst (colorInstContainer.id, colorInstSelf.id, val.target.checked);
                     }
                 }
             )
@@ -49,13 +60,21 @@ class DomRightPreviewColorTableItemCheckbox extends ReactComponentExtend <DomRig
 }
 
 namespace DomRightPreviewColorTableItemCheckbox {
+
     export class Args {
+        /**
+         * 容器的索引
+         */
+        idxContainer: number;
+        /**
+         * 自身的索引
+         */
+        idxSelf: number;
 
-        idx: number;
-
-        static create (idx: number) {
+        static create (idxContainer: number, idxSelf: number) {
             let inst = objectPool.pop (this.poolType);
-            inst.idx = idx;
+            inst.idxContainer = idxContainer;
+            inst.idxSelf = idxSelf;
             return inst;
         }
 

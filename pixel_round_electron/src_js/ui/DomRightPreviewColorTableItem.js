@@ -41,7 +41,7 @@ class DomRightPreviewColorTableItem extends ReactComponentExtend {
             }
         }, `${this.props.idx}`)));
         for (let i = this.props.idx + 1; i < IndexGlobal.inst.detailMachine.statusPreview.listColor.length; i++) {
-            let args = DomRightPreviewColorTableItemCheckbox.Args.create(i);
+            let args = DomRightPreviewColorTableItemCheckbox.Args.create(this.props.idx, i);
             this.listChildrenControl.push(ReactComponentExtend.instantiateComponent(DomRightPreviewColorTableItemCheckbox, args));
         }
         ;

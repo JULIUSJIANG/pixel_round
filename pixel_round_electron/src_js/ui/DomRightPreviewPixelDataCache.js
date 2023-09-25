@@ -4,7 +4,6 @@ import JWebgl from "../common/JWebgl.js";
 import JWebglEnum from "../common/JWebglEnum.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import CornerTypeRSBoth from "../game/CornerTypeRSBoth.js";
 import TextureColor from "../game/TextureColor.js";
 import TextureGroup from "../game/TextureGroup.js";
 import TexturePixel from "../game/TexturePixel.js";
@@ -20,6 +19,10 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend {
          * 用于颜色去重
          */
         this._setColor = new Set();
+        /**
+         * 用于处理颜色的键
+         */
+        this._listKey = new Array();
         this._analyseListOffset = [-1, 0, 1];
     }
     reactComponentExtendOnInit() {
@@ -132,6 +135,34 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend {
             listColorI.idx = i;
         }
         ;
+        // 还没有颜色表的话，创建一个
+        if (dataSrc.imgMachine.dataInst.colorTable == null) {
+            dataSrc.imgMachine.dataInst.colorTable = {};
+        }
+        ;
+        // 剔除所有不存在的颜色记录
+        this.deleteUnExistColorKey(dataSrc.imgMachine.dataInst.colorTable);
+        for (let key in dataSrc.imgMachine.dataInst.colorTable) {
+            this.deleteUnExistColorKey(dataSrc.imgMachine.dataInst.colorTable[key]);
+        }
+        ;
+        // 确保所有颜色记录存在
+        for (let i = 0; i < dataSrc.listColor.length - 1; i++) {
+            let listColorI = dataSrc.listColor[i];
+            if (dataSrc.imgMachine.dataInst.colorTable[`${listColorI.id}`] == null) {
+                dataSrc.imgMachine.dataInst.colorTable[`${listColorI.id}`] = {};
+            }
+            ;
+            for (let j = i + 1; j < dataSrc.listColor.length; j++) {
+                let listColorJ = dataSrc.listColor[j];
+                if (dataSrc.imgMachine.dataInst.colorTable[`${listColorI.id}`][`${listColorJ.id}`] == null) {
+                    dataSrc.imgMachine.dataInst.colorTable[`${listColorI.id}`][`${listColorJ.id}`] = true;
+                }
+                ;
+            }
+            ;
+        }
+        ;
         // 更新索引
         dataSrc.mapIdToColor.clear();
         for (let i = 0; i < dataSrc.listColor.length; i++) {
@@ -206,57 +237,6 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend {
             ;
         }
         ;
-        // 确定各个角的平滑类型
-        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
-            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
-                // 索引
-                let idx = y * dataSrc.imgWidthPaddingScaled + x;
-                let texturePixel = dataSrc.listXYToTexturePixel[idx];
-                texturePixel.cornerLT.rsBoth = dataSrc.getCornerTypeBoth(x, y, -0.5, 0.5);
-                texturePixel.cornerRT.rsBoth = dataSrc.getCornerTypeBoth(x, y, 0.5, 0.5);
-                texturePixel.cornerRB.rsBoth = dataSrc.getCornerTypeBoth(x, y, 0.5, -0.5);
-                texturePixel.cornerLB.rsBoth = dataSrc.getCornerTypeBoth(x, y, -0.5, -0.5);
-            }
-            ;
-        }
-        ;
-        // 修复对角交叉的平滑问题
-        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
-            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
-                let recCurrent = dataSrc.getTexturePixel(x, y);
-                let recRight = dataSrc.getTexturePixel(x + 1, y);
-                let recTop = dataSrc.getTexturePixel(x, y + 1);
-                let recRT = dataSrc.getTexturePixel(x + 1, y + 1);
-                // 越界，忽略
-                if (recRight == null || recTop == null) {
-                    continue;
-                }
-                ;
-                // 非交叉情况，忽略
-                if (recCurrent.cornerRT.rsBoth == CornerTypeRSBoth.none) {
-                    continue;
-                }
-                ;
-                if (recRT.cornerLB.rsBoth == CornerTypeRSBoth.none) {
-                    continue;
-                }
-                ;
-                if (recRight.cornerLT.rsBoth == CornerTypeRSBoth.none) {
-                    continue;
-                }
-                ;
-                if (recTop.cornerRB.rsBoth == CornerTypeRSBoth.none) {
-                    continue;
-                }
-                ;
-                recCurrent.cornerRT.rsBoth = CornerTypeRSBoth.none;
-                recRT.cornerLB.rsBoth = CornerTypeRSBoth.none;
-                recRight.cornerLT.rsBoth = CornerTypeRSBoth.none;
-                recTop.cornerRB.rsBoth = CornerTypeRSBoth.none;
-            }
-            ;
-        }
-        ;
         // 告知简略图已经绘制完毕
         dataSrc.imgMachine.currStatus.onCached();
     }
@@ -300,6 +280,28 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend {
             for (let j = 0; j < this._analyseListOffset.length; j++) {
                 let analyseListOffsetJ = this._analyseListOffset[j];
                 this.paintBucket(x + analyseListOffsetI, y + analyseListOffsetJ, colorGroup);
+            }
+            ;
+        }
+        ;
+    }
+    /**
+     * 删除已不存在的颜色记录
+     * @param obj
+     */
+    deleteUnExistColorKey(obj) {
+        // 归纳键
+        this._listKey.length = 0;
+        for (let key in obj) {
+            this._listKey.push(key);
+        }
+        ;
+        // 删除所有已经不存在的颜色记录
+        for (let i = 0; i < this._listKey.length; i++) {
+            let listKeyI = this._listKey[i];
+            let listKeyIInt = Number.parseInt(listKeyI);
+            if (!this._setColor.has(listKeyIInt)) {
+                delete obj[listKeyI];
             }
             ;
         }

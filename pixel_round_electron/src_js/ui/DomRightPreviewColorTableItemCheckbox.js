@@ -6,7 +6,14 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 class DomRightPreviewColorTableItemCheckbox extends ReactComponentExtend {
     render() {
-        let colorInst = IndexGlobal.inst.detailMachine.statusPreview.listColor[this.props.idx];
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let colorInstContainer = IndexGlobal.inst.detailMachine.statusPreview.listColor[this.props.idxContainer];
+        let colorInstSelf = IndexGlobal.inst.detailMachine.statusPreview.listColor[this.props.idxSelf];
+        let value = false;
+        if (colorInstContainer && colorInstSelf) {
+            value = dataSrc.imgMachine.getColorFirst(colorInstContainer.id, colorInstSelf.id);
+        }
+        ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
@@ -18,21 +25,26 @@ class DomRightPreviewColorTableItemCheckbox extends ReactComponentExtend {
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_SPACING,
-                [MgrDomDefine.STYLE_COLOR]: colorInst.colorRel.str16,
-                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: colorInst.colorMain.str16,
+                [MgrDomDefine.STYLE_COLOR]: colorInstSelf.colorRel.str16,
+                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: colorInstSelf.colorMain.str16,
                 [MgrDomDefine.STYLE_TEXT_ALIGN]: MgrDomDefine.STYLE_TEXT_ALIGN_CENTER,
-                [`border`]: `1px solid ${colorInst.colorRel.str16}`
+                [`border`]: `1px solid ${colorInstSelf.colorRel.str16}`
             }
-        }, `${this.props.idx}`), ReactComponentExtend.instantiateTag(NodeModules.antd.Checkbox, {
-            style: {}
+        }, `${this.props.idxSelf}`), ReactComponentExtend.instantiateTag(NodeModules.antd.Checkbox, {
+            style: {},
+            checked: value,
+            onChange: (val) => {
+                dataSrc.imgMachine.currStatus.onValColorFirst(colorInstContainer.id, colorInstSelf.id, val.target.checked);
+            }
         }));
     }
 }
 (function (DomRightPreviewColorTableItemCheckbox) {
     class Args {
-        static create(idx) {
+        static create(idxContainer, idxSelf) {
             let inst = objectPool.pop(this.poolType);
-            inst.idx = idx;
+            inst.idxContainer = idxContainer;
+            inst.idxSelf = idxSelf;
             return inst;
         }
     }

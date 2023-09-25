@@ -70,7 +70,7 @@ class MgrData {
      * @returns 
      */
     save () {
-        let txtData = JSON.stringify (this._data, null, 0);
+        let txtData = JSON.stringify (this._data, null, 1);
         return MgrSdk.inst.core.set (txtData);
     }
 

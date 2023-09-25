@@ -1,6 +1,4 @@
-import MgrData from "../mgr/MgrData.js";
 import ImgMachineStatus from "./ImgMachineStatus.js";
-import TextureGroup from "./TextureGroup.js";
 
 /**
  * 状态 - 图片加载完毕

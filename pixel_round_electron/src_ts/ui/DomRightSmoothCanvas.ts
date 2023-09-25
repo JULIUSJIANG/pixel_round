@@ -65,7 +65,6 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         if (imgMachine.currStatus == imgMachine.statusIdle) {
             return;
         };
-
         // 绘制 fbo
         if (this.fboImg == null || this.fboImg.width != dataSrc.imgWidthPaddingScaled || this.fboImg.height != dataSrc.imgHeightPaddingScaled) {
             this.fboImg = this.jWebgl.getFbo (dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);

@@ -6,6 +6,10 @@ import ImgMachineStatus from "./ImgMachineStatus.js";
  */
 class ImgMachineStatusCached extends ImgMachineStatus {
 
+    onEnter (): void {
+        this.relMachine.rel.refreshCorner ();
+    }
+
     onSizeChanged (): void {
         this.relMachine.enter (this.relMachine.statusLoaded);
     }
@@ -57,6 +61,17 @@ class ImgMachineStatusCached extends ImgMachineStatus {
     onValPixelHeight (val: number) {
         this.relMachine.dataInst.pixelHeight = val;
         this.onSizeChanged ();
+    }
+    /**
+     * 平滑优先的数据变化
+     * @param colorIdA 
+     * @param colorIdB 
+     * @param val 
+     */
+    onValColorFirst (colorIdA: number, colorIdB: number, val: boolean): void {
+        this.relMachine.dataInst.colorTable [colorIdA] [colorIdB] = val;
+        this.relMachine.rel.refreshCorner ();
+        MgrData.inst.callDataChange ();
     }
 }
 

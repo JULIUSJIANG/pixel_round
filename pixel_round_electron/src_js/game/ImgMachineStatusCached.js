@@ -1,8 +1,12 @@
+import MgrData from "../mgr/MgrData.js";
 import ImgMachineStatus from "./ImgMachineStatus.js";
 /**
  * 状态 - 图像信息缓存完毕
  */
 class ImgMachineStatusCached extends ImgMachineStatus {
+    onEnter() {
+        this.relMachine.rel.refreshCorner();
+    }
     onSizeChanged() {
         this.relMachine.enter(this.relMachine.statusLoaded);
     }
@@ -53,6 +57,17 @@ class ImgMachineStatusCached extends ImgMachineStatus {
     onValPixelHeight(val) {
         this.relMachine.dataInst.pixelHeight = val;
         this.onSizeChanged();
+    }
+    /**
+     * 平滑优先的数据变化
+     * @param colorIdA
+     * @param colorIdB
+     * @param val
+     */
+    onValColorFirst(colorIdA, colorIdB, val) {
+        this.relMachine.dataInst.colorTable[colorIdA][colorIdB] = val;
+        this.relMachine.rel.refreshCorner();
+        MgrData.inst.callDataChange();
     }
 }
 export default ImgMachineStatusCached;

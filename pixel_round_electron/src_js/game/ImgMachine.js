@@ -51,5 +51,32 @@ class ImgMachine {
      */
     onDestroy() {
     }
+    /**
+     * 获取平滑优先
+     * @param colorIdA
+     * @param colorIdB
+     */
+    getColorFirst(colorIdA, colorIdB) {
+        // 小的排前面
+        let colorSmall = colorIdA;
+        let colorLarge = colorIdB;
+        if (colorLarge < colorSmall) {
+            [colorSmall, colorLarge] = [colorLarge, colorSmall];
+        }
+        ;
+        // 读取记录
+        let value = false;
+        if (this.dataInst.colorTable
+            && this.dataInst.colorTable[colorSmall]
+            && this.dataInst.colorTable[colorSmall][colorLarge]) {
+            value = true;
+        }
+        ;
+        if (colorIdB < colorIdA) {
+            return !value;
+        }
+        ;
+        return value;
+    }
 }
 export default ImgMachine;

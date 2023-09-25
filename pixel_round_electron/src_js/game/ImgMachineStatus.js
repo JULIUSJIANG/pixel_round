@@ -69,5 +69,11 @@ class ImgMachineStatus {
      */
     onValPixelHeight(val) {
     }
+    /**
+     * 平滑优先的数据变化
+     * @param val
+     */
+    onValColorFirst(colorIdA, colorIdB, val) {
+    }
 }
 export default ImgMachineStatus;

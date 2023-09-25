@@ -8,10 +8,8 @@ import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
-import JWebglProgramTypeSmooth1 from "./JWebglProgramTypeSmooth1.js";
-import JWebglProgramTypeSmooth2 from "./JWebglProgramTypeSmooth2.js";
-import JWebglProgramTypeSmooth3Step1Mark from "./JWebglProgramTypeSmooth3Step1Mark.js";
-import JWebglProgramTypeSmooth3Step2Smooth from "./JWebglProgramTypeSmooth3Step2Smooth.js";
+import JWebglProgramTypeSmoothStep1Mark from "./JWebglProgramTypeSmoothStep1Mark.js";
+import JWebglProgramTypeSmoothStep2Smooth from "./JWebglProgramTypeSmoothStep2Smooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import objectPool from "./ObjectPool.js";
 
@@ -166,17 +164,11 @@ class JWebgl {
     @program (JWebglProgramTypePoint)
     programPoint: JWebglProgramTypePoint;
 
-    @program (JWebglProgramTypeSmooth1)
-    programSmooth1: JWebglProgramTypeSmooth1;
+    @program (JWebglProgramTypeSmoothStep1Mark)
+    programSmoothStep1Mark: JWebglProgramTypeSmoothStep1Mark;
 
-    @program (JWebglProgramTypeSmooth2)
-    programSmooth2: JWebglProgramTypeSmooth2;
-
-    @program (JWebglProgramTypeSmooth3Step1Mark)
-    programSmooth3Step1Mark: JWebglProgramTypeSmooth3Step1Mark;
-
-    @program (JWebglProgramTypeSmooth3Step2Smooth)
-    programSmooth3Step2Smooth: JWebglProgramTypeSmooth3Step2Smooth;
+    @program (JWebglProgramTypeSmoothStep2Smooth)
+    programSmoothStep2Smooth: JWebglProgramTypeSmoothStep2Smooth;
 
     /**
      * 模型矩阵

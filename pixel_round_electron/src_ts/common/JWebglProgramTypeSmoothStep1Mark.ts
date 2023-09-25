@@ -1,12 +1,11 @@
 import JWebglEnum from "./JWebglEnum.js";
-import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
 import JWEbglProgramDefine from "./JWebglProgramDefine.js";
 import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramVaryingVec4 from "./JWebglProgramVaryingVec4.js";
 
-export default class JWebglProgramTypeSmooth3Step1Mark extends JWebglProgram {
+export default class JWebglProgramTypeSmoothStep1Mark extends JWebglProgram {
     @JWebglProgram.define (JWEbglProgramDefine, `4.0`)
     dSmoothIdMax: JWEbglProgramDefine;
 

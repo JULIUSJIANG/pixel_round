@@ -61,7 +61,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.jWebgl.mat4V.setLookAt(dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 1, dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0, 0, 1, 0);
         this.jWebgl.mat4P.setOrtho(-dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgWidthPaddingScaled / 2, -dataSrc.imgHeightPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.jWebgl.mat4P, this.jWebgl.mat4V, this.jWebgl.mat4M, this.jWebgl.mat4Mvp);
-        this.jWebgl.programSmooth3Step1Mark.uMvp.fill(this.jWebgl.mat4Mvp);
+        this.jWebgl.programSmoothStep1Mark.uMvp.fill(this.jWebgl.mat4Mvp);
         // 绘制点有数量限制，这里让程序每一定数量的点绘制一次
         let pointCount = 0;
         this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
@@ -69,17 +69,17 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
             for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
                 let idx = y * dataSrc.imgWidthPaddingScaled + x;
                 let pixel = IndexGlobal.inst.detailMachine.statusPreview.listXYToTexturePixel[idx];
-                this.jWebgl.programSmooth3Step1Mark.add(x + 1, y + 1, 0, pixel.cornerLT.rsBoth.id, pixel.cornerRT.rsBoth.id, pixel.cornerRB.rsBoth.id, pixel.cornerLB.rsBoth.id);
+                this.jWebgl.programSmoothStep1Mark.add(x + 1, y + 1, 0, pixel.cornerLT.rsBoth.id, pixel.cornerRT.rsBoth.id, pixel.cornerRB.rsBoth.id, pixel.cornerLB.rsBoth.id);
                 pointCount++;
                 if (10 < pointCount) {
-                    this.jWebgl.programSmooth3Step1Mark.draw();
+                    this.jWebgl.programSmoothStep1Mark.draw();
                 }
                 ;
             }
             ;
         }
         ;
-        this.jWebgl.programSmooth3Step1Mark.draw();
+        this.jWebgl.programSmoothStep1Mark.draw();
         this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
         // 绘制最终内容
         let cameraWidth = dataSrc.imgWidthPaddingScaled;
@@ -89,14 +89,14 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.jWebgl.mat4V.setLookAt(cameraWidth / 2, cameraHeight / 2, 1, cameraWidth / 2, cameraHeight / 2, 0, 0, 1, 0);
         this.jWebgl.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
         this.jWebgl.refreshMat4Mvp();
-        this.jWebgl.programSmooth3Step2Smooth.uMvp.fill(this.jWebgl.mat4Mvp);
-        this.jWebgl.programSmooth3Step2Smooth.uTextureMain.fillByFbo(this.fboImg);
-        this.jWebgl.programSmooth3Step2Smooth.uTextureMark.fillByFbo(this.fboCorner);
-        this.jWebgl.programSmooth3Step2Smooth.uTextureSize.fill(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
+        this.jWebgl.programSmoothStep2Smooth.uMvp.fill(this.jWebgl.mat4Mvp);
+        this.jWebgl.programSmoothStep2Smooth.uTextureMain.fillByFbo(this.fboImg);
+        this.jWebgl.programSmoothStep2Smooth.uTextureMark.fillByFbo(this.fboCorner);
+        this.jWebgl.programSmoothStep2Smooth.uTextureSize.fill(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
         this.posImg.elements[0] = dataSrc.imgWidthPaddingScaled / 2;
         this.posImg.elements[1] = dataSrc.imgHeightPaddingScaled / 2;
-        this.jWebgl.programSmooth3Step2Smooth.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
-        this.jWebgl.programSmooth3Step2Smooth.draw();
+        this.jWebgl.programSmoothStep2Smooth.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
+        this.jWebgl.programSmoothStep2Smooth.draw();
         // 网格
         this.jWebgl.mat4V.setLookAt(dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 1, dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0, 0, 1, 0);
         this.jWebgl.mat4P.setOrtho(-dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgWidthPaddingScaled / 2, -dataSrc.imgHeightPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0, 2);

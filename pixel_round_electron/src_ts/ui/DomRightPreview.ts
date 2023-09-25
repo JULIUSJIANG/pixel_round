@@ -4,6 +4,7 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomRightPreviewImg from "./DomRightPreviewImg.js";
 import DomRightPreviewImgBefore from "./DomRightPreviewImgBefore.js";
+import DomRightPreviewPixelDataCache from "./DomRightPreviewPixelDataCache.js";
 import DomRightPreviewProps from "./DomRightPreviewProps.js";
 
 export default class DomRightPreview extends ReactComponentExtend <number> {
@@ -21,6 +22,8 @@ export default class DomRightPreview extends ReactComponentExtend <number> {
                 }
             },
 
+            // 尽早缓存像素数据
+            ReactComponentExtend.instantiateComponent (DomRightPreviewPixelDataCache, null),
             ReactComponentExtend.instantiateComponent (DomRightPreviewImg, null),
             ReactComponentExtend.instantiateComponent (DomRightPreviewProps, null)
         )

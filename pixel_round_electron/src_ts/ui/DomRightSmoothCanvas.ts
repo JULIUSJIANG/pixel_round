@@ -14,8 +14,6 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 
-// 00000000 00000000 00000000 00000000
-
 /**
  * 线的深度
  */
@@ -24,23 +22,20 @@ const Z_GRID = 0.1;
 /**
  * 尝试更为灵魂的平滑
  */
-class DomRightSmoothWebgl extends ReactComponentExtend <number> {
+class DomRightSmoothCanvas extends ReactComponentExtend <number> {
 
     /**
      * 3d canvas 引用器
      */
     canvasWebglRef = NodeModules.react.createRef();
-
+    /**
+     * 绘制用的辅助类
+     */
     jWebgl: JWebgl;
-
-    mat4M = new JWebglMathMatrix4 ();
-    mat4V = new JWebglMathMatrix4 ();
-    mat4P = new JWebglMathMatrix4 ();
 
     reactComponentExtendOnInit (): void {
         this.jWebgl = new JWebgl (this.canvasWebglRef.current);
         this.jWebgl.init ();
-        this.mat4M.setIdentity ();
     }
 
     /**
@@ -75,93 +70,47 @@ class DomRightSmoothWebgl extends ReactComponentExtend <number> {
     posTo = new JWebglMathVector4 (0, 0, Z_GRID);
 
     reactComponentExtendOnDraw (): void {
-        // 没有加载完毕的数据，不对 canvas 进行改动
-        if (this.finishedData == null) {
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let imgMachine = dataSrc.imgMachine;
+        // 只有加载完毕等待缓存的时候才进行下述的缓存内容
+        if (imgMachine == null || imgMachine.currStatus != imgMachine.statusLoaded) {
             return;
         };
 
-        // 没加载完，不对 canvvas 进行改动
-        let img = this.jWebgl.getImg (this.finishedData.dataOrigin);
-        if (img.currStatus != img.statusFinished) {
-            return;
+        // 绘制 fbo
+        if (this.fbo == null || this.fbo.width != dataSrc.imgWidthPaddingScaled || this.fbo.height != dataSrc.imgHeightPaddingScaled) {
+            this.fbo = this.jWebgl.getFbo (dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
         };
-
-        // 未缓存完毕，不对 canvas 进行改动
-        let imgMachine = IndexGlobal.inst.detailMachine.statusPreview.imgMachine;
-        if (imgMachine.currStatus != imgMachine.statusInited) {
-            return;
-        };
-
-        // 图片尺寸
-        let imgWidth = img.assetsImg.image.width;
-        let imgHeight = img.assetsImg.image.height;
-        // 视图尺寸
-        let viewWidth = (imgWidth + this.finishedData.paddingLeft + this.finishedData.paddingRight);
-        let viewHeight = (imgHeight + this.finishedData.paddingBottom + this.finishedData.paddingTop);
-        // 帧缓冲区尺寸
-        let fboWidth = Math.ceil (viewWidth / this.finishedData.pixelWidth);
-        let fboHeight = Math.ceil (viewHeight / this.finishedData.pixelHeight);
-        // 初始化帧缓冲区
-        this.initFbo (fboWidth, fboHeight);
         
-        // 把经过裁切、缩放的内容绘制到 fbo 上
-        this.jWebgl.useFbo (this.fboImg);
-        this.jWebgl.clear ();
-        this.mat4V.setLookAt (
-            viewWidth / 2, viewHeight / 2, 1,
-            viewWidth / 2, viewHeight / 2, 0,
-            0, 1, 0
-        );
-        this.mat4P.setOrtho (
-            - viewWidth / 2, viewWidth / 2,
-            - viewHeight / 2, viewHeight / 2,
-            0, 2
-        );
-        JWebglMathMatrix4.multiplayMat4List (
-            this.mat4P,
-            this.mat4V,
-            this.mat4M,
-            this.jWebgl.mat4Mvp
-        );
-        this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uSampler.fillByImg (img);
-        this.posImg.elements [0] = imgWidth / 2 + this.finishedData.paddingLeft;
-        this.posImg.elements [1] = imgHeight / 2 + this.finishedData.paddingBottom;
-        this.jWebgl.programImg.add (
-            this.posImg,
-            JWebglMathVector4.axisZStart,
-            JWebglMathVector4.axisYEnd,
-            imgWidth,
-            imgHeight
-        );
-        this.jWebgl.programImg.draw ();
+        // 得到简略图
+        dataSrc.drawImgPadding (this.jWebgl, this.fbo);
 
         // 使用标记信息生成纹理
         this.jWebgl.useFbo (this.fboCorner);
         this.jWebgl.clear ();
-        this.mat4V.setLookAt (
-            fboWidth / 2, fboHeight / 2, 1,
-            fboWidth / 2, fboHeight / 2, 0,
+        this.jWebgl.mat4V.setLookAt (
+            dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 1,
+            dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0,
             0, 1, 0
         );
-        this.mat4P.setOrtho (
-            - fboWidth / 2, fboWidth / 2,
-            - fboHeight / 2, fboHeight / 2,
+        this.jWebgl.mat4P.setOrtho (
+            - dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgWidthPaddingScaled / 2,
+            - dataSrc.imgHeightPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2,
              0, 2
         );
         JWebglMathMatrix4.multiplayMat4List (
-            this.mat4P,
-            this.mat4V,
-            this.mat4M,
+            this.jWebgl.mat4P,
+            this.jWebgl.mat4V,
+            this.jWebgl.mat4M,
             this.jWebgl.mat4Mvp
         );
         this.jWebgl.programSmooth3Step1Mark.uMvp.fill (this.jWebgl.mat4Mvp);
         // 绘制点有数量限制，这里让程序每一定数量的点绘制一次
         let pointCount = 0;
         this.jWebgl.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
-        for (let x = 0; x < fboWidth; x++) {
-            for (let y = 0; y < fboHeight; y++) {
-                let idx = y * fboWidth + x;
+        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
+            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
+                let idx = y * dataSrc.imgWidthPaddingScaled + x;
                 let pixel = IndexGlobal.inst.detailMachine.statusPreview.listXYToTexturePixel [idx];
                 this.jWebgl.programSmooth3Step1Mark.add (
                     x + 1,
@@ -182,38 +131,33 @@ class DomRightSmoothWebgl extends ReactComponentExtend <number> {
         this.jWebgl.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
 
         // 绘制最终内容
-        let cameraWidth = fboWidth;
-        let cameraHeight = fboHeight;
+        let cameraWidth = dataSrc.imgWidthPaddingScaled;
+        let cameraHeight = dataSrc.imgHeightPaddingScaled;
         this.jWebgl.useFbo (null);
         this.jWebgl.clear ();
-        this.mat4V.setLookAt (
+        this.jWebgl.mat4V.setLookAt (
             cameraWidth / 2, cameraHeight / 2, 1,
             cameraWidth / 2, cameraHeight / 2, 0,
             0, 1, 0
         );
-        this.mat4P.setOrtho (
+        this.jWebgl.mat4P.setOrtho (
             - cameraWidth / 2, cameraWidth / 2,
             - cameraHeight / 2, cameraHeight / 2,
             0, 2
         );
-        JWebglMathMatrix4.multiplayMat4List (
-            this.mat4P,
-            this.mat4V,
-            this.mat4M,
-            this.jWebgl.mat4Mvp
-        );
+        this.jWebgl.refreshMat4Mvp ();
         this.jWebgl.programSmooth3Step2Smooth.uMvp.fill (this.jWebgl.mat4Mvp);
         this.jWebgl.programSmooth3Step2Smooth.uTextureMain.fillByFbo (this.fboImg);
         this.jWebgl.programSmooth3Step2Smooth.uTextureMark.fillByFbo (this.fboCorner);
-        this.jWebgl.programSmooth3Step2Smooth.uTextureSize.fill (fboWidth, fboHeight);
-        this.posImg.elements [0] = fboWidth / 2;
-        this.posImg.elements [1] = fboHeight / 2;
+        this.jWebgl.programSmooth3Step2Smooth.uTextureSize.fill (dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
+        this.posImg.elements [0] = dataSrc.imgWidthPaddingScaled / 2;
+        this.posImg.elements [1] = dataSrc.imgHeightPaddingScaled / 2;
         this.jWebgl.programSmooth3Step2Smooth.add (
             this.posImg,
             JWebglMathVector4.axisZStart,
             JWebglMathVector4.axisYEnd,
-            fboWidth,
-            fboHeight
+            dataSrc.imgWidthPaddingScaled,
+            dataSrc.imgHeightPaddingScaled
         );
         this.jWebgl.programSmooth3Step2Smooth.draw ();
 
@@ -247,39 +191,8 @@ class DomRightSmoothWebgl extends ReactComponentExtend <number> {
         this.jWebgl.programLine.draw ();
     }
 
-    /**
-     * 加载完成的图片
-     */
-    finishedImg: MgrResAssetsImage;
-    /**
-     * 加载完成的数据
-     */
-    finishedData: MgrDataItem.ImgData;
-
     render (): ReactComponentExtendInstance {
-        let listImgData = MgrData.inst.get (MgrDataItem.LIST_IMG_DATA);
-        let listImgDataInst: MgrDataItem.ImgData;
-        for (let i = 0; i < listImgData.length; i++) {
-            let listImgDataI = listImgData [i];
-            if (listImgDataI.id == MgrData.inst.get (MgrDataItem.CURRENT_IMG)) {
-                listImgDataInst = listImgDataI;
-                break;
-            };
-        };
-
-        // 尺寸为最后加载完的图片的尺寸
-        let img = MgrRes.inst.getImg (listImgDataInst.dataOrigin);
-        if (img.currStatus == img.statusFinished) {
-            this.finishedImg = img;
-            this.finishedData = listImgDataInst;
-        };
-        let canvasWidth = 1;
-        let canvasHeight = 1;
-        if (this.finishedImg != null) {
-            canvasWidth = Math.ceil ((this.finishedImg.image.width + listImgDataInst.paddingRight + listImgDataInst.paddingLeft) / listImgDataInst.pixelWidth) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
-            canvasHeight = Math.ceil ((this.finishedImg.image.height + listImgDataInst.paddingTop + listImgDataInst.paddingBottom) / listImgDataInst.pixelHeight) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
-        };
-
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -316,8 +229,8 @@ class DomRightSmoothWebgl extends ReactComponentExtend <number> {
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
-                            [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
+                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                             [MgrDomDefine.STYLE_DISPLAY]: this.finishedImg == null ? MgrDomDefine.STYLE_DISPLAY_NONE : MgrDomDefine.STYLE_DISPLAY_BLOCK
                         }
@@ -339,11 +252,11 @@ class DomRightSmoothWebgl extends ReactComponentExtend <number> {
                             MgrDomDefine.TAG_CANVAS,
                             {
                                 ref: this.canvasWebglRef,
-                                width: canvasWidth * IndexGlobal.ANTINA,
-                                height: canvasHeight * IndexGlobal.ANTINA,
+                                width: dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+                                height: dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
                                 style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
+                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                 }
                             }
@@ -355,4 +268,4 @@ class DomRightSmoothWebgl extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightSmoothWebgl;
+export default DomRightSmoothCanvas;

@@ -17,19 +17,16 @@ import DomRightPreviewImgBefore from "./DomRightPreviewImgBefore.js";
 
 const Z_GRID = 0.1;
 
-const Z_MASK = 0.2;
-
 class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
     canvasWebglRef = NodeModules.react.createRef();
 
+    /**
+     * 用于绘制的上下文
+     */
     jWebgl: JWebgl;
-
-    mat4M = new JWebglMathMatrix4();
-    mat4V = new JWebglMathMatrix4();
-    mat4P = new JWebglMathMatrix4();
 
     fbo: JWebglFrameBuffer;
 
@@ -37,7 +34,13 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
      * 2d canvas 引用器
      */
     canvas2dRef = NodeModules.react.createRef ();
+    /**
+     * 2d canvas 标签
+     */
     canvas2d: HTMLCanvasElement;
+    /**
+     * 2d canvas 上下文
+     */
     canvas2dCtx: CanvasRenderingContext2D;
 
     reactComponentExtendOnInit(): void {
@@ -49,129 +52,40 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
         this.canvas2dCtx = this.canvas2d.getContext (`2d`);
     }
 
-    initFbo (width: number, height: number) {
-        if (this.fbo == null || this.fbo.width != width || this.fbo.height != height) {
-            this.fbo = this.jWebgl.getFbo (width, height);
-        };
-    }
-
-    posImg = new JWebglMathVector4 ();
-    
+    /**
+     * 点的起始位置
+     */
     posFrom = new JWebglMathVector4 (0, 0, Z_GRID);
+    /**
+     * 点的结束位置
+     */
     posTo = new JWebglMathVector4 (0, 0, Z_GRID);
 
-    posOutLB = new JWebglMathVector4 (0, 0, Z_MASK);
-    posOutRB = new JWebglMathVector4 (0, 0, Z_MASK);
-    posOutLT = new JWebglMathVector4 (0, 0, Z_MASK);
-    posOutRT = new JWebglMathVector4 (0, 0, Z_MASK);
-
-    posInLB = new JWebglMathVector4 (0, 0, Z_MASK);
-    posInRB = new JWebglMathVector4 (0, 0, Z_MASK);
-    posInLT = new JWebglMathVector4 (0, 0, Z_MASK);
-    posInRT = new JWebglMathVector4 (0, 0, Z_MASK);
-
     reactComponentExtendOnDraw(): void {
-        let listImgData = MgrData.inst.get (MgrDataItem.LIST_IMG_DATA);
-        let listImgDataInst: MgrDataItem.ImgData;
-        for (let i = 0; i < listImgData.length; i++) {
-            let listImgDataI = listImgData [i];
-            if (listImgDataI.id == MgrData.inst.get (MgrDataItem.CURRENT_IMG)) {
-                listImgDataInst = listImgDataI;
-                break;
-            };
-        };
-
-        // 没加载完的不画
-        let img = this.jWebgl.getImg (listImgDataInst.dataOrigin);
-        if (img.currStatus != img.statusFinished) {
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let imgMachine = dataSrc.imgMachine;
+        // 没加载完毕，不对画布进行改动
+        if (imgMachine == null || imgMachine.currStatus == imgMachine.statusIdle) {
             return;
         };
 
-        let imgWidth = img.assetsImg.image.width;
-        let imgHeight = img.assetsImg.image.height;
-        let viewWidth = (img.assetsImg.image.width + listImgDataInst.paddingLeft + listImgDataInst.paddingRight);
-        let viewHeight = (img.assetsImg.image.height + listImgDataInst.paddingBottom + listImgDataInst.paddingTop);
-
-        // 绘制 fbo
-        this.initFbo (Math.ceil (viewWidth / listImgDataInst.pixelWidth), Math.ceil (viewHeight / listImgDataInst.pixelHeight));
-        this.jWebgl.useFbo (this.fbo);
-        this.jWebgl.clear ();
-
-        this.mat4V.setLookAt(
-            viewWidth / 2, viewHeight / 2, 1,
-            viewWidth / 2, viewHeight / 2, 0,
-            0, 1, 0
-        );
-        this.mat4P.setOrtho (
-            -viewWidth / 2, viewWidth / 2,
-            -viewHeight / 2, viewHeight / 2,
-            0, 2
-        );
-        JWebglMathMatrix4.multiplayMat4List (
-            this.mat4P,
-            this.mat4V,
-            this.mat4M,
-            this.jWebgl.mat4Mvp
-        );
-        // 图片
-        this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uSampler.fillByImg (img);
-        this.posImg.elements [0] = imgWidth / 2 + listImgDataInst.paddingLeft;
-        this.posImg.elements [1] = imgHeight / 2 + listImgDataInst.paddingBottom;
-        this.jWebgl.programImg.add (
-            this.posImg,
-            JWebglMathVector4.axisZStart,
-            JWebglMathVector4.axisYEnd,
-            imgWidth,
-            imgHeight
-        );
-        this.jWebgl.programImg.draw ();
-
-        // 绘制屏幕
-        this.jWebgl.useFbo (null);
-        this.jWebgl.clear ();
-        viewWidth = Math.ceil (viewWidth / listImgDataInst.pixelWidth);
-        viewHeight = Math.ceil (viewHeight / listImgDataInst.pixelHeight);
-
-        this.mat4V.setLookAt(
-            viewWidth / 2, viewHeight / 2, 1,
-            viewWidth / 2, viewHeight / 2, 0,
-            0, 1, 0
-        );
-        this.mat4P.setOrtho (
-            -viewWidth / 2, viewWidth / 2,
-            -viewHeight / 2, viewHeight / 2,
-            0, 2
-        );
-        JWebglMathMatrix4.multiplayMat4List (
-            this.mat4P,
-            this.mat4V,
-            this.mat4M,
-            this.jWebgl.mat4Mvp
-        );
-
-        // 图片
-        this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uSampler.fillByFbo (this.fbo);
-        this.posImg.elements [0] = viewWidth / 2;
-        this.posImg.elements [1] = viewHeight / 2;
-        this.jWebgl.programImg.add (
-            this.posImg,
-            JWebglMathVector4.axisZStart,
-            JWebglMathVector4.axisYEnd,
-            viewWidth,
-            viewHeight
-        );
-        this.jWebgl.programImg.draw ();
+        // 初始化 fbo
+        if (this.fbo == null || this.fbo.width != dataSrc.imgWidthPaddingScaled || this.fbo.height != dataSrc.imgHeightPaddingScaled) {
+            this.fbo = this.jWebgl.getFbo (dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
+        };
+        // 得到简略图
+        dataSrc.drawImgPadding (this.jWebgl, this.fbo);
+        // 把 fbo 绘制到屏幕
+        this.jWebgl.fillFbo (null, this.fbo);
 
         // 网格
         this.jWebgl.programLine.uMvp.fill (this.jWebgl.mat4Mvp);
         let colorGrid = JWebglColor.COLOR_BLACK;
-        for (let i = 0; i <= viewWidth; i++) {
+        for (let i = 0; i <= dataSrc.imgWidthPaddingScaled; i++) {
             this.posFrom.elements [0] = i;
             this.posFrom.elements [1] = 0;
             this.posTo.elements [0] = i;
-            this.posTo.elements [1] = viewHeight;
+            this.posTo.elements [1] = dataSrc.imgHeightPaddingScaled;
             this.jWebgl.programLine.add (
                 this.posFrom,
                 colorGrid,
@@ -179,10 +93,10 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
                 colorGrid
             );
         };
-        for (let i = 0; i <= viewHeight; i++) {
+        for (let i = 0; i <= dataSrc.imgHeightPaddingScaled; i++) {
             this.posFrom.elements [0] = 0;
             this.posFrom.elements [1] = i;
-            this.posTo.elements [0] = viewWidth;
+            this.posTo.elements [0] = dataSrc.imgWidthPaddingScaled;
             this.posTo.elements [1] = i;
             this.jWebgl.programLine.add (
                 this.posFrom,
@@ -194,48 +108,24 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
         this.jWebgl.programLine.draw ();
 
         this.canvas2dCtx.clearRect (0, 0, this.canvas2d.width, this.canvas2d.height);
-        // this.canvas2dCtx.font = `bold 14px Microsoft YaHei`;
         this.canvas2dCtx.font = `10px Microsoft YaHei`;
         this.canvas2dCtx.textAlign = "center";
         this.canvas2dCtx.textBaseline = `middle`;
-        for (let x = 0; x < IndexGlobal.inst.detailMachine.statusPreview.imgWidth; x++) {
-            for (let y = 0; y < IndexGlobal.inst.detailMachine.statusPreview.imgHeight; y++) {
-                let colorId = IndexGlobal.inst.detailMachine.statusPreview.binXYToColor [y * IndexGlobal.inst.detailMachine.statusPreview.imgWidth + x];
-                let colorInst = IndexGlobal.inst.detailMachine.statusPreview.mapIdToColor.get (colorId);
+        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
+            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
+                let colorId = dataSrc.binXYToColor [y * dataSrc.imgWidthPaddingScaled + x];
+                let colorInst = dataSrc.mapIdToColor.get (colorId);
                 if (colorInst == null) {
                     continue;
                 };
                 this.canvas2dCtx.fillStyle = colorInst.colorRel.str2dText;
-                this.canvas2dCtx.fillText (`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, ((IndexGlobal.inst.detailMachine.statusPreview.imgHeight - y) - 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
+                this.canvas2dCtx.fillText (`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, ((dataSrc.imgHeightPaddingScaled - y) - 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
             };
         };
     }
 
-    finishedImg: MgrResAssetsImage;
-
     render (): ReactComponentExtendInstance {
-        let listImgData = MgrData.inst.get (MgrDataItem.LIST_IMG_DATA);
-        let listImgDataInst: MgrDataItem.ImgData;
-        for (let i = 0; i < listImgData.length; i++) {
-            let listImgDataI = listImgData [i];
-            if (listImgDataI.id == MgrData.inst.get (MgrDataItem.CURRENT_IMG)) {
-                listImgDataInst = listImgDataI;
-                break;
-            };
-        };
-
-        // 没加载完的不画
-        let img = MgrRes.inst.getImg (listImgDataInst.dataOrigin);
-        if (img.currStatus == img.statusFinished) {
-            this.finishedImg = img;
-        };
-        let canvasWidth = 1;
-        let canvasHeight = 1;
-        if (this.finishedImg != null) {
-            canvasWidth = Math.ceil ((img.image.width + listImgDataInst.paddingRight + listImgDataInst.paddingLeft) / listImgDataInst.pixelWidth) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
-            canvasHeight = Math.ceil ((img.image.height + listImgDataInst.paddingTop + listImgDataInst.paddingBottom) / listImgDataInst.pixelHeight) * IndexGlobal.PIXEL_TEX_TO_SCREEN;
-        };
-
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -272,8 +162,8 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
-                            [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
+                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                             [MgrDomDefine.STYLE_DISPLAY]: this.finishedImg == null ? MgrDomDefine.STYLE_DISPLAY_NONE : MgrDomDefine.STYLE_DISPLAY_BLOCK
                         }
@@ -295,11 +185,11 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
                             MgrDomDefine.TAG_CANVAS,
                             {
                                 ref: this.canvasWebglRef,
-                                width: canvasWidth * IndexGlobal.ANTINA,
-                                height: canvasHeight * IndexGlobal.ANTINA,
+                                width: dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+                                height: dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
                                 style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
+                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                 }
                             }
@@ -321,11 +211,11 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
                             MgrDomDefine.TAG_CANVAS,
                             {
                                 ref: this.canvas2dRef,
-                                width: canvasWidth,
-                                height: canvasHeight,
+                                width: dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN,
+                                height: dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN,
                                 style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
+                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                 }
                             }

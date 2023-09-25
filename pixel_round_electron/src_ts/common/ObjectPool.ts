@@ -36,9 +36,21 @@ namespace objectPool {
 
     /**
      * 存储对象池实例
-     * @param t 
+     * @param listT 
      */
-    export function push <T> (t: T) {
+    export function push (...listT: Array <any>) {
+        for (let i = 0; i < listT.length; i++) {
+            let listTI = listT [i];
+            doPush (listTI);
+        };
+    }
+
+    /**
+     * 执行回收
+     * @param t 
+     * @returns 
+     */
+    function doPush <T> (t: T) {
         // 空对象，忽略
         if (t == null) {
             return

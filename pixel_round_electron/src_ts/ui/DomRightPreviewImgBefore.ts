@@ -9,7 +9,7 @@ import DomInputNumber from "./DomInputNumber.js";
 import DomRightPreviewColorTableItem from "./DomRightPreviewColorTableItem.js";
 import DomRightPreviewImgBeforeWebglCutted from "./DomRightPreviewImgBeforeWebglCutted.js";
 import DomRightPreviewImgBeforeWebglOrigin from "./DomRightPreviewImgBeforeWebglOrigin.js";
-import DomRightPreviewImgBeforeWebglPixels from "./DomRightPreviewImgBeforeWebglPixels.js";
+import DomRightPreviewImgBeforeWebglPixels from "./DomRightPreviewPixelDataCache.js";
 
 class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
 

@@ -1,7 +1,7 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomRightSmoothWebgl from "./DomRightSmooth3Mark.js";
+import DomRightSmoothCanvas from "./DomRightSmoothCanvas.js";
 
 class DomRightSmooth extends ReactComponentExtend <number> {
 
@@ -18,7 +18,7 @@ class DomRightSmooth extends ReactComponentExtend <number> {
                 }
             },
 
-            ReactComponentExtend.instantiateComponent (DomRightSmoothWebgl, null)
+            ReactComponentExtend.instantiateComponent (DomRightSmoothCanvas, null)
         )
     }
 }

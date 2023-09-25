@@ -1,26 +1,43 @@
-import JWebgl from "../common/JWebgl.js";
 import ImgMachine from "./ImgMachine.js";
 
+/**
+ * 图片存档的状态机 - 状态
+ */
 class ImgMachineStatus {
-
+    /**
+     * 归属的状态机
+     */
     relMachine: ImgMachine;
 
     constructor (machine: ImgMachine) {
         this.relMachine = machine;
     }
 
-    onEnter () {
-
-    }
-
-    onExit () {
+    /**
+     * 事件派发 - 状态机被创造
+     */
+    onCreate () {
 
     }
 
     /**
-     * 尺寸参数发生变化
+     * 事件派发 - 状态机被销毁
      */
-    onSizeChanged () {
+    onDestroy () {
+
+    }
+
+    /**
+     * 事件派发 - 进入状态
+     */
+    onEnter () {
+
+    }
+
+    /**
+     * 事件派发 - 离开状态
+     */
+    onExit () {
 
     }
 
@@ -30,7 +47,14 @@ class ImgMachineStatus {
      * @param width 
      * @param height 
      */
-    onPixelDrawed (jWebgl: JWebgl, width: number, height: number) {
+    onCached () {
+
+    }
+
+    /**
+     * 事件派发 - 尺寸参数发生变化
+     */
+    onSizeChanged () {
 
     }
 }

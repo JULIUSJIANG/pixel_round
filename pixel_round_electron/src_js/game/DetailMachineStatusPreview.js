@@ -174,7 +174,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      */
     step1GetCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
         // 位置
-        let posForwardX = posCurrentX + vecForwardX;
+        let posForwardX = posCurrentX + vecForwardX * 2.0;
         let posForwardY = posCurrentY + vecForwardY * 2.0;
         let posBackX = posCurrentX - vecForwardX;
         let posBackY = posCurrentY - vecForwardY;
@@ -276,9 +276,9 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         ;
     }
     /**
-     * 修复端点问题
+     * 修复端点问题，仅考虑 3 向邻近包围的情况
      */
-    step3Point() {
+    step3PointV1() {
         for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
             for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
                 let rec = this.getTexturePixel(x, y);
@@ -287,25 +287,25 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
                 let bothRB = rec.cornerRB.rsBoth;
                 let bothLB = rec.cornerLB.rsBoth;
                 // 考察上方向
-                if (this.step3CheckSurround(x, y, 0, 1)) {
+                if (this.step3CheckSurroundV1(x, y, 0, 1)) {
                     bothLT = CornerTypeRSBoth.forwardHalf;
                     bothRT = CornerTypeRSBoth.forwardHalf;
                 }
                 ;
                 // 考察右方向
-                if (this.step3CheckSurround(x, y, 1, 0)) {
+                if (this.step3CheckSurroundV1(x, y, 1, 0)) {
                     bothRT = CornerTypeRSBoth.forwardHalf;
                     bothRB = CornerTypeRSBoth.forwardHalf;
                 }
                 ;
                 // 考察下方向
-                if (this.step3CheckSurround(x, y, 0, -1)) {
+                if (this.step3CheckSurroundV1(x, y, 0, -1)) {
                     bothRB = CornerTypeRSBoth.forwardHalf;
                     bothLB = CornerTypeRSBoth.forwardHalf;
                 }
                 ;
                 // 考察左方向
-                if (this.step3CheckSurround(x, y, -1, 0)) {
+                if (this.step3CheckSurroundV1(x, y, -1, 0)) {
                     bothLB = CornerTypeRSBoth.forwardHalf;
                     bothLT = CornerTypeRSBoth.forwardHalf;
                 }
@@ -326,7 +326,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param vecForwardX
      * @param vecForwardY
      */
-    step3CheckSurround(x, y, vecForwardX, vecForwardY) {
+    step3CheckSurroundV1(x, y, vecForwardX, vecForwardY) {
         let vecRightX = vecForwardY;
         let vecRightY = -vecForwardX;
         let colorCurrent = this.getColor(x, y);
@@ -335,7 +335,9 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         let colorRight = this.getColor(x + vecRightX, y + vecRightY);
         let colorLeft = this.getColor(x - vecRightX, y - vecRightY);
         let colorRB = this.getColor(x + vecRightX - vecForwardX, y + vecRightY - vecForwardY);
+        let colorRF = this.getColor(x + vecRightX + vecForwardX, y + vecRightY + vecForwardY);
         let colorLB = this.getColor(x - vecRightX - vecForwardX, y - vecRightY - vecForwardY);
+        let colorLF = this.getColor(x - vecRightX + vecForwardX, y - vecRightY + vecForwardY);
         if (colorCurrent == colorForward) {
             return false;
         }

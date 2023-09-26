@@ -88,7 +88,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.drawImg (0, 0);
         dataSrc.step2FixX ();
         this.drawImg (1, 0);
-        dataSrc.step3Point ();
+        dataSrc.step3PointV1 ();
         this.drawImg (2, 0);
         dataSrc.step4Addition ();
         this.drawImg (0, 1);

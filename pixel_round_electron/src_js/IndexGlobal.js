@@ -18,7 +18,7 @@ class IndexGlobal {
     /**
      * 缩略图列数
      */
-    IndexGlobal.IMG_LIST_COLUMN_COUNT = 2;
+    IndexGlobal.IMG_LIST_COLUMN_COUNT = 1;
     /**
      * 纹素尺寸到屏幕尺寸的转换
      */

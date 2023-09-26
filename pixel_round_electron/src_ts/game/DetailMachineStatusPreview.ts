@@ -571,6 +571,16 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         if (leftCornerBack == CornerTypeRSBoth.left || leftCornerBack == CornerTypeRSBoth.bothSide) {
             return false;
         };
+
+        let pixelRight = this.getTexturePixel (posRightX, posRightY);
+        if (pixelRight == null) {
+            return false;
+        };
+        let rightCornerForward = TexturePixel.getCorner (pixelRight, vecForwardX, vecForwardY).rsBoth.namedByAxis (vecForwardX, vecForwardY, vecRightX, vecRightY);
+        if (rightCornerForward == CornerTypeRSBoth.forward || rightCornerForward == CornerTypeRSBoth.right) {
+            return false;
+        };
+
         return true;
     }
 

@@ -163,9 +163,9 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     step1GetCornerTypeBoth(posCurrentX, posCurrentY, vecForwardX, vecForwardY) {
         let vecRightX = vecForwardY;
         let vecRightY = -vecForwardX;
-        let rsSideLeft = this.step1GetCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
-        let rsSideRight = this.step1GetCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
-        return rsSideLeft.onRight(rsSideRight);
+        let rsSideJust = this.step1GetCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
+        let rsSideInverse = this.step1GetCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
+        return rsSideJust.onRight(rsSideInverse);
     }
     /**
      * 获取角的裁切类型
@@ -329,9 +329,9 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     step3PointSurround(x, y, vecForwardX, vecForwardY) {
         let vecRightX = vecForwardY;
         let vecRightY = -vecForwardX;
-        let ableLeft = this.step3PointSurroundSide(x, y, vecForwardX, vecForwardY, vecRightX, vecRightY);
-        let ableRight = this.step3PointSurroundSide(x, y, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
-        return ableLeft && ableRight;
+        let ableJust = this.step3PointSurroundSide(x, y, vecForwardX, vecForwardY, vecRightX, vecRightY);
+        let ableInverse = this.step3PointSurroundSide(x, y, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
+        return ableJust && ableInverse;
     }
     /**
      * 检查某个方向是否包围结构
@@ -398,44 +398,54 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      */
     step4GetAdditionSmoothBoth(posCurrentX, posCurrentY, vecForwardX, vecForwardY) {
         let textureCurrent = this.getTexturePixel(posCurrentX, posCurrentY);
-        let cornerCurrent = TexturePixel.getCorner(textureCurrent, vecForwardX, vecForwardY);
+        let cornerCurrentForward = TexturePixel.getCorner(textureCurrent, vecForwardX, vecForwardY);
         // 本身前方已有平滑，那么不进行新增
-        if (cornerCurrent.rsBoth != CornerTypeRSBoth.none) {
-            return cornerCurrent.rsBoth;
+        if (cornerCurrentForward.rsBoth != CornerTypeRSBoth.none) {
+            return cornerCurrentForward.rsBoth;
         }
         ;
         let vecRightX = vecForwardY;
         let vecRightY = -vecForwardX;
-        // 左侧许可
-        let ableLeft = this.step4GetAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
-        // 右侧许可
-        let ableRight = this.step4GetAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
+        // 正许可
+        let ableJust = this.step4GetAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
+        // 逆许可
+        let ableInverse = this.step4GetAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
         // 其中一个不许可，都立即终止
-        if (!ableLeft || !ableRight) {
-            return cornerCurrent.rsBoth;
+        if (!ableJust || !ableInverse) {
+            return cornerCurrentForward.rsBoth;
         }
         ;
-        // 左侧需要平滑兼容
-        let smoothLeft = this.step4GetAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
-        // 右侧需要平滑兼容
-        let smoothRight = this.step4GetAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
+        // 正需要平滑兼容
+        let smoothJust = this.step4GetAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
+        // 逆需要平滑兼容
+        let smoothInverse = this.step4GetAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
         // 同时兼容俩边
-        if (smoothLeft && smoothRight) {
+        if (smoothJust && smoothInverse) {
             return CornerTypeRSBoth.forward;
         }
         ;
+        let cornerCurrentRight = TexturePixel.getCorner(textureCurrent, vecRightX, vecRightY);
+        let cornerCurrentLeft = TexturePixel.getCorner(textureCurrent, -vecRightX, -vecRightY);
         // 兼容左边
-        if (smoothLeft) {
+        if (smoothJust) {
+            if (cornerCurrentLeft.rsBoth.isSmooth) {
+                return CornerTypeRSBoth.forward;
+            }
+            ;
             return CornerTypeRSBoth.left;
         }
         ;
         // 兼容右边
-        if (smoothRight) {
+        if (smoothInverse) {
+            if (cornerCurrentRight.rsBoth.isSmooth) {
+                return CornerTypeRSBoth.forward;
+            }
+            ;
             return CornerTypeRSBoth.right;
         }
         ;
         // 否则原样返回
-        return cornerCurrent.rsBoth;
+        return cornerCurrentForward.rsBoth;
     }
     /**
      * 获取额外平滑的许可
@@ -470,8 +480,38 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
             return false;
         }
         ;
-        // 右前方的左角有平滑任务，自己不新增
-        if (TexturePixel.getCorner(textureRF, -vecRightX, -vecRightY).rsBoth != CornerTypeRSBoth.none) {
+        if (TexturePixel.getCorner(textureRF, -vecForwardX, -vecForwardY).rsBoth == CornerTypeRSBoth.forwardHalf) {
+            return false;
+        }
+        ;
+        // 左上方位置
+        let posLFX = posCurrentX - vecRightX / 2 + vecForwardX / 2;
+        let posLFY = posCurrentY - vecRightY / 2 + vecForwardY / 2;
+        // 左上方位置的记录
+        let textureLF = this.getTexturePixel(posLFX, posLFY);
+        // 越界，那么不新增平滑
+        if (!textureLF) {
+            return false;
+        }
+        ;
+        let rfCornerLeft = TexturePixel.getCorner(textureRF, -vecRightX, -vecRightY);
+        let lfCornerRight = TexturePixel.getCorner(textureLF, vecRightX, vecRightY);
+        if (rfCornerLeft.rsBoth.isSmooth && lfCornerRight.rsBoth.isSmooth) {
+            return false;
+        }
+        ;
+        if (rfCornerLeft.rsBoth == CornerTypeRSBoth.forwardHalf) {
+            return false;
+        }
+        ;
+        let colorCurrent = this.getColor(posCurrentX, posCurrentY);
+        let colorRF = this.getColor(posRFX, posRFY);
+        let colorLF = this.getColor(posLFX, posLFY);
+        if (rfCornerLeft.rsBoth.isSmooth && colorLF == colorCurrent) {
+            return false;
+        }
+        ;
+        if (lfCornerRight.rsBoth.isSmooth && colorRF == colorCurrent) {
             return false;
         }
         ;

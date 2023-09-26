@@ -225,7 +225,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
                     for (let j = 0; j < TexturePixel.listCornerY.length; j++) {
                         let listCornerYJ = TexturePixel.listCornerY [j];
                         let corner = TexturePixel.getCorner (texturePixel, listCornerXI, listCornerYJ);
-                        corner.rsBoth = this.step1GetCornerTypeBoth (x, y, listCornerXI, listCornerYJ);
+                        corner.rsBoth = this.step1CornerBaseType (x, y, listCornerXI, listCornerYJ);
                     };
                 };
             };
@@ -237,7 +237,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param posCurrentX 
      * @param posCurrentY 
      */
-    step1GetCornerTypeBoth (
+    step1CornerBaseType (
         posCurrentX: number, 
         posCurrentY: number, 
         
@@ -248,7 +248,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         let vecRightX = vecForwardY;
         let vecRightY = -vecForwardX;
 
-        let rsSideJust = this.step1GetCornerTypeSide (
+        let rsSideJust = this.step1CornerBaseTypeSide (
             posCurrentX,
             posCurrentY,
 
@@ -258,7 +258,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
             vecRightX,
             vecRightY
         );
-        let rsSideInverse = this.step1GetCornerTypeSide (
+        let rsSideInverse = this.step1CornerBaseTypeSide (
             posCurrentX,
             posCurrentY,
 
@@ -276,7 +276,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param posCurrentX 
      * @param posCurrentY 
      */
-    step1GetCornerTypeSide (
+    step1CornerBaseTypeSide (
         posCurrentX: number, 
         posCurrentY: number, 
         
@@ -480,9 +480,9 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     }
 
     /**
-     * 补充一些平滑，以让形状看起来自然
+     * 修复一些长的贴边形状
      */
-    step4Addition () {
+    step4Rect () {
         for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
             for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
                 // 索引
@@ -495,7 +495,102 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
                     for (let j = 0; j < TexturePixel.listCornerY.length; j++) {
                         let listCornerYJ = TexturePixel.listCornerY [j];
                         let corner = TexturePixel.getCorner (texturePixel, listCornerXI, listCornerYJ);
-                        corner.rsBoth = this.step4GetAdditionSmoothBoth (x, y, listCornerXI, listCornerYJ);
+                        corner.rsBoth = this.step4RectBoth (x, y, listCornerXI, listCornerYJ);
+                    };
+                };
+            };
+        };
+    }
+
+    step4RectBoth (posCurrentX: number, posCurrentY: number, vecForwardX: number, vecForwardY: number) {
+        let pixelCurrent = this.getTexturePixel (posCurrentX, posCurrentY);
+        let corner = TexturePixel.getCorner (pixelCurrent, vecForwardX, vecForwardY);
+        let vecRightX = vecForwardY;
+        let vecRightY = - vecForwardX;
+        let ableJust = this.step4RectBothSide (
+            posCurrentX, posCurrentY,
+            vecForwardX, vecForwardY,
+            vecRightX, vecRightY
+        );
+        let ableInverse = this.step4RectBothSide (
+            posCurrentX, posCurrentY,
+            vecForwardX, vecForwardY,
+            - vecRightX, - vecRightY
+        );
+        if (ableJust || ableInverse) {
+            return CornerTypeRSBoth.forwardHalf;
+        };
+        return corner.rsBoth;
+    }
+
+    step4RectBothSide (posCurrentX: number, posCurrentY: number, vecForwardX: number, vecForwardY: number, vecRightX: number, vecRightY: number) {
+        // 位置
+        let posForwardX = posCurrentX + vecForwardX * 2.0;
+        let posForwardY = posCurrentY + vecForwardY * 2.0;
+
+        let posBackX = posCurrentX - vecForwardX;
+        let posBackY = posCurrentY - vecForwardY;
+
+        let posRightX = posCurrentX + vecRightX;
+        let posRightY = posCurrentY + vecRightY;
+
+        let posLeftX = posCurrentX - vecRightX;
+        let posLeftY = posCurrentY - vecRightY;
+
+        let posRFX = posCurrentX + vecRightX / 2 + vecForwardX / 2;
+        let posRFY = posCurrentY + vecRightY / 2 + vecForwardY / 2;
+
+        let posLFX = posCurrentX - vecRightX / 2 + vecForwardX / 2;
+        let posLFY = posCurrentY - vecRightY / 2 + vecForwardY / 2;
+
+        let posRBX = posCurrentX + vecRightX / 2 - vecForwardX / 2;
+        let posRBY = posCurrentY + vecRightY / 2 - vecForwardY / 2;
+
+        let posLBX = posCurrentX - vecRightX / 2 - vecForwardX / 2;
+        let posLBY = posCurrentY - vecRightY / 2 - vecForwardY / 2;
+
+        let pixelCurrent = this.getTexturePixel (posCurrentX, posCurrentY);
+        let pixelRF = this.getTexturePixel (posRFX, posRFY);
+        let pixelLeft = this.getTexturePixel (posLeftX, posLeftY);
+        // 数据非法，忽略
+        if (pixelRF == null || pixelLeft == null) {
+            return false;
+        };
+
+        // 不是目标类型，忽略
+        let cornerType = TexturePixel.getCorner (pixelCurrent, vecForwardX, vecForwardY).rsBoth.namedByAxis (vecForwardX, vecForwardY, vecRightX, vecRightY);
+        if (cornerType != CornerTypeRSBoth.left) {
+            return false;
+        };
+
+        let rfCornerBack = TexturePixel.getCorner (pixelRF, - vecForwardX, - vecForwardY).rsBoth.namedByAxis (vecForwardX, vecForwardY, vecRightX, vecRightY);
+        let leftCornerBack = TexturePixel.getCorner (pixelLeft, - vecForwardX, - vecForwardY).rsBoth.namedByAxis (vecForwardX, vecForwardY, vecRightX, vecRightY);
+        if (rfCornerBack == CornerTypeRSBoth.left || rfCornerBack == CornerTypeRSBoth.bothSide || rfCornerBack == CornerTypeRSBoth.forward) {
+            return false;
+        };
+        if (leftCornerBack == CornerTypeRSBoth.left || leftCornerBack == CornerTypeRSBoth.bothSide) {
+            return false;
+        };
+        return true;
+    }
+
+    /**
+     * 补充一些平滑，以让形状看起来自然
+     */
+    step5Addition () {
+        for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
+            for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
+                // 索引
+                let idx = y * this.imgWidthPaddingScaled + x;
+                let texturePixel = this.listXYToTexturePixel [idx];
+
+                // 确定平滑方向
+                for (let i = 0; i < TexturePixel.listCornerX.length; i++) {
+                    let listCornerXI = TexturePixel.listCornerX [i];
+                    for (let j = 0; j < TexturePixel.listCornerY.length; j++) {
+                        let listCornerYJ = TexturePixel.listCornerY [j];
+                        let corner = TexturePixel.getCorner (texturePixel, listCornerXI, listCornerYJ);
+                        corner.rsBoth = this.step5AdditionBoth (x, y, listCornerXI, listCornerYJ);
                     };
                 };
             };
@@ -509,7 +604,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param vecForwardX 
      * @param vecForwardY 
      */
-    step4GetAdditionSmoothBoth (posCurrentX: number, posCurrentY: number, vecForwardX: number, vecForwardY: number) {
+    step5AdditionBoth (posCurrentX: number, posCurrentY: number, vecForwardX: number, vecForwardY: number) {
         let textureCurrent = this.getTexturePixel (posCurrentX, posCurrentY);
         let cornerCurrentForward = TexturePixel.getCorner (textureCurrent, vecForwardX, vecForwardY);
 
@@ -522,7 +617,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         let vecRightY = - vecForwardX;
 
         // 正许可
-        let ableJust = this.step4GetAdditionSmoothAbleSide (
+        let ableJust = this.step5AdditionBothAble (
             posCurrentX,
             posCurrentY,
 
@@ -534,7 +629,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         );
 
         // 逆许可
-        let ableInverse = this.step4GetAdditionSmoothAbleSide (
+        let ableInverse = this.step5AdditionBothAble (
             posCurrentX,
             posCurrentY,
 
@@ -551,7 +646,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         };
 
         // 正需要平滑兼容
-        let smoothJust = this.step4GetAdditionSmoothSide (
+        let smoothJust = this.step5AdditionBothSide (
             posCurrentX,
             posCurrentY,
 
@@ -563,7 +658,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         );
 
         // 逆需要平滑兼容
-        let smoothInverse = this.step4GetAdditionSmoothSide (
+        let smoothInverse = this.step5AdditionBothSide (
             posCurrentX,
             posCurrentY,
 
@@ -584,7 +679,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
 
         // 兼容左边
         if (smoothJust) {
-            if (cornerCurrentLeft.rsBoth.isSmooth) {
+            if (cornerCurrentLeft.rsBoth != CornerTypeRSBoth.none) {
                 return CornerTypeRSBoth.forward;
             };
             return CornerTypeRSBoth.left;
@@ -592,7 +687,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
 
         // 兼容右边
         if (smoothInverse) {
-            if (cornerCurrentRight.rsBoth.isSmooth) {
+            if (cornerCurrentRight.rsBoth != CornerTypeRSBoth.none) {
                 return CornerTypeRSBoth.forward;
             };
             return CornerTypeRSBoth.right;
@@ -612,7 +707,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param vecRightY 
      * @returns 
      */
-    step4GetAdditionSmoothAbleSide (
+    step5AdditionBothAble (
         posCurrentX: number, 
         posCurrentY: number, 
         
@@ -697,7 +792,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param vecRightX 
      * @param vecRightY 
      */
-    step4GetAdditionSmoothSide (
+    step5AdditionBothSide (
         posCurrentX: number, 
         posCurrentY: number, 
         

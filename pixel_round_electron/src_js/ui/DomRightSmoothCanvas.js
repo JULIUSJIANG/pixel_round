@@ -52,6 +52,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         if (this.fboImg == null || this.fboImg.width != dataSrc.imgWidthPaddingScaled || this.fboImg.height != dataSrc.imgHeightPaddingScaled) {
             this.fboImg = this.jWebgl.getFbo(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
             this.fboCorner = this.jWebgl.getFbo(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
+            this.fboColor = this.jWebgl.getFbo(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
         }
         ;
         // 得到简略图
@@ -71,6 +72,8 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.drawImg(0, 1);
         dataSrc.step5Addition();
         this.drawImg(1, 1);
+        dataSrc.step6ColorSetting();
+        this.drawImg(2, 1);
         // 网格
         let cameraWidth = dataSrc.imgWidthPaddingScaled * HORIZON_COUNT;
         let cameraHeight = dataSrc.imgHeightPaddingScaled * VERTICAL_COUNT;
@@ -117,12 +120,12 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
      */
     drawImg(x, y) {
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
-        // 使用标记信息生成纹理
-        this.jWebgl.useFbo(this.fboCorner);
-        this.jWebgl.clear();
         this.jWebgl.mat4V.setLookAt(dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 1, dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0, 0, 1, 0);
         this.jWebgl.mat4P.setOrtho(-dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgWidthPaddingScaled / 2, -dataSrc.imgHeightPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.jWebgl.mat4P, this.jWebgl.mat4V, this.jWebgl.mat4M, this.jWebgl.mat4Mvp);
+        // 使用标记信息生成纹理
+        this.jWebgl.useFbo(this.fboCorner);
+        this.jWebgl.clear();
         this.jWebgl.programSmoothStep1Mark.uMvp.fill(this.jWebgl.mat4Mvp);
         // 绘制点有数量限制，这里让程序每一定数量的点绘制一次
         let pointCount = 0;
@@ -134,6 +137,30 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
                 this.jWebgl.programSmoothStep1Mark.add(x + 1, y + 1, 0, pixel.cornerLT.rsBoth.id, pixel.cornerRT.rsBoth.id, pixel.cornerRB.rsBoth.id, pixel.cornerLB.rsBoth.id);
                 pointCount++;
                 if (10 < pointCount) {
+                    pointCount = 0;
+                    this.jWebgl.programSmoothStep1Mark.draw();
+                }
+                ;
+            }
+            ;
+        }
+        ;
+        this.jWebgl.programSmoothStep1Mark.draw();
+        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
+        // 使用采样信息生成纹理
+        this.jWebgl.useFbo(this.fboColor);
+        this.jWebgl.clear();
+        this.jWebgl.programSmoothStep1Mark.uMvp.fill(this.jWebgl.mat4Mvp);
+        pointCount = 0;
+        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
+        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
+            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
+                let idx = y * dataSrc.imgWidthPaddingScaled + x;
+                let pixel = IndexGlobal.inst.detailMachine.statusPreview.listXYToTexturePixel[idx];
+                this.jWebgl.programSmoothStep1Mark.add(x + 1, y + 1, 0, pixel.cornerLT.color, pixel.cornerRT.color, pixel.cornerRB.color, pixel.cornerLB.color);
+                pointCount++;
+                if (10 < pointCount) {
+                    pointCount = 0;
                     this.jWebgl.programSmoothStep1Mark.draw();
                 }
                 ;
@@ -153,6 +180,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.jWebgl.programSmoothStep2Smooth.uMvp.fill(this.jWebgl.mat4Mvp);
         this.jWebgl.programSmoothStep2Smooth.uTextureMain.fillByFbo(this.fboImg);
         this.jWebgl.programSmoothStep2Smooth.uTextureMark.fillByFbo(this.fboCorner);
+        this.jWebgl.programSmoothStep2Smooth.uTextureColor.fillByFbo(this.fboColor);
         this.jWebgl.programSmoothStep2Smooth.uTextureSize.fill(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
         this.posImg.elements[0] = dataSrc.imgWidthPaddingScaled * (0.5 + x);
         this.posImg.elements[1] = dataSrc.imgHeightPaddingScaled * (VERTICAL_COUNT - 1 + 0.5 - y);

@@ -1,5 +1,6 @@
 import objectPool from "../common/ObjectPool.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
+import CornerTypeRSBoth from "./CornerTypeRSBoth.js";
 import TexturePixelCorner from "./TexturePixelCorner.js";
 /**
  * 像素记录
@@ -38,6 +39,17 @@ class TexturePixel {
     }
     static create(dataSrc, posX, posY) {
         let inst = objectPool.pop(this.poolType);
+        for (let i = 0; i < this.listCornerX.length; i++) {
+            let listCornerXI = this.listCornerX[i];
+            for (let j = 0; j < this.listCornerY.length; j++) {
+                let listCornerYJ = this.listCornerY[j];
+                let corner = TexturePixel.getCorner(inst, listCornerXI, listCornerYJ);
+                corner.rsBoth = CornerTypeRSBoth.none;
+                corner.color = 0;
+            }
+            ;
+        }
+        ;
         return inst;
     }
 }

@@ -5,6 +5,10 @@ import CornerTypeRSBoth from "./CornerTypeRSBoth.js";
  */
 class TexturePixelCorner {
     /**
+     * 取色，0 为左，1 为 右
+     */
+    color: number;
+    /**
      * 该角的平滑类型
      */
     rsBoth: CornerTypeRSBoth;

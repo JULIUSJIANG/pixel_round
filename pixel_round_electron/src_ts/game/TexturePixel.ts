@@ -1,5 +1,6 @@
 import objectPool from "../common/ObjectPool.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
+import CornerTypeRSBoth from "./CornerTypeRSBoth.js";
 import DetailMachineStatusPreview from "./DetailMachineStatusPreview.js";
 import TexturePixelCorner from "./TexturePixelCorner.js";
 
@@ -64,6 +65,15 @@ class TexturePixel {
 
     public static create (dataSrc: DetailMachineStatusPreview, posX: number, posY: number) {
         let inst = objectPool.pop (this.poolType);
+        for (let i = 0; i < this.listCornerX.length; i++) {
+            let listCornerXI = this.listCornerX [i];
+            for (let j = 0; j < this.listCornerY.length; j++) {
+                let listCornerYJ = this.listCornerY [j];
+                let corner = TexturePixel.getCorner (inst, listCornerXI, listCornerYJ);
+                corner.rsBoth = CornerTypeRSBoth.none;
+                corner.color = 0;
+            };
+        };
         return inst;
     }
 

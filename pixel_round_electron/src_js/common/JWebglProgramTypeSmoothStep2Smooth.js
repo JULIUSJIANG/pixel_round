@@ -51,11 +51,7 @@ vec4 getTextureRGBA (sampler2D tex, vec2 getTextureRGBA_uv) {
   return texture2D (tex, pos);
 }
 // 如果在阈值内，绘制连接 2 个像素的对角线
-void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
-  // 采样 p1
-  vec4 v1 = getTextureRGBA (${this.uTextureMain}, p1);
-  // 采样 p2
-  vec4 v2 = getTextureRGBA (${this.uTextureMain}, p2);
+void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 smoothColor) {
   // 向量: p1 -> p2
   vec2 dir = p2 - p1;
   // 向量: p1 -> p2 顺时针旋转 90 度
@@ -67,14 +63,14 @@ void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness) {
   // 准线以内，对颜色进行替换
   float l = step (shadow, tickness);
   // 根据权重，进行取色
-  sum = mix (sum, v1, l); 
+  sum = mix (sum, smoothColor, l); 
 }
 // 2 个数是否匹配
 bool match (float current, float target) {
     return abs (current - target) < 0.5;
 }
 // 处理一个角
-void corner (inout vec4 colorMain, float mark, vec2 pos, vec2 dirForward) {
+void corner (inout vec4 colorMain, float mark, float color, vec2 pos, vec2 dirForward) {
     vec2 dirRight = vec2 (dirForward.y, -dirForward.x);
 
     vec2 posRight = pos + dirRight * 2.0;
@@ -82,32 +78,33 @@ void corner (inout vec4 colorMain, float mark, vec2 pos, vec2 dirForward) {
     vec2 posLeft = pos - dirRight * 2.0;
     vec2 posLeftForward = pos - dirRight + dirForward;
 
+    vec4 colorLeftForward = getTextureRGBA (${this.uTextureMain}, posLeftForward);
+    vec4 colorRightForward = getTextureRGBA (${this.uTextureMain}, posRightForward);
+    vec4 colorSmooth = colorLeftForward * color + colorRightForward * (1.0 - color);
+
     if (match (mark, 1.0)) {
-        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dForward});
+        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dForward}, colorSmooth);
     };
     if (match (mark, 2.0) || match (mark, 4.0)) {
-        connect (colorMain, pos, posLeft, posRightForward, ${this.dSide});
+        connect (colorMain, pos, posLeft, posRightForward, ${this.dSide}, colorSmooth);
     };
     if (match (mark, 3.0) || match (mark, 4.0)) {
-        connect (colorMain, pos, posLeftForward, posRight, ${this.dSide});
+        connect (colorMain, pos, posLeftForward, posRight, ${this.dSide}, colorSmooth);
     };
     if (match (mark, 5.0)) {
-        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dForwardSmall});
+        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dForwardSmall}, colorSmooth);
     };
 }
 void main () {
     vec4 colorMain = texture2D (${this.uTextureMain}, ${this.vTexCoord});
     vec4 colorMark = texture2D (${this.uTextureMark}, ${this.vTexCoord}) * ${this.dSmoothIdMax};
-
-    // if (match (colorMark.a, 4.0)) {
-    //     gl_FragColor = vec4 (1);
-    // };
+    vec4 colorColor = texture2D (${this.uTextureColor}, ${this.vTexCoord}) * ${this.dSmoothIdMax};
 
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
-    corner (colorMain, colorMark.r, pos, vec2 (- 0.5,   0.5));
-    corner (colorMain, colorMark.g, pos, vec2 (  0.5,   0.5));
-    corner (colorMain, colorMark.b, pos, vec2 (  0.5, - 0.5));
-    corner (colorMain, colorMark.a, pos, vec2 (- 0.5, - 0.5));
+    corner (colorMain, colorMark.r, colorColor.r, pos, vec2 (- 0.5,   0.5));
+    corner (colorMain, colorMark.g, colorColor.g, pos, vec2 (  0.5,   0.5));
+    corner (colorMain, colorMark.b, colorColor.b, pos, vec2 (  0.5, - 0.5));
+    corner (colorMain, colorMark.a, colorColor.a, pos, vec2 (- 0.5, - 0.5));
     gl_FragColor = colorMain;
 }
         `;
@@ -179,6 +176,9 @@ __decorate([
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
 ], JWebglProgramTypeSmoothStep2Smooth.prototype, "uTextureMark", void 0);
+__decorate([
+    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
+], JWebglProgramTypeSmoothStep2Smooth.prototype, "uTextureColor", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformVec2)
 ], JWebglProgramTypeSmoothStep2Smooth.prototype, "uTextureSize", void 0);

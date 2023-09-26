@@ -625,4 +625,47 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         ;
         return false;
     }
+    /**
+     * 指明平滑颜色
+     */
+    step6ColorSetting() {
+        for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
+            for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
+                // 像素记录
+                let texturePixel = this.getTexturePixel(x, y);
+                // 确定平滑方向
+                for (let i = 0; i < TexturePixel.listCornerX.length; i++) {
+                    let vecForwardX = TexturePixel.listCornerX[i];
+                    for (let j = 0; j < TexturePixel.listCornerY.length; j++) {
+                        let vecForwardY = TexturePixel.listCornerY[j];
+                        let vecRightX = vecForwardY;
+                        let vecRightY = -vecForwardX;
+                        let corner = TexturePixel.getCorner(texturePixel, vecForwardX, vecForwardY);
+                        let posRFX = x + vecRightX / 2 + vecForwardX / 2;
+                        let posRFY = y + vecRightY / 2 + vecForwardY / 2;
+                        let posLFX = x - vecRightX / 2 + vecForwardX / 2;
+                        let posLFY = y - vecRightY / 2 + vecForwardY / 2;
+                        let colorRF = this.getColor(posRFX, posRFY);
+                        let colorLF = this.getColor(posLFX, posLFY);
+                        // 反正俩边颜色一致，不动
+                        if (colorRF == colorLF) {
+                            continue;
+                        }
+                        ;
+                        if (this.imgMachine.getColorFirst(colorLF.id, colorRF.id)) {
+                            corner.color = 1;
+                        }
+                        else {
+                            corner.color = 0;
+                        }
+                        ;
+                    }
+                    ;
+                }
+                ;
+            }
+            ;
+        }
+        ;
+    }
 }

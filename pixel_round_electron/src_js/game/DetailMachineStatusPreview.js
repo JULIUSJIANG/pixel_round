@@ -107,15 +107,64 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         return this.listXYToTexturePixel[idx];
     }
     /**
+     * 把附带内边距的图片绘制到一个帧缓冲区里面
+     * @param jWebgl
+     * @param fbo
+     */
+    drawImgPadding(jWebgl, fbo) {
+        jWebgl.useFbo(fbo);
+        jWebgl.clear();
+        jWebgl.mat4M.setIdentity();
+        jWebgl.mat4V.setLookAt(this.imgWidthPadding / 2, this.imgHeightPadding / 2, 1, this.imgWidthPadding / 2, this.imgHeightPadding / 2, 0, 0, 1, 0);
+        jWebgl.mat4P.setOrtho(-this.imgWidthPadding / 2, this.imgWidthPadding / 2, -this.imgHeightPadding / 2, this.imgHeightPadding / 2, 0, 2);
+        JWebglMathMatrix4.multiplayMat4List(jWebgl.mat4P, jWebgl.mat4V, jWebgl.mat4M, jWebgl.mat4Mvp);
+        // 图片
+        jWebgl.programImg.uMvp.fill(jWebgl.mat4Mvp);
+        jWebgl.programImg.uSampler.fillByImg(jWebgl.getImg(this.imgMachine.dataInst.dataOrigin));
+        let posImg = JWebglMathVector4.create(this.imgWidth / 2 + this.imgMachine.dataInst.paddingLeft, this.imgHeight / 2 + this.imgMachine.dataInst.paddingBottom, 0);
+        jWebgl.programImg.add(posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, this.imgWidth, this.imgHeight);
+        jWebgl.programImg.draw();
+    }
+    /**
+     * 刷新角平滑的处理
+     */
+    refreshCorner() {
+    }
+    /**
+     * 确定各个角的基准平滑类型
+     */
+    step1CornerBase() {
+        for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
+            for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
+                // 索引
+                let idx = y * this.imgWidthPaddingScaled + x;
+                let texturePixel = this.listXYToTexturePixel[idx];
+                // 确定平滑方向
+                for (let i = 0; i < TexturePixel.listCornerX.length; i++) {
+                    let listCornerXI = TexturePixel.listCornerX[i];
+                    for (let j = 0; j < TexturePixel.listCornerY.length; j++) {
+                        let listCornerYJ = TexturePixel.listCornerY[j];
+                        let corner = TexturePixel.getCorner(texturePixel, listCornerXI, listCornerYJ);
+                        corner.rsBoth = this.step1GetCornerTypeBoth(x, y, listCornerXI, listCornerYJ);
+                    }
+                    ;
+                }
+                ;
+            }
+            ;
+        }
+        ;
+    }
+    /**
      * 获取角的裁切类型
      * @param posCurrentX
      * @param posCurrentY
      */
-    getCornerTypeBoth(posCurrentX, posCurrentY, vecForwardX, vecForwardY) {
+    step1GetCornerTypeBoth(posCurrentX, posCurrentY, vecForwardX, vecForwardY) {
         let vecRightX = vecForwardY;
         let vecRightY = -vecForwardX;
-        let rsSideLeft = this.getCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
-        let rsSideRight = this.getCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
+        let rsSideLeft = this.step1GetCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
+        let rsSideRight = this.step1GetCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
         return rsSideLeft.onRight(rsSideRight);
     }
     /**
@@ -123,7 +172,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param posCurrentX
      * @param posCurrentY
      */
-    getCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
+    step1GetCornerTypeSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
         // 位置
         let posForwardX = posCurrentX + vecForwardX;
         let posForwardY = posCurrentY + vecForwardY * 2.0;
@@ -172,55 +221,6 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
             // 否则不用平滑
             else {
                 return CornerTypeRSSide.none;
-            }
-            ;
-        }
-        ;
-    }
-    /**
-     * 把附带内边距的图片绘制到一个帧缓冲区里面
-     * @param jWebgl
-     * @param fbo
-     */
-    drawImgPadding(jWebgl, fbo) {
-        jWebgl.useFbo(fbo);
-        jWebgl.clear();
-        jWebgl.mat4M.setIdentity();
-        jWebgl.mat4V.setLookAt(this.imgWidthPadding / 2, this.imgHeightPadding / 2, 1, this.imgWidthPadding / 2, this.imgHeightPadding / 2, 0, 0, 1, 0);
-        jWebgl.mat4P.setOrtho(-this.imgWidthPadding / 2, this.imgWidthPadding / 2, -this.imgHeightPadding / 2, this.imgHeightPadding / 2, 0, 2);
-        JWebglMathMatrix4.multiplayMat4List(jWebgl.mat4P, jWebgl.mat4V, jWebgl.mat4M, jWebgl.mat4Mvp);
-        // 图片
-        jWebgl.programImg.uMvp.fill(jWebgl.mat4Mvp);
-        jWebgl.programImg.uSampler.fillByImg(jWebgl.getImg(this.imgMachine.dataInst.dataOrigin));
-        let posImg = JWebglMathVector4.create(this.imgWidth / 2 + this.imgMachine.dataInst.paddingLeft, this.imgHeight / 2 + this.imgMachine.dataInst.paddingBottom, 0);
-        jWebgl.programImg.add(posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, this.imgWidth, this.imgHeight);
-        jWebgl.programImg.draw();
-    }
-    /**
-     * 刷新角平滑的处理
-     */
-    refreshCorner() {
-    }
-    /**
-     * 确定各个角的基准平滑类型
-     */
-    step1CornerBase() {
-        for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
-            for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
-                // 索引
-                let idx = y * this.imgWidthPaddingScaled + x;
-                let texturePixel = this.listXYToTexturePixel[idx];
-                // 确定平滑方向
-                for (let i = 0; i < TexturePixel.listCornerX.length; i++) {
-                    let listCornerXI = TexturePixel.listCornerX[i];
-                    for (let j = 0; j < TexturePixel.listCornerY.length; j++) {
-                        let listCornerYJ = TexturePixel.listCornerY[j];
-                        let corner = TexturePixel.getCorner(texturePixel, listCornerXI, listCornerYJ);
-                        corner.rsBoth = this.getCornerTypeBoth(x, y, listCornerXI, listCornerYJ);
-                    }
-                    ;
-                }
-                ;
             }
             ;
         }
@@ -276,9 +276,84 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         ;
     }
     /**
+     * 修复端点问题
+     */
+    step3Point() {
+        for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
+            for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
+                let rec = this.getTexturePixel(x, y);
+                let bothLT = rec.cornerLT.rsBoth;
+                let bothRT = rec.cornerRT.rsBoth;
+                let bothRB = rec.cornerRB.rsBoth;
+                let bothLB = rec.cornerLB.rsBoth;
+                // 考察上方向
+                if (this.step3CheckSurround(x, y, 0, 1)) {
+                    bothLT = CornerTypeRSBoth.forwardHalf;
+                    bothRT = CornerTypeRSBoth.forwardHalf;
+                }
+                ;
+                // 考察右方向
+                if (this.step3CheckSurround(x, y, 1, 0)) {
+                    bothRT = CornerTypeRSBoth.forwardHalf;
+                    bothRB = CornerTypeRSBoth.forwardHalf;
+                }
+                ;
+                // 考察下方向
+                if (this.step3CheckSurround(x, y, 0, -1)) {
+                    bothRB = CornerTypeRSBoth.forwardHalf;
+                    bothLB = CornerTypeRSBoth.forwardHalf;
+                }
+                ;
+                // 考察左方向
+                if (this.step3CheckSurround(x, y, -1, 0)) {
+                    bothLB = CornerTypeRSBoth.forwardHalf;
+                    bothLT = CornerTypeRSBoth.forwardHalf;
+                }
+                ;
+                rec.cornerLT.rsBoth = bothLT;
+                rec.cornerRT.rsBoth = bothRT;
+                rec.cornerRB.rsBoth = bothRB;
+                rec.cornerLB.rsBoth = bothLB;
+            }
+            ;
+        }
+        ;
+    }
+    /**
+     * 检查某个方向是否包围结构
+     * @param x
+     * @param y
+     * @param vecForwardX
+     * @param vecForwardY
+     */
+    step3CheckSurround(x, y, vecForwardX, vecForwardY) {
+        let vecRightX = vecForwardY;
+        let vecRightY = -vecForwardX;
+        let colorCurrent = this.getColor(x, y);
+        let colorForward = this.getColor(x + vecForwardX, y + vecForwardY);
+        let colorBack = this.getColor(x - vecForwardX, y - vecForwardY);
+        let colorRight = this.getColor(x + vecRightX, y + vecRightY);
+        let colorLeft = this.getColor(x - vecRightX, y - vecRightY);
+        let colorRB = this.getColor(x + vecRightX - vecForwardX, y + vecRightY - vecForwardY);
+        let colorLB = this.getColor(x - vecRightX - vecForwardX, y - vecRightY - vecForwardY);
+        if (colorCurrent == colorForward) {
+            return false;
+        }
+        ;
+        if (colorLeft != colorForward || colorRight != colorForward) {
+            return false;
+        }
+        ;
+        if (colorLB == colorCurrent || colorRB == colorCurrent) {
+            return false;
+        }
+        ;
+        return true;
+    }
+    /**
      * 补充一些平滑，以让形状看起来自然
      */
-    step3Addition() {
+    step4Addition() {
         for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
             for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
                 // 索引
@@ -290,7 +365,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
                     for (let j = 0; j < TexturePixel.listCornerY.length; j++) {
                         let listCornerYJ = TexturePixel.listCornerY[j];
                         let corner = TexturePixel.getCorner(texturePixel, listCornerXI, listCornerYJ);
-                        corner.rsBoth = this.getAdditionSmoothBoth(x, y, listCornerXI, listCornerYJ);
+                        corner.rsBoth = this.step4GetAdditionSmoothBoth(x, y, listCornerXI, listCornerYJ);
                     }
                     ;
                 }
@@ -307,7 +382,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param vecForwardX
      * @param vecForwardY
      */
-    getAdditionSmoothBoth(posCurrentX, posCurrentY, vecForwardX, vecForwardY) {
+    step4GetAdditionSmoothBoth(posCurrentX, posCurrentY, vecForwardX, vecForwardY) {
         let textureCurrent = this.getTexturePixel(posCurrentX, posCurrentY);
         let cornerCurrent = TexturePixel.getCorner(textureCurrent, vecForwardX, vecForwardY);
         // 本身前方已有平滑，那么不进行新增
@@ -318,18 +393,18 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         let vecRightX = vecForwardY;
         let vecRightY = -vecForwardX;
         // 左侧许可
-        let ableLeft = this.getAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
+        let ableLeft = this.step4GetAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
         // 右侧许可
-        let ableRight = this.getAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
+        let ableRight = this.step4GetAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
         // 其中一个不许可，都立即终止
         if (!ableLeft || !ableRight) {
             return cornerCurrent.rsBoth;
         }
         ;
         // 左侧需要平滑兼容
-        let smoothLeft = this.getAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
+        let smoothLeft = this.step4GetAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
         // 右侧需要平滑兼容
-        let smoothRight = this.getAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
+        let smoothRight = this.step4GetAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
         // 同时兼容俩边
         if (smoothLeft && smoothRight) {
             return CornerTypeRSBoth.forward;
@@ -358,7 +433,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param vecRightY
      * @returns
      */
-    getAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
+    step4GetAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
         // 当前位置的记录
         let textureCurrent = this.getTexturePixel(posCurrentX, posCurrentY);
         let cornerRightType = TexturePixel.getCorner(textureCurrent, vecRightX, vecRightY).rsBoth.namedByAxis(vecForwardX, vecForwardY, vecRightX, vecRightY);
@@ -397,7 +472,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param vecRightX
      * @param vecRightY
      */
-    getAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
+    step4GetAdditionSmoothSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY) {
         // 当前记录
         let textureCurrent = this.getTexturePixel(posCurrentX, posCurrentY);
         // 右上方位置

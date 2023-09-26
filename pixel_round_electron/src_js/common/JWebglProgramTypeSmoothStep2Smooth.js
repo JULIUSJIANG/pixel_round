@@ -83,13 +83,16 @@ void corner (inout vec4 colorMain, float mark, vec2 pos, vec2 dirForward) {
     vec2 posLeftForward = pos - dirRight + dirForward;
 
     if (match (mark, 1.0)) {
-        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dTickness1});
+        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dForward});
     };
     if (match (mark, 2.0) || match (mark, 4.0)) {
-        connect (colorMain, pos, posLeft, posRightForward, ${this.dTickness2});
+        connect (colorMain, pos, posLeft, posRightForward, ${this.dSide});
     };
     if (match (mark, 3.0) || match (mark, 4.0)) {
-        connect (colorMain, pos, posLeftForward, posRight, ${this.dTickness2});
+        connect (colorMain, pos, posLeftForward, posRight, ${this.dSide});
+    };
+    if (match (mark, 5.0)) {
+        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dForwardSmall});
     };
 }
 void main () {
@@ -157,10 +160,13 @@ void main () {
 }
 __decorate([
     JWebglProgram.define(JWEbglProgramDefine, `0.3535`)
-], JWebglProgramTypeSmoothStep2Smooth.prototype, "dTickness1", void 0);
+], JWebglProgramTypeSmoothStep2Smooth.prototype, "dForward", void 0);
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `0.2071`)
+], JWebglProgramTypeSmoothStep2Smooth.prototype, "dForwardSmall", void 0);
 __decorate([
     JWebglProgram.define(JWEbglProgramDefine, `0.2236`)
-], JWebglProgramTypeSmoothStep2Smooth.prototype, "dTickness2", void 0);
+], JWebglProgramTypeSmoothStep2Smooth.prototype, "dSide", void 0);
 __decorate([
     JWebglProgram.define(JWEbglProgramDefine, `16.0`)
 ], JWebglProgramTypeSmoothStep2Smooth.prototype, "dSmoothIdMax", void 0);

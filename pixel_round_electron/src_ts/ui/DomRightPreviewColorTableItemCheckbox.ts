@@ -21,7 +21,7 @@ class DomRightPreviewColorTableItemCheckbox extends ReactComponentExtend <DomRig
             MgrDomDefine.TAG_DIV,
             {
                 style: {
-                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                    // [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                     [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN,
                     [MgrDomDefine.STYLE_JUSTIFY_CONTENT]: MgrDomDefine.STYLE_JUSTIFY_CONTENT_SPACE_BETWEEN,
@@ -33,6 +33,7 @@ class DomRightPreviewColorTableItemCheckbox extends ReactComponentExtend <DomRig
                 MgrDomDefine.TAG_DIV,
                 {
                     style: {
+                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                         [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_SPACING,
                         [MgrDomDefine.STYLE_COLOR]: colorInstSelf.colorRel.str16,
                         [MgrDomDefine.STYLE_BACKGROUND_COLOR]: colorInstSelf.colorMain.str16,
@@ -47,7 +48,8 @@ class DomRightPreviewColorTableItemCheckbox extends ReactComponentExtend <DomRig
                 NodeModules.antd.Checkbox,
                 {
                     style: {
-
+                        [MgrDomDefine.STYLE_LINE_HEIGHT]: 0,
+                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                     },
                     checked: value,
                     onChange: (val) => {

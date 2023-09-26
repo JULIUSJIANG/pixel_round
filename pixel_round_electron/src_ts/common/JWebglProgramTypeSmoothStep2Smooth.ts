@@ -12,9 +12,11 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 export default class JWebglProgramTypeSmoothStep2Smooth extends JWebglProgram {
 
     @JWebglProgram.define (JWEbglProgramDefine, `0.3535`)
-    dTickness1: JWEbglProgramDefine;
+    dForward: JWEbglProgramDefine;
+    @JWebglProgram.define (JWEbglProgramDefine, `0.2071`)
+    dForwardSmall: JWEbglProgramDefine;
     @JWebglProgram.define (JWEbglProgramDefine, `0.2236`)
-    dTickness2: JWEbglProgramDefine;
+    dSide: JWEbglProgramDefine;
 
     @JWebglProgram.define (JWEbglProgramDefine, `16.0`)
     dSmoothIdMax: JWEbglProgramDefine;
@@ -98,13 +100,16 @@ void corner (inout vec4 colorMain, float mark, vec2 pos, vec2 dirForward) {
     vec2 posLeftForward = pos - dirRight + dirForward;
 
     if (match (mark, 1.0)) {
-        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dTickness1});
+        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dForward});
     };
     if (match (mark, 2.0) || match (mark, 4.0)) {
-        connect (colorMain, pos, posLeft, posRightForward, ${this.dTickness2});
+        connect (colorMain, pos, posLeft, posRightForward, ${this.dSide});
     };
     if (match (mark, 3.0) || match (mark, 4.0)) {
-        connect (colorMain, pos, posLeftForward, posRight, ${this.dTickness2});
+        connect (colorMain, pos, posLeftForward, posRight, ${this.dSide});
+    };
+    if (match (mark, 5.0)) {
+        connect (colorMain, pos, posLeftForward, posRightForward, ${this.dForwardSmall});
     };
 }
 void main () {

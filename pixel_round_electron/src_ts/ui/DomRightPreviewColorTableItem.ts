@@ -17,43 +17,25 @@ class DomRightPreviewColorTableItem extends ReactComponentExtend <DomRightPrevie
             MgrDomDefine.TAG_DIV,
             {
                 style: {
-                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                     [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN,
                     [MgrDomDefine.STYLE_JUSTIFY_CONTENT]: MgrDomDefine.STYLE_JUSTIFY_CONTENT_SPACE_BETWEEN,
                     [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
                 }
             },
-
             ReactComponentExtend.instantiateTag (
                 MgrDomDefine.TAG_DIV,
                 {
                     style: {
-                        [MgrDomDefine.STYLE_TEXT_ALIGN]: MgrDomDefine.STYLE_TEXT_ALIGN_CENTER,
-                        [MgrDomDefine.STYLE_VERTICAL_ALIGN]: MgrDomDefine.STYLE_VERTICAL_ALIGN_MIDDLE,
-                        [MgrDomDefine.STYLE_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
-                        [MgrDomDefine.STYLE_FONT_SIZE]: MgrDomDefine.STYLE_FONT_SIZE_14
-                    }
-                },
-
-                `平滑优先`,
-            ),
-            ReactComponentExtend.instantiateTag (
-                MgrDomDefine.TAG_DIV,
-                {
-                    style: {
-                        [MgrDomDefine.STYLE_MARGIN_TOP]: MgrDomDefine.CONFIG_TXT_SPACING,
-                        [MgrDomDefine.STYLE_PADDING_TOP]: MgrDomDefine.CONFIG_TXT_SPACING,
-                        [MgrDomDefine.STYLE_PADDING_BOTTOM]: MgrDomDefine.CONFIG_TXT_SPACING,
-                        [MgrDomDefine.STYLE_PADDING_LEFT]: `${MgrDomDefine.CONFIG_NUMBER_SPACING * 3}px`,
-                        [MgrDomDefine.STYLE_PADDING_RIGHT]: `${MgrDomDefine.CONFIG_NUMBER_SPACING * 3}px`,
+                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                        [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                        [MgrDomDefine.STYLE_PADDING]: `${MgrDomDefine.CONFIG_NUMBER_SPACING}px`,
                         [MgrDomDefine.STYLE_COLOR]: colorInst.colorRel.str16,
                         [MgrDomDefine.STYLE_BACKGROUND_COLOR]: colorInst.colorMain.str16,
                         [MgrDomDefine.STYLE_TEXT_ALIGN]: MgrDomDefine.STYLE_TEXT_ALIGN_CENTER,
                         [`border`]: `1px solid ${colorInst.colorRel.str16}`
                     }
                 },
-
                 `${this.props.idx}`
             )
         ));

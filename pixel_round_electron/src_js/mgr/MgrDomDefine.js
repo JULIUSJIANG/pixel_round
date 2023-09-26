@@ -12,6 +12,7 @@ class MgrDomDefine {
     MgrDomDefine.TAG_INPUT = "input";
     MgrDomDefine.TAG_IMG = "img";
     //【样式名以及具体值】
+    MgrDomDefine.STYLE_LINE_HEIGHT = "lineHeight";
     MgrDomDefine.STYLE_TEXT_ALIGN = "textAlign";
     MgrDomDefine.STYLE_TEXT_ALIGN_CENTER = "center";
     MgrDomDefine.STYLE_VERTICAL_ALIGN = "verticalAlign";

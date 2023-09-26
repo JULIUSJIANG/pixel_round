@@ -88,8 +88,10 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.drawImg (0, 0);
         dataSrc.step2FixX ();
         this.drawImg (1, 0);
-        dataSrc.step3Addition ();
+        dataSrc.step3Point ();
         this.drawImg (2, 0);
+        dataSrc.step4Addition ();
+        this.drawImg (0, 1);
 
         // 网格
         let cameraWidth = dataSrc.imgWidthPaddingScaled * HORIZON_COUNT;

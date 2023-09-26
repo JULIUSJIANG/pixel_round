@@ -85,5 +85,11 @@ CornerTypeRSBoth.vecCross = new JWebglMathVector4();
     CornerTypeRSBoth.bothSide = new CornerTypeRSBoth({
         id: 4
     });
+    /**
+     * 正前方半刀
+     */
+    CornerTypeRSBoth.forwardHalf = new CornerTypeRSBoth({
+        id: 5
+    });
 })(CornerTypeRSBoth || (CornerTypeRSBoth = {}));
 export default CornerTypeRSBoth;

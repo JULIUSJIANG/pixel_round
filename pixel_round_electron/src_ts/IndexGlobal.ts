@@ -28,7 +28,7 @@ namespace IndexGlobal {
     /**
      * 缩略图列数
      */
-    export const IMG_LIST_COLUMN_COUNT = 1;
+    export const IMG_LIST_COLUMN_COUNT = 2;
 
     /**
      * 纹素尺寸到屏幕尺寸的转换

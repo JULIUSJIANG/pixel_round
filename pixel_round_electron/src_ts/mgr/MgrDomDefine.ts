@@ -15,6 +15,8 @@ namespace MgrDomDefine {
     export const TAG_IMG = "img";
 
     //【样式名以及具体值】
+    export const STYLE_LINE_HEIGHT = "lineHeight";
+
     export const STYLE_TEXT_ALIGN = "textAlign";
     export const STYLE_TEXT_ALIGN_CENTER = "center";
 

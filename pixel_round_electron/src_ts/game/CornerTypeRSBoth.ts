@@ -105,6 +105,12 @@ namespace CornerTypeRSBoth {
     export const bothSide = new CornerTypeRSBoth ({
         id: 4
     });
+    /**
+     * 正前方半刀
+     */
+    export const forwardHalf = new CornerTypeRSBoth ({
+        id: 5
+    });
 }
 
 export default CornerTypeRSBoth;

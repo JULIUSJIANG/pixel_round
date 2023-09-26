@@ -10,11 +10,18 @@ class CornerTypeRSBoth {
      */
     id: number;
 
+    /**
+     * 视为平滑
+     */
+    isSmooth: boolean;
+
     constructor (args: {
-        id: number
+        id: number,
+        isSmooth: boolean,
     }) 
     {
         this.id = args.id;
+        this.isSmooth = args.isSmooth;
         CornerTypeRSBoth.mapCodeToRS.set (args.id, this);
     }
 
@@ -79,37 +86,43 @@ namespace CornerTypeRSBoth {
      * 无需处理
      */
     export const none = new CornerTypeRSBoth ({
-        id: 0
+        id: 0,
+        isSmooth: false,
     });
     /**
      * 正前方一刀
      */
     export const forward = new CornerTypeRSBoth ({
-        id: 1
+        id: 1,
+        isSmooth: true,
     });
     /**
      * 左边一刀
      */
     export const left = new CornerTypeRSBoth ({
-        id: 2
+        id: 2,
+        isSmooth: true,
     });
     /**
      * 右边一刀
      */
     export const right = new CornerTypeRSBoth ({
-        id: 3
+        id: 3,
+        isSmooth: true,
     });
     /**
      * 俩边都来一刀
      */
     export const bothSide = new CornerTypeRSBoth ({
-        id: 4
+        id: 4,
+        isSmooth: true,
     });
     /**
      * 正前方半刀
      */
     export const forwardHalf = new CornerTypeRSBoth ({
-        id: 5
+        id: 5,
+        isSmooth: false,
     });
 }
 

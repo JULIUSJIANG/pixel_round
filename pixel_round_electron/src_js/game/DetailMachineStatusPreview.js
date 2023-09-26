@@ -278,7 +278,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     /**
      * 修复端点问题，仅考虑 3 向邻近包围的情况
      */
-    step3PointV1() {
+    step3Point() {
         for (let x = 0; x < this.imgWidthPaddingScaled; x++) {
             for (let y = 0; y < this.imgHeightPaddingScaled; y++) {
                 let rec = this.getTexturePixel(x, y);
@@ -287,25 +287,25 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
                 let bothRB = rec.cornerRB.rsBoth;
                 let bothLB = rec.cornerLB.rsBoth;
                 // 考察上方向
-                if (this.step3CheckSurroundV1(x, y, 0, 1)) {
+                if (this.step3PointSurround(x, y, 0, 1)) {
                     bothLT = CornerTypeRSBoth.forwardHalf;
                     bothRT = CornerTypeRSBoth.forwardHalf;
                 }
                 ;
                 // 考察右方向
-                if (this.step3CheckSurroundV1(x, y, 1, 0)) {
+                if (this.step3PointSurround(x, y, 1, 0)) {
                     bothRT = CornerTypeRSBoth.forwardHalf;
                     bothRB = CornerTypeRSBoth.forwardHalf;
                 }
                 ;
                 // 考察下方向
-                if (this.step3CheckSurroundV1(x, y, 0, -1)) {
+                if (this.step3PointSurround(x, y, 0, -1)) {
                     bothRB = CornerTypeRSBoth.forwardHalf;
                     bothLB = CornerTypeRSBoth.forwardHalf;
                 }
                 ;
                 // 考察左方向
-                if (this.step3CheckSurroundV1(x, y, -1, 0)) {
+                if (this.step3PointSurround(x, y, -1, 0)) {
                     bothLB = CornerTypeRSBoth.forwardHalf;
                     bothLT = CornerTypeRSBoth.forwardHalf;
                 }
@@ -326,27 +326,39 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
      * @param vecForwardX
      * @param vecForwardY
      */
-    step3CheckSurroundV1(x, y, vecForwardX, vecForwardY) {
+    step3PointSurround(x, y, vecForwardX, vecForwardY) {
         let vecRightX = vecForwardY;
         let vecRightY = -vecForwardX;
+        let ableLeft = this.step3PointSurroundSide(x, y, vecForwardX, vecForwardY, vecRightX, vecRightY);
+        let ableRight = this.step3PointSurroundSide(x, y, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
+        return ableLeft && ableRight;
+    }
+    /**
+     * 检查某个方向是否包围结构
+     * @param x
+     * @param y
+     * @param vecForwardX
+     * @param vecForwardY
+     */
+    step3PointSurroundSide(x, y, vecForwardX, vecForwardY, vecRightX, vecRightY) {
+        let recCurrent = this.getTexturePixel(x, y);
+        if (!TexturePixel.getCorner(recCurrent, vecForwardX - vecRightX, vecForwardY - vecRightY).rsBoth.isSmooth) {
+            return false;
+        }
+        ;
         let colorCurrent = this.getColor(x, y);
         let colorForward = this.getColor(x + vecForwardX, y + vecForwardY);
-        let colorBack = this.getColor(x - vecForwardX, y - vecForwardY);
-        let colorRight = this.getColor(x + vecRightX, y + vecRightY);
         let colorLeft = this.getColor(x - vecRightX, y - vecRightY);
-        let colorRB = this.getColor(x + vecRightX - vecForwardX, y + vecRightY - vecForwardY);
-        let colorRF = this.getColor(x + vecRightX + vecForwardX, y + vecRightY + vecForwardY);
         let colorLB = this.getColor(x - vecRightX - vecForwardX, y - vecRightY - vecForwardY);
-        let colorLF = this.getColor(x - vecRightX + vecForwardX, y - vecRightY + vecForwardY);
         if (colorCurrent == colorForward) {
             return false;
         }
         ;
-        if (colorLeft != colorForward || colorRight != colorForward) {
+        if (colorLeft != colorForward) {
             return false;
         }
         ;
-        if (colorLB == colorCurrent || colorRB == colorCurrent) {
+        if (colorCurrent == colorLB) {
             return false;
         }
         ;

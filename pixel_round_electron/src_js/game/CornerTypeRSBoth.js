@@ -5,6 +5,7 @@ import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 class CornerTypeRSBoth {
     constructor(args) {
         this.id = args.id;
+        this.isSmooth = args.isSmooth;
         CornerTypeRSBoth.mapCodeToRS.set(args.id, this);
     }
     /**
@@ -59,37 +60,43 @@ CornerTypeRSBoth.vecCross = new JWebglMathVector4();
      * 无需处理
      */
     CornerTypeRSBoth.none = new CornerTypeRSBoth({
-        id: 0
+        id: 0,
+        isSmooth: false,
     });
     /**
      * 正前方一刀
      */
     CornerTypeRSBoth.forward = new CornerTypeRSBoth({
-        id: 1
+        id: 1,
+        isSmooth: true,
     });
     /**
      * 左边一刀
      */
     CornerTypeRSBoth.left = new CornerTypeRSBoth({
-        id: 2
+        id: 2,
+        isSmooth: true,
     });
     /**
      * 右边一刀
      */
     CornerTypeRSBoth.right = new CornerTypeRSBoth({
-        id: 3
+        id: 3,
+        isSmooth: true,
     });
     /**
      * 俩边都来一刀
      */
     CornerTypeRSBoth.bothSide = new CornerTypeRSBoth({
-        id: 4
+        id: 4,
+        isSmooth: true,
     });
     /**
      * 正前方半刀
      */
     CornerTypeRSBoth.forwardHalf = new CornerTypeRSBoth({
-        id: 5
+        id: 5,
+        isSmooth: false,
     });
 })(CornerTypeRSBoth || (CornerTypeRSBoth = {}));
 export default CornerTypeRSBoth;

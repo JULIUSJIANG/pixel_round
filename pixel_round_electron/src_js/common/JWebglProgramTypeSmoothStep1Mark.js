@@ -52,7 +52,7 @@ void main() {
     }
 }
 __decorate([
-    JWebglProgram.define(JWEbglProgramDefine, `4.0`)
+    JWebglProgram.define(JWEbglProgramDefine, `16.0`)
 ], JWebglProgramTypeSmoothStep1Mark.prototype, "dSmoothIdMax", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformMat4)

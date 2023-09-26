@@ -422,7 +422,8 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     getAdditionSmoothBoth (posCurrentX: number, posCurrentY: number, vecForwardX: number, vecForwardY: number) {
         let textureCurrent = this.getTexturePixel (posCurrentX, posCurrentY);
         let cornerCurrent = TexturePixel.getCorner (textureCurrent, vecForwardX, vecForwardY);
-        // 本身已有平滑认为，那么不进行新增
+
+        // 本身前方已有平滑，那么不进行新增
         if (cornerCurrent.rsBoth != CornerTypeRSBoth.none) {
             return cornerCurrent.rsBoth;
         };
@@ -589,6 +590,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         // 右上方在边界出产生了一个点，那么试着平滑它
         let rfOriginSmoothBoth = TexturePixel.getCorner (textureRF, - vecForwardX, - vecForwardY).rsBoth;
         let rfAxisSmoothBoth = rfOriginSmoothBoth.namedByAxis (vecForwardX, vecForwardY, vecRightX, vecRightY);
+
         if (rfAxisSmoothBoth == CornerTypeRSBoth.forward || rfAxisSmoothBoth == CornerTypeRSBoth.left) {
             return true;
         };

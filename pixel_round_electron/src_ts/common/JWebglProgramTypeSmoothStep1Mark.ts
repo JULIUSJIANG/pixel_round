@@ -6,7 +6,7 @@ import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramVaryingVec4 from "./JWebglProgramVaryingVec4.js";
 
 export default class JWebglProgramTypeSmoothStep1Mark extends JWebglProgram {
-    @JWebglProgram.define (JWEbglProgramDefine, `4.0`)
+    @JWebglProgram.define (JWEbglProgramDefine, `16.0`)
     dSmoothIdMax: JWEbglProgramDefine;
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)

@@ -16,7 +16,7 @@ export default class JWebglProgramTypeSmoothStep2Smooth extends JWebglProgram {
     @JWebglProgram.define (JWEbglProgramDefine, `0.2236`)
     dTickness2: JWEbglProgramDefine;
 
-    @JWebglProgram.define (JWEbglProgramDefine, `4.0`)
+    @JWebglProgram.define (JWEbglProgramDefine, `16.0`)
     dSmoothIdMax: JWEbglProgramDefine;
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)

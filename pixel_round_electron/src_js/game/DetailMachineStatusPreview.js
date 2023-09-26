@@ -310,7 +310,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     getAdditionSmoothBoth(posCurrentX, posCurrentY, vecForwardX, vecForwardY) {
         let textureCurrent = this.getTexturePixel(posCurrentX, posCurrentY);
         let cornerCurrent = TexturePixel.getCorner(textureCurrent, vecForwardX, vecForwardY);
-        // 本身已有平滑认为，那么不进行新增
+        // 本身前方已有平滑，那么不进行新增
         if (cornerCurrent.rsBoth != CornerTypeRSBoth.none) {
             return cornerCurrent.rsBoth;
         }
@@ -321,10 +321,6 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         let ableLeft = this.getAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, vecRightX, vecRightY);
         // 右侧许可
         let ableRight = this.getAdditionSmoothAbleSide(posCurrentX, posCurrentY, vecForwardX, vecForwardY, -vecRightX, -vecRightY);
-        if (posCurrentX == 3 && posCurrentY == 14 && vecForwardX == 1 && vecForwardY == -1) {
-            console.log(`ableLeft[${ableLeft}] ableRight[${ableRight}]`);
-        }
-        ;
         // 其中一个不许可，都立即终止
         if (!ableLeft || !ableRight) {
             return cornerCurrent.rsBoth;

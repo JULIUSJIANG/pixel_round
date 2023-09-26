@@ -162,7 +162,7 @@ __decorate([
     JWebglProgram.define(JWEbglProgramDefine, `0.2236`)
 ], JWebglProgramTypeSmoothStep2Smooth.prototype, "dTickness2", void 0);
 __decorate([
-    JWebglProgram.define(JWEbglProgramDefine, `4.0`)
+    JWebglProgram.define(JWEbglProgramDefine, `16.0`)
 ], JWebglProgramTypeSmoothStep2Smooth.prototype, "dSmoothIdMax", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformMat4)

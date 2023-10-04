@@ -1,14 +1,11 @@
 import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
-import JWebglColor from "../common/JWebglColor.js";
-import JWebglEnum from "../common/JWebglEnum.js";
-import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-const HORIZON_COUNT = 3;
-const VERTICAL_COUNT = 2;
+const HORIZON_COUNT = 1;
+const VERTICAL_COUNT = 1;
 /**
  * 线的深度
  */
@@ -49,143 +46,15 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         }
         ;
         // 绘制 fbo
-        if (this.fboImg == null || this.fboImg.width != dataSrc.imgWidthPaddingScaled || this.fboImg.height != dataSrc.imgHeightPaddingScaled) {
-            this.fboImg = this.jWebgl.getFbo(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
-            this.fboCorner = this.jWebgl.getFbo(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
-            this.fboColor = this.jWebgl.getFbo(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
+        if (this.fboImg == null || this.fboImg.width != dataSrc.textureWidth || this.fboImg.height != dataSrc.textureHeight) {
+            this.fboImg = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
+            this.fboCorner = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
+            this.fboColor = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
         }
         ;
         // 得到简略图
         dataSrc.drawImgPadding(this.jWebgl, this.fboImg);
         this.jWebgl.fillFbo(null, this.fboImg);
-        // 清除一遍画布
-        this.jWebgl.useFbo(null);
-        this.jWebgl.clear();
-        // 绘制图片
-        dataSrc.step1CornerBase();
-        this.drawImg(0, 0);
-        dataSrc.step2FixX();
-        this.drawImg(1, 0);
-        dataSrc.step3Point();
-        this.drawImg(2, 0);
-        dataSrc.step4Rect();
-        this.drawImg(0, 1);
-        dataSrc.step5Addition();
-        this.drawImg(1, 1);
-        dataSrc.step6ColorSetting();
-        this.drawImg(2, 1);
-        // 网格
-        let cameraWidth = dataSrc.imgWidthPaddingScaled * HORIZON_COUNT;
-        let cameraHeight = dataSrc.imgHeightPaddingScaled * VERTICAL_COUNT;
-        this.jWebgl.mat4V.setLookAt(cameraWidth / 2, cameraHeight / 2, 1, cameraWidth / 2, cameraHeight / 2, 0, 0, 1, 0);
-        this.jWebgl.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
-        this.jWebgl.refreshMat4Mvp();
-        this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
-        let colorGrid = JWebglColor.COLOR_BLACK;
-        let count = 0;
-        for (let i = 0; i <= cameraWidth; i++) {
-            this.posFrom.elements[0] = i;
-            this.posFrom.elements[1] = 0;
-            this.posTo.elements[0] = i;
-            this.posTo.elements[1] = cameraHeight;
-            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
-            count++;
-            if (count < 10) {
-                count = 0;
-                this.jWebgl.programLine.draw();
-            }
-            ;
-        }
-        ;
-        for (let i = 0; i <= cameraHeight; i++) {
-            this.posFrom.elements[0] = 0;
-            this.posFrom.elements[1] = i;
-            this.posTo.elements[0] = cameraWidth;
-            this.posTo.elements[1] = i;
-            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
-            count++;
-            if (count < 10) {
-                count = 0;
-                this.jWebgl.programLine.draw();
-            }
-            ;
-        }
-        ;
-        this.jWebgl.programLine.draw();
-    }
-    /**
-     * 绘制图片
-     * @param x
-     * @param y
-     */
-    drawImg(x, y) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
-        this.jWebgl.mat4V.setLookAt(dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 1, dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0, 0, 1, 0);
-        this.jWebgl.mat4P.setOrtho(-dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgWidthPaddingScaled / 2, -dataSrc.imgHeightPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0, 2);
-        JWebglMathMatrix4.multiplayMat4List(this.jWebgl.mat4P, this.jWebgl.mat4V, this.jWebgl.mat4M, this.jWebgl.mat4Mvp);
-        // 使用标记信息生成纹理
-        this.jWebgl.useFbo(this.fboCorner);
-        this.jWebgl.clear();
-        this.jWebgl.programSmoothStep1Mark.uMvp.fill(this.jWebgl.mat4Mvp);
-        // 绘制点有数量限制，这里让程序每一定数量的点绘制一次
-        let pointCount = 0;
-        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
-        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
-            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
-                let idx = y * dataSrc.imgWidthPaddingScaled + x;
-                let pixel = IndexGlobal.inst.detailMachine.statusPreview.listXYToTexturePixel[idx];
-                this.jWebgl.programSmoothStep1Mark.add(x + 1, y + 1, 0, pixel.cornerLT.rsBoth.id, pixel.cornerRT.rsBoth.id, pixel.cornerRB.rsBoth.id, pixel.cornerLB.rsBoth.id);
-                pointCount++;
-                if (10 < pointCount) {
-                    pointCount = 0;
-                    this.jWebgl.programSmoothStep1Mark.draw();
-                }
-                ;
-            }
-            ;
-        }
-        ;
-        this.jWebgl.programSmoothStep1Mark.draw();
-        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
-        // 使用采样信息生成纹理
-        this.jWebgl.useFbo(this.fboColor);
-        this.jWebgl.clear();
-        this.jWebgl.programSmoothStep1Mark.uMvp.fill(this.jWebgl.mat4Mvp);
-        pointCount = 0;
-        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
-        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
-            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
-                let idx = y * dataSrc.imgWidthPaddingScaled + x;
-                let pixel = IndexGlobal.inst.detailMachine.statusPreview.listXYToTexturePixel[idx];
-                this.jWebgl.programSmoothStep1Mark.add(x + 1, y + 1, 0, pixel.cornerLT.color, pixel.cornerRT.color, pixel.cornerRB.color, pixel.cornerLB.color);
-                pointCount++;
-                if (10 < pointCount) {
-                    pointCount = 0;
-                    this.jWebgl.programSmoothStep1Mark.draw();
-                }
-                ;
-            }
-            ;
-        }
-        ;
-        this.jWebgl.programSmoothStep1Mark.draw();
-        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
-        // 绘制最终内容
-        let cameraWidth = dataSrc.imgWidthPaddingScaled * HORIZON_COUNT;
-        let cameraHeight = dataSrc.imgHeightPaddingScaled * VERTICAL_COUNT;
-        this.jWebgl.useFbo(null);
-        this.jWebgl.mat4V.setLookAt(cameraWidth / 2, cameraHeight / 2, 1, cameraWidth / 2, cameraHeight / 2, 0, 0, 1, 0);
-        this.jWebgl.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
-        this.jWebgl.refreshMat4Mvp();
-        this.jWebgl.programSmoothStep2Smooth.uMvp.fill(this.jWebgl.mat4Mvp);
-        this.jWebgl.programSmoothStep2Smooth.uTextureMain.fillByFbo(this.fboImg);
-        this.jWebgl.programSmoothStep2Smooth.uTextureMark.fillByFbo(this.fboCorner);
-        this.jWebgl.programSmoothStep2Smooth.uTextureColor.fillByFbo(this.fboColor);
-        this.jWebgl.programSmoothStep2Smooth.uTextureSize.fill(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
-        this.posImg.elements[0] = dataSrc.imgWidthPaddingScaled * (0.5 + x);
-        this.posImg.elements[1] = dataSrc.imgHeightPaddingScaled * (VERTICAL_COUNT - 1 + 0.5 - y);
-        this.jWebgl.programSmoothStep2Smooth.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
-        this.jWebgl.programSmoothStep2Smooth.draw();
     }
     render() {
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
@@ -215,8 +84,8 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         // 滚动的列表
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * HORIZON_COUNT}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * VERTICAL_COUNT}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * HORIZON_COUNT}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * VERTICAL_COUNT}px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -229,11 +98,11 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvasWebglRef,
-            width: dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * HORIZON_COUNT * IndexGlobal.ANTINA,
-            height: dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * VERTICAL_COUNT * IndexGlobal.ANTINA,
+            width: dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * HORIZON_COUNT * IndexGlobal.ANTINA,
+            height: dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * VERTICAL_COUNT * IndexGlobal.ANTINA,
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * HORIZON_COUNT}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * VERTICAL_COUNT}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * HORIZON_COUNT}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * VERTICAL_COUNT}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
         })))));

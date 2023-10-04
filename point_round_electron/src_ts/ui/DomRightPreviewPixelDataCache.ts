@@ -6,11 +6,7 @@ import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
-import CornerTypeRSBoth from "../game/CornerTypeRSBoth.js";
 import TextureColor from "../game/TextureColor.js";
-import TextureGroup from "../game/TextureGroup.js";
-import TexturePixel from "../game/TexturePixel.js";
-import MgrData from "../mgr/MgrData.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
 class DomRightPreviewPixelDataCache extends ReactComponentExtend <number> {
@@ -52,8 +48,8 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend <number> {
         };
         
         // 绘制 fbo
-        if (this.fbo == null || this.fbo.width != dataSrc.imgWidthPaddingScaled || this.fbo.height != dataSrc.imgHeightPaddingScaled) {
-            this.fbo = this.jWebgl.getFbo (dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
+        if (this.fbo == null || this.fbo.width != dataSrc.textureWidth || this.fbo.height != dataSrc.textureHeight) {
+            this.fbo = this.jWebgl.getFbo (dataSrc.textureWidth, dataSrc.textureHeight);
         };
         
         // 得到简略图
@@ -68,54 +64,40 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend <number> {
         };
         dataSrc.listColor.length = 0;
 
-        // 回收分块记录
-        for (let i = 0; i < dataSrc.listTextureGroup.length; i++) {
-            let listImgPixelGroupAllI = dataSrc.listTextureGroup [i];
-            objectPool.push (listImgPixelGroupAllI);
-        };
-        dataSrc.listTextureGroup.length = 0;
-
-        // 回收像素对象
-        for (let i = 0; i < dataSrc.listXYToTexturePixel.length; i++) {
-            let listXYToTexturePixelI = dataSrc.listXYToTexturePixel [i];
-            objectPool.push (listXYToTexturePixelI);
-        };
-        dataSrc.listXYToTexturePixel.length = 0;
-
-        dataSrc.binXYToRgbaSize = dataSrc.imgWidthPaddingScaled * dataSrc.imgHeightPaddingScaled * 4;
-        let binRgbaLength = dataSrc.binXYToRgba.length;
+        dataSrc.binXYToRgbaUintSize = dataSrc.textureWidth * dataSrc.textureHeight * 4;
+        let binRgbaLength = dataSrc.binXYToRgbaUint.length;
         // 尺寸不够，扩容
-        if (binRgbaLength < dataSrc.binXYToRgbaSize) {
-            while (binRgbaLength < dataSrc.binXYToRgbaSize) {
+        if (binRgbaLength < dataSrc.binXYToRgbaUintSize) {
+            while (binRgbaLength < dataSrc.binXYToRgbaUintSize) {
                 binRgbaLength *= 2;
             };
-            dataSrc.binXYToRgba = new Uint8Array (binRgbaLength);
+            dataSrc.binXYToRgbaUint = new Uint8Array (binRgbaLength);
         };
-        this.jWebgl.canvasWebglCtx.readPixels (0, 0, dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, dataSrc.binXYToRgba);
+        this.jWebgl.canvasWebglCtx.readPixels (0, 0, dataSrc.textureWidth, dataSrc.textureHeight, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, dataSrc.binXYToRgbaUint);
 
-        dataSrc.binXYToColorSize = dataSrc.imgWidthPaddingScaled * dataSrc.imgHeightPaddingScaled;
-        let binColorLength = dataSrc.binXYToColor.length;
+        dataSrc.binXYToColorUintSize = dataSrc.textureWidth * dataSrc.textureHeight;
+        let binColorLength = dataSrc.binXYToColorUint.length;
         // 尺寸不够，扩容
-        if (binColorLength < dataSrc.binXYToColorSize) {
-            while (binColorLength < dataSrc.binXYToColorSize) {
+        if (binColorLength < dataSrc.binXYToColorUintSize) {
+            while (binColorLength < dataSrc.binXYToColorUintSize) {
                 binColorLength *= 2;
             };
-            dataSrc.binXYToColor = new Uint32Array (binColorLength);
+            dataSrc.binXYToColorUint = new Uint32Array (binColorLength);
         };
 
         // 合并颜色值到一个数上面去
-        for (let i = 0; i < dataSrc.binXYToColorSize; i++) {
-            dataSrc.binXYToColor [i] = 0;
+        for (let i = 0; i < dataSrc.binXYToColorUintSize; i++) {
+            dataSrc.binXYToColorUint [i] = 0;
             for (let j = 0; j < 4; j++) {
-                dataSrc.binXYToColor [i] <<= 8;
-                dataSrc.binXYToColor [i] += dataSrc.binXYToRgba [i * 4 + j];
+                dataSrc.binXYToColorUint [i] <<= 8;
+                dataSrc.binXYToColorUint [i] += dataSrc.binXYToRgbaUint [i * 4 + j];
             };
         };
 
         // 颜色去重，保留下来的颜色都各不一样
         this._setColor.clear ();
-        for (let i = 0; i < dataSrc.binXYToColorSize; i++) {
-            let binColorI = dataSrc.binXYToColor [i];
+        for (let i = 0; i < dataSrc.binXYToColorUintSize; i++) {
+            let binColorI = dataSrc.binXYToColorUint [i];
             this._setColor.add (binColorI);
         };
 
@@ -180,109 +162,8 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend <number> {
             dataSrc.mapIdToColor.set (listColorI.id, listColorI);
         };
 
-        // 更新分块
-        dataSrc.listXYToTextureGroup.length = dataSrc.binXYToColorSize;
-        dataSrc.listXYToTextureGroup.fill (null);
-        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
-            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
-                // 索引
-                let idx = y * dataSrc.imgWidthPaddingScaled + x;
-                // 当前组
-                let currentGroup = dataSrc.listXYToTextureGroup [idx];
-                // 已有当前组，忽略
-                if (currentGroup != null) {
-                    continue;
-                };
-                // 为该块创建颜色组，并且开始蔓延
-                let color = dataSrc.binXYToColor [idx];
-                currentGroup = TextureGroup.create (color);
-                dataSrc.listTextureGroup.push (currentGroup);
-                this.paintBucket (x, y, currentGroup);
-            };
-        };
-
-        // 分块数据的缓存
-        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
-            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
-                // 索引
-                let idx = y * dataSrc.imgWidthPaddingScaled + x;
-                // 当前组
-                let currentGroup = dataSrc.listXYToTextureGroup [idx];
-                currentGroup.addPos (x, y);
-            };
-        };
-        for (let i = 0; i < dataSrc.listTextureGroup.length; i++) {
-            let listImgPixelGroupAllI = dataSrc.listTextureGroup [i];
-            listImgPixelGroupAllI.cache ();
-        };
-        dataSrc.listTextureGroup.sort ((a, b) => {
-            return a.areaVolume - b.areaVolume;
-        });
-        dataSrc.listTextureGroupNotEmpty.length = 0;
-        for (let i = 0; i < dataSrc.listTextureGroup.length; i++) {
-            let listImgPixelGroupAllI = dataSrc.listTextureGroup [i];
-            if (listImgPixelGroupAllI.colorObj.data255 [3] == 0) {
-                continue;
-            };
-            dataSrc.listTextureGroupNotEmpty.push (listImgPixelGroupAllI);
-        };
-
-        // 填充像素记录
-        dataSrc.listXYToTexturePixel.length = dataSrc.binXYToColorSize;
-        dataSrc.listXYToTexturePixel.fill (null);
-        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
-            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
-                // 索引
-                let idx = y * dataSrc.imgWidthPaddingScaled + x;
-                // 像素记录
-                let texturePixel = TexturePixel.create (dataSrc, x, y);
-                dataSrc.listXYToTexturePixel [idx] = texturePixel;
-            };
-        };
         // 告知简略图已经绘制完毕
         dataSrc.imgMachine.currStatus.onCached ();
-    }
-
-    private _analyseListOffset = [-1, 0, 1];
-
-    /**
-     * 进行油漆桶解析
-     * @param x 油漆桶位置 x
-     * @param y 油漆桶位置 y
-     * @param colorTarget 油漆桶蔓延的目标颜色
-     * @returns 
-     */
-    paintBucket (x: number, y: number, colorGroup: TextureGroup) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
-        // x 越界，忽略
-        if (x < 0 || dataSrc.imgWidthPaddingScaled <= x) {
-            return;
-        };
-        // y 越界，忽略
-        if (y < 0 || dataSrc.imgHeightPaddingScaled <= y) {
-            return;
-        };
-        // 内存索引
-        let idx = y * dataSrc.imgWidthPaddingScaled + x;
-        // 已被其他油漆桶蔓延
-        if (dataSrc.listXYToTextureGroup [idx] != null) {
-            return;
-        };
-        // 该位置的颜色不对的话，忽略
-        let color = dataSrc.binXYToColor [y * dataSrc.imgWidthPaddingScaled + x];
-        if (color != colorGroup.colorId) {
-            return;
-        };
-        // 否则进行组标记
-        dataSrc.listXYToTextureGroup [idx] = colorGroup;
-        // 尝试对临近的 9 格进行蔓延
-        for (let i = 0; i < this._analyseListOffset.length; i++) {
-            let analyseListOffsetI = this._analyseListOffset [i];
-            for (let j = 0; j < this._analyseListOffset.length; j++) {
-                let analyseListOffsetJ = this._analyseListOffset [j];
-                this.paintBucket (x + analyseListOffsetI, y + analyseListOffsetJ, colorGroup);
-            };
-        };
     }
 
     /**
@@ -343,8 +224,8 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend <number> {
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled}px`,
-                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled}px`,
+                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth}px`,
+                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight}px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                         }
                     },
@@ -365,11 +246,11 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend <number> {
                             MgrDomDefine.TAG_CANVAS,
                             {
                                 ref: this.canvasWebglRef,
-                                width: dataSrc.imgWidthPaddingScaled,
-                                height: dataSrc.imgHeightPaddingScaled,
+                                width: dataSrc.textureWidth,
+                                height: dataSrc.textureHeight,
                                 style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled}px`,
+                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth}px`,
+                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight}px`,
                                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                 }
                             }

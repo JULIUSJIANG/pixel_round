@@ -254,8 +254,8 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> 
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                         }
                     },
@@ -276,11 +276,11 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> 
                             MgrDomDefine.TAG_CANVAS,
                             {
                                 ref: this.canvasWebglRef,
-                                width: dataSrc.imgWidthAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
-                                height: dataSrc.imgHeightAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+                                width: dataSrc.imgWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+                                height: dataSrc.imgHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
                                 style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                 }
                             }

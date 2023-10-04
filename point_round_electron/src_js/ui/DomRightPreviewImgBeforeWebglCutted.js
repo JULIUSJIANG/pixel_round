@@ -41,8 +41,8 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend {
         }
         ;
         // 初始化 fbo
-        if (this.fbo == null || this.fbo.width != dataSrc.imgWidthPaddingScaled || this.fbo.height != dataSrc.imgHeightPaddingScaled) {
-            this.fbo = this.jWebgl.getFbo(dataSrc.imgWidthPaddingScaled, dataSrc.imgHeightPaddingScaled);
+        if (this.fbo == null || this.fbo.width != dataSrc.textureWidth || this.fbo.height != dataSrc.textureHeight) {
+            this.fbo = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
         }
         ;
         // 得到简略图
@@ -50,23 +50,23 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend {
         // 把 fbo 绘制到屏幕
         this.jWebgl.fillFbo(null, this.fbo);
         // 网格
-        this.jWebgl.mat4V.setLookAt(dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 1, dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0, 0, 1, 0);
-        this.jWebgl.mat4P.setOrtho(-dataSrc.imgWidthPaddingScaled / 2, dataSrc.imgWidthPaddingScaled / 2, -dataSrc.imgHeightPaddingScaled / 2, dataSrc.imgHeightPaddingScaled / 2, 0, 2);
+        this.jWebgl.mat4V.setLookAt(dataSrc.textureWidth / 2, dataSrc.textureHeight / 2, 1, dataSrc.textureWidth / 2, dataSrc.textureHeight / 2, 0, 0, 1, 0);
+        this.jWebgl.mat4P.setOrtho(-dataSrc.textureWidth / 2, dataSrc.textureWidth / 2, -dataSrc.textureHeight / 2, dataSrc.textureHeight / 2, 0, 2);
         this.jWebgl.refreshMat4Mvp();
         this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
         let colorGrid = JWebglColor.COLOR_BLACK;
-        for (let i = 0; i <= dataSrc.imgWidthPaddingScaled; i++) {
+        for (let i = 0; i <= dataSrc.textureWidth; i++) {
             this.posFrom.elements[0] = i;
             this.posFrom.elements[1] = 0;
             this.posTo.elements[0] = i;
-            this.posTo.elements[1] = dataSrc.imgHeightPaddingScaled;
+            this.posTo.elements[1] = dataSrc.textureHeight;
             this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
         }
         ;
-        for (let i = 0; i <= dataSrc.imgHeightPaddingScaled; i++) {
+        for (let i = 0; i <= dataSrc.textureHeight; i++) {
             this.posFrom.elements[0] = 0;
             this.posFrom.elements[1] = i;
-            this.posTo.elements[0] = dataSrc.imgWidthPaddingScaled;
+            this.posTo.elements[0] = dataSrc.textureWidth;
             this.posTo.elements[1] = i;
             this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
         }
@@ -76,16 +76,16 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend {
         this.canvas2dCtx.font = `10px Microsoft YaHei`;
         this.canvas2dCtx.textAlign = "center";
         this.canvas2dCtx.textBaseline = `middle`;
-        for (let x = 0; x < dataSrc.imgWidthPaddingScaled; x++) {
-            for (let y = 0; y < dataSrc.imgHeightPaddingScaled; y++) {
-                let colorId = dataSrc.binXYToColor[y * dataSrc.imgWidthPaddingScaled + x];
+        for (let x = 0; x < dataSrc.textureWidth; x++) {
+            for (let y = 0; y < dataSrc.textureHeight; y++) {
+                let colorId = dataSrc.binXYToColorUint[y * dataSrc.textureWidth + x];
                 let colorInst = dataSrc.mapIdToColor.get(colorId);
                 if (colorInst == null) {
                     continue;
                 }
                 ;
                 this.canvas2dCtx.fillStyle = colorInst.colorRel.str2dText;
-                this.canvas2dCtx.fillText(`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, ((dataSrc.imgHeightPaddingScaled - y) - 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
+                this.canvas2dCtx.fillText(`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, ((dataSrc.textureHeight - y) - 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
             }
             ;
         }
@@ -119,8 +119,8 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend {
         // 滚动的列表
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -133,11 +133,11 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend {
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvasWebglRef,
-            width: dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
-            height: dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+            width: dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+            height: dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
         })), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -150,11 +150,11 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend {
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvas2dRef,
-            width: dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN,
-            height: dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN,
+            width: dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN,
+            height: dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN,
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightPaddingScaled * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
         })))));

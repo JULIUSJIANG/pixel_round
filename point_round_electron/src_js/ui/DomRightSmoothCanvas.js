@@ -2,7 +2,6 @@ import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
-import JWebglEnum from "../common/JWebglEnum.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
@@ -69,8 +68,6 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
             return;
         }
         ;
-        // 混合方式为直接覆盖
-        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ZERO);
         // 绘制 fbo
         if (this.fboTexture == null || this.fboTexture.width != dataSrc.textureWidth || this.fboTexture.height != dataSrc.textureHeight) {
             this.fboTexture = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
@@ -78,12 +75,16 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
             this.fboCornerData = this.jWebgl.getFbo(dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
         }
         ;
+        // 清除所有
+        this.jWebgl.useFbo(null);
+        this.jWebgl.clear();
         // 得到简略图
         dataSrc.drawImgPadding(this.jWebgl, this.fboTexture);
         // 原图
         this.drawFbo(this.fboTexture, 0, 0);
         // 各个角的数据
         this.jWebgl.useFbo(this.fboCornerData);
+        this.jWebgl.clear();
         this.jWebgl.programSmoothStep1CornerData.uMvp.fill(this.mat4Mvp);
         this.jWebgl.programSmoothStep1CornerData.uTexture.fillByFbo(this.fboTexture);
         this.jWebgl.programSmoothStep1CornerData.uTextureSize.fill(dataSrc.textureWidth, dataSrc.textureHeight);
@@ -91,10 +92,19 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.jWebgl.programSmoothStep1CornerData.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
         this.jWebgl.programSmoothStep1CornerData.draw();
         this.drawFbo(this.fboCornerData, 1, 0);
+        // 最终结果
+        this.jWebgl.useFbo(this.fboDisplay);
+        this.jWebgl.clear();
+        this.jWebgl.programSmoothStep2Smooth.uMvp.fill(this.mat4Mvp);
+        this.jWebgl.programSmoothStep2Smooth.uTexture.fillByFbo(this.fboTexture);
+        this.jWebgl.programSmoothStep2Smooth.uTextureSize.fill(dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothStep2Smooth.uTextureCorner.fillByFbo(this.fboCornerData);
+        this.jWebgl.programSmoothStep2Smooth.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
+        this.jWebgl.programSmoothStep2Smooth.draw();
+        this.drawFbo(this.fboDisplay, 2, 0);
         // 网格
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
         let cameraHeight = dataSrc.textureHeight * VERTICAL_COUNT;
-        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
         this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
         let colorGrid = JWebglColor.COLOR_BLACK;
         for (let i = 0; i <= cameraWidth; i++) {
@@ -121,10 +131,6 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
      * @param y
      */
     drawFbo(fbo, x, y) {
-        if (fbo != this.fboDisplay) {
-            this.jWebgl.fillFbo(this.fboDisplay, fbo);
-        }
-        ;
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
         this.jWebgl.useFbo(null);
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
@@ -132,12 +138,12 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.jWebgl.mat4V.setLookAt(cameraWidth / 2, cameraHeight / 2, 1, cameraWidth / 2, cameraHeight / 2, 0, 0, 1, 0);
         this.jWebgl.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
         this.jWebgl.refreshMat4Mvp();
-        this.jWebgl.programSmoothStep2Smooth.uMvp.fill(this.jWebgl.mat4Mvp);
-        this.jWebgl.programSmoothStep2Smooth.uSampler.fillByFbo(this.fboDisplay);
+        this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
+        this.jWebgl.programImg.uTexture.fillByFbo(fbo);
         this.posImg.elements[0] = dataSrc.textureWidth * (0.5 + x);
         this.posImg.elements[1] = dataSrc.textureHeight * (VERTICAL_COUNT - 1 + 0.5 - y);
-        this.jWebgl.programSmoothStep2Smooth.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, dataSrc.textureWidth, dataSrc.textureHeight);
-        this.jWebgl.programSmoothStep2Smooth.draw();
+        this.jWebgl.programImg.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programImg.draw();
     }
     render() {
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;

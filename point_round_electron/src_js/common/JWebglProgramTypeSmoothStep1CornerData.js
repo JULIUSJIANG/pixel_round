@@ -38,7 +38,7 @@ void main() {
         return `
 // 取样
 vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
-  vec2 pos = uv * vec2 (1.0 / ${this.uTextureSize}.x, 1.0 / ${this.uTextureSize}.y);
+  vec2 pos = uv / ${this.uTextureSize};
   if (
     pos.x < 0.0 
     || 1.0 < pos.x
@@ -51,11 +51,40 @@ vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
   return texture2D (tex, pos);
 }
 
+// 检查 2 个颜色是否一致
+bool checkEqual (vec4 colorA, vec4 colorB) {
+    return (
+          abs (colorA.r - colorB.r) 
+        + abs (colorA.g - colorB.g) 
+        + abs (colorA.b - colorB.b)
+        + abs (colorA.a - colorB.a)
+    ) == 0.0;
+}
+
 void main() {
     vec2 uv = ${this.vTexCoord} * ${this.uTextureSize};
     vec2 vecRight = vec2 (${this.uForward}.y, - ${this.uForward}.x) * ${this.uRight};
-    uv -= ${this.uForward} * ${this.uRight};
-    gl_FragColor = getTextureRGBA (${this.uTexture}, uv);
+
+    vec4 colorCenter = getTextureRGBA (${this.uTexture}, uv);
+
+    vec4 colorLeft = getTextureRGBA (${this.uTexture}, uv - vecRight);
+    vec4 colorRight = getTextureRGBA (${this.uTexture}, uv + vecRight);
+
+    vec4 colorForward = getTextureRGBA (${this.uTexture}, uv + ${this.uForward});
+    vec4 colorBack = getTextureRGBA (${this.uTexture}, uv - ${this.uForward});
+
+    vec4 colorFL = getTextureRGBA (${this.uTexture}, uv + ${this.uForward} / 2.0 - vecRight / 2.0);
+    vec4 colorFR = getTextureRGBA (${this.uTexture}, uv + ${this.uForward} / 2.0 + vecRight / 2.0);
+
+    vec4 colorBL = getTextureRGBA (${this.uTexture}, uv - ${this.uForward} / 2.0 - vecRight / 2.0);
+    vec4 colorBR = getTextureRGBA (${this.uTexture}, uv - ${this.uForward} / 2.0 + vecRight / 2.0);
+
+    vec4 colorResult = vec4 (1.0, 1.0, 1.0, 0.0);
+    if (checkEqual (colorLeft, colorCenter) || checkEqual (colorCenter, colorRight)) {
+        colorResult.a = 1.0;
+    };
+
+    gl_FragColor = colorResult;
 }
         `;
     }

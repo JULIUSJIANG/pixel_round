@@ -70,8 +70,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         }
         ;
         // 混合方式为直接覆盖
-        this.jWebgl.canvasWebglCtx.disable(JWebglEnum.EnableCap.DEPTH_TEST);
-        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
+        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ZERO);
         // 绘制 fbo
         if (this.fboTexture == null || this.fboTexture.width != dataSrc.textureWidth || this.fboTexture.height != dataSrc.textureHeight) {
             this.fboTexture = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
@@ -121,7 +120,6 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         // 网格
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
         let cameraHeight = dataSrc.textureHeight * VERTICAL_COUNT;
-        this.jWebgl.canvasWebglCtx.enable(JWebglEnum.EnableCap.DEPTH_TEST);
         this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
         this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
         let colorGrid = JWebglColor.COLOR_BLACK;

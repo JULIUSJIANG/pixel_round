@@ -58,29 +58,32 @@ bool checkEqual (vec4 colorA, vec4 colorB) {
         + abs (colorA.g - colorB.g) 
         + abs (colorA.b - colorB.b)
         + abs (colorA.a - colorB.a)
-    ) == 0.0;
+    ) <= 0.01;
 }
 
 void main() {
-    vec2 uv = ${this.vTexCoord} * ${this.uTextureSize};
-    vec2 vecRight = vec2 (${this.uForward}.y, - ${this.uForward}.x) * ${this.uRight};
+    vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
+    vec2 uv = floor (pos) + vec2 (0.5, 0.5);
+
+    vec2 vecForward = vec2 (pos - uv) * 4.0;
+    vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
 
     vec4 colorCenter = getTextureRGBA (${this.uTexture}, uv);
 
     vec4 colorLeft = getTextureRGBA (${this.uTexture}, uv - vecRight);
     vec4 colorRight = getTextureRGBA (${this.uTexture}, uv + vecRight);
 
-    vec4 colorForward = getTextureRGBA (${this.uTexture}, uv + ${this.uForward});
-    vec4 colorBack = getTextureRGBA (${this.uTexture}, uv - ${this.uForward});
+    vec4 colorForward = getTextureRGBA (${this.uTexture}, uv + vecForward);
+    vec4 colorBack = getTextureRGBA (${this.uTexture}, uv - vecForward);
 
-    vec4 colorFL = getTextureRGBA (${this.uTexture}, uv + ${this.uForward} / 2.0 - vecRight / 2.0);
-    vec4 colorFR = getTextureRGBA (${this.uTexture}, uv + ${this.uForward} / 2.0 + vecRight / 2.0);
+    vec4 colorFL = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 - vecRight / 2.0);
+    vec4 colorFR = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 + vecRight / 2.0);
 
-    vec4 colorBL = getTextureRGBA (${this.uTexture}, uv - ${this.uForward} / 2.0 - vecRight / 2.0);
-    vec4 colorBR = getTextureRGBA (${this.uTexture}, uv - ${this.uForward} / 2.0 + vecRight / 2.0);
+    vec4 colorBL = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 - vecRight / 2.0);
+    vec4 colorBR = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 + vecRight / 2.0);
 
     vec4 colorResult = vec4 (1.0, 1.0, 1.0, 0.0);
-    if (checkEqual (colorLeft, colorCenter) || checkEqual (colorCenter, colorRight)) {
+    if ((checkEqual (colorLeft, colorCenter) || checkEqual (colorCenter, colorRight)) || checkEqual (colorFL, colorFR)) {
         colorResult.a = 1.0;
     };
 
@@ -143,9 +146,6 @@ __decorate([
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformVec2)
 ], JWebglProgramTypeSmoothStep1CornerData.prototype, "uTextureSize", void 0);
-__decorate([
-    JWebglProgram.uniform(JWebglProgramUniformVec2)
-], JWebglProgramTypeSmoothStep1CornerData.prototype, "uForward", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformFloat)
 ], JWebglProgramTypeSmoothStep1CornerData.prototype, "uRight", void 0);

@@ -75,10 +75,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         if (this.fboTexture == null || this.fboTexture.width != dataSrc.textureWidth || this.fboTexture.height != dataSrc.textureHeight) {
             this.fboTexture = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
             this.fboDisplay = this.jWebgl.getFbo(dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN, dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN);
-            this.fboCornerDataLT = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
-            this.fboCornerDataRT = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
-            this.fboCornerDataRB = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
-            this.fboCornerDataLB = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
+            this.fboCornerData = this.jWebgl.getFbo(dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
         }
         ;
         // 得到简略图
@@ -86,37 +83,14 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         // 原图
         this.drawFbo(this.fboTexture, 0, 0);
         // 各个角的数据
+        this.jWebgl.useFbo(this.fboCornerData);
         this.jWebgl.programSmoothStep1CornerData.uMvp.fill(this.mat4Mvp);
+        this.jWebgl.programSmoothStep1CornerData.uTexture.fillByFbo(this.fboTexture);
         this.jWebgl.programSmoothStep1CornerData.uTextureSize.fill(dataSrc.textureWidth, dataSrc.textureHeight);
         this.jWebgl.programSmoothStep1CornerData.uRight.fill(1);
-        // 左上角
-        this.jWebgl.useFbo(this.fboCornerDataLT);
-        this.jWebgl.programSmoothStep1CornerData.uTexture.fillByFbo(this.fboTexture);
-        this.jWebgl.programSmoothStep1CornerData.uForward.fill(-1, 1);
         this.jWebgl.programSmoothStep1CornerData.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
         this.jWebgl.programSmoothStep1CornerData.draw();
-        this.drawFbo(this.fboCornerDataLT, 0, 1);
-        // 右上角
-        this.jWebgl.useFbo(this.fboCornerDataRT);
-        this.jWebgl.programSmoothStep1CornerData.uTexture.fillByFbo(this.fboTexture);
-        this.jWebgl.programSmoothStep1CornerData.uForward.fill(1, 1);
-        this.jWebgl.programSmoothStep1CornerData.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
-        this.jWebgl.programSmoothStep1CornerData.draw();
-        this.drawFbo(this.fboCornerDataRT, 1, 1);
-        // 右下角
-        this.jWebgl.useFbo(this.fboCornerDataRB);
-        this.jWebgl.programSmoothStep1CornerData.uTexture.fillByFbo(this.fboTexture);
-        this.jWebgl.programSmoothStep1CornerData.uForward.fill(1, -1);
-        this.jWebgl.programSmoothStep1CornerData.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
-        this.jWebgl.programSmoothStep1CornerData.draw();
-        this.drawFbo(this.fboCornerDataRB, 0, 2);
-        // 左下角
-        this.jWebgl.useFbo(this.fboCornerDataLB);
-        this.jWebgl.programSmoothStep1CornerData.uTexture.fillByFbo(this.fboTexture);
-        this.jWebgl.programSmoothStep1CornerData.uForward.fill(-1, -1);
-        this.jWebgl.programSmoothStep1CornerData.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
-        this.jWebgl.programSmoothStep1CornerData.draw();
-        this.drawFbo(this.fboCornerDataLB, 1, 2);
+        this.drawFbo(this.fboCornerData, 1, 0);
         // 网格
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
         let cameraHeight = dataSrc.textureHeight * VERTICAL_COUNT;

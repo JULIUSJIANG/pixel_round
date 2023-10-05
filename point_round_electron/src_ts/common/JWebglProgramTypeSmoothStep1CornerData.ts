@@ -7,7 +7,7 @@ import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
-export default class JWebglProgramTypeSmoothStep2Smooth extends JWebglProgram {
+export default class JWebglProgramTypeSmoothStep1CornerData extends JWebglProgram {
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;

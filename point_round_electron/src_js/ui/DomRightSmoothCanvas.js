@@ -1,11 +1,12 @@
 import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
+import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-const HORIZON_COUNT = 1;
-const VERTICAL_COUNT = 1;
+const HORIZON_COUNT = 3;
+const VERTICAL_COUNT = 2;
 /**
  * 线的深度
  */
@@ -46,15 +47,60 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         }
         ;
         // 绘制 fbo
-        if (this.fboImg == null || this.fboImg.width != dataSrc.textureWidth || this.fboImg.height != dataSrc.textureHeight) {
-            this.fboImg = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
-            this.fboCorner = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
-            this.fboColor = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
+        if (this.fboTexture == null || this.fboTexture.width != dataSrc.textureWidth || this.fboTexture.height != dataSrc.textureHeight) {
+            this.fboTexture = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
         }
         ;
         // 得到简略图
-        dataSrc.drawImgPadding(this.jWebgl, this.fboImg);
-        this.jWebgl.fillFbo(null, this.fboImg);
+        dataSrc.drawImgPadding(this.jWebgl, this.fboTexture);
+        // 应用帧缓冲区
+        this.jWebgl.useFbo(null);
+        this.jWebgl.clear();
+        // 绘制图片
+        this.drawImg(0, 0);
+        this.drawImg(1, 1);
+        // 网格
+        let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
+        let cameraHeight = dataSrc.textureHeight * VERTICAL_COUNT;
+        this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
+        let colorGrid = JWebglColor.COLOR_BLACK;
+        for (let i = 0; i <= cameraWidth; i++) {
+            this.posFrom.elements[0] = i;
+            this.posFrom.elements[1] = 0;
+            this.posTo.elements[0] = i;
+            this.posTo.elements[1] = cameraHeight;
+            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
+        }
+        ;
+        for (let i = 0; i <= cameraHeight; i++) {
+            this.posFrom.elements[0] = 0;
+            this.posFrom.elements[1] = i;
+            this.posTo.elements[0] = cameraWidth;
+            this.posTo.elements[1] = i;
+            this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
+        }
+        ;
+        this.jWebgl.programLine.draw();
+    }
+    /**
+     * 在位置 x、y 绘制当前结果
+     * @param x
+     * @param y
+     */
+    drawImg(x, y) {
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        this.jWebgl.useFbo(null);
+        let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
+        let cameraHeight = dataSrc.textureHeight * VERTICAL_COUNT;
+        this.jWebgl.mat4V.setLookAt(cameraWidth / 2, cameraHeight / 2, 1, cameraWidth / 2, cameraHeight / 2, 0, 0, 1, 0);
+        this.jWebgl.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
+        this.jWebgl.refreshMat4Mvp();
+        this.jWebgl.programSmoothStep2Smooth.uMvp.fill(this.jWebgl.mat4Mvp);
+        this.jWebgl.programSmoothStep2Smooth.uSampler.fillByFbo(this.fboTexture);
+        this.posImg.elements[0] = dataSrc.textureWidth * (0.5 + x);
+        this.posImg.elements[1] = dataSrc.textureHeight * (VERTICAL_COUNT - 1 + 0.5 - y);
+        this.jWebgl.programSmoothStep2Smooth.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothStep2Smooth.draw();
     }
     render() {
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;

@@ -12,7 +12,7 @@ import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
 import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
-export default class JWebglProgramTypeSmoothStep2Smooth extends JWebglProgram {
+export default class JWebglProgramTypeSmoothStep1CornerData extends JWebglProgram {
     constructor() {
         super(...arguments);
         this._addLeft = new JWebglMathVector4();
@@ -87,16 +87,16 @@ void main() {
 }
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformMat4)
-], JWebglProgramTypeSmoothStep2Smooth.prototype, "uMvp", void 0);
+], JWebglProgramTypeSmoothStep1CornerData.prototype, "uMvp", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothStep2Smooth.prototype, "uSampler", void 0);
+], JWebglProgramTypeSmoothStep1CornerData.prototype, "uSampler", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec4)
-], JWebglProgramTypeSmoothStep2Smooth.prototype, "aPosition", void 0);
+], JWebglProgramTypeSmoothStep1CornerData.prototype, "aPosition", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec2)
-], JWebglProgramTypeSmoothStep2Smooth.prototype, "aTexCoord", void 0);
+], JWebglProgramTypeSmoothStep1CornerData.prototype, "aTexCoord", void 0);
 __decorate([
     JWebglProgram.varying(JWebglProgramVaryingVec2)
-], JWebglProgramTypeSmoothStep2Smooth.prototype, "vTexCoord", void 0);
+], JWebglProgramTypeSmoothStep1CornerData.prototype, "vTexCoord", void 0);

@@ -3,8 +3,10 @@ import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramAttributeVec2 from "./JWebglProgramAttributeVec2.js";
 import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
+import JWebglProgramUniformFloat from "./JWebglProgramUniformFloat.js";
 import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
+import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
 export default class JWebglProgramTypeSmoothStep1CornerData extends JWebglProgram {
@@ -13,7 +15,16 @@ export default class JWebglProgramTypeSmoothStep1CornerData extends JWebglProgra
     uMvp: JWebglProgramUniformMat4;
 
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uSampler: JWebglProgramUniformSampler2D;
+    uTexture: JWebglProgramUniformSampler2D;
+
+    @JWebglProgram.uniform (JWebglProgramUniformVec2)
+    uTextureSize: JWebglProgramUniformVec2;
+
+    @JWebglProgram.uniform (JWebglProgramUniformVec2)
+    uForward: JWebglProgramUniformVec2;
+
+    @JWebglProgram.uniform (JWebglProgramUniformFloat)
+    uRight: JWebglProgramUniformFloat;
 
     @JWebglProgram.attribute (JWebglProgramAttributeVec4)
     aPosition: JWebglProgramAttributeVec4;
@@ -35,8 +46,26 @@ void main() {
 
     impGetnShaderFTxt (): string {
         return `
+// 取样
+vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
+  vec2 pos = uv * vec2 (1.0 / ${this.uTextureSize}.x, 1.0 / ${this.uTextureSize}.y);
+  if (
+    pos.x < 0.0 
+    || 1.0 < pos.x
+    || pos.y < 0.0
+    || 1.0 < pos.y
+  )
+  {
+    return vec4 (0, 0, 0, 0);
+  };
+  return texture2D (tex, pos);
+}
+
 void main() {
-    gl_FragColor = texture2D(${this.uSampler}, ${this.vTexCoord});
+    vec2 uv = ${this.vTexCoord} * ${this.uTextureSize};
+    vec2 vecRight = vec2 (${this.uForward}.y, - ${this.uForward}.x) * ${this.uRight};
+    uv -= ${this.uForward} * ${this.uRight};
+    gl_FragColor = getTextureRGBA (${this.uTexture}, uv);
 }
         `;
     }

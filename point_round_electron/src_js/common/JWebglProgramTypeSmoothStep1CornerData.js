@@ -9,8 +9,10 @@ import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramAttributeVec2 from "./JWebglProgramAttributeVec2.js";
 import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
+import JWebglProgramUniformFloat from "./JWebglProgramUniformFloat.js";
 import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
+import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 export default class JWebglProgramTypeSmoothStep1CornerData extends JWebglProgram {
     constructor() {
@@ -34,8 +36,26 @@ void main() {
     }
     impGetnShaderFTxt() {
         return `
+// 取样
+vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
+  vec2 pos = uv * vec2 (1.0 / ${this.uTextureSize}.x, 1.0 / ${this.uTextureSize}.y);
+  if (
+    pos.x < 0.0 
+    || 1.0 < pos.x
+    || pos.y < 0.0
+    || 1.0 < pos.y
+  )
+  {
+    return vec4 (0, 0, 0, 0);
+  };
+  return texture2D (tex, pos);
+}
+
 void main() {
-    gl_FragColor = texture2D(${this.uSampler}, ${this.vTexCoord});
+    vec2 uv = ${this.vTexCoord} * ${this.uTextureSize};
+    vec2 vecRight = vec2 (${this.uForward}.y, - ${this.uForward}.x) * ${this.uRight};
+    uv -= ${this.uForward} * ${this.uRight};
+    gl_FragColor = getTextureRGBA (${this.uTexture}, uv);
 }
         `;
     }
@@ -90,7 +110,16 @@ __decorate([
 ], JWebglProgramTypeSmoothStep1CornerData.prototype, "uMvp", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothStep1CornerData.prototype, "uSampler", void 0);
+], JWebglProgramTypeSmoothStep1CornerData.prototype, "uTexture", void 0);
+__decorate([
+    JWebglProgram.uniform(JWebglProgramUniformVec2)
+], JWebglProgramTypeSmoothStep1CornerData.prototype, "uTextureSize", void 0);
+__decorate([
+    JWebglProgram.uniform(JWebglProgramUniformVec2)
+], JWebglProgramTypeSmoothStep1CornerData.prototype, "uForward", void 0);
+__decorate([
+    JWebglProgram.uniform(JWebglProgramUniformFloat)
+], JWebglProgramTypeSmoothStep1CornerData.prototype, "uRight", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec4)
 ], JWebglProgramTypeSmoothStep1CornerData.prototype, "aPosition", void 0);

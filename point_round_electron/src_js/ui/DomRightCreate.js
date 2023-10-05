@@ -30,7 +30,7 @@ export default class DomRightCreate extends ReactComponentExtend {
         this.jWebgl.useFbo(null);
         this.jWebgl.clear();
         this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uSampler.fillByImg(this.jWebgl.getImg(IndexGlobal.inst.createMachine.img.src));
+        this.jWebgl.programImg.uTexture.fillByImg(this.jWebgl.getImg(IndexGlobal.inst.createMachine.img.src));
         this.jWebgl.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
         this.jWebgl.programImg.draw();
     }

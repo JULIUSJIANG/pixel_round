@@ -273,7 +273,7 @@ class JWebgl {
         mat4P.setOrtho (
             -1, 1,
             -1, 1,
-            0, 2
+             0, 2
         );
         let mat4Mvp = objectPool.pop (JWebglMathMatrix4.poolType);
         JWebglMathMatrix4.multiplayMat4List (
@@ -284,7 +284,7 @@ class JWebgl {
         );
         this.programImg.uMvp.fill (mat4Mvp);
 
-        this.programImg.uSampler.fillByFbo (fboSrc);
+        this.programImg.uTexture.fillByFbo (fboSrc);
         this.programImg.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,

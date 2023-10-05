@@ -195,7 +195,7 @@ class JWebgl {
         let mat4Mvp = objectPool.pop(JWebglMathMatrix4.poolType);
         JWebglMathMatrix4.multiplayMat4List(mat4P, mat4V, mat4M, mat4Mvp);
         this.programImg.uMvp.fill(mat4Mvp);
-        this.programImg.uSampler.fillByFbo(fboSrc);
+        this.programImg.uTexture.fillByFbo(fboSrc);
         this.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
         this.programImg.draw();
         objectPool.push(mat4M, mat4V, mat4P, mat4Mvp);

@@ -78,7 +78,7 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> 
 
         // 图片
         this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uSampler.fillByImg (this.jWebgl.getImg (imgMachine.dataInst.dataOrigin));
+        this.jWebgl.programImg.uTexture.fillByImg (this.jWebgl.getImg (imgMachine.dataInst.dataOrigin));
         this.posImg.elements [0] = imgWidth / 2 + paddingLeft;
         this.posImg.elements [1] = imgHeight / 2 + paddingBottom;
         this.jWebgl.programImg.add (

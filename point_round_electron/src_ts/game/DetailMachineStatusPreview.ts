@@ -11,6 +11,7 @@ import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
+import objectPool from "../common/ObjectPool.js";
 
 export default class DetailMachineStatusPreview extends DetailMachineStatus {
 
@@ -128,7 +129,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
 
         // 图片
         jWebgl.programImg.uMvp.fill (jWebgl.mat4Mvp);
-        jWebgl.programImg.uSampler.fillByImg (jWebgl.getImg (this.imgMachine.dataInst.dataOrigin));
+        jWebgl.programImg.uTexture.fillByImg (jWebgl.getImg (this.imgMachine.dataInst.dataOrigin));
         let posImg = JWebglMathVector4.create (this.imgWidth / 2 + this.imgMachine.dataInst.paddingLeft, this.imgHeight / 2 + this.imgMachine.dataInst.paddingBottom, 0);
         jWebgl.programImg.add (
             posImg,
@@ -137,6 +138,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
             this.imgWidth,
             this.imgHeight
         );
+        objectPool.push (posImg);
         jWebgl.programImg.draw ();
     }
 

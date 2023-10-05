@@ -13,7 +13,7 @@ export default class JWebglProgramTypeImg extends JWebglProgram {
     uMvp: JWebglProgramUniformMat4;
 
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uSampler: JWebglProgramUniformSampler2D;
+    uTexture: JWebglProgramUniformSampler2D;
 
     @JWebglProgram.attribute (JWebglProgramAttributeVec4)
     aPosition: JWebglProgramAttributeVec4;
@@ -36,7 +36,7 @@ void main() {
     impGetnShaderFTxt (): string {
         return `
 void main() {
-    gl_FragColor = texture2D(${this.uSampler}, ${this.vTexCoord});
+    gl_FragColor = texture2D(${this.uTexture}, ${this.vTexCoord});
 }
         `;
     }

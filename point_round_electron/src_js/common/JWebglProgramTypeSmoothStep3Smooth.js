@@ -56,6 +56,16 @@ bool match (float current, float target) {
     return abs (current - target) < 0.5;
 }
 
+// 检查 2 个颜色是否一致
+bool checkEqual (vec4 colorA, vec4 colorB) {
+    return (
+          abs (colorA.r - colorB.r) 
+        + abs (colorA.g - colorB.g) 
+        + abs (colorA.b - colorB.b)
+        + abs (colorA.a - colorB.a)
+    ) <= 0.01;
+}
+
 // 进行平滑
 void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 smoothColor) {
     // 向量: p1 -> p2
@@ -72,12 +82,17 @@ void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 sm
     sum = mix (sum, smoothColor, l); 
 }
 
+// 获取角的缓存数据
+vec4 getCornerCache (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureCorner}, posCorner);
+}
+
 // 使用一个角对总颜色进行影响
 void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 posTex = floor (pos) + vec2 (0.5, 0.5);
-
-    vec2 posCorner = posTex + vecForward / 4.0;
-    vec4 colorCorner = getTextureRGBA (${this.uTextureCorner}, posCorner);
+    vec4 posTexCornerForward = getCornerCache (posTex, vecForward);
+    vec4 posTexColor = getTextureRGBA (${this.uTexture}, posTex);
     
     vec2 vecRight = vec2 (vecForward.y, -vecForward.x);
 
@@ -85,13 +100,28 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 posRight = posTex + vecRight;
 
     vec2 posFL = posTex + vecForward / 2.0 - vecRight / 2.0;
+    vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
+    vec4 posFLColor = getTextureRGBA (${this.uTexture}, posFL);
+
     vec2 posFR = posTex + vecForward / 2.0 + vecRight / 2.0;
+    vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
+    vec4 posFRColor = getTextureRGBA (${this.uTexture}, posFR);
 
-    vec4 colorFL = getTextureRGBA (${this.uTexture}, posFL);
-    vec4 colorFR = getTextureRGBA (${this.uTexture}, posFR);
-
-    if (match (colorCorner.a, 1.0)) {
-        connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorFL);
+    vec4 colorSmooth = posTexColor;
+    // 俩边颜色一致，那么平滑颜色就明确了
+    if (checkEqual (posFLColor, posFRColor)) {
+        colorSmooth = posFLColor;
+    };
+    // 左不平右平，选左颜色
+    if (!match (posFLCornerRight.g, 1.0) && match (posFRCornerLeft.r, 1.0)) {
+        colorSmooth = posFLColor;
+    };
+    // 左平右不平，选右颜色
+    if (match (posFLCornerRight.g, 1.0) && !match (posFRCornerLeft.r, 1.0)) {
+        colorSmooth = posFRColor;
+    };
+    if (match (posTexCornerForward.a, 1.0)) {
+        connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorSmooth);
     };
 }
 

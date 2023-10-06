@@ -9,6 +9,7 @@ import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
+import MgrData from "../mgr/MgrData.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
 const HORIZON_COUNT = 3;
@@ -72,6 +73,37 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             this.mat4M,
             this.mat4Mvp
         );
+
+        this.jWebgl.evtTouchStart.on (() => {
+            let touchX = Math.floor (this.jWebgl.currentTouch.posCanvas [0]);
+            let touchY = Math.floor (this.jWebgl.currentTouch.posCanvas [1]);
+            let gridX = Math.floor (touchX / IndexGlobal.PIXEL_TEX_TO_SCREEN);
+            let gridY = Math.floor (touchY / IndexGlobal.PIXEL_TEX_TO_SCREEN);
+            this.loadGridX (gridX, gridY);
+        });
+    }
+
+    /**
+     * 格子位置 x
+     */
+    gridX: number = 0;
+    /**
+     * 格子位置 y
+     */
+    gridY: number = 0;
+    /**
+     * 载入格子位置
+     * @param x 
+     * @param y 
+     */
+    loadGridX (x: number, y: number) {
+        if (x == this.gridX && y == this.gridY) {
+            return;
+        };
+        this.gridX = x;
+        this.gridY = y;
+        // 刷新画面
+        MgrData.inst.callDataChange ();
     }
 
     /**
@@ -261,6 +293,38 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
                 colorGrid,
                 this.posTo,
                 colorGrid
+            );
+        };
+        this.jWebgl.programLine.draw ();
+
+        // 准星
+        let gridXMod = this.gridX % dataSrc.textureWidth + 0.5;
+        let gridYMod = this.gridY % dataSrc.textureHeight + 0.5;
+        let colorFocus = JWebglColor.COLOR_WHITE;
+        // 竖线
+        for (let i = 0; i < HORIZON_COUNT; i++) {
+            this.posFrom.elements [0] = i * dataSrc.textureWidth + gridXMod;
+            this.posFrom.elements [1] = 0;
+            this.posTo.elements [0] = i * dataSrc.textureWidth + gridXMod;
+            this.posTo.elements [1] = cameraHeight;
+            this.jWebgl.programLine.add (
+                this.posFrom,
+                colorFocus,
+                this.posTo,
+                colorFocus
+            );
+        };
+        // 横线
+        for (let i = 0; i < VERTICAL_COUNT; i++) {
+            this.posFrom.elements [0] = 0;
+            this.posFrom.elements [1] = i * dataSrc.textureHeight + gridYMod;
+            this.posTo.elements [0] = cameraWidth;
+            this.posTo.elements [1] = i * dataSrc.textureHeight + gridYMod;
+            this.jWebgl.programLine.add (
+                this.posFrom,
+                colorFocus,
+                this.posTo,
+                colorFocus
             );
         };
         this.jWebgl.programLine.draw ();

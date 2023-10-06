@@ -4,6 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+import Eventer from "./Eventer.js";
 import JWebglEnum from "./JWebglEnum.js";
 import JWebglFrameBuffer from "./JWebglFrameBuffer.js";
 import JWebglImage from "./JWebglImage.js";
@@ -18,6 +19,7 @@ import JWebglProgramTypeSmoothStep2Tickness from "./JWebglProgramTypeSmoothStep2
 import JWebglProgramTypeSmoothStep3CornerRemove from "./JWebglProgramTypeSmoothStep3CornerRemove.js";
 import JWebglProgramTypeSmoothStep3Smooth from "./JWebglProgramTypeSmoothStep3Smooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
+import JWebglTouch from "./JWebglTouch.js";
 import objectPool from "./ObjectPool.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
@@ -52,6 +54,38 @@ class JWebgl {
          */
         this._listProgram = new Array();
         /**
+         * 交互起始位置
+         */
+        this.touchStart = new JWebglTouch();
+        /**
+         * 事件派发 - 交互起始
+         */
+        this.evtTouchStart = new Eventer();
+        /**
+         * 交互拖拽位置
+         */
+        this.touchMove = new JWebglTouch();
+        /**
+         * 事件派发 - 交互拖拽
+         */
+        this.evtTouchMove = new Eventer();
+        /**
+         * 交互结束位置
+         */
+        this.touchEnd = new JWebglTouch();
+        /**
+         * 事件派发 - 交互结束
+         */
+        this.evtTouchEnd = new Eventer();
+        /**
+         * 当前交互位置
+         */
+        this.currentTouch = new JWebglTouch();
+        /**
+         * 事件派发 - 发生交互
+         */
+        this.evtTouch = new Eventer();
+        /**
          * 模型矩阵
          */
         this.mat4M = new JWebglMathMatrix4();
@@ -78,6 +112,24 @@ class JWebgl {
      * @returns
      */
     init() {
+        this.canvasWebgl.onmousedown = (evt) => {
+            this.touchStart.fill(evt);
+            this.currentTouch = this.touchStart;
+            this.evtTouch.call(null);
+            this.evtTouchStart.call(null);
+        };
+        this.canvasWebgl.onmousemove = (evt) => {
+            this.touchMove.fill(evt);
+            this.currentTouch = this.touchMove;
+            this.evtTouch.call(null);
+            this.evtTouchMove.call(null);
+        };
+        this.canvasWebgl.onmouseup = (evt) => {
+            this.touchEnd.fill(evt);
+            this.currentTouch = this.touchEnd;
+            this.evtTouch.call(null);
+            this.evtTouchEnd.call(null);
+        };
         this.mat4M.setIdentity();
         this.mat4V.setIdentity();
         this.mat4P.setIdentity();

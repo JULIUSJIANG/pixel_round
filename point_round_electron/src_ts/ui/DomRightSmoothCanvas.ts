@@ -187,6 +187,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothStep3CornerRemove.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
         this.jWebgl.programSmoothStep3CornerRemove.uTextureTickness.fillByFbo (this.fboTickness);
         this.jWebgl.programSmoothStep3CornerRemove.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothStep3CornerRemove.uRight.fill (1);
         this.jWebgl.programSmoothStep3CornerRemove.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,
@@ -196,6 +197,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         );
         this.jWebgl.programSmoothStep3CornerRemove.draw ();
         this.drawFbo (this.fboCornerDataCache, 2, 1);
+        this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache)
 
         // 最终结果
         this.jWebgl.useFbo (this.fboDisplay);

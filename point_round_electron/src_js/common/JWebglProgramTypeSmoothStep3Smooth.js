@@ -56,7 +56,7 @@ vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
 
 // 2 个数是否匹配
 bool match (float current, float target) {
-    return abs (current - target) < 0.5;
+    return abs (current - target) < 0.1;
 }
 
 // 检查 2 个颜色是否一致
@@ -124,7 +124,7 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
         colorSmooth = posFRColor;
     };
     // 需要平滑
-    if (match (posTexCornerForward.a, 1.0)) {
+    if (match (posTexCornerForward.b, 1.0)) {
         connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorSmooth);
     };
 }

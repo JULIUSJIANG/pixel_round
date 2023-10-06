@@ -13,7 +13,6 @@ import JWebglProgramTypeSmoothStep1CornerData from "./JWebglProgramTypeSmoothSte
 import JWebglProgramTypeSmoothStep2Tickness from "./JWebglProgramTypeSmoothStep2Tickness.js";
 import JWebglProgramTypeSmoothStep3CornerRemoveX from "./JWebglProgramTypeSmoothStep3CornerRemoveX.js";
 import JWebglProgramTypeSmoothStep3Smooth from "./JWebglProgramTypeSmoothStep3Smooth.js";
-import JWebglProgramTypeSmoothStep4CornerRemNearBy from "./JWebglProgramTypeSmoothStep4CornerRemNearBy.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import JWebglTouch from "./JWebglTouch.js";
 import objectPool from "./ObjectPool.js";
@@ -232,9 +231,6 @@ class JWebgl {
 
     @program (JWebglProgramTypeSmoothStep3CornerRemoveX)
     programSmoothStep3CornerRemove: JWebglProgramTypeSmoothStep3CornerRemoveX;
-
-    @program (JWebglProgramTypeSmoothStep4CornerRemNearBy)
-    programSmoothStep4CornerRemNearBy: JWebglProgramTypeSmoothStep4CornerRemNearBy;
 
     @program (JWebglProgramTypeSmoothStep3Smooth)
     programSmoothStep3Smooth: JWebglProgramTypeSmoothStep3Smooth;

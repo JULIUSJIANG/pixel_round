@@ -15,9 +15,9 @@ import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
 import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 /**
- * 剔除 X 型平滑冲突
+ * 剔除 T 型平滑冲突
  */
-export default class JWebglProgramTypeSmoothStep3CornerRemoveX extends JWebglProgram {
+export default class JWebglProgramTypeSmoothStep3CornerRemoveT extends JWebglProgram {
     constructor() {
         super(...arguments);
         this._addLeft = new JWebglMathVector4();
@@ -82,33 +82,21 @@ void main() {
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
-    vec4 posCenterColor = getTextureRGBA (${this.uTextureTickness}, posCenter);
-
-    vec2 posForward = posCenter + vecForward;
-    vec4 posForwardCornerBack = getCornerCache (posForward, - vecForward);
-    vec4 posForwardColor = getTextureRGBA (${this.uTextureTickness}, posForward);
+    vec4 posCenterCornerLeft = getCornerCache (posCenter, - vecRight);
+    vec4 posCenterCornerRight = getCornerCache (posCenter, vecRight);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
-    vec4 posFLColor = getTextureRGBA (${this.uTextureTickness}, posFL);
 
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
-    vec4 posFRColor = getTextureRGBA (${this.uTextureTickness}, posFR);
 
-    // 发生 4 角互相平滑
     if (
-           match (posCenterCornerForward.b, 1.0)
-        && match (posForwardCornerBack.b, 1.0)
-        && match (posFLCornerRight.b, 1.0)
-        && match (posFRCornerLeft.b, 1.0)
+           (match (posFLCornerRight.b, 1.0) && match (posCenterCornerLeft.b, 1.0))
+        || (match (posFRCornerLeft.b, 1.0) && match (posCenterCornerRight.b, 1.0))
     ) 
     {
-        float ticknessStraight = posCenterColor.r + posForwardColor.r;
-        float ticknessSide = posFLColor.r + posFRColor.r;
-        if (ticknessStraight < ticknessSide) {
-            posCenterCornerForward.b = 0.0;
-        };
+        posCenterCornerForward.b = 0.0;
     };
 
     gl_FragColor = posCenterCornerForward;
@@ -163,25 +151,22 @@ void main() {
 }
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformMat4)
-], JWebglProgramTypeSmoothStep3CornerRemoveX.prototype, "uMvp", void 0);
+], JWebglProgramTypeSmoothStep3CornerRemoveT.prototype, "uMvp", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformVec2)
-], JWebglProgramTypeSmoothStep3CornerRemoveX.prototype, "uTextureSize", void 0);
+], JWebglProgramTypeSmoothStep3CornerRemoveT.prototype, "uTextureSize", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothStep3CornerRemoveX.prototype, "uTextureTickness", void 0);
-__decorate([
-    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothStep3CornerRemoveX.prototype, "uTextureCorner", void 0);
+], JWebglProgramTypeSmoothStep3CornerRemoveT.prototype, "uTextureCorner", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformFloat)
-], JWebglProgramTypeSmoothStep3CornerRemoveX.prototype, "uRight", void 0);
+], JWebglProgramTypeSmoothStep3CornerRemoveT.prototype, "uRight", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec4)
-], JWebglProgramTypeSmoothStep3CornerRemoveX.prototype, "aPosition", void 0);
+], JWebglProgramTypeSmoothStep3CornerRemoveT.prototype, "aPosition", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec2)
-], JWebglProgramTypeSmoothStep3CornerRemoveX.prototype, "aTexCoord", void 0);
+], JWebglProgramTypeSmoothStep3CornerRemoveT.prototype, "aTexCoord", void 0);
 __decorate([
     JWebglProgram.varying(JWebglProgramVaryingVec2)
-], JWebglProgramTypeSmoothStep3CornerRemoveX.prototype, "vTexCoord", void 0);
+], JWebglProgramTypeSmoothStep3CornerRemoveT.prototype, "vTexCoord", void 0);

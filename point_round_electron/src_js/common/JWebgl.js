@@ -16,6 +16,8 @@ import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmoothStep1CornerData from "./JWebglProgramTypeSmoothStep1CornerData.js";
 import JWebglProgramTypeSmoothStep2Tickness from "./JWebglProgramTypeSmoothStep2Tickness.js";
+import JWebglProgramTypeSmoothStep3CornerRemoveT from "./JWebglProgramTypeSmoothStep3CornerRemoveT.js";
+import JWebglProgramTypeSmoothStep3CornerRemoveU from "./JWebglProgramTypeSmoothStep3CornerRemoveU.js";
 import JWebglProgramTypeSmoothStep3CornerRemoveX from "./JWebglProgramTypeSmoothStep3CornerRemoveX.js";
 import JWebglProgramTypeSmoothStep3Smooth from "./JWebglProgramTypeSmoothStep3Smooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
@@ -289,7 +291,13 @@ __decorate([
 ], JWebgl.prototype, "programSmoothStep2Tickness", void 0);
 __decorate([
     program(JWebglProgramTypeSmoothStep3CornerRemoveX)
-], JWebgl.prototype, "programSmoothStep3CornerRemove", void 0);
+], JWebgl.prototype, "programSmoothStep3CornerRemoveX", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothStep3CornerRemoveU)
+], JWebgl.prototype, "programSmoothStep3CornerRemoveU", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothStep3CornerRemoveT)
+], JWebgl.prototype, "programSmoothStep3CornerRemoveT", void 0);
 __decorate([
     program(JWebglProgramTypeSmoothStep3Smooth)
 ], JWebgl.prototype, "programSmoothStep3Smooth", void 0);

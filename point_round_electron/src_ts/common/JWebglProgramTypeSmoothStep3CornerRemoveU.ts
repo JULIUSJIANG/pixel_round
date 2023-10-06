@@ -10,16 +10,16 @@ import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
 /**
- * 剔除 X 型平滑冲突
+ * 剔除无明确指示的平滑
  */
-export default class JWebglProgramTypeSmoothStep3CornerRemoveX extends JWebglProgram {
+export default class JWebglProgramTypeSmoothStep3CornerRemoveU extends JWebglProgram {
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
+    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
+    uTexture: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformVec2)
     uTextureSize: JWebglProgramUniformVec2;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureTickness: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureCorner: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformFloat)
@@ -87,33 +87,31 @@ void main() {
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
-    vec4 posCenterColor = getTextureRGBA (${this.uTextureTickness}, posCenter);
-
-    vec2 posForward = posCenter + vecForward;
-    vec4 posForwardCornerBack = getCornerCache (posForward, - vecForward);
-    vec4 posForwardColor = getTextureRGBA (${this.uTextureTickness}, posForward);
+    vec4 posCenterColor = getTextureRGBA (${this.uTexture}, posCenter);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
-    vec4 posFLColor = getTextureRGBA (${this.uTextureTickness}, posFL);
+    vec4 posFLColor = getTextureRGBA (${this.uTexture}, posFL);
 
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
-    vec4 posFRColor = getTextureRGBA (${this.uTextureTickness}, posFR);
+    vec4 posFRColor = getTextureRGBA (${this.uTexture}, posFR);
 
-    // 发生 4 角互相平滑
-    if (
-           match (posCenterCornerForward.b, 1.0)
-        && match (posForwardCornerBack.b, 1.0)
-        && match (posFLCornerRight.b, 1.0)
-        && match (posFRCornerLeft.b, 1.0)
-    ) 
-    {
-        float ticknessStraight = posCenterColor.r + posForwardColor.r;
-        float ticknessSide = posFLColor.r + posFRColor.r;
-        if (ticknessStraight < ticknessSide) {
-            posCenterCornerForward.b = 0.0;
-        };
+    // 先认为平滑无效
+    float posCenterCornerForwardB = posCenterCornerForward.b;
+    posCenterCornerForward.b = 0.0;
+
+    // 有效的平滑
+    if (checkEqual (posFLColor, posFRColor)) {
+        posCenterCornerForward.b = posCenterCornerForwardB;
+    };
+    // 左不平右平，选左颜色
+    if (!match (posFLCornerRight.g, 1.0) && match (posFRCornerLeft.r, 1.0)) {
+        posCenterCornerForward.b = posCenterCornerForwardB;
+    };
+    // 左平右不平，选右颜色
+    if (match (posFLCornerRight.g, 1.0) && !match (posFRCornerLeft.r, 1.0)) {
+        posCenterCornerForward.b = posCenterCornerForwardB;
     };
 
     gl_FragColor = posCenterCornerForward;

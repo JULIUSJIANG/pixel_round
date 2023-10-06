@@ -14,6 +14,8 @@ import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmoothStep1CornerData from "./JWebglProgramTypeSmoothStep1CornerData.js";
+import JWebglProgramTypeSmoothStep2Tickness from "./JWebglProgramTypeSmoothStep2Tickness.js";
+import JWebglProgramTypeSmoothStep3CornerRemove from "./JWebglProgramTypeSmoothStep3CornerRemove.js";
 import JWebglProgramTypeSmoothStep3Smooth from "./JWebglProgramTypeSmoothStep3Smooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import objectPool from "./ObjectPool.js";
@@ -165,6 +167,17 @@ class JWebgl {
         return new JWebglFrameBuffer(this, width, height);
     }
     /**
+     * 销毁帧缓冲区
+     * @param fbo
+     */
+    destroyFbo(fbo) {
+        if (fbo == null) {
+            return;
+        }
+        ;
+        this.canvasWebglCtx.deleteFramebuffer(fbo.frameBuffer);
+    }
+    /**
      * 输出日志
      * @param args
      */
@@ -219,6 +232,12 @@ __decorate([
 __decorate([
     program(JWebglProgramTypeSmoothStep1CornerData)
 ], JWebgl.prototype, "programSmoothStep1CornerData", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothStep2Tickness)
+], JWebgl.prototype, "programSmoothStep2Tickness", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothStep3CornerRemove)
+], JWebgl.prototype, "programSmoothStep3CornerRemove", void 0);
 __decorate([
     program(JWebglProgramTypeSmoothStep3Smooth)
 ], JWebgl.prototype, "programSmoothStep3Smooth", void 0);

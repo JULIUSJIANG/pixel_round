@@ -9,6 +9,9 @@ import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
 import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
+/**
+ * 拐角数据
+ */
 export default class JWebglProgramTypeSmoothStep1CornerData extends JWebglProgram {
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)

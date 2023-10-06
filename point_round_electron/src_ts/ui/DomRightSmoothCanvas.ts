@@ -85,6 +85,16 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
     fboCornerData: JWebglFrameBuffer;
 
     /**
+     * 备份空间
+     */
+    fboCornerDataCache: JWebglFrameBuffer;
+
+    /**
+     * 存储了厚度信息的帧缓冲区
+     */
+    fboTickness: JWebglFrameBuffer;
+
+    /**
      * 缓存了
      */
     fboDisplay: JWebglFrameBuffer;
@@ -114,9 +124,17 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
 
         // 绘制 fbo
         if (this.fboTexture == null || this.fboTexture.width != dataSrc.textureWidth || this.fboTexture.height != dataSrc.textureHeight) {
+            this.jWebgl.destroyFbo (this.fboTexture);
+            this.jWebgl.destroyFbo (this.fboDisplay);
+            this.jWebgl.destroyFbo (this.fboCornerData);
+            this.jWebgl.destroyFbo (this.fboCornerDataCache);
+            this.jWebgl.destroyFbo (this.fboTickness);
+
             this.fboTexture = this.jWebgl.getFbo (dataSrc.textureWidth, dataSrc.textureHeight);
             this.fboDisplay = this.jWebgl.getFbo (dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN, dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN);
             this.fboCornerData = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
+            this.fboCornerDataCache = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
+            this.fboTickness = this.jWebgl.getFbo (dataSrc.textureWidth, dataSrc.textureHeight);
         };
 
         // 清除所有
@@ -144,7 +162,40 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             2
         );
         this.jWebgl.programSmoothStep1CornerData.draw ();
-        this.drawFbo (this.fboCornerData, 1, 0);
+        this.drawFbo (this.fboCornerData, 0, 1);
+
+        // 厚度数据
+        this.jWebgl.useFbo (this.fboTickness);
+        this.jWebgl.clear ();
+        this.jWebgl.programSmoothStep2Tickness.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmoothStep2Tickness.uTexture.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothStep2Tickness.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothStep2Tickness.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.jWebgl.programSmoothStep2Tickness.draw ();
+        this.drawFbo (this.fboTickness, 1, 1);
+
+        // 角数据剔除
+        this.jWebgl.useFbo (this.fboCornerDataCache);
+        this.jWebgl.clear ();
+        this.jWebgl.programSmoothStep3CornerRemove.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmoothStep3CornerRemove.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothStep3CornerRemove.uTextureTickness.fillByFbo (this.fboTickness);
+        this.jWebgl.programSmoothStep3CornerRemove.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothStep3CornerRemove.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.jWebgl.programSmoothStep3CornerRemove.draw ();
+        this.drawFbo (this.fboCornerDataCache, 2, 1);
 
         // 最终结果
         this.jWebgl.useFbo (this.fboDisplay);
@@ -161,7 +212,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             2
         );
         this.jWebgl.programSmoothStep3Smooth.draw ();
-        this.drawFbo (this.fboDisplay, 2, 0);
+        this.drawFbo (this.fboDisplay, 1, 0);
 
         // 网格
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;

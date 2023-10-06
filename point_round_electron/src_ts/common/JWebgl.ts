@@ -9,6 +9,8 @@ import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmoothStep1CornerData from "./JWebglProgramTypeSmoothStep1CornerData.js";
+import JWebglProgramTypeSmoothStep2Tickness from "./JWebglProgramTypeSmoothStep2Tickness.js";
+import JWebglProgramTypeSmoothStep3CornerRemove from "./JWebglProgramTypeSmoothStep3CornerRemove.js";
 import JWebglProgramTypeSmoothStep3Smooth from "./JWebglProgramTypeSmoothStep3Smooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import objectPool from "./ObjectPool.js";
@@ -167,6 +169,12 @@ class JWebgl {
     @program (JWebglProgramTypeSmoothStep1CornerData)
     programSmoothStep1CornerData: JWebglProgramTypeSmoothStep1CornerData;
 
+    @program (JWebglProgramTypeSmoothStep2Tickness)
+    programSmoothStep2Tickness: JWebglProgramTypeSmoothStep2Tickness;
+
+    @program (JWebglProgramTypeSmoothStep3CornerRemove)
+    programSmoothStep3CornerRemove: JWebglProgramTypeSmoothStep3CornerRemove;
+
     @program (JWebglProgramTypeSmoothStep3Smooth)
     programSmoothStep3Smooth: JWebglProgramTypeSmoothStep3Smooth;
 
@@ -235,6 +243,17 @@ class JWebgl {
      */
     getFbo (width: number, height: number) {
         return new JWebglFrameBuffer (this, width, height);
+    }
+
+    /**
+     * 销毁帧缓冲区
+     * @param fbo 
+     */
+    destroyFbo (fbo: JWebglFrameBuffer) {
+        if (fbo == null) {
+            return;
+        };
+        this.canvasWebglCtx.deleteFramebuffer (fbo.frameBuffer);
     }
 
     /**

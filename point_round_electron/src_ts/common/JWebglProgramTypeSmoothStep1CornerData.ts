@@ -89,9 +89,16 @@ void main() {
     vec4 colorBL = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 - vecRight / 2.0);
     vec4 colorBR = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 + vecRight / 2.0);
 
-    vec4 colorResult = vec4 (1.0, 1.0, 1.0, 0.0);
+    vec4 colorResult = vec4 (0.0, 1.0, 1.0, 0.0);
+
+    // a 为 1 的时候，就是要平滑
     if ((checkEqual (colorLeft, colorCenter) || checkEqual (colorCenter, colorRight)) || checkEqual (colorFL, colorFR)) {
         colorResult.a = 1.0;
+    };
+
+    // r 为 1 的时候，就是该角左隔板有压力
+    if (checkEqual (colorFL, colorCenter) || checkEqual (colorCenter, colorBR)) {
+        colorResult.r = 1.0;
     };
 
     gl_FragColor = colorResult;

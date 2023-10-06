@@ -14,7 +14,7 @@ import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmoothStep1CornerData from "./JWebglProgramTypeSmoothStep1CornerData.js";
-import JWebglProgramTypeSmoothStep2Smooth from "./JWebglProgramTypeSmoothStep2Smooth.js";
+import JWebglProgramTypeSmoothStep3Smooth from "./JWebglProgramTypeSmoothStep3Smooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import objectPool from "./ObjectPool.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
@@ -220,6 +220,6 @@ __decorate([
     program(JWebglProgramTypeSmoothStep1CornerData)
 ], JWebgl.prototype, "programSmoothStep1CornerData", void 0);
 __decorate([
-    program(JWebglProgramTypeSmoothStep2Smooth)
-], JWebgl.prototype, "programSmoothStep2Smooth", void 0);
+    program(JWebglProgramTypeSmoothStep3Smooth)
+], JWebgl.prototype, "programSmoothStep3Smooth", void 0);
 export default JWebgl;

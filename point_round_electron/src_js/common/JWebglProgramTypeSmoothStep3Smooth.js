@@ -9,12 +9,12 @@ import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramAttributeVec2 from "./JWebglProgramAttributeVec2.js";
 import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
-import JWebglProgramUniformFloat from "./JWebglProgramUniformFloat.js";
+import JWEbglProgramDefine from "./JWebglProgramDefine.js";
 import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
 import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
-export default class JWebglProgramTypeSmoothStep1CornerData extends JWebglProgram {
+export default class JWebglProgramTypeSmoothStep3Smooth extends JWebglProgram {
     constructor() {
         super(...arguments);
         this._addLeft = new JWebglMathVector4();
@@ -38,63 +38,73 @@ void main() {
         return `
 // 取样
 vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
-  vec2 pos = uv / ${this.uTextureSize};
-  if (
-    pos.x < 0.0 
-    || 1.0 < pos.x
-    || pos.y < 0.0
-    || 1.0 < pos.y
-  )
-  {
-    return vec4 (0, 0, 0, 0);
-  };
-  return texture2D (tex, pos);
+    vec2 pos = uv / ${this.uTextureSize};
+    if (
+           pos.x < 0.0 
+        || 1.0 < pos.x
+        || pos.y < 0.0
+        || 1.0 < pos.y
+    )
+    {
+        return vec4 (0, 0, 0, 0);
+    };
+    return texture2D (tex, pos);
 }
 
-// 检查 2 个颜色是否一致
-bool checkEqual (vec4 colorA, vec4 colorB) {
-    return (
-          abs (colorA.r - colorB.r) 
-        + abs (colorA.g - colorB.g) 
-        + abs (colorA.b - colorB.b)
-        + abs (colorA.a - colorB.a)
-    ) <= 0.01;
+// 2 个数是否匹配
+bool match (float current, float target) {
+    return abs (current - target) < 0.5;
+}
+
+// 进行平滑
+void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 smoothColor) {
+    // 向量: p1 -> p2
+    vec2 dir = p2 - p1;
+    // 向量: p1 -> p2 顺时针旋转 90 度
+    dir = normalize (vec2 (dir.y, -dir.x));
+    // 向量: p1 像素点中心 -> uv
+    vec2 lp = uv - (floor (p1) + 0.5);
+    // lp 在 dir 上的投影，取值 0 - 1.4142135623730951;
+    float shadow = dot (lp, dir);
+    // 准线以内，对颜色进行替换
+    float l = step (shadow, tickness);
+    // 根据权重，进行取色
+    sum = mix (sum, smoothColor, l); 
+}
+
+// 使用一个角对总颜色进行影响
+void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
+    vec2 posTex = floor (pos) + vec2 (0.5, 0.5);
+
+    vec2 posCorner = posTex + vecForward / 4.0;
+    vec4 colorCorner = getTextureRGBA (${this.uTextureCorner}, posCorner);
+    
+    vec2 vecRight = vec2 (vecForward.y, -vecForward.x);
+
+    vec2 posLeft = posTex - vecRight;
+    vec2 posRight = posTex + vecRight;
+
+    vec2 posFL = posTex + vecForward / 2.0 - vecRight / 2.0;
+    vec2 posFR = posTex + vecForward / 2.0 + vecRight / 2.0;
+
+    vec4 colorFL = getTextureRGBA (${this.uTexture}, posFL);
+    vec4 colorFR = getTextureRGBA (${this.uTexture}, posFR);
+
+    if (match (colorCorner.a, 1.0)) {
+        connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorFL);
+    };
 }
 
 void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
-    vec2 uv = floor (pos) + vec2 (0.5, 0.5);
+    vec4 colorSum = getTextureRGBA (${this.uTexture}, pos);
 
-    vec2 vecForward = vec2 (pos - uv) * 4.0;
-    vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
+    colorCorner (colorSum, pos, vec2 (- 1.0, 1.0));
+    colorCorner (colorSum, pos, vec2 (1.0, 1.0));
+    colorCorner (colorSum, pos, vec2 (1.0, - 1.0));
+    colorCorner (colorSum, pos, vec2 (- 1.0, - 1.0));
 
-    vec4 colorCenter = getTextureRGBA (${this.uTexture}, uv);
-
-    vec4 colorLeft = getTextureRGBA (${this.uTexture}, uv - vecRight);
-    vec4 colorRight = getTextureRGBA (${this.uTexture}, uv + vecRight);
-
-    vec4 colorForward = getTextureRGBA (${this.uTexture}, uv + vecForward);
-    vec4 colorBack = getTextureRGBA (${this.uTexture}, uv - vecForward);
-
-    vec4 colorFL = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 - vecRight / 2.0);
-    vec4 colorFR = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 + vecRight / 2.0);
-
-    vec4 colorBL = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 - vecRight / 2.0);
-    vec4 colorBR = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 + vecRight / 2.0);
-
-    vec4 colorResult = vec4 (0.0, 1.0, 1.0, 0.0);
-
-    // a 为 1 的时候，就是要平滑
-    if ((checkEqual (colorLeft, colorCenter) || checkEqual (colorCenter, colorRight)) || checkEqual (colorFL, colorFR)) {
-        colorResult.a = 1.0;
-    };
-
-    // r 为 1 的时候，就是该角左隔板有压力
-    if (checkEqual (colorFL, colorCenter) || checkEqual (colorCenter, colorBR)) {
-        colorResult.r = 1.0;
-    };
-
-    gl_FragColor = colorResult;
+    gl_FragColor = colorSum;
 }
         `;
     }
@@ -145,23 +155,32 @@ void main() {
     }
 }
 __decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `0.3535`)
+], JWebglProgramTypeSmoothStep3Smooth.prototype, "dForward", void 0);
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `0.2071`)
+], JWebglProgramTypeSmoothStep3Smooth.prototype, "dForwardSmall", void 0);
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `0.2236`)
+], JWebglProgramTypeSmoothStep3Smooth.prototype, "dSide", void 0);
+__decorate([
     JWebglProgram.uniform(JWebglProgramUniformMat4)
-], JWebglProgramTypeSmoothStep1CornerData.prototype, "uMvp", void 0);
+], JWebglProgramTypeSmoothStep3Smooth.prototype, "uMvp", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothStep1CornerData.prototype, "uTexture", void 0);
+], JWebglProgramTypeSmoothStep3Smooth.prototype, "uTexture", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformVec2)
-], JWebglProgramTypeSmoothStep1CornerData.prototype, "uTextureSize", void 0);
+], JWebglProgramTypeSmoothStep3Smooth.prototype, "uTextureSize", void 0);
 __decorate([
-    JWebglProgram.uniform(JWebglProgramUniformFloat)
-], JWebglProgramTypeSmoothStep1CornerData.prototype, "uRight", void 0);
+    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
+], JWebglProgramTypeSmoothStep3Smooth.prototype, "uTextureCorner", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec4)
-], JWebglProgramTypeSmoothStep1CornerData.prototype, "aPosition", void 0);
+], JWebglProgramTypeSmoothStep3Smooth.prototype, "aPosition", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec2)
-], JWebglProgramTypeSmoothStep1CornerData.prototype, "aTexCoord", void 0);
+], JWebglProgramTypeSmoothStep3Smooth.prototype, "aTexCoord", void 0);
 __decorate([
     JWebglProgram.varying(JWebglProgramVaryingVec2)
-], JWebglProgramTypeSmoothStep1CornerData.prototype, "vTexCoord", void 0);
+], JWebglProgramTypeSmoothStep3Smooth.prototype, "vTexCoord", void 0);

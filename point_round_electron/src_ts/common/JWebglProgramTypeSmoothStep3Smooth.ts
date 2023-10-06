@@ -9,7 +9,7 @@ import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
 import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
-export default class JWebglProgramTypeSmoothStep2Smooth extends JWebglProgram {
+export default class JWebglProgramTypeSmoothStep3Smooth extends JWebglProgram {
 
     @JWebglProgram.define (JWEbglProgramDefine, `0.3535`)
     dForward: JWEbglProgramDefine;

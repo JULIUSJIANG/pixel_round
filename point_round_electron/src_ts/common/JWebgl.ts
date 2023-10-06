@@ -9,7 +9,7 @@ import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
 import JWebglProgramTypeSmoothStep1CornerData from "./JWebglProgramTypeSmoothStep1CornerData.js";
-import JWebglProgramTypeSmoothStep2Smooth from "./JWebglProgramTypeSmoothStep2Smooth.js";
+import JWebglProgramTypeSmoothStep3Smooth from "./JWebglProgramTypeSmoothStep3Smooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import objectPool from "./ObjectPool.js";
 
@@ -167,8 +167,8 @@ class JWebgl {
     @program (JWebglProgramTypeSmoothStep1CornerData)
     programSmoothStep1CornerData: JWebglProgramTypeSmoothStep1CornerData;
 
-    @program (JWebglProgramTypeSmoothStep2Smooth)
-    programSmoothStep2Smooth: JWebglProgramTypeSmoothStep2Smooth;
+    @program (JWebglProgramTypeSmoothStep3Smooth)
+    programSmoothStep3Smooth: JWebglProgramTypeSmoothStep3Smooth;
 
     /**
      * 模型矩阵

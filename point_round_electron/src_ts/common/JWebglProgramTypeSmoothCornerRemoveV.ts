@@ -132,18 +132,16 @@ void main() {
         posCenterCornerForward.a = 0.0;
     };
 
-    // 不破坏大三角形 - 偏左型
-    if (
-           match (posLeftCornerForward.a, 1.0)
-        && match (posFLCornerBack.a, 1.0)
-        && match (posLeftCornerForward.g, 1.0)
-        && match (posCenterCornerForward.r, 1.0)
-    )
-    {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
+    // 不破坏向前的壁垒 - 偏左
+    // if (
+    //        match (posFLCornerBack.r, 1.0)
+    //     && match (posFLCornerBack.g, 1.0)
+    // ) 
+    // {
+    //     posCenterCornerForward.a = posCenterCornerForwardVal;
+    // };
 
-    // 不破坏大三角形 - 中间型
+    // 不破坏向前的壁垒 - 中间型
     if (
             match (posFLCornerBack.a, 1.0) 
         &&  match (posFRCornerBack.a, 1.0)
@@ -154,7 +152,36 @@ void main() {
         posCenterCornerForward.a = posCenterCornerForwardVal;
     };
 
-    // 不破坏大三角形 - 偏右型
+    // 不破坏向前的壁垒 - 偏右
+    // if (
+    //        match (posFRCornerBack.r, 1.0)
+    //     && match (posFRCornerBack.g, 1.0)
+    // ) 
+    // {
+    //     posCenterCornerForward.a = posCenterCornerForwardVal;
+    // };
+
+    // 不破坏向后的壁垒 - 偏左型
+    if (
+           match (posLeftCornerForward.a, 1.0)
+        && match (posFLCornerBack.a, 1.0)
+        && match (posLeftCornerForward.g, 1.0)
+        && match (posCenterCornerForward.r, 1.0)
+    )
+    {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
+
+    // 不破坏向后的壁垒 - 中间型
+    // if (
+    //        match (posCenterCornerForward.r, 1.0)
+    //     && match (posCenterCornerForward.g, 1.0)
+    // ) 
+    // {
+    //     posCenterCornerForward.a = posCenterCornerForwardVal;
+    // };
+
+    // 不破坏向后的壁垒 - 偏右型
     if (
            match (posRightCornerForward.a, 1.0)
         && match (posFRCornerBack.a, 1.0)

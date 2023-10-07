@@ -82,18 +82,26 @@ void main() {
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
+    vec4 posCenterCornerBack = getCornerCache (posCenter, - vecForward);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerBack = getCornerCache (posFL, - vecForward);
+    vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
+    vec4 posFLColor = getTextureRGBA (${this.uTextureMain}, posFL);
 
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRCornerBack = getCornerCache (posFR, - vecForward);
+    vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
+    vec4 posFRColor = getTextureRGBA (${this.uTextureMain}, posFR);
 
     vec2 posLeft = posCenter - vecRight;
     vec4 posLeftCornerForward = getCornerCache (posLeft, vecForward);
 
     vec2 posRight = posCenter + vecRight;
     vec4 posRightCornerForward = getCornerCache (posRight, vecForward);
+
+    vec2 posForward = posCenter + vecForward;
+    vec4 posForwardColor = getTextureRGBA (${this.uTextureMain}, posForward);
 
     float posCenterCornerForwardVal = posCenterCornerForward.a;
 
@@ -119,12 +127,63 @@ void main() {
         posCenterCornerForward.a = 0.0;
     };
 
-    // 不破坏大三角形
+    // 不破坏大三角形 - 偏左型
+    if (
+           match (posLeftCornerForward.a, 1.0)
+        && match (posFLCornerBack.a, 1.0)
+        && match (posLeftCornerForward.g, 1.0)
+        && match (posCenterCornerForward.r, 1.0)
+    )
+    {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
+
+    // 不破坏大三角形 - 中间型
     if (
             match (posFLCornerBack.a, 1.0) 
         &&  match (posFRCornerBack.a, 1.0)
         &&  match (posFLCornerBack.r, 1.0)
         &&  match (posFRCornerBack.g, 1.0)
+    ) 
+    {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
+
+    // 不破坏大三角形 - 偏右型
+    if (
+           match (posRightCornerForward.a, 1.0)
+        && match (posFRCornerBack.a, 1.0)
+        && match (posRightCornerForward.r, 1.0)
+        && match (posCenterCornerForward.g, 1.0)
+    ) 
+    {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
+
+    // 不破坏层次表现
+    if (match (posCenterCornerBack.a, 1.0)) {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
+
+    // 不破坏 L 开口向左
+    if (
+           match (posCenterCornerForward.a, 1.0)
+        && match (posFRCornerLeft.a, 1.0)
+        && match (posCenterCornerForward.r, 1.0)
+        && match (posFRCornerLeft.g, 1.0)
+        && checkEqual (posFLColor, posForwardColor)
+    ) 
+    {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
+
+    // 不破坏 L 开口向右
+    if (
+           match (posCenterCornerForwardVal, 1.0)
+        && match (posFLCornerRight.a, 1.0)
+        && match (posCenterCornerForward.g, 1.0)
+        && match (posFLCornerRight.r, 1.0)
+        && checkEqual (posFRColor, posForwardColor)
     ) 
     {
         posCenterCornerForward.a = posCenterCornerForwardVal;
@@ -186,6 +245,9 @@ __decorate([
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformVec2)
 ], JWebglProgramTypeSmoothCornerRemoveV.prototype, "uTextureSize", void 0);
+__decorate([
+    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
+], JWebglProgramTypeSmoothCornerRemoveV.prototype, "uTextureMain", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
 ], JWebglProgramTypeSmoothCornerRemoveV.prototype, "uTextureCorner", void 0);

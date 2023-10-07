@@ -476,6 +476,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.clear ();
         this.jWebgl.programSmoothCornerRemoveV.uMvp.fill (this.mat4Mvp);
         this.jWebgl.programSmoothCornerRemoveV.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothCornerRemoveV.uTextureMain.fillByFbo (this.fboTexture);
         this.jWebgl.programSmoothCornerRemoveV.uTextureCorner.fillByFbo (this.fboCornerData);
         this.jWebgl.programSmoothCornerRemoveV.uRight.fill (1);
         this.jWebgl.programSmoothCornerRemoveV.add (

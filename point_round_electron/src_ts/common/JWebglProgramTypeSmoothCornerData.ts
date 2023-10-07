@@ -100,7 +100,6 @@ void main() {
     vec4 posRightColor = getTextureRGBA (${this.uTextureMain}, posRight);
 
     vec2 posForward = posCenter + vecForward;
-
     vec2 posBack = posCenter - vecForward;
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;

@@ -131,16 +131,10 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec4 posFRColor = getTextureRGBA (${this.uTexture}, posFR);
 
     vec4 colorSmooth = posTexColor;
-    // 俩边颜色一致，那么平滑颜色就明确了
-    if (checkEqual (posFLColor, posFRColor)) {
+    if (match (posTexCornerForward.r, 1.0)) {
         colorSmooth = posFLColor;
     };
-    // 左不平右平，选左颜色
-    if (!match (posFLFlatRight.g, 1.0) && match (posFRFlatLeft.r, 1.0)) {
-        colorSmooth = posFLColor;
-    };
-    // 左平右不平，选右颜色
-    if (match (posFLFlatRight.g, 1.0) && !match (posFRFlatLeft.r, 1.0)) {
+    if (match (posTexCornerForward.g, 1.0)) {
         colorSmooth = posFRColor;
     };
     // 需要平滑

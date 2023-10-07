@@ -10,7 +10,7 @@ import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
 /**
- * 剔除无明确指示的平滑
+ * 只保留有明确指示的平滑
  */
 export default class JWebglProgramTypeSmoothCornerRemoveU extends JWebglProgram {
 
@@ -118,10 +118,14 @@ void main() {
     // 左不平右平，选左颜色
     if (!match (posFLFlatRight.g, 1.0) && match (posFRFlatLeft.r, 1.0)) {
         posCenterCornerForward.a = posCenterCornerForwardVal;
+        posCenterCornerForward.r = 1.0;
+        posCenterCornerForward.g = 0.0;
     };
     // 左平右不平，选右颜色
     if (match (posFLFlatRight.g, 1.0) && !match (posFRFlatLeft.r, 1.0)) {
         posCenterCornerForward.a = posCenterCornerForwardVal;
+        posCenterCornerForward.r = 0.0;
+        posCenterCornerForward.g = 1.0;
     };
 
     gl_FragColor = posCenterCornerForward;

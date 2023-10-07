@@ -94,12 +94,30 @@ void main() {
 
     vec4 colorResult = vec4 (0.0, 0.0, 0.0, 0.0);
 
-    // a 为 1 的时候，就是要平滑
-    if ((checkEqual (colorLeft, colorCenter) || checkEqual (colorCenter, colorRight)) || checkEqual (colorFL, colorFR)) {
-        colorResult.a = 1.0;
-    };
-    if (checkEqual (colorFL, colorCenter) || checkEqual (colorFR, colorCenter)) {
-        colorResult.a = 0.0;
+    // a 为 1 的时候，就是要平滑。r 为 1 的时候，表明要取色左侧; g 为 1 的时候，表明要取色右侧
+    if (!checkEqual (colorFL, colorCenter) && !checkEqual (colorFR, colorCenter)) {
+        // 前方 2 个颜色一样，那么左右都行
+        if (checkEqual (colorFL, colorFR)) {
+            colorResult.a = 1.0;
+            colorResult.r = 1.0;
+            colorResult.g = 1.0;
+        }
+        // 左右颜色都一样，还不确定取左颜色还是右颜色
+        else if (checkEqual (colorLeft, colorCenter) && checkEqual (colorCenter, colorRight)) {
+            colorResult.a = 1.0;
+        }
+        else {
+            // 左倾，取左颜色
+            if (checkEqual (colorLeft, colorCenter)) {
+                colorResult.a = 1.0;
+                colorResult.r = 1.0;
+            };
+            // 右倾，取右颜色
+            if (checkEqual (colorCenter, colorRight)) {
+                colorResult.a = 1.0;
+                colorResult.g = 1.0;
+            };
+        };
     };
 
     gl_FragColor = colorResult;

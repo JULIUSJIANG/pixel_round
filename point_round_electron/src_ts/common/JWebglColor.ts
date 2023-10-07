@@ -121,17 +121,6 @@ namespace JWebglColor {
     export const COLOR_BLUE_ALPHA = new JWebglColor (0.4039, 0.4039, 0.9254, 0.7);
 }
 
-// for (let i = 0; i < colorData01.length; i+=4) {
-//     DemoLifeCycleColor.listColor.push (
-//         new DemoLifeCycleColor (
-//             colorData01 [i + 0],
-//             colorData01 [i + 1],
-//             colorData01 [i + 2],
-//             colorData01 [i + 3]
-//         )
-//     );
-// };
-
 for (let i = 0; i < colorData255.length; i+=4) {
     JWebglColor.listColor.push (
         new JWebglColor (

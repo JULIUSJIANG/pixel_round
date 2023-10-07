@@ -108,20 +108,20 @@ void main() {
     vec4 posFRColor = getTextureRGBA (${this.uTexture}, posFR);
 
     // 先认为平滑无效
-    float posCenterCornerForwardR = posCenterCornerForward.r;
-    posCenterCornerForward.r = 0.0;
+    float posCenterCornerForwardVal = posCenterCornerForward.a;
+    posCenterCornerForward.a = 0.0;
 
     // 有效的平滑
     if (checkEqual (posFLColor, posFRColor)) {
-        posCenterCornerForward.r = posCenterCornerForwardR;
+        posCenterCornerForward.a = posCenterCornerForwardVal;
     };
     // 左不平右平，选左颜色
     if (!match (posFLFlatRight.g, 1.0) && match (posFRFlatLeft.r, 1.0)) {
-        posCenterCornerForward.r = posCenterCornerForwardR;
+        posCenterCornerForward.a = posCenterCornerForwardVal;
     };
     // 左平右不平，选右颜色
     if (match (posFLFlatRight.g, 1.0) && !match (posFRFlatLeft.r, 1.0)) {
-        posCenterCornerForward.r = posCenterCornerForwardR;
+        posCenterCornerForward.a = posCenterCornerForwardVal;
     };
 
     gl_FragColor = posCenterCornerForward;

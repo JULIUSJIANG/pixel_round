@@ -98,16 +98,16 @@ void main() {
 
     // 发生 4 角互相平滑
     if (
-           match (posCenterCornerForward.r, 1.0)
-        && match (posForwardCornerBack.r, 1.0)
-        && match (posFLCornerRight.r, 1.0)
-        && match (posFRCornerLeft.r, 1.0)
+           match (posCenterCornerForward.a, 1.0)
+        && match (posForwardCornerBack.a, 1.0)
+        && match (posFLCornerRight.a, 1.0)
+        && match (posFRCornerLeft.a, 1.0)
     ) 
     {
         float ticknessStraight = posCenterColor.r + posForwardColor.r;
         float ticknessSide = posFLColor.r + posFRColor.r;
         if (ticknessStraight < ticknessSide) {
-            posCenterCornerForward.r = 0.0;
+            posCenterCornerForward.a = 0.0;
         };
     };
 

@@ -95,11 +95,11 @@ void main() {
     vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
 
     if (
-           (match (posFLCornerRight.b, 1.0) && match (posCenterCornerLeft.b, 1.0))
-        || (match (posFRCornerLeft.b, 1.0) && match (posCenterCornerRight.b, 1.0))
+           (match (posFLCornerRight.r, 1.0) && match (posCenterCornerLeft.r, 1.0))
+        || (match (posFRCornerLeft.r, 1.0) && match (posCenterCornerRight.r, 1.0))
     ) 
     {
-        posCenterCornerForward.b = 0.0;
+        posCenterCornerForward.r = 0.0;
     };
 
     gl_FragColor = posCenterCornerForward;

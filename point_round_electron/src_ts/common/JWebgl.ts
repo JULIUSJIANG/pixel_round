@@ -18,6 +18,7 @@ import JWebglProgramTypeSmoothSmooth from "./JWebglProgramTypeSmoothSmooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import JWebglTouch from "./JWebglTouch.js";
 import objectPool from "./ObjectPool.js";
+import JWebglProgramTypeSmoothFlat from "./JWebglProgramTypeSmoothFlat.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -225,11 +226,14 @@ class JWebgl {
     @program (JWebglProgramTypePoint)
     programPoint: JWebglProgramTypePoint;
 
-    @program (JWebglProgramTypeSmoothCornerData)
-    programSmoothCornerData: JWebglProgramTypeSmoothCornerData;
-
     @program (JWebglProgramTypeSmoothTickness)
     programSmoothTickness: JWebglProgramTypeSmoothTickness;
+
+    @program (JWebglProgramTypeSmoothFlat)
+    programSmoothFlat: JWebglProgramTypeSmoothFlat;
+
+    @program (JWebglProgramTypeSmoothCornerData)
+    programSmoothCornerData: JWebglProgramTypeSmoothCornerData;
 
     @program (JWebglProgramTypeSmoothCornerRemoveX)
     programSmoothCornerRemoveX: JWebglProgramTypeSmoothCornerRemoveX;

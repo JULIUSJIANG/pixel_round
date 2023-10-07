@@ -15,9 +15,9 @@ import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
 import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 /**
- * 剔除无明确指示的平滑
+ * 平坦数据
  */
-export default class JWebglProgramTypeSmoothCornerRemoveU extends JWebglProgram {
+export default class JWebglProgramTypeSmoothFlat extends JWebglProgram {
     constructor() {
         super(...arguments);
         this._addLeft = new JWebglMathVector4();
@@ -39,9 +39,19 @@ void main() {
     }
     impGetnShaderFTxt() {
         return `
-// 2 个数是否匹配
-bool match (float current, float target) {
-    return abs (current - target) < 0.5;
+// 取样
+vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
+  vec2 pos = uv / ${this.uTextureSize};
+  if (
+    pos.x < 0.0 
+    || 1.0 < pos.x
+    || pos.y < 0.0
+    || 1.0 < pos.y
+  )
+  {
+    return vec4 (0, 0, 0, 0);
+  };
+  return texture2D (tex, pos);
 }
 
 // 检查 2 个颜色是否一致
@@ -54,70 +64,40 @@ bool checkEqual (vec4 colorA, vec4 colorB) {
     ) <= 0.01;
 }
 
-// 取样
-vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
-    vec2 pos = uv / ${this.uTextureSize};
-    if (
-           pos.x < 0.0 
-        || 1.0 < pos.x
-        || pos.y < 0.0
-        || 1.0 < pos.y
-    )
-    {
-        return vec4 (0, 0, 0, 0);
-    };
-    return texture2D (tex, pos);
-}
-
-// 获取角的缓存数据
-vec4 getCornerCache (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureCorner}, posCorner);
-}
-
-// 获取平坦的缓存数据
-vec4 getFlatCache (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureFlat}, posCorner);
-}
-
 void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
+    vec2 uv = floor (pos) + vec2 (0.5, 0.5);
 
-    vec2 posCenter = floor (pos) + vec2 (0.5, 0.5);
-    vec2 vecForward = vec2 (pos - posCenter) * 4.0;
+    vec2 vecForward = vec2 (pos - uv) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
-    vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
-    vec4 posCenterColor = getTextureRGBA (${this.uTexture}, posCenter);
 
-    vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
-    vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
-    vec4 posFLFlatRight = getFlatCache (posFL, vecRight);
-    vec4 posFLColor = getTextureRGBA (${this.uTexture}, posFL);
+    vec4 colorCenter = getTextureRGBA (${this.uTexture}, uv);
 
-    vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
-    vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
-    vec4 posFRFlatLeft = getFlatCache (posFR, - vecRight);
-    vec4 posFRColor = getTextureRGBA (${this.uTexture}, posFR);
+    vec4 colorLeft = getTextureRGBA (${this.uTexture}, uv - vecRight);
+    vec4 colorRight = getTextureRGBA (${this.uTexture}, uv + vecRight);
 
-    // 先认为平滑无效
-    float posCenterCornerForwardR = posCenterCornerForward.r;
-    posCenterCornerForward.r = 0.0;
+    vec4 colorForward = getTextureRGBA (${this.uTexture}, uv + vecForward);
+    vec4 colorBack = getTextureRGBA (${this.uTexture}, uv - vecForward);
 
-    // 有效的平滑
-    if (checkEqual (posFLColor, posFRColor)) {
-        posCenterCornerForward.r = posCenterCornerForwardR;
-    };
-    // 左不平右平，选左颜色
-    if (!match (posFLFlatRight.g, 1.0) && match (posFRFlatLeft.r, 1.0)) {
-        posCenterCornerForward.r = posCenterCornerForwardR;
-    };
-    // 左平右不平，选右颜色
-    if (match (posFLFlatRight.g, 1.0) && !match (posFRFlatLeft.r, 1.0)) {
-        posCenterCornerForward.r = posCenterCornerForwardR;
+    vec4 colorFL = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 - vecRight / 2.0);
+    vec4 colorFR = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 + vecRight / 2.0);
+
+    vec4 colorBL = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 - vecRight / 2.0);
+    vec4 colorBR = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 + vecRight / 2.0);
+
+    vec4 colorResult = vec4 (0.0, 0.0, 0.0, 1.0);
+
+    // r 为 1 的时候，表明该角左边界是平的
+    if (!checkEqual (colorFL, colorCenter) && !checkEqual (colorForward, colorCenter) && checkEqual (colorFR, colorCenter)) {
+        colorResult.r = 1.0;
     };
 
-    gl_FragColor = posCenterCornerForward;
+    // g 为 1 的时候，表明该角右边界是平的
+    if (!checkEqual (colorFR, colorCenter) && !checkEqual (colorForward, colorCenter) && checkEqual (colorFL, colorCenter)) {
+        colorResult.g = 1.0;
+    };
+
+    gl_FragColor = colorResult;
 }
         `;
     }
@@ -169,28 +149,22 @@ void main() {
 }
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformMat4)
-], JWebglProgramTypeSmoothCornerRemoveU.prototype, "uMvp", void 0);
+], JWebglProgramTypeSmoothFlat.prototype, "uMvp", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothCornerRemoveU.prototype, "uTexture", void 0);
+], JWebglProgramTypeSmoothFlat.prototype, "uTexture", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformVec2)
-], JWebglProgramTypeSmoothCornerRemoveU.prototype, "uTextureSize", void 0);
-__decorate([
-    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothCornerRemoveU.prototype, "uTextureCorner", void 0);
-__decorate([
-    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothCornerRemoveU.prototype, "uTextureFlat", void 0);
+], JWebglProgramTypeSmoothFlat.prototype, "uTextureSize", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformFloat)
-], JWebglProgramTypeSmoothCornerRemoveU.prototype, "uRight", void 0);
+], JWebglProgramTypeSmoothFlat.prototype, "uRight", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec4)
-], JWebglProgramTypeSmoothCornerRemoveU.prototype, "aPosition", void 0);
+], JWebglProgramTypeSmoothFlat.prototype, "aPosition", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec2)
-], JWebglProgramTypeSmoothCornerRemoveU.prototype, "aTexCoord", void 0);
+], JWebglProgramTypeSmoothFlat.prototype, "aTexCoord", void 0);
 __decorate([
     JWebglProgram.varying(JWebglProgramVaryingVec2)
-], JWebglProgramTypeSmoothCornerRemoveU.prototype, "vTexCoord", void 0);
+], JWebglProgramTypeSmoothFlat.prototype, "vTexCoord", void 0);

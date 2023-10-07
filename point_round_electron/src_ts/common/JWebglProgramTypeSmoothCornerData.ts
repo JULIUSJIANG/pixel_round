@@ -94,22 +94,12 @@ void main() {
 
     vec4 colorResult = vec4 (0.0, 0.0, 0.0, 1.0);
 
-    // r 为 1 的时候，表明该角左边界是平的
-    if (!checkEqual (colorFL, colorCenter) && !checkEqual (colorForward, colorCenter) && checkEqual (colorFR, colorCenter)) {
+    // r 为 1 的时候，就是要平滑
+    if ((checkEqual (colorLeft, colorCenter) || checkEqual (colorCenter, colorRight)) || checkEqual (colorFL, colorFR)) {
         colorResult.r = 1.0;
     };
-
-    // g 为 1 的时候，表明该角右边界是平的
-    if (!checkEqual (colorFR, colorCenter) && !checkEqual (colorForward, colorCenter) && checkEqual (colorFL, colorCenter)) {
-        colorResult.g = 1.0;
-    };
-
-    // b 为 1 的时候，就是要平滑
-    if ((checkEqual (colorLeft, colorCenter) || checkEqual (colorCenter, colorRight)) || checkEqual (colorFL, colorFR)) {
-        colorResult.b = 1.0;
-    };
     if (checkEqual (colorFL, colorCenter) || checkEqual (colorFR, colorCenter)) {
-        colorResult.b = 0.0;
+        colorResult.r = 0.0;
     };
 
     gl_FragColor = colorResult;

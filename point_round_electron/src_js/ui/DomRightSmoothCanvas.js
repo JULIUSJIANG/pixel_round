@@ -120,6 +120,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.jWebgl.clear();
         this.step0Texture();
         this.step0Tickness();
+        this.step0Flat();
         this.step1CornerData();
         this.step2CornerRemX();
         this.step3CornerRemU();
@@ -205,6 +206,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.jWebgl.programSmoothSmooth.uTexture.fillByFbo(this.fboTexture);
         this.jWebgl.programSmoothSmooth.uTextureSize.fill(dataSrc.textureWidth, dataSrc.textureHeight);
         this.jWebgl.programSmoothSmooth.uTextureCorner.fillByFbo(this.fboCornerData);
+        this.jWebgl.programSmoothSmooth.uTextureFlat.fillByFbo(this.fboFlat);
         this.jWebgl.programSmoothSmooth.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
         this.jWebgl.programSmoothSmooth.draw();
         this.drawFbo(this.fboDisplay, x, y);
@@ -233,6 +235,22 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.jWebgl.programSmoothTickness.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
         this.jWebgl.programSmoothTickness.draw();
         this.drawFbo(this.fboTickness, 0, 1);
+    }
+    /**
+     * 源纹理 -> 平坦纹理
+     */
+    step0Flat() {
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        // 各个角的数据
+        this.jWebgl.useFbo(this.fboFlat);
+        this.jWebgl.clear();
+        this.jWebgl.programSmoothFlat.uMvp.fill(this.mat4Mvp);
+        this.jWebgl.programSmoothFlat.uTexture.fillByFbo(this.fboTexture);
+        this.jWebgl.programSmoothFlat.uTextureSize.fill(dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothFlat.uRight.fill(1);
+        this.jWebgl.programSmoothFlat.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
+        this.jWebgl.programSmoothFlat.draw();
+        this.drawFbo(this.fboFlat, 0, 2);
     }
     /**
      * 源纹理 -> 角数据纹理
@@ -283,6 +301,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.jWebgl.programSmoothCornerRemoveU.uTexture.fillByFbo(this.fboTexture);
         this.jWebgl.programSmoothCornerRemoveU.uTextureSize.fill(dataSrc.textureWidth, dataSrc.textureHeight);
         this.jWebgl.programSmoothCornerRemoveU.uTextureCorner.fillByFbo(this.fboCornerData);
+        this.jWebgl.programSmoothCornerRemoveU.uTextureFlat.fillByFbo(this.fboFlat);
         this.jWebgl.programSmoothCornerRemoveU.uRight.fill(1);
         this.jWebgl.programSmoothCornerRemoveU.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
         this.jWebgl.programSmoothCornerRemoveU.draw();

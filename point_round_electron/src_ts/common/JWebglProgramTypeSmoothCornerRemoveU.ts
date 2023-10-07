@@ -22,6 +22,8 @@ export default class JWebglProgramTypeSmoothCornerRemoveU extends JWebglProgram 
     uTextureSize: JWebglProgramUniformVec2;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureCorner: JWebglProgramUniformSampler2D;
+    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
+    uTextureFlat: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformFloat)
     uRight: JWebglProgramUniformFloat;
 
@@ -80,6 +82,12 @@ vec4 getCornerCache (vec2 posTex, vec2 dir) {
     return getTextureRGBA (${this.uTextureCorner}, posCorner);
 }
 
+// 获取平坦的缓存数据
+vec4 getFlatCache (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureFlat}, posCorner);
+}
+
 void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
 
@@ -91,27 +99,29 @@ void main() {
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
+    vec4 posFLFlatRight = getFlatCache (posFL, vecRight);
     vec4 posFLColor = getTextureRGBA (${this.uTexture}, posFL);
 
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
+    vec4 posFRFlatLeft = getFlatCache (posFR, - vecRight);
     vec4 posFRColor = getTextureRGBA (${this.uTexture}, posFR);
 
     // 先认为平滑无效
-    float posCenterCornerForwardB = posCenterCornerForward.b;
-    posCenterCornerForward.b = 0.0;
+    float posCenterCornerForwardR = posCenterCornerForward.r;
+    posCenterCornerForward.r = 0.0;
 
     // 有效的平滑
     if (checkEqual (posFLColor, posFRColor)) {
-        posCenterCornerForward.b = posCenterCornerForwardB;
+        posCenterCornerForward.r = posCenterCornerForwardR;
     };
     // 左不平右平，选左颜色
-    if (!match (posFLCornerRight.g, 1.0) && match (posFRCornerLeft.r, 1.0)) {
-        posCenterCornerForward.b = posCenterCornerForwardB;
+    if (!match (posFLFlatRight.g, 1.0) && match (posFRFlatLeft.r, 1.0)) {
+        posCenterCornerForward.r = posCenterCornerForwardR;
     };
     // 左平右不平，选右颜色
-    if (match (posFLCornerRight.g, 1.0) && !match (posFRCornerLeft.r, 1.0)) {
-        posCenterCornerForward.b = posCenterCornerForwardB;
+    if (match (posFLFlatRight.g, 1.0) && !match (posFRFlatLeft.r, 1.0)) {
+        posCenterCornerForward.r = posCenterCornerForwardR;
     };
 
     gl_FragColor = posCenterCornerForward;

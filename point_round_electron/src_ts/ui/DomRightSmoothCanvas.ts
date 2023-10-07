@@ -10,7 +10,7 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrData from "../mgr/MgrData.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-const HORIZON_COUNT = 3;
+const HORIZON_COUNT = 5;
 
 const VERTICAL_COUNT = 4;
 
@@ -108,22 +108,22 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
      * 缓存了图片信息的帧缓冲区
      */
     fboTexture: JWebglFrameBuffer;
-
+    /**
+     * 存储了厚度信息的帧缓冲区，用于面对 x 平滑冲突时候，判断哪边是线
+     */
+    fboTickness: JWebglFrameBuffer;
+    /**
+     * 存储了平坦信息的帧缓冲区，可由此确定部分情况的平滑颜色
+     */
+    fboFlat: JWebglFrameBuffer;
     /**
      * 存储了角信息的帧缓冲区
      */
     fboCornerData: JWebglFrameBuffer;
-
     /**
      * 备份空间
      */
     fboCornerDataCache: JWebglFrameBuffer;
-
-    /**
-     * 存储了厚度信息的帧缓冲区
-     */
-    fboTickness: JWebglFrameBuffer;
-
     /**
      * 缓存了
      */
@@ -155,16 +155,17 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         // 绘制 fbo
         if (this.fboTexture == null || this.fboTexture.width != dataSrc.textureWidth || this.fboTexture.height != dataSrc.textureHeight) {
             this.jWebgl.destroyFbo (this.fboTexture);
-            this.jWebgl.destroyFbo (this.fboDisplay);
-            this.jWebgl.destroyFbo (this.fboCornerData);
-            this.jWebgl.destroyFbo (this.fboCornerDataCache);
-            this.jWebgl.destroyFbo (this.fboTickness);
-
             this.fboTexture = this.jWebgl.getFbo (dataSrc.textureWidth, dataSrc.textureHeight);
-            this.fboDisplay = this.jWebgl.getFbo (dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN, dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN);
-            this.fboCornerData = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
-            this.fboCornerDataCache = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
+            this.jWebgl.destroyFbo (this.fboTickness);
             this.fboTickness = this.jWebgl.getFbo (dataSrc.textureWidth, dataSrc.textureHeight);
+            this.jWebgl.destroyFbo (this.fboFlat);
+            this.fboFlat = this.jWebgl.getFbo (dataSrc.textureWidth * 2, dataSrc.textureHeight * 2);
+            this.jWebgl.destroyFbo (this.fboCornerData);
+            this.fboCornerData = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
+            this.jWebgl.destroyFbo (this.fboCornerDataCache);
+            this.fboCornerDataCache = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
+            this.jWebgl.destroyFbo (this.fboDisplay);
+            this.fboDisplay = this.jWebgl.getFbo (dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN, dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN);
         };
 
         // 清除所有
@@ -279,7 +280,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             2
         );
         this.jWebgl.programSmoothStep3CornerRemoveU.draw ();
-        this.drawFbo (this.fboCornerDataCache, 0, 3);
+        this.drawFbo (this.fboCornerDataCache, 3, 1);
         this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
 
         // 最终结果
@@ -297,7 +298,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             2
         );
         this.jWebgl.programSmoothStep3Smooth.draw ();
-        this.drawFbo (this.fboDisplay, 0, 2);
+        this.drawFbo (this.fboDisplay, 3, 0);
 
         // 角数据剔除 T
         this.jWebgl.useFbo (this.fboCornerDataCache);
@@ -314,7 +315,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             2
         );
         this.jWebgl.programSmoothStep3CornerRemoveT.draw ();
-        this.drawFbo (this.fboCornerDataCache, 1, 3);
+        this.drawFbo (this.fboCornerDataCache, 4, 1);
         this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
 
         // 最终结果
@@ -332,7 +333,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             2
         );
         this.jWebgl.programSmoothStep3Smooth.draw ();
-        this.drawFbo (this.fboDisplay, 1, 2);
+        this.drawFbo (this.fboDisplay, 4, 0);
 
         // 网格
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;

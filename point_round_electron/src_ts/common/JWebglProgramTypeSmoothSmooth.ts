@@ -29,8 +29,6 @@ export default class JWebglProgramTypeSmoothSmooth extends JWebglProgram {
     uTextureSize: JWebglProgramUniformVec2;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureCorner: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureFlat: JWebglProgramUniformSampler2D;
 
     @JWebglProgram.attribute (JWebglProgramAttributeVec4)
     aPosition: JWebglProgramAttributeVec4;
@@ -103,12 +101,6 @@ vec4 getCornerCache (vec2 posTex, vec2 dir) {
     return getTextureRGBA (${this.uTextureCorner}, posCorner);
 }
 
-// 获取平坦的缓存数据
-vec4 getFlatCache (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureFlat}, posCorner);
-}
-
 // 使用一个角对总颜色进行影响
 void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 posTex = floor (pos) + vec2 (0.5, 0.5);
@@ -121,13 +113,9 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 posRight = posTex + vecRight;
 
     vec2 posFL = posTex + vecForward / 2.0 - vecRight / 2.0;
-    vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
-    vec4 posFLFlatRight = getFlatCache (posFL, vecRight);
     vec4 posFLColor = getTextureRGBA (${this.uTexture}, posFL);
 
     vec2 posFR = posTex + vecForward / 2.0 + vecRight / 2.0;
-    vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
-    vec4 posFRFlatLeft = getFlatCache (posFR, - vecRight);
     vec4 posFRColor = getTextureRGBA (${this.uTexture}, posFR);
 
     vec4 colorSmooth = posTexColor;

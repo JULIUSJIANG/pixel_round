@@ -140,7 +140,7 @@ void main() {
         colorResult.a = 0.0;
     };
     // 没能给出一个明确的颜色，那么取消该平滑
-    if (colorResult.r == 0.0 && colorResult.g == 0.0) {
+    if (match (colorResult.r, 0.0) && match (colorResult.g, 0.0)) {
         colorResult.a = 0.0;
     };
 

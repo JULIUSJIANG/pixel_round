@@ -10,20 +10,16 @@ import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
 /**
- * 只保留有明确指示的平滑
+ * 剔除 I 型平滑冲突
  */
-export default class JWebglProgramTypeSmoothCornerRemoveU extends JWebglProgram {
+export default class JWebglProgramTypeSmoothCornerRemoveI extends JWebglProgram {
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTexture: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformVec2)
     uTextureSize: JWebglProgramUniformVec2;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureCorner: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureFlat: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformFloat)
     uRight: JWebglProgramUniformFloat;
 
@@ -82,12 +78,6 @@ vec4 getCornerCache (vec2 posTex, vec2 dir) {
     return getTextureRGBA (${this.uTextureCorner}, posCorner);
 }
 
-// 获取平坦的缓存数据
-vec4 getFlatCache (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureFlat}, posCorner);
-}
-
 void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
 
@@ -95,37 +85,37 @@ void main() {
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
-    vec4 posCenterColor = getTextureRGBA (${this.uTexture}, posCenter);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
-    vec4 posFLFlatRight = getFlatCache (posFL, vecRight);
-    vec4 posFLColor = getTextureRGBA (${this.uTexture}, posFL);
 
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
-    vec4 posFRFlatLeft = getFlatCache (posFR, - vecRight);
-    vec4 posFRColor = getTextureRGBA (${this.uTexture}, posFR);
 
-    // 先认为平滑无效
-    float posCenterCornerForwardVal = posCenterCornerForward.a;
-    posCenterCornerForward.a = 0.0;
+    // I 型右侧
+    if (
+           match (posCenterCornerForward.a, 1.0)
+        && match (posCenterCornerForward.r, 1.0)
 
-    // 有效的平滑
-    if (checkEqual (posFLColor, posFRColor)) {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-    // 左不平右平，选左颜色
-    if (!match (posFLFlatRight.g, 1.0) && match (posFRFlatLeft.r, 1.0)) {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-        posCenterCornerForward.r = 1.0;
-        posCenterCornerForward.g = 0.0;
-    };
-    // 左平右不平，选右颜色
-    if (match (posFLFlatRight.g, 1.0) && !match (posFRFlatLeft.r, 1.0)) {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
+        && match (posFLCornerRight.a, 1.0)
+        && match (posFLCornerRight.g, 1.0)
+    ) 
+    {
         posCenterCornerForward.r = 0.0;
         posCenterCornerForward.g = 1.0;
+    };
+
+    // I 型左侧
+    if (
+           match (posCenterCornerForward.a, 1.0)
+        && match (posCenterCornerForward.g, 1.0)
+
+        && match (posFRCornerLeft.a, 1.0)
+        && match (posFRCornerLeft.r, 1.0)
+    )
+    {
+        posCenterCornerForward.r = 1.0;
+        posCenterCornerForward.g = 0.0;
     };
 
     gl_FragColor = posCenterCornerForward;

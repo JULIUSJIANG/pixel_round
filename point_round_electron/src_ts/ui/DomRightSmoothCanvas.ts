@@ -175,10 +175,11 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.step0Texture ();
         this.step0Tickness ();
         this.step0Flat ();
+
         this.step1CornerData ();
         this.step2CornerRemX ();
-
         this.step3CornerRemT ();
+        this.step4CornerRemI ();
 
         // 网格
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
@@ -434,6 +435,31 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveT.draw ();
+        this.drawFbo (this.fboCornerDataCache, posX, 1);
+        this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
+        this.smoothTo (posX, 0);
+    }
+
+    /**
+     * 剔除 I 平滑
+     */
+    step4CornerRemI () {
+        let posX = 4;
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        this.jWebgl.useFbo (this.fboCornerDataCache);
+        this.jWebgl.clear ();
+        this.jWebgl.programSmoothCornerRemoveI.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmoothCornerRemoveI.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothCornerRemoveI.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothCornerRemoveI.uRight.fill (1);
+        this.jWebgl.programSmoothCornerRemoveI.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.jWebgl.programSmoothCornerRemoveI.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, 1);
         this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
         this.smoothTo (posX, 0);

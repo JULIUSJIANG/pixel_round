@@ -39,6 +39,21 @@ void main() {
     }
     impGetnShaderFTxt() {
         return `
+// 2 个数是否匹配
+bool match (float current, float target) {
+    return abs (current - target) < 0.5;
+}
+
+// 检查 2 个颜色是否一致
+bool checkEqual (vec4 colorA, vec4 colorB) {
+    return (
+          abs (colorA.r - colorB.r) 
+        + abs (colorA.g - colorB.g) 
+        + abs (colorA.b - colorB.b)
+        + abs (colorA.a - colorB.a)
+    ) <= 0.01;
+}
+
 // 取样
 vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
   vec2 pos = uv / ${this.uTextureSize};
@@ -54,63 +69,69 @@ vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
   return texture2D (tex, pos);
 }
 
-// 检查 2 个颜色是否一致
-bool checkEqual (vec4 colorA, vec4 colorB) {
-    return (
-          abs (colorA.r - colorB.r) 
-        + abs (colorA.g - colorB.g) 
-        + abs (colorA.b - colorB.b)
-        + abs (colorA.a - colorB.a)
-    ) <= 0.01;
+// 获取平坦的缓存数据
+vec4 getFlatCache (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureFlat}, posCorner);
 }
 
 void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
-    vec2 uv = floor (pos) + vec2 (0.5, 0.5);
 
-    vec2 vecForward = vec2 (pos - uv) * 4.0;
+    vec2 posCenter = floor (pos) + vec2 (0.5, 0.5);
+    vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
+    vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
 
-    vec4 colorCenter = getTextureRGBA (${this.uTexture}, uv);
+    vec2 posLeft = posCenter - vecRight;
+    vec4 posLeftColor = getTextureRGBA (${this.uTextureMain}, posLeft);
 
-    vec4 colorLeft = getTextureRGBA (${this.uTexture}, uv - vecRight);
-    vec4 colorRight = getTextureRGBA (${this.uTexture}, uv + vecRight);
+    vec2 posRight = posCenter + vecRight;
+    vec4 posRightColor = getTextureRGBA (${this.uTextureMain}, posRight);
 
-    vec4 colorForward = getTextureRGBA (${this.uTexture}, uv + vecForward);
-    vec4 colorBack = getTextureRGBA (${this.uTexture}, uv - vecForward);
+    vec2 posForward = posCenter + vecForward;
 
-    vec4 colorFL = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 - vecRight / 2.0);
-    vec4 colorFR = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 + vecRight / 2.0);
+    vec2 posBack = posCenter - vecForward;
 
-    vec4 colorBL = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 - vecRight / 2.0);
-    vec4 colorBR = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 + vecRight / 2.0);
+    vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
+    vec4 posFLColor = getTextureRGBA (${this.uTextureMain}, posFL);
+    vec4 posFLFlatRight = getFlatCache (posFL, vecRight);
+
+    vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
+    vec4 posFRColor = getTextureRGBA (${this.uTextureMain}, posFR);
+    vec4 posFRFlatLeft = getFlatCache (posFR, - vecRight);
+
+    vec2 posBL = posCenter - vecForward / 2.0 - vecRight / 2.0;
+
+    vec2 posBR = posCenter - vecForward / 2.0 + vecRight / 2.0;
 
     vec4 colorResult = vec4 (0.0, 0.0, 0.0, 0.0);
 
-    // a 为 1 的时候，就是要平滑。r 为 1 的时候，表明要取色左侧; g 为 1 的时候，表明要取色右侧
-    if (!checkEqual (colorFL, colorCenter) && !checkEqual (colorFR, colorCenter)) {
-        // 前方 2 个颜色一样，那么左右都行
-        if (checkEqual (colorFL, colorFR)) {
-            colorResult.a = 1.0;
+    // 前方相邻的 2 个块颜色一致
+    if (checkEqual (posFLColor, posFRColor)) {
+        colorResult.a = 1.0;
+        colorResult.r = 1.0;
+        colorResult.g = 1.0;
+    };
+    // 与左方颜色一致或者与右方颜色一致
+    if (checkEqual (posLeftColor, posCenterColor) || checkEqual (posCenterColor, posRightColor)) {
+        colorResult.a = 1.0;
+        // 左不平右平，选左颜色
+        if (!match (posFLFlatRight.g, 1.0) && match (posFRFlatLeft.r, 1.0)) {
             colorResult.r = 1.0;
-            colorResult.g = 1.0;
-        }
-        // 左右颜色都一样，还不确定取左颜色还是右颜色
-        else if (checkEqual (colorLeft, colorCenter) && checkEqual (colorCenter, colorRight)) {
-            colorResult.a = 1.0;
-        }
-        else {
-            // 左倾，取左颜色
-            if (checkEqual (colorLeft, colorCenter)) {
-                colorResult.a = 1.0;
-                colorResult.r = 1.0;
-            };
-            // 右倾，取右颜色
-            if (checkEqual (colorCenter, colorRight)) {
-                colorResult.a = 1.0;
-                colorResult.g = 1.0;
-            };
         };
+        // 左平右不平，选右颜色
+        if (match (posFLFlatRight.g, 1.0) && !match (posFRFlatLeft.r, 1.0)) {
+            colorResult.g = 1.0;
+        };
+    };
+    // 不需要多余的平滑
+    if (checkEqual (posFLColor, posCenterColor) || checkEqual (posFRColor, posCenterColor)) {
+        colorResult.a = 0.0;
+    };
+    // 没能给出一个明确的颜色，那么取消该平滑
+    if (colorResult.r == 0.0 && colorResult.g == 0.0) {
+        colorResult.a = 0.0;
     };
 
     gl_FragColor = colorResult;
@@ -168,7 +189,10 @@ __decorate([
 ], JWebglProgramTypeSmoothCornerData.prototype, "uMvp", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothCornerData.prototype, "uTexture", void 0);
+], JWebglProgramTypeSmoothCornerData.prototype, "uTextureMain", void 0);
+__decorate([
+    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
+], JWebglProgramTypeSmoothCornerData.prototype, "uTextureFlat", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformVec2)
 ], JWebglProgramTypeSmoothCornerData.prototype, "uTextureSize", void 0);

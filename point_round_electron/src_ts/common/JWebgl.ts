@@ -9,12 +9,12 @@ import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
-import JWebglProgramTypeSmoothStep1CornerData from "./JWebglProgramTypeSmoothStep1CornerData.js";
-import JWebglProgramTypeSmoothStep2Tickness from "./JWebglProgramTypeSmoothStep2Tickness.js";
-import JWebglProgramTypeSmoothStep3CornerRemoveT from "./JWebglProgramTypeSmoothStep3CornerRemoveT.js";
-import JWebglProgramTypeSmoothStep3CornerRemoveU from "./JWebglProgramTypeSmoothStep3CornerRemoveU.js";
-import JWebglProgramTypeSmoothStep3CornerRemoveX from "./JWebglProgramTypeSmoothStep3CornerRemoveX.js";
-import JWebglProgramTypeSmoothStep3Smooth from "./JWebglProgramTypeSmoothStep3Smooth.js";
+import JWebglProgramTypeSmoothCornerData from "./JWebglProgramTypeSmoothCornerData.js";
+import JWebglProgramTypeSmoothTickness from "./JWebglProgramTypeSmoothTickness.js";
+import JWebglProgramTypeSmoothCornerRemoveT from "./JWebglProgramTypeSmoothCornerRemoveT.js";
+import JWebglProgramTypeSmoothCornerRemoveU from "./JWebglProgramTypeSmoothCornerRemoveU.js";
+import JWebglProgramTypeSmoothCornerRemoveX from "./JWebglProgramTypeSmoothCornerRemoveX.js";
+import JWebglProgramTypeSmoothSmooth from "./JWebglProgramTypeSmoothSmooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import JWebglTouch from "./JWebglTouch.js";
 import objectPool from "./ObjectPool.js";
@@ -225,23 +225,23 @@ class JWebgl {
     @program (JWebglProgramTypePoint)
     programPoint: JWebglProgramTypePoint;
 
-    @program (JWebglProgramTypeSmoothStep1CornerData)
-    programSmoothStep1CornerData: JWebglProgramTypeSmoothStep1CornerData;
+    @program (JWebglProgramTypeSmoothCornerData)
+    programSmoothCornerData: JWebglProgramTypeSmoothCornerData;
 
-    @program (JWebglProgramTypeSmoothStep2Tickness)
-    programSmoothStep2Tickness: JWebglProgramTypeSmoothStep2Tickness;
+    @program (JWebglProgramTypeSmoothTickness)
+    programSmoothTickness: JWebglProgramTypeSmoothTickness;
 
-    @program (JWebglProgramTypeSmoothStep3CornerRemoveX)
-    programSmoothStep3CornerRemoveX: JWebglProgramTypeSmoothStep3CornerRemoveX;
+    @program (JWebglProgramTypeSmoothCornerRemoveX)
+    programSmoothCornerRemoveX: JWebglProgramTypeSmoothCornerRemoveX;
 
-    @program (JWebglProgramTypeSmoothStep3CornerRemoveU)
-    programSmoothStep3CornerRemoveU: JWebglProgramTypeSmoothStep3CornerRemoveU;
+    @program (JWebglProgramTypeSmoothCornerRemoveU)
+    programSmoothCornerRemoveU: JWebglProgramTypeSmoothCornerRemoveU;
     
-    @program (JWebglProgramTypeSmoothStep3CornerRemoveT)
-    programSmoothStep3CornerRemoveT: JWebglProgramTypeSmoothStep3CornerRemoveT;
+    @program (JWebglProgramTypeSmoothCornerRemoveT)
+    programSmoothCornerRemoveT: JWebglProgramTypeSmoothCornerRemoveT;
 
-    @program (JWebglProgramTypeSmoothStep3Smooth)
-    programSmoothStep3Smooth: JWebglProgramTypeSmoothStep3Smooth;
+    @program (JWebglProgramTypeSmoothSmooth)
+    programSmoothSmooth: JWebglProgramTypeSmoothSmooth;
 
     /**
      * 模型矩阵

@@ -10,21 +10,25 @@ import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
 /**
- * 剔除 T 型平滑冲突
+ * 拐角数据
  */
-export default class JWebglProgramTypeSmoothStep3CornerRemoveT extends JWebglProgram {
+export default class JWebglProgramTypeSmoothCornerData extends JWebglProgram {
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
+
+    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
+    uTexture: JWebglProgramUniformSampler2D;
+
     @JWebglProgram.uniform (JWebglProgramUniformVec2)
     uTextureSize: JWebglProgramUniformVec2;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureCorner: JWebglProgramUniformSampler2D;
+
     @JWebglProgram.uniform (JWebglProgramUniformFloat)
     uRight: JWebglProgramUniformFloat;
 
     @JWebglProgram.attribute (JWebglProgramAttributeVec4)
     aPosition: JWebglProgramAttributeVec4;
+
     @JWebglProgram.attribute (JWebglProgramAttributeVec2)
     aTexCoord: JWebglProgramAttributeVec2;
 
@@ -42,9 +46,19 @@ void main() {
 
     impGetnShaderFTxt (): string {
         return `
-// 2 个数是否匹配
-bool match (float current, float target) {
-    return abs (current - target) < 0.5;
+// 取样
+vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
+  vec2 pos = uv / ${this.uTextureSize};
+  if (
+    pos.x < 0.0 
+    || 1.0 < pos.x
+    || pos.y < 0.0
+    || 1.0 < pos.y
+  )
+  {
+    return vec4 (0, 0, 0, 0);
+  };
+  return texture2D (tex, pos);
 }
 
 // 检查 2 个颜色是否一致
@@ -57,52 +71,48 @@ bool checkEqual (vec4 colorA, vec4 colorB) {
     ) <= 0.01;
 }
 
-// 取样
-vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
-    vec2 pos = uv / ${this.uTextureSize};
-    if (
-           pos.x < 0.0 
-        || 1.0 < pos.x
-        || pos.y < 0.0
-        || 1.0 < pos.y
-    )
-    {
-        return vec4 (0, 0, 0, 0);
-    };
-    return texture2D (tex, pos);
-}
-
-// 获取角的缓存数据
-vec4 getCornerCache (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureCorner}, posCorner);
-}
-
 void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
+    vec2 uv = floor (pos) + vec2 (0.5, 0.5);
 
-    vec2 posCenter = floor (pos) + vec2 (0.5, 0.5);
-    vec2 vecForward = vec2 (pos - posCenter) * 4.0;
+    vec2 vecForward = vec2 (pos - uv) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
-    vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
-    vec4 posCenterCornerLeft = getCornerCache (posCenter, - vecRight);
-    vec4 posCenterCornerRight = getCornerCache (posCenter, vecRight);
 
-    vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
-    vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
+    vec4 colorCenter = getTextureRGBA (${this.uTexture}, uv);
 
-    vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
-    vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
+    vec4 colorLeft = getTextureRGBA (${this.uTexture}, uv - vecRight);
+    vec4 colorRight = getTextureRGBA (${this.uTexture}, uv + vecRight);
 
-    if (
-           (match (posFLCornerRight.b, 1.0) && match (posCenterCornerLeft.b, 1.0))
-        || (match (posFRCornerLeft.b, 1.0) && match (posCenterCornerRight.b, 1.0))
-    ) 
-    {
-        posCenterCornerForward.b = 0.0;
+    vec4 colorForward = getTextureRGBA (${this.uTexture}, uv + vecForward);
+    vec4 colorBack = getTextureRGBA (${this.uTexture}, uv - vecForward);
+
+    vec4 colorFL = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 - vecRight / 2.0);
+    vec4 colorFR = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 + vecRight / 2.0);
+
+    vec4 colorBL = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 - vecRight / 2.0);
+    vec4 colorBR = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 + vecRight / 2.0);
+
+    vec4 colorResult = vec4 (0.0, 0.0, 0.0, 1.0);
+
+    // r 为 1 的时候，表明该角左边界是平的
+    if (!checkEqual (colorFL, colorCenter) && !checkEqual (colorForward, colorCenter) && checkEqual (colorFR, colorCenter)) {
+        colorResult.r = 1.0;
     };
 
-    gl_FragColor = posCenterCornerForward;
+    // g 为 1 的时候，表明该角右边界是平的
+    if (!checkEqual (colorFR, colorCenter) && !checkEqual (colorForward, colorCenter) && checkEqual (colorFL, colorCenter)) {
+        colorResult.g = 1.0;
+    };
+
+    // b 为 1 的时候，就是要平滑
+    if ((checkEqual (colorLeft, colorCenter) || checkEqual (colorCenter, colorRight)) || checkEqual (colorFL, colorFR)) {
+        colorResult.b = 1.0;
+    };
+    if (checkEqual (colorFL, colorCenter) || checkEqual (colorFR, colorCenter)) {
+        colorResult.b = 0.0;
+    };
+
+    gl_FragColor = colorResult;
 }
         `;
     }

@@ -3,32 +3,29 @@ import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramAttributeVec2 from "./JWebglProgramAttributeVec2.js";
 import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
-import JWebglProgramUniformFloat from "./JWebglProgramUniformFloat.js";
+import JWEbglProgramDefine from "./JWebglProgramDefine.js";
 import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
 import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
 /**
- * 拐角数据
+ * 厚度标记
  */
-export default class JWebglProgramTypeSmoothStep1CornerData extends JWebglProgram {
+export default class JWebglProgramTypeSmoothTickness extends JWebglProgram {
+
+    @JWebglProgram.define (JWEbglProgramDefine, `4.0`)
+    dTicknessMax: JWEbglProgramDefine;
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
-
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTexture: JWebglProgramUniformSampler2D;
-
     @JWebglProgram.uniform (JWebglProgramUniformVec2)
     uTextureSize: JWebglProgramUniformVec2;
 
-    @JWebglProgram.uniform (JWebglProgramUniformFloat)
-    uRight: JWebglProgramUniformFloat;
-
     @JWebglProgram.attribute (JWebglProgramAttributeVec4)
     aPosition: JWebglProgramAttributeVec4;
-
     @JWebglProgram.attribute (JWebglProgramAttributeVec2)
     aTexCoord: JWebglProgramAttributeVec2;
 
@@ -48,17 +45,17 @@ void main() {
         return `
 // 取样
 vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
-  vec2 pos = uv / ${this.uTextureSize};
-  if (
-    pos.x < 0.0 
-    || 1.0 < pos.x
-    || pos.y < 0.0
-    || 1.0 < pos.y
-  )
-  {
-    return vec4 (0, 0, 0, 0);
-  };
-  return texture2D (tex, pos);
+    vec2 pos = uv / ${this.uTextureSize};
+    if (
+            pos.x < 0.0 
+        ||  1.0 < pos.x
+        ||  pos.y < 0.0
+        ||  1.0 < pos.y
+    )
+    {
+        return vec4 (0, 0, 0, 0);
+    };
+    return texture2D (tex, pos);
 }
 
 // 检查 2 个颜色是否一致
@@ -73,46 +70,37 @@ bool checkEqual (vec4 colorA, vec4 colorB) {
 
 void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
-    vec2 uv = floor (pos) + vec2 (0.5, 0.5);
+    vec4 colorMiddle = getTextureRGBA (${this.uTexture}, pos);
 
-    vec2 vecForward = vec2 (pos - uv) * 4.0;
-    vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
+    // 厚度
+    float count = 0.0;
 
-    vec4 colorCenter = getTextureRGBA (${this.uTexture}, uv);
-
-    vec4 colorLeft = getTextureRGBA (${this.uTexture}, uv - vecRight);
-    vec4 colorRight = getTextureRGBA (${this.uTexture}, uv + vecRight);
-
-    vec4 colorForward = getTextureRGBA (${this.uTexture}, uv + vecForward);
-    vec4 colorBack = getTextureRGBA (${this.uTexture}, uv - vecForward);
-
-    vec4 colorFL = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 - vecRight / 2.0);
-    vec4 colorFR = getTextureRGBA (${this.uTexture}, uv + vecForward / 2.0 + vecRight / 2.0);
-
-    vec4 colorBL = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 - vecRight / 2.0);
-    vec4 colorBR = getTextureRGBA (${this.uTexture}, uv - vecForward / 2.0 + vecRight / 2.0);
-
-    vec4 colorResult = vec4 (0.0, 0.0, 0.0, 1.0);
-
-    // r 为 1 的时候，表明该角左边界是平的
-    if (!checkEqual (colorFL, colorCenter) && !checkEqual (colorForward, colorCenter) && checkEqual (colorFR, colorCenter)) {
-        colorResult.r = 1.0;
+    // 上
+    vec4 colorTop = getTextureRGBA (${this.uTexture}, pos + vec2 (0.0, 1.0));
+    if (checkEqual (colorTop, colorMiddle)) {
+        count += 1.0;
     };
 
-    // g 为 1 的时候，表明该角右边界是平的
-    if (!checkEqual (colorFR, colorCenter) && !checkEqual (colorForward, colorCenter) && checkEqual (colorFL, colorCenter)) {
-        colorResult.g = 1.0;
+    // 右
+    vec4 colorRight = getTextureRGBA (${this.uTexture}, pos + vec2 (1.0, 0.0));
+    if (checkEqual (colorRight, colorMiddle)) {
+        count += 1.0;
     };
 
-    // b 为 1 的时候，就是要平滑
-    if ((checkEqual (colorLeft, colorCenter) || checkEqual (colorCenter, colorRight)) || checkEqual (colorFL, colorFR)) {
-        colorResult.b = 1.0;
-    };
-    if (checkEqual (colorFL, colorCenter) || checkEqual (colorFR, colorCenter)) {
-        colorResult.b = 0.0;
+    // 下
+    vec4 colorBottom = getTextureRGBA (${this.uTexture}, pos + vec2 (0.0, - 1.0));
+    if (checkEqual (colorBottom, colorMiddle)) {
+        count += 1.0;
     };
 
-    gl_FragColor = colorResult;
+    // 左
+    vec4 colorLeft = getTextureRGBA (${this.uTexture}, pos + vec2 (- 1.0, 0.0));
+    if (checkEqual (colorLeft, colorMiddle)) {
+        count += 1.0;
+    };
+
+    count /= ${this.dTicknessMax};
+    gl_FragColor = vec4 (count, 0.0, 0.0, 1.0);
 }
         `;
     }

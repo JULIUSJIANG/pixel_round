@@ -14,12 +14,12 @@ import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
 import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
-import JWebglProgramTypeSmoothStep1CornerData from "./JWebglProgramTypeSmoothStep1CornerData.js";
-import JWebglProgramTypeSmoothStep2Tickness from "./JWebglProgramTypeSmoothStep2Tickness.js";
-import JWebglProgramTypeSmoothStep3CornerRemoveT from "./JWebglProgramTypeSmoothStep3CornerRemoveT.js";
-import JWebglProgramTypeSmoothStep3CornerRemoveU from "./JWebglProgramTypeSmoothStep3CornerRemoveU.js";
-import JWebglProgramTypeSmoothStep3CornerRemoveX from "./JWebglProgramTypeSmoothStep3CornerRemoveX.js";
-import JWebglProgramTypeSmoothStep3Smooth from "./JWebglProgramTypeSmoothStep3Smooth.js";
+import JWebglProgramTypeSmoothCornerData from "./JWebglProgramTypeSmoothCornerData.js";
+import JWebglProgramTypeSmoothTickness from "./JWebglProgramTypeSmoothTickness.js";
+import JWebglProgramTypeSmoothCornerRemoveT from "./JWebglProgramTypeSmoothCornerRemoveT.js";
+import JWebglProgramTypeSmoothCornerRemoveU from "./JWebglProgramTypeSmoothCornerRemoveU.js";
+import JWebglProgramTypeSmoothCornerRemoveX from "./JWebglProgramTypeSmoothCornerRemoveX.js";
+import JWebglProgramTypeSmoothSmooth from "./JWebglProgramTypeSmoothSmooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import JWebglTouch from "./JWebglTouch.js";
 import objectPool from "./ObjectPool.js";
@@ -284,21 +284,21 @@ __decorate([
     program(JWebglProgramTypePoint)
 ], JWebgl.prototype, "programPoint", void 0);
 __decorate([
-    program(JWebglProgramTypeSmoothStep1CornerData)
-], JWebgl.prototype, "programSmoothStep1CornerData", void 0);
+    program(JWebglProgramTypeSmoothCornerData)
+], JWebgl.prototype, "programSmoothCornerData", void 0);
 __decorate([
-    program(JWebglProgramTypeSmoothStep2Tickness)
-], JWebgl.prototype, "programSmoothStep2Tickness", void 0);
+    program(JWebglProgramTypeSmoothTickness)
+], JWebgl.prototype, "programSmoothTickness", void 0);
 __decorate([
-    program(JWebglProgramTypeSmoothStep3CornerRemoveX)
-], JWebgl.prototype, "programSmoothStep3CornerRemoveX", void 0);
+    program(JWebglProgramTypeSmoothCornerRemoveX)
+], JWebgl.prototype, "programSmoothCornerRemoveX", void 0);
 __decorate([
-    program(JWebglProgramTypeSmoothStep3CornerRemoveU)
-], JWebgl.prototype, "programSmoothStep3CornerRemoveU", void 0);
+    program(JWebglProgramTypeSmoothCornerRemoveU)
+], JWebgl.prototype, "programSmoothCornerRemoveU", void 0);
 __decorate([
-    program(JWebglProgramTypeSmoothStep3CornerRemoveT)
-], JWebgl.prototype, "programSmoothStep3CornerRemoveT", void 0);
+    program(JWebglProgramTypeSmoothCornerRemoveT)
+], JWebgl.prototype, "programSmoothCornerRemoveT", void 0);
 __decorate([
-    program(JWebglProgramTypeSmoothStep3Smooth)
-], JWebgl.prototype, "programSmoothStep3Smooth", void 0);
+    program(JWebglProgramTypeSmoothSmooth)
+], JWebgl.prototype, "programSmoothSmooth", void 0);
 export default JWebgl;

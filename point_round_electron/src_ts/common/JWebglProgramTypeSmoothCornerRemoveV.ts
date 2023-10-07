@@ -88,6 +88,7 @@ void main() {
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
     vec4 posCenterCornerBack = getCornerCache (posCenter, - vecForward);
+    vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerBack = getCornerCache (posFL, - vecForward);
@@ -112,7 +113,7 @@ void main() {
 
     // 由左向右的尖锐
     if (
-            match (posCenterCornerForward.a, 1.0)
+            match (posCenterCornerForwardVal, 1.0)
         &&  match (posCenterCornerForward.g, 0.0)
         &&  match (posFLCornerBack.a, 1.0)
         &&  match (posFLCornerBack.r, 1.0)
@@ -123,7 +124,7 @@ void main() {
 
     // 由右向左的尖锐
     if (
-            match (posCenterCornerForward.a, 1.0)
+            match (posCenterCornerForwardVal, 1.0)
         &&  match (posCenterCornerForward.r, 0.0)
         &&  match (posFRCornerBack.a, 1.0)
         &&  match (posFRCornerBack.g, 1.0)
@@ -133,14 +134,14 @@ void main() {
     };
 
     // 不破坏向前的壁垒 - 偏左
-    // if (
-    //        match (posFLCornerBack.r, 1.0)
-    //     && match (posFLCornerBack.g, 1.0)
-    // ) 
-    // {
-    //     posCenterCornerForward.a = posCenterCornerForwardVal;
-    // };
-
+    if (
+           match (posFLCornerBack.r, 1.0)
+        && match (posFLCornerBack.g, 1.0)
+        && match (posLeftCornerForward.a, 1.0)
+    ) 
+    {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
     // 不破坏向前的壁垒 - 中间型
     if (
             match (posFLCornerBack.a, 1.0) 
@@ -151,15 +152,15 @@ void main() {
     {
         posCenterCornerForward.a = posCenterCornerForwardVal;
     };
-
     // 不破坏向前的壁垒 - 偏右
-    // if (
-    //        match (posFRCornerBack.r, 1.0)
-    //     && match (posFRCornerBack.g, 1.0)
-    // ) 
-    // {
-    //     posCenterCornerForward.a = posCenterCornerForwardVal;
-    // };
+    if (
+           match (posFRCornerBack.r, 1.0)
+        && match (posFRCornerBack.g, 1.0)
+        && match (posRightCornerForward.a, 1.0)
+    ) 
+    {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
 
     // 不破坏向后的壁垒 - 偏左型
     if (
@@ -171,16 +172,16 @@ void main() {
     {
         posCenterCornerForward.a = posCenterCornerForwardVal;
     };
-
     // 不破坏向后的壁垒 - 中间型
-    // if (
-    //        match (posCenterCornerForward.r, 1.0)
-    //     && match (posCenterCornerForward.g, 1.0)
-    // ) 
-    // {
-    //     posCenterCornerForward.a = posCenterCornerForwardVal;
-    // };
-
+    if (
+           match (posCenterCornerForward.r, 1.0)
+        && match (posCenterCornerForward.g, 1.0)
+        && match (posFLCornerBack.a, 1.0)
+        && match (posFRCornerBack.a, 1.0)
+    ) 
+    {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
     // 不破坏向后的壁垒 - 偏右型
     if (
            match (posRightCornerForward.a, 1.0)
@@ -192,15 +193,9 @@ void main() {
         posCenterCornerForward.a = posCenterCornerForwardVal;
     };
 
-    // 不破坏层次表现
-    if (match (posCenterCornerBack.a, 1.0)) {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-
     // 不破坏 L 开口向左
     if (
-           match (posCenterCornerForward.a, 1.0)
-        && match (posFRCornerLeft.a, 1.0)
+           match (posFRCornerLeft.a, 1.0)
         && match (posCenterCornerForward.r, 1.0)
         && match (posFRCornerLeft.g, 1.0)
         && checkEqual (posFLColor, posForwardColor)
@@ -208,16 +203,19 @@ void main() {
     {
         posCenterCornerForward.a = posCenterCornerForwardVal;
     };
-
     // 不破坏 L 开口向右
     if (
-           match (posCenterCornerForwardVal, 1.0)
-        && match (posFLCornerRight.a, 1.0)
+           match (posFLCornerRight.a, 1.0)
         && match (posCenterCornerForward.g, 1.0)
         && match (posFLCornerRight.r, 1.0)
         && checkEqual (posFRColor, posForwardColor)
     ) 
     {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
+
+    // 不破坏层次表现
+    if (match (posCenterCornerBack.a, 1.0)) {
         posCenterCornerForward.a = posCenterCornerForwardVal;
     };
 

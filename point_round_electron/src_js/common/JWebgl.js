@@ -25,6 +25,7 @@ import objectPool from "./ObjectPool.js";
 import JWebglProgramTypeSmoothFlat from "./JWebglProgramTypeSmoothFlat.js";
 import JWebglProgramTypeSmoothCornerRemoveI from "./JWebglProgramTypeSmoothCornerRemoveI.js";
 import JWebglProgramTypeSmoothCornerRemoveV from "./JWebglProgramTypeSmoothCornerRemoveV.js";
+import JWebglProgramTypeSmoothCornerRemoveA from "./JWebglProgramTypeSmoothCornerRemoveA.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
  * 获取原型上的缓存
@@ -294,6 +295,9 @@ __decorate([
 __decorate([
     program(JWebglProgramTypeSmoothCornerData)
 ], JWebgl.prototype, "programSmoothCornerData", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothCornerRemoveA)
+], JWebgl.prototype, "programSmoothCornerRemoveA", void 0);
 __decorate([
     program(JWebglProgramTypeSmoothCornerRemoveX)
 ], JWebgl.prototype, "programSmoothCornerRemoveX", void 0);

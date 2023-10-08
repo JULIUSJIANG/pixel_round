@@ -82,19 +82,23 @@ void main() {
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
-    vec4 posCenterColor = getTextureRGBA (${this.uTextureTickness}, posCenter);
+    vec4 posCenterColorTickness = getTextureRGBA (${this.uTextureTickness}, posCenter);
+    vec4 posCenterColorMain = getTextureRGBA (${this.uTextureMain}, posCenter);
 
     vec2 posForward = posCenter + vecForward;
     vec4 posForwardCornerBack = getCornerCache (posForward, - vecForward);
-    vec4 posForwardColor = getTextureRGBA (${this.uTextureTickness}, posForward);
+    vec4 posForwardColorTickness = getTextureRGBA (${this.uTextureTickness}, posForward);
+    vec4 posForwardColorMain = getTextureRGBA (${this.uTextureMain}, posForward);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
-    vec4 posFLColor = getTextureRGBA (${this.uTextureTickness}, posFL);
+    vec4 posFLColorTickness = getTextureRGBA (${this.uTextureTickness}, posFL);
+    vec4 posFLColorMain = getTextureRGBA (${this.uTextureMain}, posFL);
 
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
-    vec4 posFRColor = getTextureRGBA (${this.uTextureTickness}, posFR);
+    vec4 posFRColorTickness = getTextureRGBA (${this.uTextureTickness}, posFR);
+    vec4 posFRColorMain = getTextureRGBA (${this.uTextureMain}, posFR);
 
     // 发生 4 角互相平滑
     if (
@@ -104,10 +108,29 @@ void main() {
         && match (posFRCornerLeft.a, 1.0)
     ) 
     {
-        float ticknessStraight = posCenterColor.r + posForwardColor.r;
-        float ticknessSide = posFLColor.r + posFRColor.r;
-        if (ticknessStraight < ticknessSide) {
+        // 自己为唯一等色对角线，取消平滑
+        if (
+                checkEqual (posCenterColorMain, posForwardColorMain)
+            && !checkEqual (posFLColorMain, posFRColorMain)
+        ) 
+        {
             posCenterCornerForward.a = 0.0;
+        }
+        // 自己为唯一不等色对角线，保留平滑
+        else if (
+               !checkEqual (posCenterColorMain, posForwardColorMain)
+            &&  checkEqual (posFLColorMain, posFRColorMain)
+        )
+        {
+
+        }
+        // 否则根据厚度信息作出判断
+        else {
+            float ticknessStraight = posCenterColorTickness.r + posForwardColorTickness.r;
+            float ticknessSide = posFLColorTickness.r + posFRColorTickness.r;
+            if (ticknessStraight < ticknessSide) {
+                posCenterCornerForward.a = 0.0;
+            };
         };
     };
 
@@ -167,6 +190,9 @@ __decorate([
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformVec2)
 ], JWebglProgramTypeSmoothCornerRemoveX.prototype, "uTextureSize", void 0);
+__decorate([
+    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
+], JWebglProgramTypeSmoothCornerRemoveX.prototype, "uTextureMain", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
 ], JWebglProgramTypeSmoothCornerRemoveX.prototype, "uTextureTickness", void 0);

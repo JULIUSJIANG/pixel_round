@@ -20,6 +20,7 @@ import objectPool from "./ObjectPool.js";
 import JWebglProgramTypeSmoothFlat from "./JWebglProgramTypeSmoothFlat.js";
 import JWebglProgramTypeSmoothCornerRemoveI from "./JWebglProgramTypeSmoothCornerRemoveI.js";
 import JWebglProgramTypeSmoothCornerRemoveV from "./JWebglProgramTypeSmoothCornerRemoveV.js";
+import JWebglProgramTypeSmoothCornerRemoveA from "./JWebglProgramTypeSmoothCornerRemoveA.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -235,6 +236,9 @@ class JWebgl {
 
     @program (JWebglProgramTypeSmoothCornerData)
     programSmoothCornerData: JWebglProgramTypeSmoothCornerData;
+
+    @program (JWebglProgramTypeSmoothCornerRemoveA)
+    programSmoothCornerRemoveA: JWebglProgramTypeSmoothCornerRemoveA;
 
     @program (JWebglProgramTypeSmoothCornerRemoveX)
     programSmoothCornerRemoveX: JWebglProgramTypeSmoothCornerRemoveX;

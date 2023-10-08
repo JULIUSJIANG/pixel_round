@@ -110,6 +110,22 @@ vec4 getAngleCacheRight (vec2 posTex, vec2 dir) {
     return getTextureRGBA (${this.uTextureAngleRight}, posCorner);
 }
 
+// 进行平滑
+void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 smoothColor) {
+    // 向量: p1 -> p2
+    vec2 dir = p2 - p1;
+    // 向量: p1 -> p2 顺时针旋转 90 度
+    dir = normalize (vec2 (dir.y, -dir.x));
+    // 向量: p1 像素点中心 -> uv
+    vec2 lp = uv - (floor (p1) + 0.5);
+    // lp 在 dir 上的投影，取值 0 - 1.4142135623730951;
+    float shadow = dot (lp, dir);
+    // 准线以内，对颜色进行替换
+    float l = step (shadow, tickness);
+    // 根据权重，进行取色
+    sum = mix (sum, smoothColor, l); 
+}
+
 // 使用一个角对总颜色进行影响
 void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x);
@@ -165,11 +181,34 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
         && posAngle < posCenterAngleForwardRight.g
     )
     {
-
+        float distance = length (posRel);
+        // 超出半径，取平滑颜色
+        if (posCenterAreaForwardRight.b < distance) {
+            colorSum = colorSmooth;
+        };
     }
     // 否则采纳默认平滑
     else {
-
+        // 需要平滑
+        if (match (posCenterCornerForward.a, 1.0)) {
+            // 小平滑
+            connect (colorSum, pos, posFL, posFR, ${this.dForwardSmall}, colorSmooth);
+    
+            // 经典平滑
+            if (match (posCenterEnumForward.r, 0.0)) {
+                connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorSmooth);
+            };
+    
+            // 左倾平滑
+            if (match (posCenterEnumForward.g, 1.0)) {
+                connect (colorSum, pos, posLeft, posFR, ${this.dSide}, colorSmooth);
+            };
+    
+            // 右倾平滑
+            if (match (posCenterEnumForward.b, 1.0)) {
+                connect (colorSum, pos, posFL, posRight, ${this.dSide}, colorSmooth);
+            };
+        };
     };
 }
 

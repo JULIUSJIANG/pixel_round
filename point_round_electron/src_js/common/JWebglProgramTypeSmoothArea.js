@@ -118,7 +118,7 @@ void main() {
 
                 // 处于反向
                 if (${this.uRight} < 0.0) {
-
+                    colorResult.r = - colorResult.r;
                 };
             };
         };

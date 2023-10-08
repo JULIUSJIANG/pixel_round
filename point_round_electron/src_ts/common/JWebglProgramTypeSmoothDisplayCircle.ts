@@ -152,6 +152,9 @@ void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 sm
 void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x);
 
+    vec2 vecForwardNormalized = normalize (vecForward);
+    vec2 vecRightNormalized = normalize (vecRight);
+
     vec2 posCenter = floor (pos) + vec2 (0.5, 0.5);
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
     vec4 posCenterEnumForward = getEnumCache (posCenter, vecForward);
@@ -190,7 +193,10 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
         && posAngle < posCenterAngleForwardLeft.g
     ) 
     {
-        float distance = length (posRel);
+        // 圆心位置
+        vec2 circleCenter = posCenter + posCenterAreaForwardLeft.r * vecRightNormalized + posCenterAreaForwardLeft.g * vecForwardNormalized;
+        // 与圆心距离
+        float distance = length (pos - circleCenter);
         // 超出半径，取平滑颜色
         if (posCenterAreaForwardLeft.b < distance) {
             colorSum = colorSmooth;
@@ -203,7 +209,10 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
         && posAngle < posCenterAngleForwardRight.g
     )
     {
-        float distance = length (posRel);
+        // 圆心位置
+        vec2 circleCenter = posCenter + posCenterAreaForwardRight.r * vecRightNormalized + posCenterAreaForwardRight.g * vecForwardNormalized;
+        // 与圆心距离
+        float distance = length (pos - circleCenter);
         // 超出半径，取平滑颜色
         if (posCenterAreaForwardRight.b < distance) {
             colorSum = colorSmooth;

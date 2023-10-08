@@ -25,6 +25,7 @@ import JWebglProgramTypeSmoothEnumRound from "./JWebglProgramTypeSmoothEnumRound
 import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide.js";
 import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea.js";
 import JWebglProgramTypeSmoothDisplayCircle from "./JWebglProgramTypeSmoothDisplayCircle.js";
+import JWebglProgramTypeSmoothAngle from "./JWebglProgramTypeSmoothAngle.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -264,6 +265,9 @@ class JWebgl {
 
     @program (JWebglProgramTypeSmoothArea)
     programSmoothArea: JWebglProgramTypeSmoothArea;
+
+    @program (JWebglProgramTypeSmoothAngle)
+    programSmoothAngle: JWebglProgramTypeSmoothAngle;
 
     @program (JWebglProgramTypeSmoothDisplayOrdinary)
     programSmoothDisplayOrdinary: JWebglProgramTypeSmoothDisplayOrdinary;

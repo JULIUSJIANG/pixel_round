@@ -10,9 +10,9 @@ import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
 /**
- * 让部分折线更加平滑 - 圆心位置
+ * 让部分折线更加平滑 - 影响的角度
  */
-export default class JWebglProgramTypeSmoothArea extends JWebglProgram {
+export default class JWebglProgramTypeSmoothAngle extends JWebglProgram {
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;

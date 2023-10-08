@@ -93,6 +93,18 @@ vec4 getAreaCacheRight (vec2 posTex, vec2 dir) {
     return getTextureRGBA (${this.uTextureAreaRight}, posCorner);
 }
 
+// 获取角度区域的缓存数据 - 左
+vec4 getAngleCacheLeft (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureAngleLeft}, posCorner);
+}
+
+// 获取角度区域的缓存数据 - 右
+vec4 getAngleCacheRight (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureAngleRight}, posCorner);
+}
+
 // 使用一个角对总颜色进行影响
 void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 posCenter = floor (pos) + vec2 (0.5, 0.5);
@@ -100,6 +112,8 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec4 posCenterEnumForward = getEnumCache (posCenter, vecForward);
     vec4 posCenterAreaForwardLeft = getAreaCacheLeft (posCenter, vecForward);
     vec4 posCenterAreaForwardRight = getAreaCacheRight (posCenter, vecForward);
+    vec4 posCenterAngleForwardLeft = getAngleCacheLeft (posCenter, vecForward);
+    vec4 posCenterAngleForwardRight = getAngleCacheRight (posCenter, vecForward);
     vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
     
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x);
@@ -211,6 +225,12 @@ __decorate([
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
 ], JWebglProgramTypeSmoothDisplayCircle.prototype, "uTextureAreaRight", void 0);
+__decorate([
+    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
+], JWebglProgramTypeSmoothDisplayCircle.prototype, "uTextureAngleLeft", void 0);
+__decorate([
+    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
+], JWebglProgramTypeSmoothDisplayCircle.prototype, "uTextureAngleRight", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec4)
 ], JWebglProgramTypeSmoothDisplayCircle.prototype, "aPosition", void 0);

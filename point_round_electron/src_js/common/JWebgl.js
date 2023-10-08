@@ -30,6 +30,7 @@ import JWebglProgramTypeSmoothEnumRound from "./JWebglProgramTypeSmoothEnumRound
 import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide.js";
 import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea.js";
 import JWebglProgramTypeSmoothDisplayCircle from "./JWebglProgramTypeSmoothDisplayCircle.js";
+import JWebglProgramTypeSmoothAngle from "./JWebglProgramTypeSmoothAngle.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
  * 获取原型上的缓存
@@ -323,6 +324,9 @@ __decorate([
 __decorate([
     program(JWebglProgramTypeSmoothArea)
 ], JWebgl.prototype, "programSmoothArea", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothAngle)
+], JWebgl.prototype, "programSmoothAngle", void 0);
 __decorate([
     program(JWebglProgramTypeSmoothDisplayOrdinary)
 ], JWebgl.prototype, "programSmoothDisplayOrdinary", void 0);

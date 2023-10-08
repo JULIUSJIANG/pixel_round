@@ -15,9 +15,9 @@ import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
 import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 /**
- * 让部分折线更加平滑 - 圆心位置
+ * 让部分折线更加平滑 - 影响的角度
  */
-export default class JWebglProgramTypeSmoothArea extends JWebglProgram {
+export default class JWebglProgramTypeSmoothAngle extends JWebglProgram {
     constructor() {
         super(...arguments);
         this._addLeft = new JWebglMathVector4();
@@ -156,28 +156,28 @@ void main() {
 }
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformMat4)
-], JWebglProgramTypeSmoothArea.prototype, "uMvp", void 0);
+], JWebglProgramTypeSmoothAngle.prototype, "uMvp", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformVec2)
-], JWebglProgramTypeSmoothArea.prototype, "uTextureSize", void 0);
+], JWebglProgramTypeSmoothAngle.prototype, "uTextureSize", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothArea.prototype, "uTextureMain", void 0);
+], JWebglProgramTypeSmoothAngle.prototype, "uTextureMain", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothArea.prototype, "uTextureCorner", void 0);
+], JWebglProgramTypeSmoothAngle.prototype, "uTextureCorner", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothArea.prototype, "uTextureEnum", void 0);
+], JWebglProgramTypeSmoothAngle.prototype, "uTextureEnum", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformFloat)
-], JWebglProgramTypeSmoothArea.prototype, "uRight", void 0);
+], JWebglProgramTypeSmoothAngle.prototype, "uRight", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec4)
-], JWebglProgramTypeSmoothArea.prototype, "aPosition", void 0);
+], JWebglProgramTypeSmoothAngle.prototype, "aPosition", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec2)
-], JWebglProgramTypeSmoothArea.prototype, "aTexCoord", void 0);
+], JWebglProgramTypeSmoothAngle.prototype, "aTexCoord", void 0);
 __decorate([
     JWebglProgram.varying(JWebglProgramVaryingVec2)
-], JWebglProgramTypeSmoothArea.prototype, "vTexCoord", void 0);
+], JWebglProgramTypeSmoothAngle.prototype, "vTexCoord", void 0);

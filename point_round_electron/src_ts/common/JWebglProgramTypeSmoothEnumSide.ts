@@ -125,6 +125,7 @@ void main() {
                     checkEqual (posLeftColor, posFLColor)
                 &&  checkEqual (posFLColor, posFRColor)
                 && !match (posCenterCornerLeft.a, 1.0)
+                && !match (posCenterCornerRight.a, 1.0)
             ) 
             {
                 colorResult.g = 1.0;
@@ -134,6 +135,7 @@ void main() {
             if (
                     checkEqual (posFLColor, posFRColor)
                 &&  checkEqual (posFRColor, posRightColor)
+                && !match (posCenterCornerLeft.a, 1.0)
                 && !match (posCenterCornerRight.a, 1.0)
             ) 
             {

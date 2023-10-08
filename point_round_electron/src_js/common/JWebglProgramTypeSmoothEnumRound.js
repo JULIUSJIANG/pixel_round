@@ -88,7 +88,10 @@ void main() {
     vec4 posForwardCornerBack = getCornerCache (posForward, - vecForward);
     vec4 posForwardColor = getTextureRGBA (${this.uTextureMain}, posForward);
 
-    gl_FragColor = vec4 (posCenterCornerForward.a, 0.0, 0.0, 1.0) * ${this.uRight};
+    vec4 colorResult = vec4 (0.0, 0.0, 0.0, 1.0);
+    colorResult.r = posCenterCornerForward.a;
+
+    gl_FragColor = colorResult * ${this.uRight};
 }
         `;
     }

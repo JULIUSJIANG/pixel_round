@@ -87,14 +87,56 @@ void main() {
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
-    vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
 
-    vec2 posForward = posCenter + vecForward;
-    vec4 posForwardCornerBack = getCornerCache (posForward, - vecForward);
-    vec4 posForwardColor = getTextureRGBA (${this.uTextureMain}, posForward);
+    vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
+    vec4 posFLCornerBack = getCornerCache (posFL, - vecForward);
+    vec4 posFLColor = getTextureRGBA (${this.uTextureMain}, posFL);
+
+    vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
+    vec4 posFRCornerBack = getCornerCache (posFR, - vecForward);
+    vec4 posFRColor = getTextureRGBA (${this.uTextureMain}, posFR);
+
+    vec2 posLeft = posCenter - vecRight;
+    vec4 posLeftCornerBack = getCornerCache (posLeft, - vecForward);
+    vec4 posLeftColor = getTextureRGBA (${this.uTextureMain}, posLeft);
+
+    vec2 posRight = posCenter + vecRight;
+    vec4 posRightCornerBack = getCornerCache (posRight, - vecForward);
+    vec4 posRightColor = getTextureRGBA (${this.uTextureMain}, posRight);
 
     vec4 colorResult = vec4 (0.0, 0.0, 0.0, 1.0);
-    colorResult.r = posCenterCornerForward.a;
+    if (match (posCenterCornerForward.a, 1.0)) {
+        // 默认为大的向前平滑
+        colorResult.r = 0.0;
+
+        // 俩边均无切口，那么迷你化
+        if (
+               !match (posFLCornerBack.a, 1.0)
+            && !match (posFRCornerBack.a, 1.0)
+        ) 
+        {
+            colorResult.r = 1.0;
+        };
+
+        // 不破坏 z 结构 - 左型
+        if (
+               match (posCenterCornerForward.r, 1.0)
+            && match (posLeftCornerBack.a, 1.0)
+            && checkEqual (posLeftColor, posFLColor)
+        )
+        {
+            colorResult.r = 0.0;
+        };
+        // 不破坏 z 结构 - 右型
+        if (
+               match (posCenterCornerForward.g, 1.0)
+            && match (posRightCornerBack.a, 1.0)
+            && checkEqual (posRightColor, posFRColor)
+        )
+        {
+            colorResult.r = 0.0;
+        };
+    };
 
     gl_FragColor = colorResult * ${this.uRight};
 }

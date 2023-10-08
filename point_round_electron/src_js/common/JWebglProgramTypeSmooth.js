@@ -125,7 +125,7 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     // 需要平滑
     if (match (posTexCornerForward.a, 1.0)) {
         connect (colorSum, pos, posFL, posFR, ${this.dForwardSmall}, colorSmooth);
-        if (match (posTexEnumForward.r, 1.0)) {
+        if (match (posTexEnumForward.r, 0.0)) {
             connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorSmooth);
         };
     };

@@ -126,6 +126,8 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         // 清除所有
         this.jWebgl.useFbo(null);
         this.jWebgl.clear();
+        this.jWebgl.useFbo(this.fboEnumData);
+        this.jWebgl.clear();
         this.step0Texture();
         this.step0Tickness();
         this.step0Flat();

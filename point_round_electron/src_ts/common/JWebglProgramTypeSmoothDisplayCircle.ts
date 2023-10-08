@@ -20,6 +20,8 @@ export default class JWebglProgramTypeSmoothDisplayCircle extends JWebglProgram 
     dForwardSmall: JWEbglProgramDefine;
     @JWebglProgram.define (JWEbglProgramDefine, `0.2236`)
     dSide: JWEbglProgramDefine;
+    @JWebglProgram.define (JWEbglProgramDefine, `3.1415`)
+    dPI: JWEbglProgramDefine;
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
@@ -59,6 +61,11 @@ void main() {
 
     impGetnShaderFTxt (): string {
         return `
+// 手动实现的 atan2
+float atan2 (float y, float x) {
+    return atan (y / x) + step (x, 0.0) * step (0.0, y) * ${this.dPI} - step (x, 0.0) * step (y, 0.0) * ${this.dPI};
+}
+
 // 取样
 vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
     vec2 pos = uv / ${this.uTextureSize};
@@ -127,6 +134,8 @@ vec4 getAngleCacheRight (vec2 posTex, vec2 dir) {
 
 // 使用一个角对总颜色进行影响
 void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
+    vec2 vecRight = vec2 (vecForward.y, - vecForward.x);
+
     vec2 posCenter = floor (pos) + vec2 (0.5, 0.5);
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
     vec4 posCenterEnumForward = getEnumCache (posCenter, vecForward);
@@ -135,8 +144,6 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec4 posCenterAngleForwardLeft = getAngleCacheLeft (posCenter, vecForward);
     vec4 posCenterAngleForwardRight = getAngleCacheRight (posCenter, vecForward);
     vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
-    
-    vec2 vecRight = vec2 (vecForward.y, - vecForward.x);
 
     vec2 posLeft = posCenter - vecRight;
     vec2 posRight = posCenter + vecRight;
@@ -147,12 +154,44 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRColor = getTextureRGBA (${this.uTextureMain}, posFR);
 
+    // 相对于中心的位置
+    vec2 posRel = pos - posCenter;
+    // 在参考坐标系中的角度
+    float posAngle = atan2 (dot (posRel, vecForward), dot (posRel, vecRight)) / ${this.dPI};
+
     vec4 colorSmooth = posCenterColor;
     if (match (posCenterCornerForward.r, 1.0)) {
         colorSmooth = posFLColor;
     };
     if (match (posCenterCornerForward.g, 1.0)) {
         colorSmooth = posFRColor;
+    };
+
+    // 涉猎左管制区域
+    if (
+           match (posCenterAngleForwardLeft.a, 1.0)
+        && posCenterAngleForwardLeft.r < posAngle
+        && posAngle < posCenterAngleForwardLeft.g
+    ) 
+    {
+        float distance = length (posRel);
+        // 超出半径，取平滑颜色
+        if (posCenterAreaForwardLeft.b < distance) {
+            colorSum = colorSmooth;
+        };
+    }
+    // 涉猎右管制区域
+    else if (
+            match (posCenterAngleForwardRight.a, 1.0)
+        && posCenterAngleForwardRight.r < posAngle
+        && posAngle < posCenterAngleForwardRight.g
+    )
+    {
+
+    }
+    // 否则采纳默认平滑
+    else {
+
     };
 }
 

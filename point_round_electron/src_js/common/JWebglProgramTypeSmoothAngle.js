@@ -9,6 +9,7 @@ import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramAttributeVec2 from "./JWebglProgramAttributeVec2.js";
 import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
+import JWEbglProgramDefine from "./JWebglProgramDefine.js";
 import JWebglProgramUniformFloat from "./JWebglProgramUniformFloat.js";
 import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramUniformSampler2D from "./JWebglProgramUniformSampler2D.js";
@@ -69,12 +70,6 @@ vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
     return texture2D (tex, pos);
 }
 
-// 获取角的缓存数据
-vec4 getCornerCache (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureCorner}, posCorner);
-}
-
 // 获取平滑类型
 vec4 getEnumCache (vec2 posTex, vec2 dir) {
     vec2 posCorner = posTex + dir / 4.0;
@@ -88,19 +83,45 @@ void main() {
     vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
-    vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
     vec4 posCenterEnumForward = getEnumCache (posCenter, vecForward);
+    vec4 posCenterEnumLeft = getEnumCache (posCenter, - vecRight);
+    vec4 posCenterEnumRight = getEnumCache (posCenter, vecRight);
 
     // 最终结果
     vec4 colorResult = vec4 (0);
 
-    float posCenterCornerForwardVal = posCenterCornerForward.a;
-    posCenterCornerForward.a = 0.0;
     // 仅关心有平滑的角
-    if (match (posCenterCornerForwardVal, 1.0)) {
-        // 是小平滑
-        if (match (posCenterEnumForward.r, 1.0)) {
-            colorResult.a = 1.0;
+    if (match (posCenterEnumForward.a, 1.0)) {
+        // 是经典平滑
+        if (
+               match (posCenterEnumForward.r, 0.0)
+            && match (posCenterEnumForward.g, 0.0)
+            && match (posCenterEnumForward.b, 0.0)
+        ) 
+        {
+            // 左侧也是经典平滑，那么形成折线
+            if (
+                   match (posCenterEnumLeft.a, 1.0)
+                && match (posCenterEnumLeft.r, 0.0)
+                && match (posCenterEnumLeft.g, 0.0)
+                && match (posCenterEnumLeft.b, 0.0)
+            ) 
+            {
+                // 标注为有效
+                colorResult.a = 1.0;
+                // 起始角
+                colorResult.r = 0.5;
+                // 终止角
+                colorResult.g = 0.75;
+
+                // 处于反向
+                if (${this.uRight} < 0.0) {
+                    float valR = colorResult.r;
+                    float valG = colorResult.g;
+                    colorResult.r = 1.0 - valG;
+                    colorResult.g = 1.0 - valR;
+                };
+            };
         };
     };
 
@@ -155,6 +176,24 @@ void main() {
     }
 }
 __decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `0.7071`) // 0.7071067811865476
+], JWebglProgramTypeSmoothAngle.prototype, "dForwardLength", void 0);
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `0.5`)
+], JWebglProgramTypeSmoothAngle.prototype, "dForwardUnit", void 0);
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `0.4142`) // 0.4142135623730951
+], JWebglProgramTypeSmoothAngle.prototype, "dForwardLengthSmall", void 0);
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `0.2928`) // 0.2928932188134525
+], JWebglProgramTypeSmoothAngle.prototype, "dForwardUnitSmall", void 0);
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `1.118`) // 1.118033988749895
+], JWebglProgramTypeSmoothAngle.prototype, "dSideLength", void 0);
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `0.5`)
+], JWebglProgramTypeSmoothAngle.prototype, "dSideUnit", void 0);
+__decorate([
     JWebglProgram.uniform(JWebglProgramUniformMat4)
 ], JWebglProgramTypeSmoothAngle.prototype, "uMvp", void 0);
 __decorate([
@@ -163,9 +202,6 @@ __decorate([
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
 ], JWebglProgramTypeSmoothAngle.prototype, "uTextureMain", void 0);
-__decorate([
-    JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeSmoothAngle.prototype, "uTextureCorner", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
 ], JWebglProgramTypeSmoothAngle.prototype, "uTextureEnum", void 0);

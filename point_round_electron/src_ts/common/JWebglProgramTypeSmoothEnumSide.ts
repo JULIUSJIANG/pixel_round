@@ -10,9 +10,9 @@ import JWebglProgramUniformVec2 from "./JWebglProgramUniformVec2.js";
 import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 
 /**
- * 剔除导致尖锐的平滑
+ * 替换某些短距平滑为长距平滑
  */
-export default class JWebglProgramTypeSmoothCornerRemoveV extends JWebglProgram {
+export default class JWebglProgramTypeSmoothEnumSide extends JWebglProgram {
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
@@ -87,150 +87,30 @@ void main() {
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
-    vec4 posCenterCornerBack = getCornerCache (posCenter, - vecForward);
-    vec4 posCenterCornerLeft = getCornerCache (posCenter, - vecRight);
-    vec4 posCenterCornerRight = getCornerCache (posCenter, vecRight);
-    vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerBack = getCornerCache (posFL, - vecForward);
-    vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
     vec4 posFLColor = getTextureRGBA (${this.uTextureMain}, posFL);
 
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRCornerBack = getCornerCache (posFR, - vecForward);
-    vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
     vec4 posFRColor = getTextureRGBA (${this.uTextureMain}, posFR);
 
     vec2 posLeft = posCenter - vecRight;
-    vec4 posLeftCornerForward = getCornerCache (posLeft, vecForward);
+    vec4 posLeftCornerBack = getCornerCache (posLeft, - vecForward);
+    vec4 posLeftColor = getTextureRGBA (${this.uTextureMain}, posLeft);
 
     vec2 posRight = posCenter + vecRight;
-    vec4 posRightCornerForward = getCornerCache (posRight, vecForward);
+    vec4 posRightCornerBack = getCornerCache (posRight, - vecForward);
+    vec4 posRightColor = getTextureRGBA (${this.uTextureMain}, posRight);
 
-    vec2 posForward = posCenter + vecForward;
-    vec4 posForwardColor = getTextureRGBA (${this.uTextureMain}, posForward);
+    vec4 colorResult = vec4 (0.0, 0.0, 0.0, 1.0);
+    // 仅针对有平滑的情况
+    if (match (posCenterCornerForward.a, 1.0)) {
 
-    float posCenterCornerForwardVal = posCenterCornerForward.a;
-
-    // 由左向右的尖锐
-    if (
-            match (posCenterCornerForwardVal, 1.0)
-        &&  match (posCenterCornerForward.g, 0.0)
-        &&  match (posFLCornerBack.a, 1.0)
-        &&  match (posFLCornerBack.r, 1.0)
-    )
-    {
-        posCenterCornerForward.a = 0.0;
     };
 
-    // 由右向左的尖锐
-    if (
-            match (posCenterCornerForwardVal, 1.0)
-        &&  match (posCenterCornerForward.r, 0.0)
-        &&  match (posFRCornerBack.a, 1.0)
-        &&  match (posFRCornerBack.g, 1.0)
-    )
-    {
-        posCenterCornerForward.a = 0.0;
-    };
-
-    // 不破坏向前的壁垒 - 偏左
-    if (
-           match (posFLCornerBack.r, 1.0)
-        && match (posFLCornerBack.g, 1.0)
-        && match (posLeftCornerForward.a, 1.0)
-    ) 
-    {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-    // 不破坏向前的壁垒 - 中间型
-    if (
-            match (posFLCornerBack.a, 1.0) 
-        &&  match (posFRCornerBack.a, 1.0)
-        &&  match (posFLCornerBack.r, 1.0)
-        &&  match (posFRCornerBack.g, 1.0)
-    ) 
-    {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-    // 不破坏向前的壁垒 - 偏右
-    if (
-           match (posFRCornerBack.r, 1.0)
-        && match (posFRCornerBack.g, 1.0)
-        && match (posRightCornerForward.a, 1.0)
-    ) 
-    {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-
-    // 不破坏向后的壁垒 - 偏左型
-    if (
-           match (posLeftCornerForward.a, 1.0)
-        && match (posFLCornerBack.a, 1.0)
-        && match (posLeftCornerForward.g, 1.0)
-        && match (posCenterCornerForward.r, 1.0)
-    )
-    {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-    // 不破坏向后的壁垒 - 中间型
-    if (
-           match (posCenterCornerForward.r, 1.0)
-        && match (posCenterCornerForward.g, 1.0)
-        && match (posFLCornerBack.a, 1.0)
-        && match (posFRCornerBack.a, 1.0)
-    ) 
-    {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-    // 不破坏向后的壁垒 - 偏右型
-    if (
-           match (posRightCornerForward.a, 1.0)
-        && match (posFRCornerBack.a, 1.0)
-        && match (posRightCornerForward.r, 1.0)
-        && match (posCenterCornerForward.g, 1.0)
-    ) 
-    {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-
-    // 不破坏 L 开口向左
-    if (
-           match (posFRCornerLeft.a, 1.0)
-        && match (posCenterCornerForward.r, 1.0)
-        && match (posFRCornerLeft.g, 1.0)
-        && checkEqual (posFLColor, posForwardColor)
-    ) 
-    {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-    // 不破坏 L 开口向右
-    if (
-           match (posFLCornerRight.a, 1.0)
-        && match (posCenterCornerForward.g, 1.0)
-        && match (posFLCornerRight.r, 1.0)
-        && checkEqual (posFRColor, posForwardColor)
-    ) 
-    {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-
-    // 不破坏反弹表现
-    // if (
-    //        match (posCenterCornerLeft.a, 1.0)
-    //     || match (posCenterCornerRight.a, 1.0)
-    // )
-    // {
-    //     posCenterCornerForward.a = posCenterCornerForwardVal;
-    // };
-
-    // 不破坏层次表现
-    if (match (posCenterCornerBack.a, 1.0)) {
-        posCenterCornerForward.a = posCenterCornerForwardVal;
-    };
-
-    gl_FragColor = posCenterCornerForward;
+    gl_FragColor = colorResult * ${this.uRight};
 }
         `;
     }

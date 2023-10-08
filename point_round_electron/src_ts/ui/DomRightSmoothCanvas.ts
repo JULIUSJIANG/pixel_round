@@ -206,6 +206,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.step5CornerRemI (1, 2);
         this.step6CornerRemV (2, 2);
         this.step7EnumRound (3, 2);
+        this.step8EnumSide (4, 2);
 
         // 网格
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
@@ -557,6 +558,31 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             2
         );
         this.jWebgl.programSmoothEnumRound.draw ();
+        this.drawFbo (this.fboEnumDataCache, posX, posY + 1);
+        this.jWebgl.fillFbo (this.fboEnumData, this.fboEnumDataCache);
+        this.smoothTo (posX, posY + 0);
+    }
+
+    /**
+     * 平滑数据纹理 -> 平滑数据纹理
+     */
+    step8EnumSide (posX: number, posY: number) {
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        this.jWebgl.useFbo (this.fboEnumDataCache);
+        this.jWebgl.clear ();
+        this.jWebgl.programSmoothEnumSide.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmoothEnumSide.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothEnumSide.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothEnumSide.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothEnumSide.uRight.fill (1);
+        this.jWebgl.programSmoothEnumSide.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.jWebgl.programSmoothEnumSide.draw ();
         this.drawFbo (this.fboEnumDataCache, posX, posY + 1);
         this.jWebgl.fillFbo (this.fboEnumData, this.fboEnumDataCache);
         this.smoothTo (posX, posY + 0);

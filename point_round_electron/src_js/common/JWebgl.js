@@ -27,6 +27,7 @@ import JWebglProgramTypeSmoothCornerRemoveI from "./JWebglProgramTypeSmoothCorne
 import JWebglProgramTypeSmoothCornerRemoveV from "./JWebglProgramTypeSmoothCornerRemoveV.js";
 import JWebglProgramTypeSmoothCornerRemoveA from "./JWebglProgramTypeSmoothCornerRemoveA.js";
 import JWebglProgramTypeSmoothEnumRound from "./JWebglProgramTypeSmoothEnumRound.js";
+import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
  * 获取原型上的缓存
@@ -314,6 +315,9 @@ __decorate([
 __decorate([
     program(JWebglProgramTypeSmoothEnumRound)
 ], JWebgl.prototype, "programSmoothEnumRound", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothEnumSide)
+], JWebgl.prototype, "programSmoothEnumSide", void 0);
 __decorate([
     program(JWebglProgramTypeSmooth)
 ], JWebgl.prototype, "programSmooth", void 0);

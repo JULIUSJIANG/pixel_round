@@ -22,6 +22,7 @@ import JWebglProgramTypeSmoothCornerRemoveI from "./JWebglProgramTypeSmoothCorne
 import JWebglProgramTypeSmoothCornerRemoveV from "./JWebglProgramTypeSmoothCornerRemoveV.js";
 import JWebglProgramTypeSmoothCornerRemoveA from "./JWebglProgramTypeSmoothCornerRemoveA.js";
 import JWebglProgramTypeSmoothEnumRound from "./JWebglProgramTypeSmoothEnumRound.js";
+import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -255,6 +256,9 @@ class JWebgl {
 
     @program (JWebglProgramTypeSmoothEnumRound)
     programSmoothEnumRound: JWebglProgramTypeSmoothEnumRound;
+
+    @program (JWebglProgramTypeSmoothEnumSide)
+    programSmoothEnumSide: JWebglProgramTypeSmoothEnumSide;
 
     @program (JWebglProgramTypeSmooth)
     programSmooth: JWebglProgramTypeSmooth;

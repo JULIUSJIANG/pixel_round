@@ -7,7 +7,7 @@ import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-const HORIZON_COUNT = 5;
+const HORIZON_COUNT = 6;
 const VERTICAL_COUNT = 4;
 /**
  * 线的深度
@@ -135,10 +135,10 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.step2CornerRemA(2, 0);
         this.step3CornerRemX(3, 0);
         this.step4CornerRemT(4, 0);
-        this.step5CornerRemI(1, 2);
-        this.step6CornerRemV(2, 2);
-        this.step7EnumRound(3, 2);
-        this.step8EnumSide(4, 2);
+        this.step5CornerRemI(5, 0);
+        this.step6CornerRemV(1, 2);
+        this.step7EnumRound(2, 2);
+        this.step8EnumSide(3, 2);
         // 网格
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
         let cameraHeight = dataSrc.textureHeight * VERTICAL_COUNT;

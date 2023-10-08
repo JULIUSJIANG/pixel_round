@@ -111,7 +111,7 @@ void main() {
     vec4 posRightCornerBack = getCornerCache (posRight, - vecForward);
     vec4 posRightColor = getTextureRGBA (${this.uTextureMain}, posRight);
 
-    vec4 colorResult = vec4 (0.0, 0.0, 0.0, 1.0);
+    vec4 colorResult = vec4 (0.0, 0.0, 0.0, posCenterCornerForward.a);
     if (match (posCenterCornerForward.a, 1.0)) {
         // 默认为大的向前平滑
         colorResult.r = 0.0;

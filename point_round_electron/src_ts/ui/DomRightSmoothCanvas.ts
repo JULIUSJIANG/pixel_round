@@ -133,6 +133,14 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
      */
     fboEnumDataCache: JWebglFrameBuffer;
     /**
+     * 存储了平滑圆心的帧缓冲区 - 左分区
+     */
+    fboAreaLeft: JWebglFrameBuffer;
+    /**
+     * 存储了平滑圆心的帧缓冲区 - 右分区
+     */
+    fboAreaRight: JWebglFrameBuffer;
+    /**
      * 缓存了
      */
     fboDisplay: JWebglFrameBuffer;
@@ -184,6 +192,12 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             this.jWebgl.destroyFbo (this.fboEnumDataCache);
             this.fboEnumDataCache = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
 
+            this.jWebgl.destroyFbo (this.fboAreaLeft);
+            this.fboAreaLeft = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
+
+            this.jWebgl.destroyFbo (this.fboAreaRight);
+            this.fboAreaRight = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
+
             this.jWebgl.destroyFbo (this.fboDisplay);
             this.fboDisplay = this.jWebgl.getFbo (dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN, dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN);
         };
@@ -207,6 +221,9 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.step6CornerRemV (1, 2);
         this.step7EnumRound (2, 2);
         this.step8EnumSide (3, 2);
+
+        this.smoothCircleTo (4, 2);
+        this.step9AreaLeft (4, 3);
 
         // 网格
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
@@ -308,28 +325,56 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
     }
 
     /**
-     * 把平滑结果绘制在 x、y
+     * 把平滑结果绘制在 x、y - 经典款
      * @param x 
      * @param y 
      */
-    smoothTo (x: number, y: number) {
+    smoothOrdinaryTo (x: number, y: number) {
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
         // 最终结果
         this.jWebgl.useFbo (this.fboDisplay);
         this.jWebgl.clear ();
-        this.jWebgl.programSmooth.uMvp.fill (this.mat4Mvp);
-        this.jWebgl.programSmooth.uTextureMain.fillByFbo (this.fboTexture);
-        this.jWebgl.programSmooth.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
-        this.jWebgl.programSmooth.uTextureCorner.fillByFbo (this.fboCornerData);
-        this.jWebgl.programSmooth.uTextureEnum.fillByFbo (this.fboEnumData);
-        this.jWebgl.programSmooth.add (
+        this.jWebgl.programSmoothDisplayOrdinary.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmoothDisplayOrdinary.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothDisplayOrdinary.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothDisplayOrdinary.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothDisplayOrdinary.uTextureEnum.fillByFbo (this.fboEnumData);
+        this.jWebgl.programSmoothDisplayOrdinary.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,
             JWebglMathVector4.axisYEnd,
             2,
             2
         );
-        this.jWebgl.programSmooth.draw ();
+        this.jWebgl.programSmoothDisplayOrdinary.draw ();
+        this.drawFbo (this.fboDisplay, x, y);
+    }
+
+    /**
+     * 把平滑结果绘制在 x、y - 高级款
+     * @param x 
+     * @param y 
+     */
+    smoothCircleTo (x: number, y: number) {
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        // 最终结果
+        this.jWebgl.useFbo (this.fboDisplay);
+        this.jWebgl.clear ();
+        this.jWebgl.programSmoothDisplayCircle.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmoothDisplayCircle.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothDisplayCircle.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothDisplayCircle.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothDisplayCircle.uTextureEnum.fillByFbo (this.fboEnumData);
+        this.jWebgl.programSmoothDisplayCircle.uTextureAreaLeft.fillByFbo (this.fboAreaLeft);
+        this.jWebgl.programSmoothDisplayCircle.uTextureAreaRight.fillByFbo (this.fboAreaRight);
+        this.jWebgl.programSmoothDisplayCircle.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.jWebgl.programSmoothDisplayCircle.draw ();
         this.drawFbo (this.fboDisplay, x, y);
     }
 
@@ -411,7 +456,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         );
         this.jWebgl.programSmoothCornerData.draw ();
         this.drawFbo (this.fboCornerData, posX, posY + 1);
-        this.smoothTo (posX, posY + 0);
+        this.smoothOrdinaryTo (posX, posY + 0);
     }
 
     /**
@@ -436,7 +481,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothCornerRemoveA.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
-        this.smoothTo (posX, posY + 0);
+        this.smoothOrdinaryTo (posX, posY + 0);
     }
 
     /**
@@ -462,7 +507,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothCornerRemoveX.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
-        this.smoothTo (posX, posY + 0);
+        this.smoothOrdinaryTo (posX, posY + 0);
     }
 
     /**
@@ -486,7 +531,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothCornerRemoveT.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
-        this.smoothTo (posX, posY + 0);
+        this.smoothOrdinaryTo (posX, posY + 0);
     }
 
     /**
@@ -510,7 +555,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothCornerRemoveI.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
-        this.smoothTo (posX, posY + 0);
+        this.smoothOrdinaryTo (posX, posY + 0);
     }
     
     /**
@@ -535,7 +580,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothCornerRemoveV.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
-        this.smoothTo (posX, posY + 0);
+        this.smoothOrdinaryTo (posX, posY + 0);
     }
 
     /**
@@ -560,7 +605,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothEnumRound.draw ();
         this.drawFbo (this.fboEnumDataCache, posX, posY + 1);
         this.jWebgl.fillFbo (this.fboEnumData, this.fboEnumDataCache);
-        this.smoothTo (posX, posY + 0);
+        this.smoothOrdinaryTo (posX, posY + 0);
     }
 
     /**
@@ -586,7 +631,47 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothEnumSide.draw ();
         this.drawFbo (this.fboEnumDataCache, posX, posY + 1);
         this.jWebgl.fillFbo (this.fboEnumData, this.fboEnumDataCache);
-        this.smoothTo (posX, posY + 0);
+        this.smoothOrdinaryTo (posX, posY + 0);
+    }
+
+    /**
+     * 平滑数据纹理 -> 平滑区域纹理
+     * @param posX 
+     * @param posY 
+     */
+    step9AreaLeft (posX: number, posY: number) {
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        this.jWebgl.programSmoothArea.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmoothArea.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothArea.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothArea.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothArea.uTextureEnum.fillByFbo (this.fboEnumData);
+        
+        this.jWebgl.useFbo (this.fboAreaLeft);
+        this.jWebgl.clear ();
+        this.jWebgl.programSmoothArea.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.jWebgl.programSmoothArea.uRight.fill (1);
+        this.jWebgl.programSmoothArea.draw ();
+        this.drawFbo (this.fboAreaLeft, posX, posY);
+
+        this.jWebgl.useFbo (this.fboAreaRight);
+        this.jWebgl.clear ();
+        this.jWebgl.programSmoothArea.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.jWebgl.programSmoothArea.uRight.fill (- 1);
+        this.jWebgl.programSmoothArea.draw ();
+        this.drawFbo (this.fboAreaRight, posX + 1, posY);
     }
 
     render (): ReactComponentExtendInstance {

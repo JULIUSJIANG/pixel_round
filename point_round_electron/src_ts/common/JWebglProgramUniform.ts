@@ -42,7 +42,7 @@ export default class JWebglProgramUniform {
     _init () {
         this.location = this.relProgram.relWebgl.canvasWebglCtx.getUniformLocation (this.relProgram.program, this.name);
         if (!this.location) {
-            this.relProgram.relWebgl.error (`获取 uniform [${this.name}] 内存地址失败`);
+            this.relProgram.relWebgl.error (`获取 uniform [${this.name}] 内存地址失败`, this.relProgram._shaderVTxt, this.relProgram._shaderFTxt);
         };
         this.onInit ();
     }

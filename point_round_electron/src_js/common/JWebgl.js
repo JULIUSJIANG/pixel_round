@@ -18,7 +18,7 @@ import JWebglProgramTypeSmoothCornerData from "./JWebglProgramTypeSmoothCornerDa
 import JWebglProgramTypeSmoothTickness from "./JWebglProgramTypeSmoothTickness.js";
 import JWebglProgramTypeSmoothCornerRemoveT from "./JWebglProgramTypeSmoothCornerRemoveT.js";
 import JWebglProgramTypeSmoothCornerRemoveX from "./JWebglProgramTypeSmoothCornerRemoveX.js";
-import JWebglProgramTypeSmooth from "./JWebglProgramTypeSmooth.js";
+import JWebglProgramTypeSmoothDisplayOrdinary from "./JWebglProgramTypeSmoothDisplayOrdinary.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import JWebglTouch from "./JWebglTouch.js";
 import objectPool from "./ObjectPool.js";
@@ -28,6 +28,8 @@ import JWebglProgramTypeSmoothCornerRemoveV from "./JWebglProgramTypeSmoothCorne
 import JWebglProgramTypeSmoothCornerRemoveA from "./JWebglProgramTypeSmoothCornerRemoveA.js";
 import JWebglProgramTypeSmoothEnumRound from "./JWebglProgramTypeSmoothEnumRound.js";
 import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide.js";
+import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea.js";
+import JWebglProgramTypeSmoothDisplayCircle from "./JWebglProgramTypeSmoothDisplayCircle.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
  * 获取原型上的缓存
@@ -319,6 +321,12 @@ __decorate([
     program(JWebglProgramTypeSmoothEnumSide)
 ], JWebgl.prototype, "programSmoothEnumSide", void 0);
 __decorate([
-    program(JWebglProgramTypeSmooth)
-], JWebgl.prototype, "programSmooth", void 0);
+    program(JWebglProgramTypeSmoothArea)
+], JWebgl.prototype, "programSmoothArea", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothDisplayOrdinary)
+], JWebgl.prototype, "programSmoothDisplayOrdinary", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothDisplayCircle)
+], JWebgl.prototype, "programSmoothDisplayCircle", void 0);
 export default JWebgl;

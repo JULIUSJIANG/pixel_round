@@ -13,7 +13,7 @@ import JWebglProgramTypeSmoothCornerData from "./JWebglProgramTypeSmoothCornerDa
 import JWebglProgramTypeSmoothTickness from "./JWebglProgramTypeSmoothTickness.js";
 import JWebglProgramTypeSmoothCornerRemoveT from "./JWebglProgramTypeSmoothCornerRemoveT.js";
 import JWebglProgramTypeSmoothCornerRemoveX from "./JWebglProgramTypeSmoothCornerRemoveX.js";
-import JWebglProgramTypeSmoothSmooth from "./JWebglProgramTypeSmoothSmooth.js";
+import JWebglProgramTypeSmooth from "./JWebglProgramTypeSmooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import JWebglTouch from "./JWebglTouch.js";
 import objectPool from "./ObjectPool.js";
@@ -252,8 +252,8 @@ class JWebgl {
     @program (JWebglProgramTypeSmoothCornerRemoveV)
     programSmoothCornerRemoveV: JWebglProgramTypeSmoothCornerRemoveV;
 
-    @program (JWebglProgramTypeSmoothSmooth)
-    programSmoothSmooth: JWebglProgramTypeSmoothSmooth;
+    @program (JWebglProgramTypeSmooth)
+    programSmooth: JWebglProgramTypeSmooth;
 
     /**
      * 模型矩阵

@@ -18,7 +18,7 @@ import JWebglProgramTypeSmoothCornerData from "./JWebglProgramTypeSmoothCornerDa
 import JWebglProgramTypeSmoothTickness from "./JWebglProgramTypeSmoothTickness.js";
 import JWebglProgramTypeSmoothCornerRemoveT from "./JWebglProgramTypeSmoothCornerRemoveT.js";
 import JWebglProgramTypeSmoothCornerRemoveX from "./JWebglProgramTypeSmoothCornerRemoveX.js";
-import JWebglProgramTypeSmoothSmooth from "./JWebglProgramTypeSmoothSmooth.js";
+import JWebglProgramTypeSmooth from "./JWebglProgramTypeSmooth.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
 import JWebglTouch from "./JWebglTouch.js";
 import objectPool from "./ObjectPool.js";
@@ -311,6 +311,6 @@ __decorate([
     program(JWebglProgramTypeSmoothCornerRemoveV)
 ], JWebgl.prototype, "programSmoothCornerRemoveV", void 0);
 __decorate([
-    program(JWebglProgramTypeSmoothSmooth)
-], JWebgl.prototype, "programSmoothSmooth", void 0);
+    program(JWebglProgramTypeSmooth)
+], JWebgl.prototype, "programSmooth", void 0);
 export default JWebgl;

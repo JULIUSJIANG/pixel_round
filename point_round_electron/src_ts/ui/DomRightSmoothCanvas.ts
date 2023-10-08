@@ -298,18 +298,18 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         // 最终结果
         this.jWebgl.useFbo (this.fboDisplay);
         this.jWebgl.clear ();
-        this.jWebgl.programSmoothSmooth.uMvp.fill (this.mat4Mvp);
-        this.jWebgl.programSmoothSmooth.uTexture.fillByFbo (this.fboTexture);
-        this.jWebgl.programSmoothSmooth.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
-        this.jWebgl.programSmoothSmooth.uTextureCorner.fillByFbo (this.fboCornerData);
-        this.jWebgl.programSmoothSmooth.add (
+        this.jWebgl.programSmooth.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmooth.uTexture.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmooth.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmooth.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmooth.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,
             JWebglMathVector4.axisYEnd,
             2,
             2
         );
-        this.jWebgl.programSmoothSmooth.draw ();
+        this.jWebgl.programSmooth.draw ();
         this.drawFbo (this.fboDisplay, x, y);
     }
 

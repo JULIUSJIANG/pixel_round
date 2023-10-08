@@ -12,7 +12,7 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
 /**
  * 正式平滑
  */
-export default class JWebglProgramTypeSmoothSmooth extends JWebglProgram {
+export default class JWebglProgramTypeSmooth extends JWebglProgram {
 
     @JWebglProgram.define (JWEbglProgramDefine, `0.3535`)
     dForward: JWEbglProgramDefine;
@@ -127,7 +127,7 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     };
     // 需要平滑
     if (match (posTexCornerForward.a, 1.0)) {
-        connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorSmooth);
+        connect (colorSum, pos, posFL, posFR, ${this.dForwardSmall}, colorSmooth);
     };
 }
 

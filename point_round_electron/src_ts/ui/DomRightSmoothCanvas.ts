@@ -121,9 +121,17 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
      */
     fboCornerData: JWebglFrameBuffer;
     /**
-     * 备份空间
+     * 存储了角信息的帧缓冲区 - 备份
      */
     fboCornerDataCache: JWebglFrameBuffer;
+    /**
+     * 存储了平滑类型的帧缓冲区
+     */
+    fboEnumData: JWebglFrameBuffer;
+    /**
+     * 存储了平滑类型的帧缓冲区 - 备份
+     */
+    fboEnumDataCache: JWebglFrameBuffer;
     /**
      * 缓存了
      */
@@ -165,10 +173,17 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             this.fboTickness = this.jWebgl.getFbo (dataSrc.textureWidth, dataSrc.textureHeight);
             this.jWebgl.destroyFbo (this.fboFlat);
             this.fboFlat = this.jWebgl.getFbo (dataSrc.textureWidth * 2, dataSrc.textureHeight * 2);
+
             this.jWebgl.destroyFbo (this.fboCornerData);
             this.fboCornerData = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
             this.jWebgl.destroyFbo (this.fboCornerDataCache);
             this.fboCornerDataCache = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
+            
+            this.jWebgl.destroyFbo (this.fboEnumData);
+            this.fboEnumData = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
+            this.jWebgl.destroyFbo (this.fboEnumDataCache);
+            this.fboEnumDataCache = this.jWebgl.getFbo (dataSrc.textureWidth * 2.0, dataSrc.textureHeight * 2.0);
+
             this.jWebgl.destroyFbo (this.fboDisplay);
             this.fboDisplay = this.jWebgl.getFbo (dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN, dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN);
         };
@@ -188,6 +203,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
 
         this.step5CornerRemI (1, 2);
         this.step6CornerRemV (2, 2);
+        this.step7EnumRound (3, 2);
 
         // 网格
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
@@ -299,9 +315,10 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.useFbo (this.fboDisplay);
         this.jWebgl.clear ();
         this.jWebgl.programSmooth.uMvp.fill (this.mat4Mvp);
-        this.jWebgl.programSmooth.uTexture.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmooth.uTextureMain.fillByFbo (this.fboTexture);
         this.jWebgl.programSmooth.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
         this.jWebgl.programSmooth.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmooth.uTextureEnum.fillByFbo (this.fboEnumData);
         this.jWebgl.programSmooth.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,
@@ -515,6 +532,31 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothCornerRemoveV.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
+        this.smoothTo (posX, posY + 0);
+    }
+
+    /**
+     * 角数据纹理 -> 平滑数据纹理
+     */
+    step7EnumRound (posX: number, posY: number) {
+        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        this.jWebgl.useFbo (this.fboEnumDataCache);
+        this.jWebgl.clear ();
+        this.jWebgl.programSmoothEnumRound.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmoothEnumRound.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
+        this.jWebgl.programSmoothEnumRound.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothEnumRound.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothEnumRound.uRight.fill (1);
+        this.jWebgl.programSmoothEnumRound.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.jWebgl.programSmoothEnumRound.draw ();
+        this.drawFbo (this.fboEnumDataCache, posX, posY + 1);
+        this.jWebgl.fillFbo (this.fboEnumData, this.fboEnumDataCache);
         this.smoothTo (posX, posY + 0);
     }
 

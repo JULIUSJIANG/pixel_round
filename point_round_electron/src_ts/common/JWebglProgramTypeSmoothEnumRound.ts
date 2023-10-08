@@ -87,6 +87,7 @@ void main() {
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
+    vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerBack = getCornerCache (posFL, - vecForward);
@@ -95,6 +96,12 @@ void main() {
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRCornerBack = getCornerCache (posFR, - vecForward);
     vec4 posFRColor = getTextureRGBA (${this.uTextureMain}, posFR);
+
+    vec2 posBL = posCenter - vecForward / 2.0 - vecRight / 2.0;
+    vec4 posBLColor = getTextureRGBA (${this.uTextureMain}, posBL);
+
+    vec2 posBR = posCenter - vecForward / 2.0 + vecRight / 2.0;
+    vec4 posBRColor = getTextureRGBA (${this.uTextureMain}, posBR);
 
     vec2 posLeft = posCenter - vecRight;
     vec4 posLeftCornerBack = getCornerCache (posLeft, - vecForward);
@@ -118,24 +125,33 @@ void main() {
             colorResult.r = 1.0;
         };
 
+        // 不破坏大直角
+        if (
+               checkEqual (posBLColor, posCenterColor)
+            && checkEqual (posCenterColor, posBRColor)
+        )
+        {
+            colorResult.r = 0.0;
+        };
+
         // 不破坏 z 结构 - 左型
-        if (
-               match (posCenterCornerForward.r, 1.0)
-            && match (posLeftCornerBack.a, 1.0)
-            && checkEqual (posLeftColor, posFLColor)
-        )
-        {
-            colorResult.r = 0.0;
-        };
+        // if (
+        //        match (posCenterCornerForward.r, 1.0)
+        //     && match (posLeftCornerBack.a, 1.0)
+        //     && checkEqual (posLeftColor, posFLColor)
+        // )
+        // {
+        //     colorResult.r = 0.0;
+        // };
         // 不破坏 z 结构 - 右型
-        if (
-               match (posCenterCornerForward.g, 1.0)
-            && match (posRightCornerBack.a, 1.0)
-            && checkEqual (posRightColor, posFRColor)
-        )
-        {
-            colorResult.r = 0.0;
-        };
+        // if (
+        //        match (posCenterCornerForward.g, 1.0)
+        //     && match (posRightCornerBack.a, 1.0)
+        //     && checkEqual (posRightColor, posFRColor)
+        // )
+        // {
+        //     colorResult.r = 0.0;
+        // };
     };
 
     gl_FragColor = colorResult * ${this.uRight};

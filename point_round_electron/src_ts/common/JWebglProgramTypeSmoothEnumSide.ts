@@ -22,6 +22,8 @@ export default class JWebglProgramTypeSmoothEnumSide extends JWebglProgram {
     uTextureMain: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureCorner: JWebglProgramUniformSampler2D;
+    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
+    uTextureEnum: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformFloat)
     uRight: JWebglProgramUniformFloat;
 
@@ -80,6 +82,12 @@ vec4 getCornerCache (vec2 posTex, vec2 dir) {
     return getTextureRGBA (${this.uTextureCorner}, posCorner);
 }
 
+// 获取平滑的缓存数据
+vec4 getEnumCache (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureEnum}, posCorner);
+}
+
 void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
 
@@ -87,6 +95,9 @@ void main() {
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
+    vec4 posCenterCornerLeft = getCornerCache (posCenter, - vecRight);
+    vec4 posCenterCornerRight = getCornerCache (posCenter, vecRight);
+    vec4 posCenterEnumForward = getEnumCache (posCenter, vecForward);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerBack = getCornerCache (posFL, - vecForward);
@@ -104,10 +115,31 @@ void main() {
     vec4 posRightCornerBack = getCornerCache (posRight, - vecForward);
     vec4 posRightColor = getTextureRGBA (${this.uTextureMain}, posRight);
 
-    vec4 colorResult = vec4 (0.0, 0.0, 0.0, 1.0);
+    vec4 colorResult = posCenterEnumForward;
     // 仅针对有平滑的情况
     if (match (posCenterCornerForward.a, 1.0)) {
+        // 不是小平滑，才可能进行变化
+        if (!match (colorResult.r, 1.0)) {
+            // 向左倾斜
+            if (
+                    checkEqual (posLeftColor, posFLColor)
+                &&  checkEqual (posFLColor, posFRColor)
+                && !match (posCenterCornerLeft.a, 1.0)
+            ) 
+            {
+                colorResult.g = 1.0;
+            };
 
+            // 向右倾斜
+            if (
+                    checkEqual (posFLColor, posFRColor)
+                &&  checkEqual (posFRColor, posRightColor)
+                && !match (posCenterCornerRight.a, 1.0)
+            ) 
+            {
+                colorResult.b = 1.0;
+            };
+        };
     };
 
     gl_FragColor = colorResult * ${this.uRight};

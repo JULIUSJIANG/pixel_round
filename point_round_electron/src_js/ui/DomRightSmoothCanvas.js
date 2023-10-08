@@ -401,6 +401,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend {
         this.jWebgl.programSmoothEnumSide.uTextureSize.fill(dataSrc.textureWidth, dataSrc.textureHeight);
         this.jWebgl.programSmoothEnumSide.uTextureMain.fillByFbo(this.fboTexture);
         this.jWebgl.programSmoothEnumSide.uTextureCorner.fillByFbo(this.fboCornerData);
+        this.jWebgl.programSmoothEnumSide.uTextureEnum.fillByFbo(this.fboEnumData);
         this.jWebgl.programSmoothEnumSide.uRight.fill(1);
         this.jWebgl.programSmoothEnumSide.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
         this.jWebgl.programSmoothEnumSide.draw();

@@ -13,7 +13,7 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2.js";
  * 正式平滑 - 经典款，绝大部分交界处可导
  */
 export default class JWebglProgramTypeSmoothDisplayCircle extends JWebglProgram {
-    @JWebglProgram.define (JWEbglProgramDefine, `2.1213`)
+    @JWebglProgram.define (JWEbglProgramDefine, `5.0`)
     dScale: JWEbglProgramDefine;
 
     @JWebglProgram.define (JWEbglProgramDefine, `0.3535`)

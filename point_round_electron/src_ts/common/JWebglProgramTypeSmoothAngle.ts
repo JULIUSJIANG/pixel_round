@@ -179,18 +179,18 @@ void main() {
         };
 
         // 是俩侧平滑
-        // if (
-        //        match (posCenterEnumForward.g, 1.0)
-        //     && match (posCenterEnumForward.b, 1.0)
-        // )
-        // {
-        //     // 标注为有效
-        //     colorResult.a = 1.0;
-        //     // 起始角
-        //     colorResult.r = 0.0;
-        //     // 终止角
-        //     colorResult.g = 1.0;
-        // };
+        if (
+               match (posCenterEnumForward.g, 1.0)
+            && match (posCenterEnumForward.b, 1.0)
+        )
+        {
+            // 标注为有效
+            colorResult.a = 1.0;
+            // 起始角
+            colorResult.r = 0.0;
+            // 终止角
+            colorResult.g = 1.0;
+        };
 
         // 处于反向
         if (${this.uRight} < 0.0) {

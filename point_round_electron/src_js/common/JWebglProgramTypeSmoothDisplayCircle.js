@@ -289,7 +289,7 @@ void main() {
     }
 }
 __decorate([
-    JWebglProgram.define(JWEbglProgramDefine, `2.1213`)
+    JWebglProgram.define(JWEbglProgramDefine, `5.0`)
 ], JWebglProgramTypeSmoothDisplayCircle.prototype, "dScale", void 0);
 __decorate([
     JWebglProgram.define(JWEbglProgramDefine, `0.3535`)

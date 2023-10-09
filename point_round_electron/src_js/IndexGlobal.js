@@ -22,7 +22,7 @@ class IndexGlobal {
     /**
      * 纹素尺寸到屏幕尺寸的转换
      */
-    IndexGlobal.PIXEL_TEX_TO_SCREEN = 32;
+    IndexGlobal.PIXEL_TEX_TO_SCREEN = 16;
     /**
      * 高清值，每个屏幕像素对应多少个渲染缓冲区像素
      */

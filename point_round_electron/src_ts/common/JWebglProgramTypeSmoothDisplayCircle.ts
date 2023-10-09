@@ -176,7 +176,7 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     // 相对于中心的位置
     vec2 posRel = pos - posCenter;
     // 在参考坐标系中的角度
-    float posAngle = atan2 (dot (posRel, vecForward), dot (posRel, vecRight)) / ${this.dPI};
+    float posAngle = atan2 (dot (posRel, vecForwardNormalized), dot (posRel, vecRightNormalized)) / ${this.dPI};
 
     // 确定平滑的颜色
     vec4 colorSmooth = posCenterColor;
@@ -222,8 +222,6 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
         vec2 circleCenter = posCenter + circleDataSrcR * vecRightNormalized + circleDataSrcG * vecForwardNormalized;
         // 与圆心距离
         float distance = length (pos - circleCenter);
-        colorSum.r = distance;
-        return;
         // 超出半径，取平滑颜色
         if (circleDataSrc.b <= distance) {
             colorSum = colorSmooth;
@@ -258,9 +256,9 @@ void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
     vec4 colorSum = getTextureRGBA (${this.uTextureMain}, pos);
 
-    // colorCorner (colorSum, pos, vec2 (- 1.0, 1.0));
-    // colorCorner (colorSum, pos, vec2 (1.0, 1.0));
-    // colorCorner (colorSum, pos, vec2 (1.0, - 1.0));
+    colorCorner (colorSum, pos, vec2 (- 1.0, 1.0));
+    colorCorner (colorSum, pos, vec2 (1.0, 1.0));
+    colorCorner (colorSum, pos, vec2 (1.0, - 1.0));
     colorCorner (colorSum, pos, vec2 (- 1.0, - 1.0));
 
     gl_FragColor = colorSum;

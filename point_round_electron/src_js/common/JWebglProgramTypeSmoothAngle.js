@@ -152,15 +152,16 @@ void main() {
                     colorResult.r = 0.25;
                     // 终止角
                     colorResult.g = 1.0;
-                    // 处于反向
-                    if (${this.uRight} < 0.0) {
-                        float valR = colorResult.r;
-                        float valG = colorResult.g;
-                        colorResult.r = 1.0 - valG;
-                        colorResult.g = 1.0 - valR;
-                    };
                 };
             };
+        };
+
+        // 处于反向
+        if (${this.uRight} < 0.0) {
+            float valR = colorResult.r;
+            float valG = colorResult.g;
+            colorResult.r = 1.0 - valG;
+            colorResult.g = 1.0 - valR;
         };
     };
 

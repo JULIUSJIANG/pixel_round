@@ -170,6 +170,8 @@ void main() {
                 };
 
                 if (checkEqual (colorForward, colorLeft)) {
+                    // 标注为有效
+                    colorResult.a = 1.0;
                     // 圆心 x
                     colorResult.r = ${this.dForwardLength} / 2.0;
                     // 圆心 y
@@ -180,24 +182,30 @@ void main() {
                     if (${this.uRight} < 0.0) {
                         colorResult.r = - colorResult.r;
                     };
-                    // 帧缓冲区储值 0 - 1
-                    colorResult /= ${this.dScale};
-                    // 帧缓冲区存储不了负数，所以这里处理一下
-                    colorResult.r = colorResult.r / 2.0 + 0.5;
-                    colorResult.g = colorResult.g / 2.0 + 0.5;
-                    colorResult.a = 1.0;
                 };
             };
         };
 
         // 是俩侧平滑
-        if (
-               match (posCenterEnumForward.r, 1.0)
-            && match (posCenterEnumForward.g, 1.0)
-        )
-        {
+        // if (
+        //        match (posCenterEnumForward.r, 1.0)
+        //     && match (posCenterEnumForward.g, 1.0)
+        // )
+        // {
+        //     // 圆心 x
+        //     colorResult.r = 0;
+        //     // 圆心 y
+        //     colorResult.g = - ${this.dForwardLength} * 3.0;
+        //     colorResult.b = ${this.dSideLength} * 2.0;
+        // };
 
-        };
+        float colorResultA = colorResult.a;
+        // 帧缓冲区储值 0 - 1
+        colorResult /= ${this.dScale};
+        // 帧缓冲区存储不了负数，所以这里处理一下
+        colorResult.r = colorResult.r / 2.0 + 0.5;
+        colorResult.g = colorResult.g / 2.0 + 0.5;
+        colorResult.a = colorResultA;
     };
 
     gl_FragColor = colorResult;

@@ -213,7 +213,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
             this.fboAngleRight = this.jWebgl.getFbo (dataSrc.textureWidth * 2, dataSrc.textureHeight * 2);
 
             this.jWebgl.destroyFbo (this.fboDisplay);
-            this.fboDisplay = this.jWebgl.getFbo (dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN, dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN);
+            this.fboDisplay = this.jWebgl.getFbo (dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA, dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA);
         };
 
         // 清除所有

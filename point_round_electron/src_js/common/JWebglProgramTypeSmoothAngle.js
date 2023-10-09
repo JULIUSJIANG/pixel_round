@@ -112,7 +112,7 @@ void main() {
                 // 起始角
                 colorResult.r = 0.25;
                 // 终止角
-                colorResult.g = 0.75;
+                colorResult.g = 1.0;
 
                 // 处于反向
                 if (${this.uRight} < 0.0) {

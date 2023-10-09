@@ -167,18 +167,18 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
 
     // 涉猎左管制区域
     bool matchLeft = match (posCenterAngleForwardLeft.a, 1.0)
-        && posCenterAngleForwardLeft.r < posAngle
-        && posAngle < posCenterAngleForwardLeft.g;
+        && posCenterAngleForwardLeft.r <= posAngle
+        && posAngle <= posCenterAngleForwardLeft.g;
 
     // 涉猎右管制区域
     bool matchRight = match (posCenterAngleForwardRight.a, 1.0)
-        && posCenterAngleForwardRight.r < posAngle
-        && posAngle < posCenterAngleForwardRight.g;
+        && posCenterAngleForwardRight.r <= posAngle
+        && posAngle <= posCenterAngleForwardRight.g;
 
     // 涉猎管制区
     if (
            matchLeft
-        && matchRight
+        || matchRight
     ) 
     {
         // 相对圆心的偏离值
@@ -201,7 +201,7 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
         // 与圆心距离
         float distance = length (pos - circleCenter);
         // 超出半径，取平滑颜色
-        if (circleDataSrc.b < distance) {
+        if (circleDataSrc.b <= distance) {
             colorSum = colorSmooth;
         };
     }
@@ -234,9 +234,9 @@ void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
     vec4 colorSum = getTextureRGBA (${this.uTextureMain}, pos);
 
-    colorCorner (colorSum, pos, vec2 (- 1.0, 1.0));
-    colorCorner (colorSum, pos, vec2 (1.0, 1.0));
-    colorCorner (colorSum, pos, vec2 (1.0, - 1.0));
+    // colorCorner (colorSum, pos, vec2 (- 1.0, 1.0));
+    // colorCorner (colorSum, pos, vec2 (1.0, 1.0));
+    // colorCorner (colorSum, pos, vec2 (1.0, - 1.0));
     colorCorner (colorSum, pos, vec2 (- 1.0, - 1.0));
 
     gl_FragColor = colorSum;

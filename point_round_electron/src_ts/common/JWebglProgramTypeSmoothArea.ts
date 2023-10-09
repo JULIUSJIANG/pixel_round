@@ -130,16 +130,20 @@ void main() {
                 // 标注为有效
                 colorResult.a = 1.0;
                 // 圆心 x
-                colorResult.r = 0.0;
+                colorResult.r = ${this.dForwardLength} / 2.0;
                 // 圆心 y
-                colorResult.g = 0.0;
+                colorResult.g = - ${this.dForwardLength} / 2.0;
                 // 半径
-                colorResult.b = ${this.dForwardLength} / 2.0;
+                colorResult.b = ${this.dForwardLength};
 
                 // 处于反向
                 if (${this.uRight} < 0.0) {
                     colorResult.r = - colorResult.r;
                 };
+
+                // 帧缓冲区存储不了负数，所以这里处理一下
+                colorResult.r = colorResult.r / 2.0 + 0.5;
+                colorResult.g = colorResult.g / 2.0 + 0.5;
             };
         };
     };

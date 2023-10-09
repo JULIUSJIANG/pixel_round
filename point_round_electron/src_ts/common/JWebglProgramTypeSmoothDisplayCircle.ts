@@ -178,6 +178,7 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     // 在参考坐标系中的角度
     float posAngle = atan2 (dot (posRel, vecForward), dot (posRel, vecRight)) / ${this.dPI};
 
+    // 确定平滑的颜色
     vec4 colorSmooth = posCenterColor;
     if (match (posCenterCornerForward.r, 1.0)) {
         colorSmooth = posFLColor;
@@ -187,34 +188,42 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     };
 
     // 涉猎左管制区域
-    if (
-           match (posCenterAngleForwardLeft.a, 1.0)
+    bool matchLeft = match (posCenterAngleForwardLeft.a, 1.0)
         && posCenterAngleForwardLeft.r < posAngle
-        && posAngle < posCenterAngleForwardLeft.g
+        && posAngle < posCenterAngleForwardLeft.g;
+
+    // 涉猎右管制区域
+    bool matchRight = match (posCenterAngleForwardRight.a, 1.0)
+        && posCenterAngleForwardRight.r < posAngle
+        && posAngle < posCenterAngleForwardRight.g;
+
+    // 涉猎管制区
+    if (
+           matchLeft
+        && matchRight
     ) 
     {
-        // 圆心位置
-        vec2 circleCenter = posCenter + posCenterAreaForwardLeft.r * vecRightNormalized + posCenterAreaForwardLeft.g * vecForwardNormalized;
-        // 与圆心距离
-        float distance = length (pos - circleCenter);
-        // 超出半径，取平滑颜色
-        if (posCenterAreaForwardLeft.b < distance) {
-            colorSum = colorSmooth;
+        // 相对圆心的偏离值
+        vec4 circleDataSrc;
+        // 是左管制区
+        if (matchLeft)
+        {
+            circleDataSrc = posCenterAreaForwardLeft;
+        }
+        // 是右管制区
+        else {
+            circleDataSrc = posCenterAreaForwardRight;
         };
-    }
-    // 涉猎右管制区域
-    else if (
-            match (posCenterAngleForwardRight.a, 1.0)
-        && posCenterAngleForwardRight.r < posAngle
-        && posAngle < posCenterAngleForwardRight.g
-    )
-    {
+        // 还原数据
+        float circleDataSrcR = (circleDataSrc.r - 0.5) * 2.0;
+        // 还原数据
+        float circleDataSrcG = (circleDataSrc.g - 0.5) * 2.0;
         // 圆心位置
-        vec2 circleCenter = posCenter + posCenterAreaForwardRight.r * vecRightNormalized + posCenterAreaForwardRight.g * vecForwardNormalized;
+        vec2 circleCenter = posCenter + circleDataSrcR * vecRightNormalized + circleDataSrcG * vecForwardNormalized;
         // 与圆心距离
         float distance = length (pos - circleCenter);
         // 超出半径，取平滑颜色
-        if (posCenterAreaForwardRight.b < distance) {
+        if (circleDataSrc.b < distance) {
             colorSum = colorSmooth;
         };
     }

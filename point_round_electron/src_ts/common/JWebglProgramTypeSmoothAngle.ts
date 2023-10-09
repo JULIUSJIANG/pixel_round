@@ -130,7 +130,7 @@ void main() {
                 // 标注为有效
                 colorResult.a = 1.0;
                 // 起始角
-                colorResult.r = 0.5;
+                colorResult.r = 0.25;
                 // 终止角
                 colorResult.g = 0.75;
 

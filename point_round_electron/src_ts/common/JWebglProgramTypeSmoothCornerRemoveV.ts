@@ -111,6 +111,9 @@ void main() {
     vec2 posForward = posCenter + vecForward;
     vec4 posForwardColor = getTextureRGBA (${this.uTextureMain}, posForward);
 
+    vec2 posBack = posCenter - vecForward;
+    vec4 posBackColor = getTextureRGBA (${this.uTextureMain}, posBack);
+
     float posCenterCornerForwardVal = posCenterCornerForward.a;
 
     // 由左向右的尖锐
@@ -217,13 +220,16 @@ void main() {
     };
 
     // 不破坏反弹表现
-    // if (
-    //        match (posCenterCornerLeft.a, 1.0)
-    //     || match (posCenterCornerRight.a, 1.0)
-    // )
-    // {
-    //     posCenterCornerForward.a = posCenterCornerForwardVal;
-    // };
+    if (
+        (
+               match (posCenterCornerLeft.a, 1.0)
+            || match (posCenterCornerRight.a, 1.0)
+        )
+        && checkEqual (posCenterColor, posBackColor)
+    )
+    {
+        posCenterCornerForward.a = posCenterCornerForwardVal;
+    };
 
     // 不破坏层次表现
     if (match (posCenterCornerBack.a, 1.0)) {

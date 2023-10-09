@@ -662,8 +662,8 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothArea.uMvp.fill (this.mat4Mvp);
         this.jWebgl.programSmoothArea.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
         this.jWebgl.programSmoothArea.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothArea.uTextureCorner.fillByFbo (this.fboCornerData);
         this.jWebgl.programSmoothArea.uTextureEnum.fillByFbo (this.fboEnumData);
-        
         this.jWebgl.useFbo (this.fboAreaLeft);
         this.jWebgl.clear ();
         this.jWebgl.programSmoothArea.add (
@@ -677,6 +677,9 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothArea.draw ();
         this.drawFbo (this.fboAreaLeft, posX, posY);
 
+        this.jWebgl.programSmoothArea.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothArea.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothArea.uTextureEnum.fillByFbo (this.fboEnumData);
         this.jWebgl.useFbo (this.fboAreaRight);
         this.jWebgl.clear ();
         this.jWebgl.programSmoothArea.add (
@@ -701,6 +704,7 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothAngle.uMvp.fill (this.mat4Mvp);
         this.jWebgl.programSmoothAngle.uTextureSize.fill (dataSrc.textureWidth, dataSrc.textureHeight);
         this.jWebgl.programSmoothAngle.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothAngle.uTextureCorner.fillByFbo (this.fboCornerData);
         this.jWebgl.programSmoothAngle.uTextureEnum.fillByFbo (this.fboEnumData);
         
         this.jWebgl.useFbo (this.fboAngleLeft);
@@ -716,6 +720,9 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programSmoothAngle.draw ();
         this.drawFbo (this.fboAngleLeft, posX, posY);
 
+        this.jWebgl.programSmoothAngle.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothAngle.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothAngle.uTextureEnum.fillByFbo (this.fboEnumData);
         this.jWebgl.useFbo (this.fboAngleRight);
         this.jWebgl.clear ();
         this.jWebgl.programSmoothAngle.add (

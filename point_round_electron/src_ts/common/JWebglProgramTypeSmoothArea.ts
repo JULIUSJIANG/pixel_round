@@ -37,6 +37,8 @@ export default class JWebglProgramTypeSmoothArea extends JWebglProgram {
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureMain: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
+    uTextureCorner: JWebglProgramUniformSampler2D;
+    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureEnum: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformFloat)
     uRight: JWebglProgramUniformFloat;
@@ -90,6 +92,12 @@ vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
     return texture2D (tex, pos);
 }
 
+// 获取角的缓存数据
+vec4 getCornerCache (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureCorner}, posCorner);
+}
+
 // 获取平滑类型
 vec4 getEnumCache (vec2 posTex, vec2 dir) {
     vec2 posCorner = posTex + dir / 4.0;
@@ -103,9 +111,19 @@ void main() {
     vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
+    vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
+    vec4 posCenterCornerLeft = getCornerCache (posCenter, - vecRight);
     vec4 posCenterEnumForward = getEnumCache (posCenter, vecForward);
     vec4 posCenterEnumLeft = getEnumCache (posCenter, - vecRight);
-    vec4 posCenterEnumRight = getEnumCache (posCenter, vecRight);
+
+    vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
+    vec4 posFLColor = getTextureRGBA (${this.uTextureMain}, posFL);
+
+    vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
+    vec4 posFRColor = getTextureRGBA (${this.uTextureMain}, posFR);
+
+    vec2 posBL = posCenter - vecForward / 2.0 - vecRight / 2.0;
+    vec4 posBLColor = getTextureRGBA (${this.uTextureMain}, posBL);
 
     // 最终结果
     vec4 colorResult = vec4 (0);
@@ -127,28 +145,50 @@ void main() {
                 && match (posCenterEnumLeft.b, 0.0)
             ) 
             {
-                // 标注为有效
-                colorResult.a = 1.0;
-                // 圆心 x
-                colorResult.r = ${this.dForwardLength} / 2.0;
-                // 圆心 y
-                colorResult.g = - ${this.dForwardLength} / 2.0;
-                // 半径
-                colorResult.b = ${this.dForwardLength};
-
+                // 前方颜色
+                vec4 colorForward = posFRColor;
+                float posCenterCornerForwardL = posCenterCornerForward.r;
                 // 处于反向
                 if (${this.uRight} < 0.0) {
-                    colorResult.r = - colorResult.r;
+                    posCenterCornerForwardL = posCenterCornerForward.g;
+                };
+                if (match (posCenterCornerForwardL, 1.0)) {
+                    colorForward = posFLColor;
                 };
 
-                // 帧缓冲区存储不了负数，所以这里处理一下
-                colorResult.r = colorResult.r / 2.0 + 0.5;
-                colorResult.g = colorResult.g / 2.0 + 0.5;
+                // 左方颜色
+                vec4 colorLeft = posFLColor;
+                float posCenterCornerLeftL = posCenterCornerLeft.r;
+                // 处于反向
+                if (${this.uRight} < 0.0) {
+                    posCenterCornerLeftL = posCenterCornerLeft.g;
+                };
+                if (match (posCenterCornerLeftL, 1.0)) {
+                    colorLeft = posBLColor;
+                };
+
+                if (checkEqual (colorForward, colorLeft)) {
+                    // 标注为有效
+                    colorResult.a = 1.0;
+                    // 圆心 x
+                    colorResult.r = ${this.dForwardLength} / 2.0;
+                    // 圆心 y
+                    colorResult.g = - ${this.dForwardLength} / 2.0;
+                    // 半径
+                    colorResult.b = ${this.dForwardLength};
+                    // 处于反向
+                    if (${this.uRight} < 0.0) {
+                        colorResult.r = - colorResult.r;
+                    };
+                    // 帧缓冲区存储不了负数，所以这里处理一下
+                    colorResult.r = colorResult.r / 2.0 + 0.5;
+                    colorResult.g = colorResult.g / 2.0 + 0.5;
+                };
             };
         };
     };
 
-    gl_FragColor = colorResult * abs (${this.uRight});
+    gl_FragColor = colorResult;
 }
         `;
     }

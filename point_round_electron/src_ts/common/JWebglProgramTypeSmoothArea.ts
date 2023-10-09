@@ -188,14 +188,15 @@ void main() {
 
         // 是俩侧平滑
         // if (
-        //        match (posCenterEnumForward.r, 1.0)
-        //     && match (posCenterEnumForward.g, 1.0)
+        //        match (posCenterEnumForward.g, 1.0)
+        //     && match (posCenterEnumForward.b, 1.0)
         // )
         // {
         //     // 圆心 x
-        //     colorResult.r = 0;
+        //     colorResult.r = 0.0;
         //     // 圆心 y
         //     colorResult.g = - ${this.dForwardLength} * 3.0;
+        //     // 半径
         //     colorResult.b = ${this.dSideLength} * 2.0;
         // };
 

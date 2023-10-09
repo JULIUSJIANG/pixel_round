@@ -182,22 +182,21 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     ) 
     {
         // 相对圆心的偏离值
-        vec4 circleDataSrc;
+        vec4 circleDataSrc = posCenterAreaForwardRight;
         // 是左管制区
         if (matchLeft)
         {
             circleDataSrc = posCenterAreaForwardLeft;
-        }
-        // 是右管制区
-        else {
-            circleDataSrc = posCenterAreaForwardRight;
         };
+
         // 还原数据
-        float circleDataSrcR = (circleDataSrc.r - 0.5) * 2.0;
-        // 还原数据
-        float circleDataSrcG = (circleDataSrc.g - 0.5) * 2.0;
+        circleDataSrc.r = (circleDataSrc.r - 0.5) * 2.0;
+        circleDataSrc.g = (circleDataSrc.g - 0.5) * 2.0;
+        circleDataSrc *= ${this.dScale};
+        circleDataSrc.a = 1.0;
+
         // 圆心位置
-        vec2 circleCenter = posCenter + circleDataSrcR * vecRightNormalized + circleDataSrcG * vecForwardNormalized;
+        vec2 circleCenter = posCenter + circleDataSrc.r * vecRightNormalized + circleDataSrc.g * vecForwardNormalized;
         // 与圆心距离
         float distance = length (pos - circleCenter);
         // 超出半径，取平滑颜色
@@ -289,6 +288,9 @@ void main() {
         return this._addAttributeData(pos.elements[0], pos.elements[1], pos.elements[2], 1, texCoordX, texCoordY);
     }
 }
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `2.1213`)
+], JWebglProgramTypeSmoothDisplayCircle.prototype, "dScale", void 0);
 __decorate([
     JWebglProgram.define(JWEbglProgramDefine, `0.3535`)
 ], JWebglProgramTypeSmoothDisplayCircle.prototype, "dForward", void 0);

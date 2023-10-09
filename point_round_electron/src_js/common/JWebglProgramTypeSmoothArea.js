@@ -146,8 +146,6 @@ void main() {
                 };
 
                 if (checkEqual (colorForward, colorLeft)) {
-                    // 标注为有效
-                    colorResult.a = 1.0;
                     // 圆心 x
                     colorResult.r = ${this.dForwardLength} / 2.0;
                     // 圆心 y
@@ -158,11 +156,23 @@ void main() {
                     if (${this.uRight} < 0.0) {
                         colorResult.r = - colorResult.r;
                     };
+                    // 帧缓冲区储值 0 - 1
+                    colorResult /= ${this.dScale};
                     // 帧缓冲区存储不了负数，所以这里处理一下
                     colorResult.r = colorResult.r / 2.0 + 0.5;
                     colorResult.g = colorResult.g / 2.0 + 0.5;
+                    colorResult.a = 1.0;
                 };
             };
+        };
+
+        // 是俩侧平滑
+        if (
+               match (posCenterEnumForward.r, 1.0)
+            && match (posCenterEnumForward.g, 1.0)
+        )
+        {
+
         };
     };
 
@@ -216,6 +226,9 @@ void main() {
         return this._addAttributeData(pos.elements[0], pos.elements[1], pos.elements[2], 1, texCoordX, texCoordY);
     }
 }
+__decorate([
+    JWebglProgram.define(JWEbglProgramDefine, `2.1213`)
+], JWebglProgramTypeSmoothArea.prototype, "dScale", void 0);
 __decorate([
     JWebglProgram.define(JWEbglProgramDefine, `0.7071`) // 0.7071067811865476
 ], JWebglProgramTypeSmoothArea.prototype, "dForwardLength", void 0);

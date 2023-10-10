@@ -5,7 +5,6 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomRightPreviewColorTable from "./DomRightPreviewColorTable.js";
 
 export default class DomRightPreviewProps extends ReactComponentExtend <number> {
 
@@ -27,7 +26,6 @@ export default class DomRightPreviewProps extends ReactComponentExtend <number> 
                 }
             },
 
-            ReactComponentExtend.instantiateComponent (DomRightPreviewColorTable, null),
             ReactComponentExtend.instantiateTag (
                 NodeModules.antd.Button,
                 {

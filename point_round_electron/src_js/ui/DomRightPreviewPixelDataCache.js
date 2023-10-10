@@ -118,34 +118,6 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend {
             listColorI.idx = i;
         }
         ;
-        // 还没有颜色表的话，创建一个
-        if (dataSrc.imgMachine.dataInst.colorTable == null) {
-            dataSrc.imgMachine.dataInst.colorTable = {};
-        }
-        ;
-        // 剔除所有不存在的颜色记录
-        this.deleteUnExistColorKey(dataSrc.imgMachine.dataInst.colorTable);
-        for (let key in dataSrc.imgMachine.dataInst.colorTable) {
-            this.deleteUnExistColorKey(dataSrc.imgMachine.dataInst.colorTable[key]);
-        }
-        ;
-        // 确保所有颜色记录存在
-        for (let i = 0; i < dataSrc.listColor.length - 1; i++) {
-            let listColorI = dataSrc.listColor[i];
-            if (dataSrc.imgMachine.dataInst.colorTable[`${listColorI.id}`] == null) {
-                dataSrc.imgMachine.dataInst.colorTable[`${listColorI.id}`] = {};
-            }
-            ;
-            for (let j = i + 1; j < dataSrc.listColor.length; j++) {
-                let listColorJ = dataSrc.listColor[j];
-                if (dataSrc.imgMachine.dataInst.colorTable[`${listColorI.id}`][`${listColorJ.id}`] == null) {
-                    dataSrc.imgMachine.dataInst.colorTable[`${listColorI.id}`][`${listColorJ.id}`] = true;
-                }
-                ;
-            }
-            ;
-        }
-        ;
         // 更新索引
         dataSrc.mapIdToColor.clear();
         for (let i = 0; i < dataSrc.listColor.length; i++) {
@@ -155,28 +127,6 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend {
         ;
         // 告知简略图已经绘制完毕
         dataSrc.imgMachine.currStatus.onCached();
-    }
-    /**
-     * 删除已不存在的颜色记录
-     * @param obj
-     */
-    deleteUnExistColorKey(obj) {
-        // 归纳键
-        this._listKey.length = 0;
-        for (let key in obj) {
-            this._listKey.push(key);
-        }
-        ;
-        // 删除所有已经不存在的颜色记录
-        for (let i = 0; i < this._listKey.length; i++) {
-            let listKeyI = this._listKey[i];
-            let listKeyIInt = Number.parseInt(listKeyI);
-            if (!this._setColor.has(listKeyIInt)) {
-                delete obj[listKeyI];
-            }
-            ;
-        }
-        ;
     }
     render() {
         let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;

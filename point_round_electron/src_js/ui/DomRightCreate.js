@@ -155,8 +155,7 @@ export default class DomRightCreate extends ReactComponentExtend {
                     paddingBottom: 0,
                     paddingLeft: 0,
                     pixelWidth: 1,
-                    pixelHeight: 1,
-                    colorTable: {}
+                    pixelHeight: 1
                 };
                 MgrData.inst.get(MgrDataItem.LIST_IMG_DATA).push(imgData);
                 MgrData.inst.set(MgrDataItem.LIST_SEED, id);

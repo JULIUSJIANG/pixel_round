@@ -63,7 +63,6 @@ namespace MgrDataItem {
         paddingLeft: number;
         pixelWidth: number;
         pixelHeight: number;
-        colorTable: {}
     }
     export const LIST_IMG_DATA = new MgrDataItem <Array <ImgData>> ({
         key: `LIST_IMG_DATA_${VERSION}`,

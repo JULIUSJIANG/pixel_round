@@ -62,17 +62,6 @@ class ImgMachineStatusCached extends ImgMachineStatus {
         this.relMachine.dataInst.pixelHeight = val;
         this.onSizeChanged ();
     }
-    /**
-     * 平滑优先的数据变化
-     * @param colorIdA 
-     * @param colorIdB 
-     * @param val 
-     */
-    onValColorFirst (colorIdA: number, colorIdB: number, val: boolean): void {
-        this.relMachine.dataInst.colorTable [colorIdA] [colorIdB] = val;
-        this.relMachine.rel.refreshCorner ();
-        MgrData.inst.callDataChange ();
-    }
 }
 
 export default ImgMachineStatusCached;

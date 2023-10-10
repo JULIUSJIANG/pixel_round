@@ -1,5 +1,6 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import DomRightPreviewImgBefore from "./DomRightPreviewImgBefore.js";
 import DomRightSmooth from "./DomRightSmooth.js";
 export default class DomRightPreviewImg extends ReactComponentExtend {
     render() {
@@ -10,9 +11,7 @@ export default class DomRightPreviewImg extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             }
-        }, 
-        // ReactComponentExtend.instantiateComponent (DomRightPreviewImgBefore, null),
-        ReactComponentExtend.instantiateComponent(DomRightSmooth, null));
+        }, ReactComponentExtend.instantiateComponent(DomRightPreviewImgBefore, null), ReactComponentExtend.instantiateComponent(DomRightSmooth, null));
     }
     ;
 }

@@ -19,7 +19,7 @@ export default class DomRightPreviewImg extends ReactComponentExtend <number> {
                 }
             },
 
-            // ReactComponentExtend.instantiateComponent (DomRightPreviewImgBefore, null),
+            ReactComponentExtend.instantiateComponent (DomRightPreviewImgBefore, null),
             ReactComponentExtend.instantiateComponent (DomRightSmooth, null),
         )
     };

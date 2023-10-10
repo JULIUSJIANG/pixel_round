@@ -27,6 +27,14 @@ abstract class MgrSdkCore {
      * @param dataUrl 
      */
     abstract saveFile (fileName: string, dataUrl: string): Promise <MgrSdkCtxSaveFile>;
+    /**
+     * 打开调试工具
+     */
+    abstract openDebugTools ();
+    /**
+     * 通知服务端已被销毁
+     */
+    abstract callDestoried ();
 }
 
 export default MgrSdkCore;

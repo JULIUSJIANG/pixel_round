@@ -76,6 +76,13 @@ namespace MgrDataItem {
         key: `CURRENT_IMG_${VERSION}`,
         defVal: 0
     });
+    /**
+     * 启动时自动打开调试工具
+     */
+    export const AUTO_DEBUG_TOOLS = new MgrDataItem <boolean> ({
+        key: `AUTO_DEBUG_TOOLS_${VERSION}`,
+        defVal: false
+    });
 }
 
 export default MgrDataItem;

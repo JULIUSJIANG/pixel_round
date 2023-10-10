@@ -41,7 +41,7 @@ class MgrSdkCoreElectronRequest {
     });
     ;
     ;
-    MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE = new MgrSdkCoreElectronRequest({
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_FILE = new MgrSdkCoreElectronRequest({
         code: 1003,
         analyse: null
     });
@@ -55,6 +55,18 @@ class MgrSdkCoreElectronRequest {
     ;
     MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_TXT = new MgrSdkCoreElectronRequest({
         code: 1005,
+        analyse: null
+    });
+    ;
+    ;
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_DEBUG = new MgrSdkCoreElectronRequest({
+        code: 1006,
+        analyse: null
+    });
+    ;
+    ;
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_DESTORIED = new MgrSdkCoreElectronRequest({
+        code: 1007,
         analyse: null
     });
 })(MgrSdkCoreElectronRequest || (MgrSdkCoreElectronRequest = {}));
@@ -112,7 +124,7 @@ class MgrSdkCoreElectron extends MgrSdkCore {
         });
     }
     saveFile(fileName, dataUrl) {
-        return this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE, {
+        return this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_FILE, {
             fileName: fileName,
             fileUrl: dataUrl
         })
@@ -121,6 +133,12 @@ class MgrSdkCoreElectron extends MgrSdkCore {
                 isSuccessed: true
             };
         });
+    }
+    openDebugTools() {
+        this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_DEBUG, {});
+    }
+    callDestoried() {
+        this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_DESTORIED, {});
     }
     /**
      * 告知服务端

@@ -42,5 +42,12 @@ const VERSION = 21;
         key: `CURRENT_IMG_${VERSION}`,
         defVal: 0
     });
+    /**
+     * 启动时自动打开调试工具
+     */
+    MgrDataItem.AUTO_DEBUG_TOOLS = new MgrDataItem({
+        key: `AUTO_DEBUG_TOOLS_${VERSION}`,
+        defVal: false
+    });
 })(MgrDataItem || (MgrDataItem = {}));
 export default MgrDataItem;

@@ -1,11 +1,11 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomRightPreviewImg from "./DomRightPreviewImg.js";
-import DomRightPreviewPixelDataCache from "./DomRightPreviewPixelDataCache.js";
-import DomRightPreviewProps from "./DomRightPreviewProps.js";
+import DomExperimentRightPreviewImg from "./DomExperimentRightPreviewImg.js";
+import DomExperimentRightPreviewPixelDataCache from "./DomExperimentRightPreviewPixelDataCache.js";
+import DomExperimentRightPreviewProps from "./DomExperimentRightPreviewProps.js";
 
-export default class DomRightPreview extends ReactComponentExtend <number> {
+export default class DomExperimentRightPreview extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
         return ReactComponentExtend.instantiateTag (
@@ -21,9 +21,9 @@ export default class DomRightPreview extends ReactComponentExtend <number> {
             },
 
             // 尽早缓存像素数据
-            ReactComponentExtend.instantiateComponent (DomRightPreviewPixelDataCache, null),
-            ReactComponentExtend.instantiateComponent (DomRightPreviewImg, null),
-            ReactComponentExtend.instantiateComponent (DomRightPreviewProps, null)
+            ReactComponentExtend.instantiateComponent (DomExperimentRightPreviewPixelDataCache, null),
+            ReactComponentExtend.instantiateComponent (DomExperimentRightPreviewImg, null),
+            ReactComponentExtend.instantiateComponent (DomExperimentRightPreviewProps, null)
         )
     }
 }

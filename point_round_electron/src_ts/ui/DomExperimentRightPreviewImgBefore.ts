@@ -5,10 +5,10 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomInputNumber from "./DomInputNumber.js";
-import DomRightPreviewImgBeforeWebglCutted from "./DomRightPreviewImgBeforeWebglCutted.js";
-import DomRightPreviewImgBeforeWebglOrigin from "./DomRightPreviewImgBeforeWebglOrigin.js";
+import DomExperimentRightPreviewImgBeforeWebglCutted from "./DomExperimentRightPreviewImgBeforeWebglCutted.js";
+import DomExperimentRightPreviewImgBeforeWebglOrigin from "./DomExperimentRightPreviewImgBeforeWebglOrigin.js";
 
-class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
+class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
         let listImgData = MgrData.inst.get (MgrDataItem.LIST_IMG_DATA);
@@ -34,7 +34,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
             },
 
             ReactComponentExtend.instantiateComponent (
-                DomRightPreviewImgBeforeWebglOrigin,
+                DomExperimentRightPreviewImgBeforeWebglOrigin,
                 this.props
             ),
 
@@ -107,7 +107,7 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
                     )),
                 ),
                 ReactComponentExtend.instantiateComponent (
-                    DomRightPreviewImgBeforeWebglCutted,
+                    DomExperimentRightPreviewImgBeforeWebglCutted,
                     this.props
                 ),
                 ReactComponentExtend.instantiateTag (
@@ -144,4 +144,4 @@ class DomRightPreviewImgBefore extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightPreviewImgBefore;
+export default DomExperimentRightPreviewImgBefore;

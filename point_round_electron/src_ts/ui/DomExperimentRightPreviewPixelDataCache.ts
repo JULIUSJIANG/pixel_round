@@ -9,7 +9,7 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import TextureColor from "../game/TextureColor.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-class DomRightPreviewPixelDataCache extends ReactComponentExtend <number> {
+class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -217,4 +217,4 @@ class DomRightPreviewPixelDataCache extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightPreviewPixelDataCache;
+export default DomExperimentRightPreviewPixelDataCache;

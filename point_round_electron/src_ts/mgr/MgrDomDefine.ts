@@ -19,6 +19,8 @@ namespace MgrDomDefine {
 
     export const STYLE_TEXT_ALIGN = "textAlign";
     export const STYLE_TEXT_ALIGN_CENTER = "center";
+    export const STYLE_TEXT_ALIGN_LEFT = "left";
+    export const STYLE_TEXT_ALIGN_RIGHT = "right";
 
     export const STYLE_VERTICAL_ALIGN = "verticalAlign";
     export const STYLE_VERTICAL_ALIGN_MIDDLE = "middle";

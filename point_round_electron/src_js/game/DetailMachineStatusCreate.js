@@ -1,7 +1,7 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
-import DomRightCreate from "../ui/DomRightCreate.js";
+import DomExperimentRightCreate from "../ui/DomExperimentRightCreate.js";
 import DetailMachineStatus from "./DetailMachineStatus.js";
 export default class DetailMachineStatusCreate extends DetailMachineStatus {
     onImg(id) {
@@ -9,6 +9,6 @@ export default class DetailMachineStatusCreate extends DetailMachineStatus {
         this.relMachine.enter(this.relMachine.statusPreview);
     }
     onRender() {
-        return ReactComponentExtend.instantiateComponent(DomRightCreate, null);
+        return ReactComponentExtend.instantiateComponent(DomExperimentRightCreate, null);
     }
 }

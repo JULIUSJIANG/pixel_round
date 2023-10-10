@@ -22,7 +22,7 @@ const Z_GRID = 0.1;
 /**
  * 尝试更为灵魂的平滑
  */
-class DomRightSmoothCanvas extends ReactComponentExtend <number> {
+class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
     /**
      * 模型
      */
@@ -813,4 +813,4 @@ class DomRightSmoothCanvas extends ReactComponentExtend <number> {
     }
 }
 
-export default DomRightSmoothCanvas;
+export default DomExperimentRightSmoothCanvas;

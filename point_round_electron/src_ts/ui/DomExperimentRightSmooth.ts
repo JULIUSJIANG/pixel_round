@@ -1,9 +1,9 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomRightSmoothCanvas from "./DomRightSmoothCanvas.js";
+import DomExperimentRightSmoothCanvas from "./DomExperimentRightSmoothCanvas.js";
 
-class DomRightSmooth extends ReactComponentExtend <number> {
+class DomExperimentRightSmooth extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
         return ReactComponentExtend.instantiateTag (
@@ -18,9 +18,9 @@ class DomRightSmooth extends ReactComponentExtend <number> {
                 }
             },
 
-            ReactComponentExtend.instantiateComponent (DomRightSmoothCanvas, null)
+            ReactComponentExtend.instantiateComponent (DomExperimentRightSmoothCanvas, null)
         )
     }
 }
 
-export default DomRightSmooth;
+export default DomExperimentRightSmooth;

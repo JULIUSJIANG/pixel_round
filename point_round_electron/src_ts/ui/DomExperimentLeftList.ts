@@ -5,9 +5,9 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomLeftListImg from "./DomLeftListImg.js";
+import DomExperimentLeftListImg from "./DomExperimentLeftListImg.js";
 
-export default class DomLeftList extends ReactComponentExtend <number> {
+export default class DomExperimentLeftList extends ReactComponentExtend <number> {
 
     listChildren = new Array <ReactComponentExtendInstance> ();
 
@@ -38,9 +38,9 @@ export default class DomLeftList extends ReactComponentExtend <number> {
                     continue;
                 };
                 let imgData = listImgData [i + j];
-                let args = objectPool.pop (DomLeftListImg.Args.poolType);
+                let args = objectPool.pop (DomExperimentLeftListImg.Args.poolType);
                 args.init (imgData, i, j);
-                this.listChildrenContainer.push (ReactComponentExtend.instantiateComponent (DomLeftListImg, args));
+                this.listChildrenContainer.push (ReactComponentExtend.instantiateComponent (DomExperimentLeftListImg, args));
             };
             this.listChildren.push (ReactComponentExtend.instantiateTag (
                 MgrDomDefine.TAG_DIV,

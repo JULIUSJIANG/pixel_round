@@ -16,7 +16,7 @@ const Z_GRID = 0.1;
 
 const Z_MASK = 0.2;
 
-class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> {
+class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -292,4 +292,4 @@ class DomRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> 
     }
 }
 
-export default DomRightPreviewImgBeforeWebglOrigin;
+export default DomExperimentRightPreviewImgBeforeWebglOrigin;

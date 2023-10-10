@@ -6,7 +6,7 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
 const TEMP_COUNT = 4;
 
-export default class DomLeftGlobal extends ReactComponentExtend <number> {
+export default class DomExperimentLeftGlobal extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
         let propsAdd = {

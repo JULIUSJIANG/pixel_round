@@ -9,7 +9,7 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-export default class DomRightCreate extends ReactComponentExtend<number> {
+export default class DomExperimentRightCreate extends ReactComponentExtend<number> {
 
     /**
      * 3d canvas 引用器

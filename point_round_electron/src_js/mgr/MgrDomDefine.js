@@ -15,6 +15,8 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_LINE_HEIGHT = "lineHeight";
     MgrDomDefine.STYLE_TEXT_ALIGN = "textAlign";
     MgrDomDefine.STYLE_TEXT_ALIGN_CENTER = "center";
+    MgrDomDefine.STYLE_TEXT_ALIGN_LEFT = "left";
+    MgrDomDefine.STYLE_TEXT_ALIGN_RIGHT = "right";
     MgrDomDefine.STYLE_VERTICAL_ALIGN = "verticalAlign";
     MgrDomDefine.STYLE_VERTICAL_ALIGN_MIDDLE = "middle";
     MgrDomDefine.STYLE_WIDTH = "width";

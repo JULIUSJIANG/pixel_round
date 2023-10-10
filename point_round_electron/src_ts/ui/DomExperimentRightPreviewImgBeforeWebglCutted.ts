@@ -10,7 +10,7 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
 const Z_GRID = 0.1;
 
-class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> {
+class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -228,4 +228,4 @@ class DomRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> 
     }
 }
 
-export default DomRightPreviewImgBeforeWebglCutted;
+export default DomExperimentRightPreviewImgBeforeWebglCutted;

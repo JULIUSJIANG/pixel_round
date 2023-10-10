@@ -2,10 +2,10 @@ import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomLeftGlobal from "./DomLeftGlobal.js";
-import DomLeftList from "./DomLeftList.js";
+import DomExperimentLeftGlobal from "./DomExperimentLeftGlobal.js";
+import DomExperimentLeftList from "./DomExperimentLeftList.js";
 
-export default class DomLeft extends ReactComponentExtend <number> {
+export default class DomExperimentLeft extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
         const imgSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
@@ -25,8 +25,8 @@ export default class DomLeft extends ReactComponentExtend <number> {
                 }
             },
 
-            ReactComponentExtend.instantiateComponent (DomLeftList, null),
-            ReactComponentExtend.instantiateComponent (DomLeftGlobal, null)
+            ReactComponentExtend.instantiateComponent (DomExperimentLeftList, null),
+            ReactComponentExtend.instantiateComponent (DomExperimentLeftGlobal, null)
         )
     }
 }

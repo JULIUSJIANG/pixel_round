@@ -2,7 +2,7 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
-import DomRightPreview from "../ui/DomRightPreview.js";
+import DomExperimentRightPreview from "../ui/DomExperimentRightPreview.js";
 import DetailMachineStatus from "./DetailMachineStatus.js";
 import TextureColor from "./TextureColor.js";
 import ImgMachine from "./ImgMachine.js";
@@ -43,7 +43,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     }
 
     onRender (): ReactComponentExtendInstance {
-        return ReactComponentExtend.instantiateComponent (DomRightPreview, null);
+        return ReactComponentExtend.instantiateComponent (DomExperimentRightPreview, null);
     }
 
     /**

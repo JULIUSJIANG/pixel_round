@@ -6,7 +6,7 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-export default class DomRightPreviewProps extends ReactComponentExtend <number> {
+export default class DomExperimentRightPreviewProps extends ReactComponentExtend <number> {
 
 
     render (): ReactComponentExtendInstance {

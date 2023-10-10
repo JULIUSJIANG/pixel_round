@@ -1,7 +1,7 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
-import DomRightPreview from "../ui/DomRightPreview.js";
+import DomExperimentRightPreview from "../ui/DomExperimentRightPreview.js";
 import DetailMachineStatus from "./DetailMachineStatus.js";
 import ImgMachine from "./ImgMachine.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
@@ -54,7 +54,7 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
         this.imgMachine.onCreate();
     }
     onRender() {
-        return ReactComponentExtend.instantiateComponent(DomRightPreview, null);
+        return ReactComponentExtend.instantiateComponent(DomExperimentRightPreview, null);
     }
     /**
      * 把附带内边距的图片绘制到一个帧缓冲区里面

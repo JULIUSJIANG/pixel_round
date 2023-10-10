@@ -1,6 +1,6 @@
-import CreateMachineStatus from "./CreateMachineStatus.js";
+import MCRootStatusExperimentStatusCreateStatus from "./MCRootStatusExperimentStatusCreateStatus.js";
 
-export default class CreateMachineStatusUploading extends CreateMachineStatus {
+export default class MCRootStatusExperimentStatusCreateStatusUploading extends MCRootStatusExperimentStatusCreateStatus {
     
     targetUid: string;
 

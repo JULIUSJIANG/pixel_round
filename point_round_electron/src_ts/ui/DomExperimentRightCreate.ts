@@ -38,7 +38,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
     }
 
     reactComponentExtendOnDraw(): void {
-        if (IndexGlobal.inst.createMachine.img == null) {
+        if (IndexGlobal.mcExpCreate ().img == null) {
             return;
         };
 
@@ -46,7 +46,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
         this.jWebgl.useFbo (null);
         this.jWebgl.clear ();
         this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uTexture.fillByImg (this.jWebgl.getImg (IndexGlobal.inst.createMachine.img.src));
+        this.jWebgl.programImg.uTexture.fillByImg (this.jWebgl.getImg (IndexGlobal.mcExpCreate ().img.src));
         this.jWebgl.programImg.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,
@@ -60,9 +60,9 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
     render(): ReactComponentExtendInstance {
         let canvasWidth = 1;
         let canvasHeight = 1;
-        if (IndexGlobal.inst.createMachine.img != null) {
-            canvasWidth = IndexGlobal.inst.createMachine.img.image.width * IndexGlobal.PIXEL_TEX_TO_SCREEN;
-            canvasHeight = IndexGlobal.inst.createMachine.img.image.height * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+        if (IndexGlobal.mcExpCreate ().img != null) {
+            canvasWidth = IndexGlobal.mcExpCreate ().img.image.width * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+            canvasHeight = IndexGlobal.mcExpCreate ().img.image.height * IndexGlobal.PIXEL_TEX_TO_SCREEN;
         };
         return ReactComponentExtend.instantiateTag(
             MgrDomDefine.TAG_DIV,
@@ -116,7 +116,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
                                 [MgrDomDefine.STYLE_WIDTH]: `${canvasWidth}px`,
                                 [MgrDomDefine.STYLE_HEIGHT]: `${canvasHeight}px`,
                                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-                                [MgrDomDefine.STYLE_DISPLAY]: IndexGlobal.inst.createMachine.img == null ? MgrDomDefine.STYLE_DISPLAY_NONE : MgrDomDefine.STYLE_DISPLAY_BLOCK
+                                [MgrDomDefine.STYLE_DISPLAY]: IndexGlobal.mcExpCreate ().img == null ? MgrDomDefine.STYLE_DISPLAY_NONE : MgrDomDefine.STYLE_DISPLAY_BLOCK
                             }
                         },
 
@@ -171,13 +171,13 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
                         },
                         onChange: (info) => {
                             if (info.file.status == `uploading`) {
-                                IndexGlobal.inst.createMachine.currStatus.onUploading(info.file.uid);
+                                IndexGlobal.mcExpCreate ().currStatus.onUploading(info.file.uid);
                             };
                             if (info.file.status == `done`) {
                                 const reader = new FileReader();
                                 reader.addEventListener('load', () => {
                                     let dataBase64 = reader.result as string;
-                                    IndexGlobal.inst.createMachine.currStatus.onDone(info.file.uid, dataBase64);
+                                    IndexGlobal.mcExpCreate ().currStatus.onDone(info.file.uid, dataBase64);
                                 });
                                 reader.readAsDataURL(info.file.originFileObj);
                             };
@@ -192,7 +192,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
                             }
                         },
 
-                        IndexGlobal.inst.createMachine.currStatus.onDraggerTxt()
+                        IndexGlobal.mcExpCreate ().currStatus.onDraggerTxt()
                     )
                 )
             ),
@@ -204,17 +204,17 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
                         [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING
                     },
                     onClick: () => {
-                        if (IndexGlobal.inst.createMachine.img == null) {
+                        if (IndexGlobal.mcExpCreate ().img == null) {
                             return NodeModules.antd.message.error (`请先选择图片文件`);
                         };
-                        if (IndexGlobal.inst.createMachine.currStatus != IndexGlobal.inst.createMachine.statusIdle) {
+                        if (IndexGlobal.mcExpCreate ().currStatus != IndexGlobal.mcExpCreate ().statusIdle) {
                             return NodeModules.antd.message.error (`文件加载中，请稍后`);
                         };
                         let id = MgrData.inst.get (MgrDataItem.LIST_SEED);
                         id++;
                         let imgData: MgrDataItem.ImgData = {
                             id: id,
-                            dataOrigin: IndexGlobal.inst.createMachine.img.src,
+                            dataOrigin: IndexGlobal.mcExpCreate ().img.src,
                             paddingTop: 0,
                             paddingRight: 0,
                             paddingBottom: 0,
@@ -224,7 +224,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
                         };
                         MgrData.inst.get (MgrDataItem.LIST_IMG_DATA).push (imgData);
                         MgrData.inst.set (MgrDataItem.LIST_SEED, id);
-                        IndexGlobal.inst.detailMachine.currStatus.onImg (id);
+                        IndexGlobal.mcExp ().currStatus.onImg (id);
                     }
                 },
 

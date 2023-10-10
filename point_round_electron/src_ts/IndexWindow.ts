@@ -36,11 +36,6 @@ Promise.resolve ()
     })
     // 自动 update
     .then (() => {
-        // 勾选了默认打开调试工具
-        if (MgrData.inst.get (MgrDataItem.AUTO_DEBUG_TOOLS)) {
-            MgrSdk.inst.core.openDebugTools ();
-        };
-
         // 关闭窗口时候自动存档一次
         window.addEventListener (`beforeunload`, () => {
             MgrSdk.inst.core.logToMain (`客户端关闭...`);

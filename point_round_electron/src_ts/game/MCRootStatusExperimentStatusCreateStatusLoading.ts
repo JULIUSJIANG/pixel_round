@@ -1,8 +1,8 @@
 import MgrRes from "../mgr/MgrRes.js";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
-import CreateMachineStatus from "./CreateMachineStatus.js";
+import MCRootStatusExperimentStatusCreateStatus from "./MCRootStatusExperimentStatusCreateStatus.js";
 
-export default class CreateMachineStatusLoading extends CreateMachineStatus {
+export default class MCRootStatusExperimentStatusCreateStatusLoading extends MCRootStatusExperimentStatusCreateStatus {
 
     dataUrl: string;
 

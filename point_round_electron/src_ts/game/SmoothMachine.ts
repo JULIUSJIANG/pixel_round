@@ -1,21 +1,21 @@
-import DetailMachineStatusPreview from "./DetailMachineStatusPreview.js";
-import ImgMachineStatus from "./ImgMachineStatus.js";
-import ImgMachineStatusIdle from "./ImgMachineStatusIdle.js";
-import ImgMachineStatusCached from "./ImgMachineStatusCached.js";
+import MCRootStatusExperimentStatusSmooth from "./MCRootStatusExperimentStatusSmooth.js";
+import SmoothMachineStatus from "./SmoothMachineStatus.js";
+import SmoothMachineStatusIdle from "./SmoothMachineStatusIdle.js";
+import SmoothMachineStatusCached from "./SmoothMachineStatusCached.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrData from "../mgr/MgrData.js";
-import ImgMachineStatusLoaded from "./ImgMachineStatusLoaded.js";
+import SmoothMachineStatusLoaded from "./SmoothMachineStatusLoaded.js";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 import MgrRes from "../mgr/MgrRes.js";
 
 /**
  * 图片存档的状态机
  */
-class ImgMachine {
+class SmoothMachine {
     /**
      * 归属的界面状态
      */
-    rel: DetailMachineStatusPreview;
+    rel: MCRootStatusExperimentStatusSmooth;
     /**
      * 存档id
      */
@@ -29,7 +29,7 @@ class ImgMachine {
      */
     assetsImg: MgrResAssetsImage;
 
-    constructor (rel: DetailMachineStatusPreview, relId: number) {
+    constructor (rel: MCRootStatusExperimentStatusSmooth, relId: number) {
         this.rel = rel;
         this.dataId = relId;
 
@@ -44,35 +44,35 @@ class ImgMachine {
 
         this.assetsImg = MgrRes.inst.getImg (this.dataInst.dataOrigin);
 
-        this.statusIdle = new ImgMachineStatusIdle (this);
-        this.statusLoaded = new ImgMachineStatusLoaded (this);
-        this.statusCached = new ImgMachineStatusCached (this);
+        this.statusIdle = new SmoothMachineStatusIdle (this);
+        this.statusLoaded = new SmoothMachineStatusLoaded (this);
+        this.statusCached = new SmoothMachineStatusCached (this);
         this.enter (this.statusIdle);
     }
 
     /**
      * 状态 - 初始
      */
-    statusIdle: ImgMachineStatusIdle;
+    statusIdle: SmoothMachineStatusIdle;
     /**
      * 状态 - 图片加载完毕
      */
-    statusLoaded: ImgMachineStatusLoaded;
+    statusLoaded: SmoothMachineStatusLoaded;
     /**
      * 状态 - 缓存完毕
      */
-    statusCached: ImgMachineStatusCached;
+    statusCached: SmoothMachineStatusCached;
 
     /**
      * 当前状态
      */
-    currStatus: ImgMachineStatus;
+    currStatus: SmoothMachineStatus;
 
     /**
      * 切换状态
      * @param status 
      */
-    enter (status: ImgMachineStatus) {
+    enter (status: SmoothMachineStatus) {
         let rec = this.currStatus;
         this.currStatus = status;
         if (rec) {
@@ -97,4 +97,4 @@ class ImgMachine {
     }
 }
 
-export default ImgMachine;
+export default SmoothMachine;

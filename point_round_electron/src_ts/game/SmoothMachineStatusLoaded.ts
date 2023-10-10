@@ -1,9 +1,9 @@
-import ImgMachineStatus from "./ImgMachineStatus.js";
+import SmoothMachineStatus from "./SmoothMachineStatus.js";
 
 /**
  * 状态 - 图片加载完毕
  */
-class ImgMachineStatusLoaded extends ImgMachineStatus {
+class SmoothMachineStatusLoaded extends SmoothMachineStatus {
 
     onEnter (): void {
         this.relMachine.rel.imgWidth = this.relMachine.assetsImg.image.width;
@@ -21,4 +21,4 @@ class ImgMachineStatusLoaded extends ImgMachineStatus {
     }
 }
 
-export default ImgMachineStatusLoaded;
+export default SmoothMachineStatusLoaded;

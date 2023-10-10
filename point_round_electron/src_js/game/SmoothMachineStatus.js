@@ -1,98 +1,73 @@
-import ImgMachine from "./ImgMachine.js";
-
 /**
  * 图片存档的状态机 - 状态
  */
-class ImgMachineStatus {
-    /**
-     * 归属的状态机
-     */
-    relMachine: ImgMachine;
-
-    constructor (machine: ImgMachine) {
+class SmoothMachineStatus {
+    constructor(machine) {
         this.relMachine = machine;
     }
-
     /**
      * 事件派发 - 状态机被创造
      */
-    onCreate () {
-
+    onCreate() {
     }
-
     /**
      * 事件派发 - 状态机被销毁
      */
-    onDestroy () {
-
+    onDestroy() {
     }
-
     /**
      * 事件派发 - 进入状态
      */
-    onEnter () {
-
+    onEnter() {
     }
-
     /**
      * 事件派发 - 离开状态
      */
-    onExit () {
-
+    onExit() {
     }
-
     /**
      * 事件派发 - 简略图已绘制
-     * @param jWebgl 
-     * @param width 
-     * @param height 
+     * @param jWebgl
+     * @param width
+     * @param height
      */
-    onCached () {
-
+    onCached() {
     }
-
     /**
      * 收到数据 - 左内边距
-     * @param val 
+     * @param val
      */
-    onValPaddingLeft (val: number) {
-
+    onValPaddingLeft(val) {
     }
     /**
      * 收到数据 - 右内边距
-     * @param val 
+     * @param val
      */
-    onValPaddingRight (val: number) {
-
+    onValPaddingRight(val) {
     }
     /**
      * 收到数据 - 上内边距
-     * @param val 
+     * @param val
      */
-    onValPaddingTop (val: number) {
-
+    onValPaddingTop(val) {
     }
     /**
      * 收到数据 - 下内边距
-     * @param val 
+     * @param val
      */
-    onValPaddingBottom (val: number) {
-
+    onValPaddingBottom(val) {
     }
     /**
      * 收到数据 - 颗粒宽度
-     * @param val 
+     * @param val
      */
-    onValPixelWidth (val: number) {
-
+    onValPixelWidth(val) {
     }
     /**
      * 收到数据 - 颗粒高度
-     * @param val 
+     * @param val
      */
-    onValPixelHeight (val: number) {
-
+    onValPixelHeight(val) {
     }
 }
-
-export default ImgMachineStatus;
+export default SmoothMachineStatus;

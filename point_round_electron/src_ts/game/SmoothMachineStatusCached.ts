@@ -1,10 +1,10 @@
 import MgrData from "../mgr/MgrData.js";
-import ImgMachineStatus from "./ImgMachineStatus.js";
+import SmoothMachineStatus from "./SmoothMachineStatus.js";
 
 /**
  * 状态 - 图像信息缓存完毕
  */
-class ImgMachineStatusCached extends ImgMachineStatus {
+class SmoothMachineStatusCached extends SmoothMachineStatus {
 
     onEnter (): void {
         this.relMachine.rel.refreshCorner ();
@@ -64,4 +64,4 @@ class ImgMachineStatusCached extends ImgMachineStatus {
     }
 }
 
-export default ImgMachineStatusCached;
+export default SmoothMachineStatusCached;

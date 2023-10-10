@@ -1,16 +1,46 @@
-import CreateMachine from "./game/CreateMachine.js";
-import DetailMachine from "./game/DetailMachine.js";
+import MCRoot from "./game/MCRoot.js";
 import MgrData from "./mgr/MgrData.js";
 import MgrDataItem from "./mgr/MgrDataItem.js";
+import MgrSdk from "./mgr/MgrSdk.js";
 class IndexGlobal {
+    /**
+     * 初始化
+     */
     init() {
-        this.detailMachine = new DetailMachine(this);
-        this.detailMachine.enter(this.detailMachine.mapIdToStatus.get(MgrData.inst.get(MgrDataItem.DETAIL_MACHINE_STATUS)));
-        this.createMachine = new CreateMachine(this);
+        // 勾选了默认打开调试工具
+        if (MgrData.inst.get(MgrDataItem.AUTO_DEBUG_TOOLS)) {
+            MgrSdk.inst.core.openDebugTools();
+        }
+        ;
+        this.mcRoot = new MCRoot(this);
+        this.mcRoot.onInit();
     }
 }
 (function (IndexGlobal) {
     IndexGlobal.inst = new IndexGlobal();
+    /**
+     * 绘画状态机
+     * @returns
+     */
+    function mcDB() {
+        return IndexGlobal.inst.mcRoot.statusDrawingBoard;
+    }
+    IndexGlobal.mcDB = mcDB;
+    /**
+     * 实验状态机
+     * @returns
+     */
+    function mcExp() {
+        return IndexGlobal.inst.mcRoot.statusExperiment;
+    }
+    IndexGlobal.mcExp = mcExp;
+    /**
+     * 实验状态机 - 创建
+     */
+    function mcExpCreate() {
+        return IndexGlobal.inst.mcRoot.statusExperiment.statusCreate;
+    }
+    IndexGlobal.mcExpCreate = mcExpCreate;
     /**
      * 缩略图边长
      */

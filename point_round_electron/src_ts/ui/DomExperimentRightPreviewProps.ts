@@ -42,10 +42,10 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                         listImgData.splice (targetIdx, 1);
                         targetIdx = Math.min (targetIdx, listImgData.length - 1);
                         if (0 <= targetIdx) {
-                            IndexGlobal.inst.detailMachine.currStatus.onImg (listImgData [targetIdx].id);
+                            IndexGlobal.mcExp ().currStatus.onImg (listImgData [targetIdx].id);
                         }
                         else {
-                            IndexGlobal.inst.detailMachine.currStatus.onCreate ();
+                            IndexGlobal.mcExp ().currStatus.onCreate ();
                         };
                     },
                     style: {

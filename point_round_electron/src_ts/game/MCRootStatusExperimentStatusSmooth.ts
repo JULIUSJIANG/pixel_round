@@ -3,19 +3,19 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import DomExperimentRightPreview from "../ui/DomExperimentRightPreview.js";
-import DetailMachineStatus from "./DetailMachineStatus.js";
+import MCRootStatusExperimentStatus from "./MCRootStatusExperimentStatus.js";
 import TextureColor from "./TextureColor.js";
-import ImgMachine from "./ImgMachine.js";
-import DetailMachine from "./DetailMachine.js";
+import SmoothMachine from "./SmoothMachine.js";
+import MCRootStatusExperiment from "./MCRootStatusExperiment.js";
 import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
 
-export default class DetailMachineStatusPreview extends DetailMachineStatus {
+export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExperimentStatus {
 
-    constructor (machine: DetailMachine, id: number) {
+    constructor (machine: MCRootStatusExperiment, id: number) {
         super (machine, id);
     }
 
@@ -30,12 +30,12 @@ export default class DetailMachineStatusPreview extends DetailMachineStatus {
     /**
      * 当前控制的图片
      */
-    imgMachine: ImgMachine;
+    imgMachine: SmoothMachine;
 
     onImg (id: number): void {
         MgrData.inst.set (MgrDataItem.CURRENT_IMG, id);
         let rec = this.imgMachine;
-        this.imgMachine = new ImgMachine (this, id);
+        this.imgMachine = new SmoothMachine (this, id);
         if (rec) {
             rec.onDestroy ();
         };

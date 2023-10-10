@@ -40,7 +40,7 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend <numb
     private _listKey = new Array <string> ();
 
     reactComponentExtendOnDraw(): void {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp ().statusPreview;
         let imgMachine = dataSrc.imgMachine;
         // 只有加载完毕等待缓存的时候才进行下述的缓存内容
         if (imgMachine.currStatus != imgMachine.statusLoaded) {
@@ -142,7 +142,7 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend <numb
     }
 
     render (): ReactComponentExtendInstance {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp ().statusPreview;
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {

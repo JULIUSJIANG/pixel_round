@@ -1,15 +1,18 @@
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
-import DetailMachine from "./DetailMachine.js";
+import MCRootStatusExperiment from "./MCRootStatusExperiment.js";
 
-export default class DetailMachineStatus {
+export default class MCRootStatusExperimentStatus {
 
-    relMachine: DetailMachine;
+    relMachine: MCRootStatusExperiment;
 
     id: number;
     
-    constructor (machine: DetailMachine, id: number) {
+    constructor (machine: MCRootStatusExperiment, id: number) {
         this.relMachine = machine;
         this.id = id;
+
+        this.relMachine.listStatus.push (this);
+        this.relMachine.mapIdToStatus.set (this.id, this);
     }
 
     onEnter () {
@@ -30,5 +33,9 @@ export default class DetailMachineStatus {
 
     onImg (id: number) {
 
+    }
+
+    onInit () {
+        
     }
 }

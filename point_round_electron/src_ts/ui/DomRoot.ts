@@ -141,7 +141,7 @@ export default class DomRoot extends ReactComponentExtend <number> {
                     },
 
                     ReactComponentExtend.instantiateComponent (DomExperimentLeft, null),
-                    IndexGlobal.inst.detailMachine.currStatus.onRender ()
+                    IndexGlobal.mcExp ().currStatus.onRender ()
                 ),
             )
         );

@@ -37,6 +37,14 @@ namespace MgrDataItem {
     export const listItem: Array <MgrDataItem <unknown>> = new Array ();
 
     /**
+     * 根状态
+     */
+    export const MC_ROOT_STATUS = new MgrDataItem <number> ({
+        key: `MC_ROOT_STATUS_${VERSION}`,
+        defVal: 0
+    });
+
+    /**
      * 当前的详情状态
      */
     export const DETAIL_MACHINE_STATUS = new MgrDataItem <number> ({

@@ -96,7 +96,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
         MgrData.inst.callDataChange();
     }
     reactComponentExtendOnDraw() {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         let imgMachine = dataSrc.imgMachine;
         // 只有加载完毕等待缓存的时候才进行下述的缓存内容
         if (imgMachine.currStatus == imgMachine.statusIdle) {
@@ -202,7 +202,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * @param y
      */
     drawFbo(fbo, x, y) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         this.jWebgl.useFbo(null);
         let cameraWidth = dataSrc.textureWidth * HORIZON_COUNT;
         let cameraHeight = dataSrc.textureHeight * VERTICAL_COUNT;
@@ -222,7 +222,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * @param y
      */
     smoothOrdinaryTo(x, y) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         // 最终结果
         this.jWebgl.useFbo(this.fboDisplay);
         this.jWebgl.clear();
@@ -241,7 +241,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * @param y
      */
     smoothCircleTo(x, y) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         // 最终结果
         this.jWebgl.useFbo(this.fboDisplay);
         this.jWebgl.clear();
@@ -262,7 +262,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 准备好源纹理
      */
     step0Texture() {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         // 得到简略图
         dataSrc.drawImgPadding(this.jWebgl, this.fboTexture);
         // 原图
@@ -272,7 +272,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 源纹理 -> 厚度纹理
      */
     step0Tickness() {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         // 厚度数据
         this.jWebgl.useFbo(this.fboTickness);
         this.jWebgl.clear();
@@ -287,7 +287,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 源纹理 -> 平坦纹理
      */
     step0Flat() {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         // 各个角的数据
         this.jWebgl.useFbo(this.fboFlat);
         this.jWebgl.clear();
@@ -303,7 +303,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 源纹理 -> 角数据纹理
      */
     step1CornerData(posX, posY) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         // 各个角的数据
         this.jWebgl.useFbo(this.fboCornerData);
         this.jWebgl.clear();
@@ -321,7 +321,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 剔除 A 平滑
      */
     step2CornerRemA(posX, posY) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         this.jWebgl.useFbo(this.fboCornerDataCache);
         this.jWebgl.clear();
         this.jWebgl.programSmoothCornerRemoveA.uMvp.fill(this.mat4Mvp);
@@ -339,7 +339,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 剔除 X 平滑
      */
     step3CornerRemX(posX, posY) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         this.jWebgl.useFbo(this.fboCornerDataCache);
         this.jWebgl.clear();
         this.jWebgl.programSmoothCornerRemoveX.uMvp.fill(this.mat4Mvp);
@@ -358,7 +358,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 剔除 T 平滑
      */
     step4CornerRemT(posX, posY) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         this.jWebgl.useFbo(this.fboCornerDataCache);
         this.jWebgl.clear();
         this.jWebgl.programSmoothCornerRemoveT.uMvp.fill(this.mat4Mvp);
@@ -375,7 +375,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 剔除 I 平滑
      */
     step5CornerRemI(posX, posY) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         this.jWebgl.useFbo(this.fboCornerDataCache);
         this.jWebgl.clear();
         this.jWebgl.programSmoothCornerRemoveI.uMvp.fill(this.mat4Mvp);
@@ -392,7 +392,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 剔除尖锐平滑
      */
     step6CornerRemV(posX, posY) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         this.jWebgl.useFbo(this.fboCornerDataCache);
         this.jWebgl.clear();
         this.jWebgl.programSmoothCornerRemoveV.uMvp.fill(this.mat4Mvp);
@@ -410,7 +410,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 角数据纹理 -> 平滑数据纹理
      */
     step7EnumRound(posX, posY) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         this.jWebgl.useFbo(this.fboEnumDataCache);
         this.jWebgl.clear();
         this.jWebgl.programSmoothEnumRound.uMvp.fill(this.mat4Mvp);
@@ -428,7 +428,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * 平滑数据纹理 -> 平滑数据纹理
      */
     step8EnumSide(posX, posY) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         this.jWebgl.useFbo(this.fboEnumDataCache);
         this.jWebgl.clear();
         this.jWebgl.programSmoothEnumSide.uMvp.fill(this.mat4Mvp);
@@ -449,7 +449,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * @param posY
      */
     step9Area(posX, posY) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         this.jWebgl.programSmoothArea.uMvp.fill(this.mat4Mvp);
         this.jWebgl.programSmoothArea.uTextureSize.fill(dataSrc.textureWidth, dataSrc.textureHeight);
         this.jWebgl.programSmoothArea.uTextureMain.fillByFbo(this.fboTexture);
@@ -477,7 +477,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
      * @param posY
      */
     step10Angle(posX, posY) {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         this.jWebgl.programSmoothAngle.uMvp.fill(this.mat4Mvp);
         this.jWebgl.programSmoothAngle.uTextureSize.fill(dataSrc.textureWidth, dataSrc.textureHeight);
         this.jWebgl.programSmoothAngle.uTextureMain.fillByFbo(this.fboTexture);
@@ -500,7 +500,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
         this.drawFbo(this.fboAngleRight, posX + 1, posY);
     }
     render() {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,

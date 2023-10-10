@@ -40,7 +40,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend {
         let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
-                IndexGlobal.inst.detailMachine.currStatus.onImg(this.props.imgData.id);
+                IndexGlobal.mcExp().currStatus.onImg(this.props.imgData.id);
             },
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: 0,
@@ -52,7 +52,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend {
             props.style[MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
         }
         ;
-        if (IndexGlobal.inst.detailMachine.currStatus == IndexGlobal.inst.detailMachine.statusPreview && this.props.imgData.id == MgrData.inst.get(MgrDataItem.CURRENT_IMG)) {
+        if (IndexGlobal.mcExp().currStatus == IndexGlobal.mcExp().statusPreview && this.props.imgData.id == MgrData.inst.get(MgrDataItem.CURRENT_IMG)) {
             props[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         else {

@@ -1,10 +1,10 @@
-import CreateMachine from "./CreateMachine.js";
+import MCRootStatusExperimentStatusCreate from "./MCRootStatusExperimentStatusCreate.js";
 
-export default class CreateMachineStatus {
+export default class MCRootStatusExperimentStatusCreateStatus {
 
-    relMachine: CreateMachine;
+    relMachine: MCRootStatusExperimentStatusCreate;
 
-    constructor (relMachine: CreateMachine) {
+    constructor (relMachine: MCRootStatusExperimentStatusCreate) {
         this.relMachine = relMachine;
     }
 

@@ -1,10 +1,10 @@
 import MgrData from "../mgr/MgrData.js";
-import ImgMachineStatus from "./ImgMachineStatus.js";
+import SmoothMachineStatus from "./SmoothMachineStatus.js";
 
 /**
  * 状态 - 初始化时候
  */
-class ImgMachineStatusIdle extends ImgMachineStatus {
+class SmoothMachineStatusIdle extends SmoothMachineStatus {
 
     /**
      * 监听 id
@@ -27,4 +27,4 @@ class ImgMachineStatusIdle extends ImgMachineStatus {
     }
 }
 
-export default ImgMachineStatusIdle;
+export default SmoothMachineStatusIdle;

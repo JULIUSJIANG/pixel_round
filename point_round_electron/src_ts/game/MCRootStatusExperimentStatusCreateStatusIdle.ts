@@ -1,6 +1,6 @@
-import CreateMachineStatus from "./CreateMachineStatus.js";
+import MCRootStatusExperimentStatusCreateStatus from "./MCRootStatusExperimentStatusCreateStatus.js";
 
-export default class CreateMachineStatusIdle extends CreateMachineStatus {
+export default class MCRootStatusExperimentStatusCreateStatusIdle extends MCRootStatusExperimentStatusCreateStatus {
     
     onUploading (uid: string): void {
         this.relMachine.statusUploading.targetUid = uid;

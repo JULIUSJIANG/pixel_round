@@ -27,7 +27,7 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
         this.jWebgl.init();
     }
     reactComponentExtendOnDraw() {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         let imgMachine = dataSrc.imgMachine;
         // 只有加载完毕等待缓存的时候才进行下述的缓存内容
         if (imgMachine.currStatus != imgMachine.statusLoaded) {
@@ -129,7 +129,7 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
         dataSrc.imgMachine.currStatus.onCached();
     }
     render() {
-        let dataSrc = IndexGlobal.inst.detailMachine.statusPreview;
+        let dataSrc = IndexGlobal.mcExp().statusPreview;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,

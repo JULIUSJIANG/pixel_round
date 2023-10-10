@@ -18,6 +18,13 @@ const VERSION = 21;
      */
     MgrDataItem.listItem = new Array();
     /**
+     * 根状态
+     */
+    MgrDataItem.MC_ROOT_STATUS = new MgrDataItem({
+        key: `MC_ROOT_STATUS_${VERSION}`,
+        defVal: 0
+    });
+    /**
      * 当前的详情状态
      */
     MgrDataItem.DETAIL_MACHINE_STATUS = new MgrDataItem({

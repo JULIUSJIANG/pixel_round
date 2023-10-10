@@ -37,6 +37,10 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
         this.jWebgl.refreshMat4Mvp ();
     }
 
+    reactComponentExtendOnRelease (): void {
+        this.jWebgl.release ();
+    }
+
     reactComponentExtendOnDraw(): void {
         if (IndexGlobal.mcExpCreate ().img == null) {
             return;
@@ -228,7 +232,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
                     }
                 },
 
-                `确认创建`
+                `确认添加`
             )
         );
     }

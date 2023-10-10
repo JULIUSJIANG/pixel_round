@@ -81,6 +81,10 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
         });
     }
 
+    reactComponentExtendOnRelease (): void {
+        this.jWebgl.release ();
+    }
+
     /**
      * 格子位置 x
      */

@@ -27,8 +27,8 @@ class MCRoot {
     constructor (indexGlobal: IndexGlobal) {
         this.relGlobal = indexGlobal;
 
-        this.statusDrawingBoard = new MCRootStatusDrawingBoard (this, 0);
-        this.statusExperiment = new MCRootStatusExperiment (this, 1);
+        this.statusDrawingBoard = new MCRootStatusDrawingBoard (this, 0, `画板模式`);
+        this.statusExperiment = new MCRootStatusExperiment (this, 1, `实验模式`);
     }
 
     /**
@@ -56,6 +56,7 @@ class MCRoot {
             rec.onExit ();
         };
         this.currStatus.onEnter ();
+        MgrData.inst.set (MgrDataItem.MC_ROOT_STATUS, this.currStatus.id);
     }
 
     /**

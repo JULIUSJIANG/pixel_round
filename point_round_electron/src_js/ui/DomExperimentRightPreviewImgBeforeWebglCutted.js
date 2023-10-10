@@ -32,6 +32,9 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
         this.canvas2d = this.canvas2dRef.current;
         this.canvas2dCtx = this.canvas2d.getContext(`2d`);
     }
+    reactComponentExtendOnRelease() {
+        this.jWebgl.release();
+    }
     reactComponentExtendOnDraw() {
         let dataSrc = IndexGlobal.mcExp().statusPreview;
         let imgMachine = dataSrc.imgMachine;

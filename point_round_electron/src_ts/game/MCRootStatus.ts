@@ -1,3 +1,4 @@
+import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MCRoot from "./MCRoot.js";
 
 /**
@@ -9,9 +10,12 @@ class MCRootStatus {
 
     id: number;
 
-    constructor (mcRoot: MCRoot, id: number) {
+    name: string;
+
+    constructor (mcRoot: MCRoot, id: number, name: string) {
         this.relMC = mcRoot;
         this.id = id;
+        this.name = name;
 
         this.relMC.listStatus.push (this);
         this.relMC.mapIdToStatus.set (this.id, this);
@@ -36,6 +40,13 @@ class MCRootStatus {
      */
     onExit () {
 
+    }
+
+    /**
+     * 要展示的实例
+     */
+    onDisplay (): ReactComponentExtendInstance {
+        return null;
     }
 }
 

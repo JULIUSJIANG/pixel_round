@@ -38,7 +38,7 @@ abstract class ReactComponentExtend <T> extends NodeModules.react.Component {
      * 组件要被卸载
      */
     componentWillUnmount () {
-
+        this.reactComponentExtendOnRelease ();
     }
 
     /**
@@ -51,6 +51,12 @@ abstract class ReactComponentExtend <T> extends NodeModules.react.Component {
      * 事件派发 - 进行绘制
      */
     reactComponentExtendOnDraw () {
+
+    }
+    /**
+     * 事件派发 - 释放
+     */
+    reactComponentExtendOnRelease () {
 
     }
 

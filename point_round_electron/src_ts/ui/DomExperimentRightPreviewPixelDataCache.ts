@@ -25,6 +25,10 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend <numb
         this.jWebgl.init();
     }
 
+    reactComponentExtendOnRelease (): void {
+        this.jWebgl.release ();
+    }
+
     /**
      * 帧缓冲区
      */

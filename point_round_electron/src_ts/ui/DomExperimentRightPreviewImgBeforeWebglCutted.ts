@@ -43,6 +43,10 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
         this.canvas2dCtx = this.canvas2d.getContext (`2d`);
     }
 
+    reactComponentExtendOnRelease (): void {
+        this.jWebgl.release ();
+    }
+
     /**
      * 点的起始位置
      */

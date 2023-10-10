@@ -36,7 +36,7 @@ export default class DomExperimentLeftGlobal extends ReactComponentExtend <numbe
                 NodeModules.antd.Button,
                 propsAdd,
     
-                `创建`
+                `添加`
             )
         );
     }

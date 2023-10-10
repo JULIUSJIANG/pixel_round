@@ -1,5 +1,5 @@
 {
- "MC_ROOT_STATUS_21": 0,
+ "MC_ROOT_STATUS_21": 1,
  "DETAIL_MACHINE_STATUS_21": 1,
  "LIST_SEED_21": 18,
  "LIST_IMG_DATA_21": [
@@ -144,6 +144,6 @@
    "pixelHeight": 2
   }
  ],
- "CURRENT_IMG_21": 4,
+ "CURRENT_IMG_21": 2,
  "AUTO_DEBUG_TOOLS_21": false
 }

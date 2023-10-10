@@ -26,6 +26,9 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
     }
+    reactComponentExtendOnRelease() {
+        this.jWebgl.release();
+    }
     reactComponentExtendOnDraw() {
         let dataSrc = IndexGlobal.mcExp().statusPreview;
         let imgMachine = dataSrc.imgMachine;

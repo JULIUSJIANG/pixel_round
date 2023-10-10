@@ -171,6 +171,16 @@ class JWebgl {
             this[propsName] = program;
         });
     }
+    /**
+     * 释放掉
+     */
+    release() {
+        let ext = this.canvasWebglCtx.getExtension(`WEBGL_lose_context`);
+        if (ext) {
+            ext.loseContext();
+        }
+        ;
+    }
     useProgram(program) {
         if (program == this._program) {
             return;

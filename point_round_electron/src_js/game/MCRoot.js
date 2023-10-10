@@ -16,8 +16,8 @@ class MCRoot {
          */
         this.mapIdToStatus = new Map();
         this.relGlobal = indexGlobal;
-        this.statusDrawingBoard = new MCRootStatusDrawingBoard(this, 0);
-        this.statusExperiment = new MCRootStatusExperiment(this, 1);
+        this.statusDrawingBoard = new MCRootStatusDrawingBoard(this, 0, `画板模式`);
+        this.statusExperiment = new MCRootStatusExperiment(this, 1, `实验模式`);
     }
     /**
      * 切换状态
@@ -31,6 +31,7 @@ class MCRoot {
         }
         ;
         this.currStatus.onEnter();
+        MgrData.inst.set(MgrDataItem.MC_ROOT_STATUS, this.currStatus.id);
     }
     /**
      * 事件派发 - 初始化

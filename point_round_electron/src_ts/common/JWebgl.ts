@@ -185,6 +185,16 @@ class JWebgl {
         });
     }
 
+    /**
+     * 释放掉
+     */
+    release () {
+        let ext = this.canvasWebglCtx.getExtension (`WEBGL_lose_context`);
+        if (ext) {
+            ext.loseContext();
+        };
+    }
+
     private _program: JWebglProgram;
 
     useProgram (program: JWebglProgram) {

@@ -21,6 +21,9 @@ export default class DomExperimentRightCreate extends ReactComponentExtend {
         this.jWebgl.mat4P.setOrtho(-1, 1, -1, 1, 0, 2);
         this.jWebgl.refreshMat4Mvp();
     }
+    reactComponentExtendOnRelease() {
+        this.jWebgl.release();
+    }
     reactComponentExtendOnDraw() {
         if (IndexGlobal.mcExpCreate().img == null) {
             return;
@@ -161,6 +164,6 @@ export default class DomExperimentRightCreate extends ReactComponentExtend {
                 MgrData.inst.set(MgrDataItem.LIST_SEED, id);
                 IndexGlobal.mcExp().currStatus.onImg(id);
             }
-        }, `确认创建`));
+        }, `确认添加`));
     }
 }

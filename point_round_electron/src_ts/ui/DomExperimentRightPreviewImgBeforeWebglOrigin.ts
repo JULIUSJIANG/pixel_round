@@ -29,6 +29,10 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
         this.jWebgl.init();
     }
 
+    reactComponentExtendOnRelease (): void {
+        this.jWebgl.release ();
+    }
+
     posImg = new JWebglMathVector4 ();
     
     posFrom = new JWebglMathVector4 (0, 0, Z_GRID);

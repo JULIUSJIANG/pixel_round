@@ -80,6 +80,9 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend {
             this.loadGridX(gridX, gridY);
         });
     }
+    reactComponentExtendOnRelease() {
+        this.jWebgl.release();
+    }
     /**
      * 载入格子位置
      * @param x

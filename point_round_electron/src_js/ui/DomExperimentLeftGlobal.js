@@ -24,6 +24,6 @@ export default class DomExperimentLeftGlobal extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN,
             }
-        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, propsAdd, `创建`));
+        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, propsAdd, `添加`));
     }
 }

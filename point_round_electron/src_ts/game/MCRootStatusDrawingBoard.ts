@@ -12,6 +12,11 @@ import MCRootStatus from "./MCRootStatus.js";
 import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus.js";
 import MCRootStatusDrawingBoardOpStatusEraser from "./MCRootStatusDrawingBoardOpStatusEraser.js";
 import MCRootStatusDrawingBoardOpStatusPencil from "./MCRootStatusDrawingBoardOpStatusPencil.js";
+import MCRootStatusDrawingBoardTouchPos from "./MCRootStatusDrawingBoardTouchPos.js";
+import MCRootStatusDrawingBoardTouchStatus from "./MCRootStatusDrawingBoardTouchStatus.js";
+import MCRootStatusDrawingBoardTouchStatusEnded from "./MCRootStatusDrawingBoardTouchStatusEnded.js";
+import MCRootStatusDrawingBoardTouchStatusMoved from "./MCRootStatusDrawingBoardTouchStatusMoved.js";
+import MCRootStatusDrawingBoardTouchStatusStarted from "./MCRootStatusDrawingBoardTouchStatusStarted.js";
 
 /**
  * 根状态机 - 状态 - 画板模式
@@ -21,12 +26,22 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
     constructor (mcRoot: MCRoot, id: number, name: string) {
         super (mcRoot, id, name);
 
+        this.touchPosStart = new MCRootStatusDrawingBoardTouchPos (this);
+        this.touchPosMove = new MCRootStatusDrawingBoardTouchPos (this);
+        this.touchPosEnd = new MCRootStatusDrawingBoardTouchPos (this);
+        this.touchCurrentPos = this.touchPosMove;
+
         this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil (this, 0, `画笔`);
         this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser (this, 1, `橡皮擦`);
+
+        this.touchStatusEnded = new MCRootStatusDrawingBoardTouchStatusEnded (this);
+        this.touchStatusStarted = new MCRootStatusDrawingBoardTouchStatusStarted (this);
+        this.touchStatusMoved = new MCRootStatusDrawingBoardTouchStatusMoved (this);
     }
 
     onInit (): void {
         this.opEnter (this.opStatusPencil);
+        this.touchEnter (this.touchStatusEnded);
     }
     
     opListStatus = new Array <MCRootStatusDrawingBoardOpStatus> ();
@@ -42,6 +57,31 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
     opEnter (status: MCRootStatusDrawingBoardOpStatus) {
         let rec = this.opCurrStatus;
         this.opCurrStatus = status;
+        if (rec) {
+            rec.onExit ();
+        };
+        this.opCurrStatus.onEnter ();
+    }
+
+    touchPosStart: MCRootStatusDrawingBoardTouchPos;
+
+    touchPosMove: MCRootStatusDrawingBoardTouchPos;
+
+    touchPosEnd: MCRootStatusDrawingBoardTouchPos;
+
+    touchCurrentPos: MCRootStatusDrawingBoardTouchPos;
+
+    touchStatusEnded: MCRootStatusDrawingBoardTouchStatusEnded;
+
+    touchStatusStarted: MCRootStatusDrawingBoardTouchStatusStarted;
+
+    touchStatusMoved: MCRootStatusDrawingBoardTouchStatusMoved;
+
+    touchCurrStatus: MCRootStatusDrawingBoardTouchStatus;
+
+    touchEnter (status: MCRootStatusDrawingBoardTouchStatus) {
+        let rec = this.touchCurrStatus;
+        this.touchCurrStatus = status;
         if (rec) {
             rec.onExit ();
         };

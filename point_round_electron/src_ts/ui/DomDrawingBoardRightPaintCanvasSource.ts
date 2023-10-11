@@ -32,6 +32,28 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
     reactComponentExtendOnInit (): void {
         this.jWebgl = new JWebgl (this.canvasWebglRef.current);
         this.jWebgl.init ();
+
+        this.jWebgl.evtTouchStart.on (() => {
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onStart (
+                this.jWebgl.currentTouch.posCanvas [0],
+                this.jWebgl.currentTouch.posCanvas [1]
+            );
+            MgrData.inst.callDataChange ();
+        });
+        this.jWebgl.evtTouchMove.on (() => {
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onMove (
+                this.jWebgl.currentTouch.posCanvas [0],
+                this.jWebgl.currentTouch.posCanvas [1]
+            );
+            MgrData.inst.callDataChange ();
+        });
+        this.jWebgl.evtTouchEnd.on (() => {
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onEnd (
+                this.jWebgl.currentTouch.posCanvas [0],
+                this.jWebgl.currentTouch.posCanvas [1]
+            );
+            MgrData.inst.callDataChange ();
+        });
     }
 
     reactComponentExtendOnRelease (): void {
@@ -93,6 +115,29 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
                 colorGrid
             );
         };
+        this.jWebgl.programLine.draw ();
+
+        // 准星
+        this.posFrom.elements [0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXFloat;
+        this.posFrom.elements [1] = 0;
+        this.posTo.elements [0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXFloat;
+        this.posTo.elements [1] = cameraHeight;
+        this.jWebgl.programLine.add (
+            this.posFrom,
+            JWebglColor.COLOR_RED,
+            this.posTo,
+            JWebglColor.COLOR_RED
+        );
+        this.posFrom.elements [0] = 0;
+        this.posFrom.elements [1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYFloat;
+        this.posTo.elements [0] = cameraWidth;
+        this.posTo.elements [1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYFloat;
+        this.jWebgl.programLine.add (
+            this.posFrom,
+            JWebglColor.COLOR_RED,
+            this.posTo,
+            JWebglColor.COLOR_RED
+        );
         this.jWebgl.programLine.draw ();
     }
 

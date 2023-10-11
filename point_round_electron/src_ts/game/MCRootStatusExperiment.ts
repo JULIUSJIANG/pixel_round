@@ -39,7 +39,7 @@ export default class MCRootStatusExperiment extends MCRootStatus {
             rec.onExit ();
         };
         this.currStatus.onEnter ();
-        MgrData.inst.set (MgrDataItem.DETAIL_MACHINE_STATUS, this.currStatus.id);
+        MgrData.inst.set (MgrDataItem.MC_STATUS_EXP_STATUS, this.currStatus.id);
     }
 
     onInit (): void {
@@ -47,7 +47,7 @@ export default class MCRootStatusExperiment extends MCRootStatus {
             let listStatusI = this.listStatus [i];
             listStatusI.onInit ();
         };
-        this.enter (this.mapIdToStatus.get (MgrData.inst.get (MgrDataItem.DETAIL_MACHINE_STATUS)));
+        this.enter (this.mapIdToStatus.get (MgrData.inst.get (MgrDataItem.MC_STATUS_EXP_STATUS)));
     }
 
     onDisplay (): ReactComponentExtendInstance {

@@ -37,32 +37,41 @@ namespace MgrDataItem {
     export const listItem: Array <MgrDataItem <unknown>> = new Array ();
 
     /**
+     * 启动时自动打开调试工具
+     */
+    export const AUTO_DEBUG_TOOLS = new MgrDataItem <boolean> ({
+        key: `AUTO_DEBUG_TOOLS_${VERSION}`,
+        defVal: false
+    });
+
+    /**
      * 根状态
      */
-    export const MC_ROOT_STATUS = new MgrDataItem <number> ({
+    export const MC_STATUS = new MgrDataItem <number> ({
         key: `MC_ROOT_STATUS_${VERSION}`,
         defVal: 0
     });
 
     /**
-     * 当前的详情状态
+     * 根状态 - 实验模式状态
      */
-    export const DETAIL_MACHINE_STATUS = new MgrDataItem <number> ({
+    export const MC_STATUS_EXP_STATUS = new MgrDataItem <number> ({
         key: `DETAIL_MACHINE_STATUS_${VERSION}`,
         defVal: 0
     });
 
     /**
-     * 图片数据的 id 种子
+     * id 种子
      */
-    export const LIST_SEED = new MgrDataItem <number> ({
+    export const SEED = new MgrDataItem <number> ({
         key: `LIST_SEED_${VERSION}`,
         defVal: 0
     });
+
     /**
-     * 图片数据
+     * 实验模式 - 图片数据
      */
-    export interface ImgData {
+    export interface ExpImgData {
         id: number;
         dataOrigin: string;
         paddingTop: number;
@@ -72,24 +81,16 @@ namespace MgrDataItem {
         pixelWidth: number;
         pixelHeight: number;
     }
-    export const LIST_IMG_DATA = new MgrDataItem <Array <ImgData>> ({
+    export const EXP_LIST_IMG_DATA = new MgrDataItem <Array <ExpImgData>> ({
         key: `LIST_IMG_DATA_${VERSION}`,
         defVal: []
     });
-
     /**
-     * 当前查看的图片
+     * 实验模式 - 当前图片
      */
-    export const CURRENT_IMG = new MgrDataItem <number> ({
+    export const EXP_CURRENT_IMG = new MgrDataItem <number> ({
         key: `CURRENT_IMG_${VERSION}`,
         defVal: 0
-    });
-    /**
-     * 启动时自动打开调试工具
-     */
-    export const AUTO_DEBUG_TOOLS = new MgrDataItem <boolean> ({
-        key: `AUTO_DEBUG_TOOLS_${VERSION}`,
-        defVal: false
     });
 }
 

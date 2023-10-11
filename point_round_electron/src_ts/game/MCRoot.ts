@@ -56,7 +56,7 @@ class MCRoot {
             rec.onExit ();
         };
         this.currStatus.onEnter ();
-        MgrData.inst.set (MgrDataItem.MC_ROOT_STATUS, this.currStatus.id);
+        MgrData.inst.set (MgrDataItem.MC_STATUS, this.currStatus.id);
     }
 
     /**
@@ -68,7 +68,7 @@ class MCRoot {
             listStatusI.onInit ();
         };
 
-        this.enter (this.mapIdToStatus.get (MgrData.inst.get (MgrDataItem.MC_ROOT_STATUS)));
+        this.enter (this.mapIdToStatus.get (MgrData.inst.get (MgrDataItem.MC_STATUS)));
     }
 }
 

@@ -114,6 +114,18 @@ export default class DomRoot extends ReactComponentExtend <number> {
                         ...this.listChildren,
                     ),
 
+                    // 分割线
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.CONFIG_TXT_SPACING,
+                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
+                            }
+                        }
+                    ),
+
                     ReactComponentExtend.instantiateTag (
                         NodeModules.antd.Button,
                         {

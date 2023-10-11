@@ -15,7 +15,7 @@ export default class DomExperimentLeftList extends ReactComponentExtend <number>
 
     render (): ReactComponentExtendInstance {
         this.listChildren.length = 0;
-        let listImgData = MgrData.inst.get (MgrDataItem.LIST_IMG_DATA);
+        let listImgData = MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA);
         for (let i = 0; i < listImgData.length; i+= IndexGlobal.IMG_LIST_COLUMN_COUNT) {
             let containerProps = {
                 style: {

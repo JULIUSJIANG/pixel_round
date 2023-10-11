@@ -8,7 +8,7 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
 
-class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftListImg.Args> {
+class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLeftListImg.Args> {
 
     render (): ReactComponentExtendInstance {
         let img = MgrRes.inst.getImg (this.props.imgData.dataOrigin);
@@ -93,7 +93,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
     }
 }
 
-namespace DomExperimentLeftListImg {
+namespace DomDrawingBoardLeftListImg {
     export class Args {
 
         imgData: MgrDataItem.ExpImgData;
@@ -116,4 +116,4 @@ namespace DomExperimentLeftListImg {
     }
 }
 
-export default DomExperimentLeftListImg;
+export default DomDrawingBoardLeftListImg;

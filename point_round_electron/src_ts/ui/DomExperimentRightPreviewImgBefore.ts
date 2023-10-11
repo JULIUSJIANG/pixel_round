@@ -11,11 +11,11 @@ import DomExperimentRightPreviewImgBeforeWebglOrigin from "./DomExperimentRightP
 class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
-        let listImgData = MgrData.inst.get (MgrDataItem.LIST_IMG_DATA);
-        let listImgDataInst: MgrDataItem.ImgData;
+        let listImgData = MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA);
+        let listImgDataInst: MgrDataItem.ExpImgData;
         for (let i = 0; i < listImgData.length; i++) {
             let listImgDataI = listImgData [i];
-            if (listImgDataI.id == MgrData.inst.get (MgrDataItem.CURRENT_IMG)) {
+            if (listImgDataI.id == MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG)) {
                 listImgDataInst = listImgDataI;
                 break;
             };

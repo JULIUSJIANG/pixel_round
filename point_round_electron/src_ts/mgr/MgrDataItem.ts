@@ -88,6 +88,13 @@ namespace MgrDataItem {
         key: `DB_CURRENT_IMG_${VERSION}`,
         defVal: 0
     });
+    /**
+     * 画板模式 - 当前颜色
+     */
+    export const DB_COLOR = new MgrDataItem <string> ({
+        key: `DB_COLOR_${VERSION}`,
+        defVal: `#ffffffff`
+    });
 
     /**
      * 实验模式 - 图片数据

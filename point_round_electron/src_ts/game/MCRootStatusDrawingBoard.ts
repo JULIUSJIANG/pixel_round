@@ -7,12 +7,46 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomDrawingBoardLeft from "../ui/DomDrawingBoardLeft.js";
 import DomDrawingBoardRightEmpty from "../ui/DomDrawingBoardRightEmpty.js";
 import DomDrawingBoardRightPaint from "../ui/DomDrawingBoardRightPaint.js";
+import MCRoot from "./MCRoot.js";
 import MCRootStatus from "./MCRootStatus.js";
+import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus.js";
+import MCRootStatusDrawingBoardOpStatusEraser from "./MCRootStatusDrawingBoardOpStatusEraser.js";
+import MCRootStatusDrawingBoardOpStatusPencil from "./MCRootStatusDrawingBoardOpStatusPencil.js";
 
 /**
  * 根状态机 - 状态 - 画板模式
  */
 class MCRootStatusDrawingBoard extends MCRootStatus {
+
+    constructor (mcRoot: MCRoot, id: number, name: string) {
+        super (mcRoot, id, name);
+
+        this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil (this, 0, `画笔`);
+        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser (this, 1, `橡皮擦`);
+    }
+
+    onInit (): void {
+        this.opEnter (this.opStatusPencil);
+    }
+    
+    opListStatus = new Array <MCRootStatusDrawingBoardOpStatus> ();
+    
+    opMapIdToStatus = new Map <number, MCRootStatusDrawingBoardOpStatus> ();
+
+    opStatusPencil: MCRootStatusDrawingBoardOpStatusPencil;
+
+    opStatusEraser: MCRootStatusDrawingBoardOpStatusEraser;
+
+    opCurrStatus: MCRootStatusDrawingBoardOpStatus;
+
+    opEnter (status: MCRootStatusDrawingBoardOpStatus) {
+        let rec = this.opCurrStatus;
+        this.opCurrStatus = status;
+        if (rec) {
+            rec.onExit ();
+        };
+        this.opCurrStatus.onEnter ();
+    }
 
     onDisplay (): ReactComponentExtendInstance {
         let instDisplay: ReactComponentExtendInstance;

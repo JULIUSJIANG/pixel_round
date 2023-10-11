@@ -2,28 +2,17 @@
  "AUTO_DEBUG_TOOLS_21": false,
  "MC_STATUS_21": 0,
  "MC_STATUS_EXP_STATUS_21": 1,
- "SEED_21": 28,
+ "SEED_21": 30,
  "DB_LIST_IMG_DATA_21": [
   {
-   "id": 26,
-   "dataOrigin": null,
-   "width": 50,
-   "height": 50
-  },
-  {
-   "id": 27,
-   "dataOrigin": null,
-   "width": 50,
-   "height": 50
-  },
-  {
-   "id": 28,
+   "id": 30,
    "dataOrigin": null,
    "width": 50,
    "height": 50
   }
  ],
- "DB_CURRENT_IMG_21": 27,
+ "DB_CURRENT_IMG_21": 30,
+ "DB_COLOR_21": "ea1717c4",
  "EXP_LIST_IMG_DATA_21": [
   {
    "id": 2,
@@ -166,5 +155,5 @@
    "pixelHeight": 2
   }
  ],
- "EXP_CURRENT_IMG_21": 8
+ "EXP_CURRENT_IMG_21": 10
 }

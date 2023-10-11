@@ -57,6 +57,13 @@ const VERSION = 21;
         key: `DB_CURRENT_IMG_${VERSION}`,
         defVal: 0
     });
+    /**
+     * 画板模式 - 当前颜色
+     */
+    MgrDataItem.DB_COLOR = new MgrDataItem({
+        key: `DB_COLOR_${VERSION}`,
+        defVal: `#ffffffff`
+    });
     MgrDataItem.EXP_LIST_IMG_DATA = new MgrDataItem({
         key: `EXP_LIST_IMG_DATA_${VERSION}`,
         defVal: []

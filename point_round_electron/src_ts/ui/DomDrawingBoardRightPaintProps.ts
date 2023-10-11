@@ -8,8 +8,34 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
 export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend <number> {
 
-    render (): ReactComponentExtendInstance {
+    listChildren = new Array <ReactComponentExtendInstance> ();
 
+    render (): ReactComponentExtendInstance {
+        this.listChildren.length = 0;
+        for (let i = 0; i < IndexGlobal.inst.mcRoot.statusDrawingBoard.opListStatus.length; i++) {
+            let opListStatusI = IndexGlobal.inst.mcRoot.statusDrawingBoard.opListStatus [i];
+            let propsBtn = {
+                style: {
+                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                },
+                onClick: () => {
+                    if (opListStatusI == IndexGlobal.inst.mcRoot.statusDrawingBoard.opCurrStatus) {
+                        return;
+                    };
+                    IndexGlobal.inst.mcRoot.statusDrawingBoard.opEnter (opListStatusI);
+                    MgrData.inst.callDataChange ();
+                }
+            };
+            if (opListStatusI == IndexGlobal.inst.mcRoot.statusDrawingBoard.opCurrStatus) {
+                propsBtn [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
+            };
+            this.listChildren.push (ReactComponentExtend.instantiateTag (
+                NodeModules.antd.Button,
+                propsBtn,
+
+                opListStatusI.name
+            ));
+        };
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -33,6 +59,31 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                     },
                 },
 
+                // 板块 - 操作
+                ReactComponentExtend.instantiateTag (
+                    MgrDomDefine.TAG_DIV,
+                    {
+                        style: {
+                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                        }
+                    },
+
+                    ...this.listChildren,
+                ),
+
+                // 分割线
+                ReactComponentExtend.instantiateTag (
+                    MgrDomDefine.TAG_DIV,
+                    {
+                        style: {
+                            [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.CONFIG_TXT_SPACING,
+                            [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                            [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
+                        }
+                    }
+                ),
+
                 // 板块 - 颜色
                 ReactComponentExtend.instantiateTag (
                     MgrDomDefine.TAG_DIV,
@@ -54,7 +105,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                                 [MgrDomDefine.STYLE_FONT_SIZE]: MgrDomDefine.STYLE_FONT_SIZE_14,
                             }
                         },
-                        `颜色`
+                        `画笔颜色`
                     ),
                     ReactComponentExtend.instantiateTag (
                         NodeModules.antd.ColorPicker,
@@ -64,44 +115,14 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                             },
 
-                            [MgrDomDefine.PROPS_VALUE]: `#ffffffff`,
-                            [MgrDomDefine.PROPS_ON_CHANGE]: (val) => {
-
+                            [MgrDomDefine.PROPS_VALUE]: `${MgrData.inst.get (MgrDataItem.DB_COLOR)}`,
+                            onChangeComplete: (val) => {
+                                val = val.toHex();
+                                MgrData.inst.set (MgrDataItem.DB_COLOR, val);
+                                MgrData.inst.callDataChange ();
                             }
                         }
                     )
-                ),
-
-                // 板块 - 操作
-                ReactComponentExtend.instantiateTag (
-                    MgrDomDefine.TAG_DIV,
-                    {
-                        style: {
-                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                        }
-                    },
-
-                    ReactComponentExtend.instantiateTag (
-                        NodeModules.antd.Button,
-                        {
-                            style: {
-                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            }
-                        },
-
-                        `画笔`
-                    ),
-                    ReactComponentExtend.instantiateTag (
-                        NodeModules.antd.Button,
-                        {
-                            style: {
-                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            }
-                        },
-
-                        `橡皮擦`
-                    ),
                 ),
 
                 ReactComponentExtend.instantiateTag (

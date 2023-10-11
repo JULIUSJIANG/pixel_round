@@ -150,6 +150,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend {
                 ;
                 let id = MgrData.inst.get(MgrDataItem.SEED);
                 id++;
+                MgrData.inst.set(MgrDataItem.SEED, id);
                 let imgData = {
                     id: id,
                     dataOrigin: IndexGlobal.mcExpCreate().img.src,
@@ -161,7 +162,6 @@ export default class DomExperimentRightCreate extends ReactComponentExtend {
                     pixelHeight: 1
                 };
                 MgrData.inst.get(MgrDataItem.EXP_LIST_IMG_DATA).push(imgData);
-                MgrData.inst.set(MgrDataItem.SEED, id);
                 IndexGlobal.mcExp().currStatus.onImg(id);
             }
         }, `确认添加`));

@@ -8,11 +8,11 @@ class IndexGlobal {
         /**
          * 绘板数据的集合
          */
-        this.listDBImg = new Array();
+        this.dbListImg = new Array();
         /**
          * 标识到绘板数据的映射
          */
-        this.mapIdToDBImg = new Map();
+        this.dbMapIdToImg = new Map();
     }
     /**
      * 初始化
@@ -27,13 +27,49 @@ class IndexGlobal {
         let listImg = MgrData.inst.get(MgrDataItem.DB_LIST_IMG_DATA);
         for (let i = 0; i < listImg.length; i++) {
             let listImgI = listImg[i];
-            let dbImg = new DBImg(listImgI);
-            this.listDBImg.push(dbImg);
-            this.mapIdToDBImg.set(dbImg.dbImgData.id, dbImg);
+            this.dbAddCache(listImgI);
         }
         ;
         this.mcRoot = new MCRoot(this);
         this.mcRoot.onInit();
+    }
+    /**
+     * 添加缓存
+     * @param imgData
+     */
+    dbAddCache(imgData) {
+        let dbImg = new DBImg(imgData);
+        this.dbListImg.push(dbImg);
+        this.dbMapIdToImg.set(dbImg.dbImgData.id, dbImg);
+    }
+    /**
+     * 删除某索引的记录
+     * @param idx
+     */
+    dbDelete(idx) {
+        let rec = this.dbListImg[idx];
+        this.dbMapIdToImg.delete(rec.dbImgData.id);
+        this.dbListImg.splice(idx, 1);
+        MgrData.inst.get(MgrDataItem.DB_LIST_IMG_DATA).splice(idx, 1);
+    }
+    /**
+     * 创建画板
+     * @param width
+     * @param height
+     */
+    dbCreate(width, height) {
+        let id = MgrData.inst.get(MgrDataItem.SEED);
+        id++;
+        MgrData.inst.set(MgrDataItem.SEED, id);
+        let imgData = {
+            id: id,
+            dataOrigin: null,
+            width: width,
+            height: height
+        };
+        MgrData.inst.get(MgrDataItem.DB_LIST_IMG_DATA).push(imgData);
+        this.dbAddCache(imgData);
+        return id;
     }
 }
 (function (IndexGlobal) {

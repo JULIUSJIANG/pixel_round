@@ -1,8 +1,12 @@
+import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
+import MgrData from "../mgr/MgrData.js";
+import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomDrawingBoardLeft from "../ui/DomDrawingBoardLeft.js";
-import DomDrawingBoardRightCreate from "../ui/DomDrawingBoardRightCreate.js";
+import DomDrawingBoardRightEmpty from "../ui/DomDrawingBoardRightEmpty.js";
+import DomDrawingBoardRightPaint from "../ui/DomDrawingBoardRightPaint.js";
 import MCRootStatus from "./MCRootStatus.js";
 
 /**
@@ -11,6 +15,14 @@ import MCRootStatus from "./MCRootStatus.js";
 class MCRootStatusDrawingBoard extends MCRootStatus {
 
     onDisplay (): ReactComponentExtendInstance {
+        let instDisplay: ReactComponentExtendInstance;
+        // 有可用图片
+        if (IndexGlobal.inst.dbMapIdToImg.get (MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG))) {
+            instDisplay = ReactComponentExtend.instantiateComponent (DomDrawingBoardRightPaint, null)
+        }   
+        else {
+            instDisplay = ReactComponentExtend.instantiateComponent (DomDrawingBoardRightEmpty, null);
+        };
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -24,7 +36,7 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
             },
 
             ReactComponentExtend.instantiateComponent (DomDrawingBoardLeft, null),
-            ReactComponentExtend.instantiateComponent (DomDrawingBoardRightCreate, null),
+            instDisplay,
         );
     }
 }

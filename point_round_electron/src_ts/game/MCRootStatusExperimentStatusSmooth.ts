@@ -15,10 +15,6 @@ import objectPool from "../common/ObjectPool.js";
 
 export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExperimentStatus {
 
-    constructor (machine: MCRootStatusExperiment, id: number) {
-        super (machine, id);
-    }
-
     onEnter (): void {
         this.onImg (MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG));
     }

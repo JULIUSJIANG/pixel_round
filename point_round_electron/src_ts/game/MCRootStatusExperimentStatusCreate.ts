@@ -11,7 +11,7 @@ import MCRootStatusExperimentStatusCreateStatusUploading from "./MCRootStatusExp
 import MCRootStatusExperiment from "./MCRootStatusExperiment.js";
 import MCRootStatusExperimentStatus from "./MCRootStatusExperimentStatus.js";
 
-export default class MCRootStatusExperimentStatusCreate extends MCRootStatusExperimentStatus{
+export default class MCRootStatusExperimentStatusCreate extends MCRootStatusExperimentStatus {
 
     onImg (id: number): void {
         MgrData.inst.set (MgrDataItem.EXP_CURRENT_IMG, id);

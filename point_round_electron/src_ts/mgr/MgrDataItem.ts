@@ -73,7 +73,9 @@ namespace MgrDataItem {
      */
     export interface DBImgData {
         id: number;
-        dataOrigin: string
+        dataOrigin: string;
+        width: number;
+        height: number;
     };
     export const DB_LIST_IMG_DATA = new MgrDataItem <Array <DBImgData>> ({
         key: `DB_LIST_IMG_DATA_${VERSION}`,

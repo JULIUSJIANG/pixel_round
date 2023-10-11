@@ -8,8 +8,8 @@ import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
 export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExperimentStatus {
-    constructor(machine, id) {
-        super(machine, id);
+    constructor() {
+        super(...arguments);
         /**
          * (源图宽度 + 内边距) + 缩放
          */

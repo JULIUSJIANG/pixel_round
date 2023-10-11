@@ -26,11 +26,6 @@ export default class MCRootStatusExperiment extends MCRootStatus {
         MgrData.inst.set(MgrDataItem.MC_STATUS_EXP_STATUS, this.currStatus.id);
     }
     onInit() {
-        for (let i = 0; i < this.listStatus.length; i++) {
-            let listStatusI = this.listStatus[i];
-            listStatusI.onInit();
-        }
-        ;
         this.enter(this.mapIdToStatus.get(MgrData.inst.get(MgrDataItem.MC_STATUS_EXP_STATUS)));
     }
     onDisplay() {

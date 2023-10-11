@@ -12,15 +12,6 @@ class IndexGlobal {
     mcRoot: MCRoot;
 
     /**
-     * 绘板数据的集合
-     */
-    listDBImg = new Array <DBImg> ();
-    /**
-     * 标识到绘板数据的映射
-     */
-    mapIdToDBImg = new Map <number, DBImg> ();
-
-    /**
      * 初始化
      */
     init () {
@@ -33,13 +24,61 @@ class IndexGlobal {
         let listImg = MgrData.inst.get (MgrDataItem.DB_LIST_IMG_DATA);
         for (let i = 0; i < listImg.length; i++) {
             let listImgI = listImg [i];
-            let dbImg = new DBImg (listImgI);
-            this.listDBImg.push (dbImg);
-            this.mapIdToDBImg.set (dbImg.dbImgData.id, dbImg);
+            this.dbAddCache (listImgI);
         };
 
         this.mcRoot = new MCRoot (this);
         this.mcRoot.onInit ();
+    }
+
+    /**
+     * 绘板数据的集合
+     */
+    dbListImg = new Array <DBImg> ();
+    /**
+     * 标识到绘板数据的映射
+     */
+    dbMapIdToImg = new Map <number, DBImg> ();
+
+    /**
+     * 添加缓存
+     * @param imgData 
+     */
+    dbAddCache (imgData: MgrDataItem.DBImgData) {
+        let dbImg = new DBImg (imgData);
+        this.dbListImg.push (dbImg);
+        this.dbMapIdToImg.set (dbImg.dbImgData.id, dbImg);
+    }
+
+    /**
+     * 删除某索引的记录
+     * @param idx 
+     */
+    dbDelete (idx: number) {
+        let rec = this.dbListImg [idx];
+        this.dbMapIdToImg.delete (rec.dbImgData.id);
+        this.dbListImg.splice (idx, 1);
+        MgrData.inst.get (MgrDataItem.DB_LIST_IMG_DATA).splice (idx, 1);
+    }
+
+    /**
+     * 创建画板
+     * @param width 
+     * @param height 
+     */
+    dbCreate (width: number, height: number) {
+        let id = MgrData.inst.get (MgrDataItem.SEED);
+        id++;
+        MgrData.inst.set (MgrDataItem.SEED, id);
+        let imgData: MgrDataItem.DBImgData = {
+            id: id,
+            dataOrigin: null,
+            width: width,
+            height: height
+        };
+        MgrData.inst.get (MgrDataItem.DB_LIST_IMG_DATA).push (imgData);
+        this.dbAddCache (imgData);
+        return id;
     }
 }
 

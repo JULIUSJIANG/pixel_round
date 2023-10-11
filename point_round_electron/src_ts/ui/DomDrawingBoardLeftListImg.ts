@@ -4,6 +4,8 @@ import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import DBImg from "../game/DBImg.js";
+import MgrData from "../mgr/MgrData.js";
+import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
 class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLeftListImg.Args> {
@@ -42,7 +44,8 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
         let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
-
+                MgrData.inst.set (MgrDataItem.DB_CURRENT_IMG, this.props.dbImg.dbImgData.id);
+                MgrData.inst.callDataChange ();
             },
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: 0,
@@ -53,7 +56,12 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
         if (this.props.j != 0) {
             props.style [MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
         };
-        props.style [MgrDomDefine.STYLE_BACKGROUND_COLOR] = MgrDomDefine.CONFIG_TXT_BG_COLOR;
+        if (MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG) == this.props.dbImg.dbImgData.id) {
+            props [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
+        }
+        else {
+            props.style [MgrDomDefine.STYLE_BACKGROUND_COLOR] = MgrDomDefine.CONFIG_TXT_BG_COLOR;
+        };
         return ReactComponentExtend.instantiateTag (
             NodeModules.antd.Button,
             props,

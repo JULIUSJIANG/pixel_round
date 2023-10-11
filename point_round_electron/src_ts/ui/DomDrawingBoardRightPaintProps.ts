@@ -6,7 +6,7 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-export default class DomExperimentRightPreviewProps extends ReactComponentExtend <number> {
+export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
 
@@ -28,23 +28,24 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                 NodeModules.antd.Button,
                 {
                     onClick: () => {
-                        let listImgData = MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA);
+                        let listImgData = MgrData.inst.get (MgrDataItem.DB_LIST_IMG_DATA);
                         let targetIdx: number;
                         for (let i = 0; i < listImgData.length; i++) {
                             let imgData = listImgData [i];
-                            if (imgData.id == MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG)) {
+                            if (imgData.id == MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG)) {
                                 targetIdx = i;
                                 break;
                             };
                         };
-                        listImgData.splice (targetIdx, 1);
+                        // 删除该索引上的单位
+                        IndexGlobal.inst.dbDelete (targetIdx);
+
+                        // 尽量维持选择状态
                         targetIdx = Math.min (targetIdx, listImgData.length - 1);
                         if (0 <= targetIdx) {
-                            IndexGlobal.mcExp ().currStatus.onImg (listImgData [targetIdx].id);
-                        }
-                        else {
-                            IndexGlobal.mcExp ().currStatus.onCreate ();
+                            MgrData.inst.set (MgrDataItem.DB_CURRENT_IMG, listImgData [targetIdx].id);
                         };
+                        MgrData.inst.callDataChange ();
                     },
                     style: {
                         [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,

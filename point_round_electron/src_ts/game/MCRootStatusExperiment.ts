@@ -13,8 +13,6 @@ import DomExperimentLeft from "../ui/DomExperimentLeft.js";
 
 export default class MCRootStatusExperiment extends MCRootStatus {
 
-    relGlobal: IndexGlobal;
-
     listStatus = new Array <MCRootStatusExperimentStatus> ();
 
     mapIdToStatus = new Map <number, MCRootStatusExperimentStatus> ();
@@ -43,10 +41,6 @@ export default class MCRootStatusExperiment extends MCRootStatus {
     }
 
     onInit (): void {
-        for (let i = 0; i < this.listStatus.length; i++) {
-            let listStatusI = this.listStatus [i];
-            listStatusI.onInit ();
-        };
         this.enter (this.mapIdToStatus.get (MgrData.inst.get (MgrDataItem.MC_STATUS_EXP_STATUS)));
     }
 

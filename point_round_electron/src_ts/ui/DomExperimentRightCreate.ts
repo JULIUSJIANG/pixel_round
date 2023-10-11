@@ -216,6 +216,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
                         };
                         let id = MgrData.inst.get (MgrDataItem.SEED);
                         id++;
+                        MgrData.inst.set (MgrDataItem.SEED, id);
                         let imgData: MgrDataItem.ExpImgData = {
                             id: id,
                             dataOrigin: IndexGlobal.mcExpCreate ().img.src,
@@ -227,7 +228,6 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
                             pixelHeight: 1
                         };
                         MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA).push (imgData);
-                        MgrData.inst.set (MgrDataItem.SEED, id);
                         IndexGlobal.mcExp ().currStatus.onImg (id);
                     }
                 },

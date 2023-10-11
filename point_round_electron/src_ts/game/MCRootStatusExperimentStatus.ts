@@ -34,8 +34,4 @@ export default class MCRootStatusExperimentStatus {
     onImg (id: number) {
 
     }
-
-    onInit () {
-        
-    }
 }

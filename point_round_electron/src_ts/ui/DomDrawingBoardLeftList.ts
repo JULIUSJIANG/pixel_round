@@ -13,7 +13,7 @@ export default class DomDrawingBoardLeftList extends ReactComponentExtend <numbe
 
     render (): ReactComponentExtendInstance {
         this.listChildren.length = 0;
-        let listImgData = IndexGlobal.inst.listDBImg;
+        let listImgData = IndexGlobal.inst.dbListImg;
         for (let i = 0; i < listImgData.length; i+= IndexGlobal.IMG_LIST_COLUMN_COUNT) {
             let containerProps = {
                 style: {

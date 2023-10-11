@@ -4,9 +4,15 @@ export default class DBImgSrcStatusLoading extends DBImgSrcStatus {
         this.relImg.imgLoading.onload = () => {
             this.relImg.srcEnter(this.relImg.srcStatusFinished);
         };
-        this.relImg.imgLoading.src = this.relImg.dbImgData.dataOrigin;
+        this.loadUrl(this.relImg.dbImgData.dataOrigin);
     }
     onSrcChanged() {
-        this.relImg.imgLoading.src = this.relImg.dbImgData.dataOrigin;
+        this.loadUrl(this.relImg.dbImgData.dataOrigin);
+    }
+    loadUrl(url) {
+        if (url != null) {
+            this.relImg.imgLoading.src = url;
+        }
+        ;
     }
 }

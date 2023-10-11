@@ -18,43 +18,55 @@ const VERSION = 21;
      */
     MgrDataItem.listItem = new Array();
     /**
-     * 根状态
-     */
-    MgrDataItem.MC_ROOT_STATUS = new MgrDataItem({
-        key: `MC_ROOT_STATUS_${VERSION}`,
-        defVal: 0
-    });
-    /**
-     * 当前的详情状态
-     */
-    MgrDataItem.DETAIL_MACHINE_STATUS = new MgrDataItem({
-        key: `DETAIL_MACHINE_STATUS_${VERSION}`,
-        defVal: 0
-    });
-    /**
-     * 图片数据的 id 种子
-     */
-    MgrDataItem.LIST_SEED = new MgrDataItem({
-        key: `LIST_SEED_${VERSION}`,
-        defVal: 0
-    });
-    MgrDataItem.LIST_IMG_DATA = new MgrDataItem({
-        key: `LIST_IMG_DATA_${VERSION}`,
-        defVal: []
-    });
-    /**
-     * 当前查看的图片
-     */
-    MgrDataItem.CURRENT_IMG = new MgrDataItem({
-        key: `CURRENT_IMG_${VERSION}`,
-        defVal: 0
-    });
-    /**
      * 启动时自动打开调试工具
      */
     MgrDataItem.AUTO_DEBUG_TOOLS = new MgrDataItem({
         key: `AUTO_DEBUG_TOOLS_${VERSION}`,
         defVal: false
+    });
+    /**
+     * 根状态
+     */
+    MgrDataItem.MC_STATUS = new MgrDataItem({
+        key: `MC_STATUS_${VERSION}`,
+        defVal: 0
+    });
+    /**
+     * 根状态 - 实验模式状态
+     */
+    MgrDataItem.MC_STATUS_EXP_STATUS = new MgrDataItem({
+        key: `MC_STATUS_EXP_STATUS_${VERSION}`,
+        defVal: 0
+    });
+    /**
+     * id 种子
+     */
+    MgrDataItem.SEED = new MgrDataItem({
+        key: `SEED_${VERSION}`,
+        defVal: 0
+    });
+    ;
+    MgrDataItem.DB_LIST_IMG_DATA = new MgrDataItem({
+        key: `DB_LIST_IMG_DATA_${VERSION}`,
+        defVal: []
+    });
+    /**
+     * 画板模式 - 当前图片
+     */
+    MgrDataItem.DB_CURRENT_IMG = new MgrDataItem({
+        key: `DB_CURRENT_IMG_${VERSION}`,
+        defVal: 0
+    });
+    MgrDataItem.EXP_LIST_IMG_DATA = new MgrDataItem({
+        key: `EXP_LIST_IMG_DATA_${VERSION}`,
+        defVal: []
+    });
+    /**
+     * 实验模式 - 当前图片
+     */
+    MgrDataItem.EXP_CURRENT_IMG = new MgrDataItem({
+        key: `EXP_CURRENT_IMG_${VERSION}`,
+        defVal: 0
     });
 })(MgrDataItem || (MgrDataItem = {}));
 export default MgrDataItem;

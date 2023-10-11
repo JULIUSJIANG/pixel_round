@@ -148,7 +148,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend {
                     return NodeModules.antd.message.error(`文件加载中，请稍后`);
                 }
                 ;
-                let id = MgrData.inst.get(MgrDataItem.LIST_SEED);
+                let id = MgrData.inst.get(MgrDataItem.SEED);
                 id++;
                 let imgData = {
                     id: id,
@@ -160,8 +160,8 @@ export default class DomExperimentRightCreate extends ReactComponentExtend {
                     pixelWidth: 1,
                     pixelHeight: 1
                 };
-                MgrData.inst.get(MgrDataItem.LIST_IMG_DATA).push(imgData);
-                MgrData.inst.set(MgrDataItem.LIST_SEED, id);
+                MgrData.inst.get(MgrDataItem.EXP_LIST_IMG_DATA).push(imgData);
+                MgrData.inst.set(MgrDataItem.SEED, id);
                 IndexGlobal.mcExp().currStatus.onImg(id);
             }
         }, `确认添加`));

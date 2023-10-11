@@ -13,6 +13,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
     render (): ReactComponentExtendInstance {
         let img = MgrRes.inst.getImg (this.props.imgData.dataOrigin);
         let imgInst: ReactComponentExtendInstance;
+        // 加载完成才显示
         if (img.currStatus == img.statusFinished) {
             let imgWidth = IndexGlobal.IMG_MINI_SIZE;
             let imgHeight = IndexGlobal.IMG_MINI_SIZE;

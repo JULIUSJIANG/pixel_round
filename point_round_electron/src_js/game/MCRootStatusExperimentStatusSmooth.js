@@ -38,13 +38,13 @@ export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExpe
         this.mapIdToColor = new Map();
     }
     onEnter() {
-        this.onImg(MgrData.inst.get(MgrDataItem.CURRENT_IMG));
+        this.onImg(MgrData.inst.get(MgrDataItem.EXP_CURRENT_IMG));
     }
     onCreate() {
         this.relMachine.enter(this.relMachine.statusCreate);
     }
     onImg(id) {
-        MgrData.inst.set(MgrDataItem.CURRENT_IMG, id);
+        MgrData.inst.set(MgrDataItem.EXP_CURRENT_IMG, id);
         let rec = this.imgMachine;
         this.imgMachine = new SmoothMachine(this, id);
         if (rec) {

@@ -10,6 +10,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend {
     render() {
         let img = MgrRes.inst.getImg(this.props.imgData.dataOrigin);
         let imgInst;
+        // 加载完成才显示
         if (img.currStatus == img.statusFinished) {
             let imgWidth = IndexGlobal.IMG_MINI_SIZE;
             let imgHeight = IndexGlobal.IMG_MINI_SIZE;
@@ -52,7 +53,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend {
             props.style[MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
         }
         ;
-        if (IndexGlobal.mcExp().currStatus == IndexGlobal.mcExp().statusPreview && this.props.imgData.id == MgrData.inst.get(MgrDataItem.CURRENT_IMG)) {
+        if (IndexGlobal.mcExp().currStatus == IndexGlobal.mcExp().statusPreview && this.props.imgData.id == MgrData.inst.get(MgrDataItem.EXP_CURRENT_IMG)) {
             props[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         else {

@@ -6,7 +6,6 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrSdk from "../mgr/MgrSdk.js";
-import DomExperimentLeft from "./DomExperimentLeft.js";
 
 /**
  * 根

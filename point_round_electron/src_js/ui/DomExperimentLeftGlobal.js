@@ -2,7 +2,6 @@ import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-const TEMP_COUNT = 4;
 export default class DomExperimentLeftGlobal extends ReactComponentExtend {
     render() {
         let propsAdd = {

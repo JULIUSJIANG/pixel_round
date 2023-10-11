@@ -11,7 +11,7 @@ class SmoothMachine {
     constructor(rel, relId) {
         this.rel = rel;
         this.dataId = relId;
-        let listData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
+        let listData = MgrData.inst.get(MgrDataItem.EXP_LIST_IMG_DATA);
         for (let i = 0; i < listData.length; i++) {
             let listDataI = listData[i];
             if (listDataI.id == this.dataId) {

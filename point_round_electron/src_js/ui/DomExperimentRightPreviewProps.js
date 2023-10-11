@@ -17,11 +17,11 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
             }
         }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
             onClick: () => {
-                let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
+                let listImgData = MgrData.inst.get(MgrDataItem.EXP_LIST_IMG_DATA);
                 let targetIdx;
                 for (let i = 0; i < listImgData.length; i++) {
                     let imgData = listImgData[i];
-                    if (imgData.id == MgrData.inst.get(MgrDataItem.CURRENT_IMG)) {
+                    if (imgData.id == MgrData.inst.get(MgrDataItem.EXP_CURRENT_IMG)) {
                         targetIdx = i;
                         break;
                     }

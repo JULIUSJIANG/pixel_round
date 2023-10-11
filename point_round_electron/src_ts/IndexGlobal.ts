@@ -3,6 +3,7 @@ import MCRoot from "./game/MCRoot.js";
 import MgrData from "./mgr/MgrData.js";
 import MgrDataItem from "./mgr/MgrDataItem.js";
 import MgrSdk from "./mgr/MgrSdk.js";
+import DBImg from "./game/DBImg.js";
 
 class IndexGlobal {
     /**
@@ -11,12 +12,30 @@ class IndexGlobal {
     mcRoot: MCRoot;
 
     /**
+     * 绘板数据的集合
+     */
+    listDBImg = new Array <DBImg> ();
+    /**
+     * 标识到绘板数据的映射
+     */
+    mapIdToDBImg = new Map <number, DBImg> ();
+
+    /**
      * 初始化
      */
     init () {
         // 勾选了默认打开调试工具
         if (MgrData.inst.get (MgrDataItem.AUTO_DEBUG_TOOLS)) {
             MgrSdk.inst.core.openDebugTools ();
+        };
+
+        // 缓存图片数据
+        let listImg = MgrData.inst.get (MgrDataItem.DB_LIST_IMG_DATA);
+        for (let i = 0; i < listImg.length; i++) {
+            let listImgI = listImg [i];
+            let dbImg = new DBImg (listImgI);
+            this.listDBImg.push (dbImg);
+            this.mapIdToDBImg.set (dbImg.dbImgData.id, dbImg);
         };
 
         this.mcRoot = new MCRoot (this);

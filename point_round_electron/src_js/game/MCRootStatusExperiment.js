@@ -23,7 +23,7 @@ export default class MCRootStatusExperiment extends MCRootStatus {
         }
         ;
         this.currStatus.onEnter();
-        MgrData.inst.set(MgrDataItem.DETAIL_MACHINE_STATUS, this.currStatus.id);
+        MgrData.inst.set(MgrDataItem.MC_STATUS_EXP_STATUS, this.currStatus.id);
     }
     onInit() {
         for (let i = 0; i < this.listStatus.length; i++) {
@@ -31,7 +31,7 @@ export default class MCRootStatusExperiment extends MCRootStatus {
             listStatusI.onInit();
         }
         ;
-        this.enter(this.mapIdToStatus.get(MgrData.inst.get(MgrDataItem.DETAIL_MACHINE_STATUS)));
+        this.enter(this.mapIdToStatus.get(MgrData.inst.get(MgrDataItem.MC_STATUS_EXP_STATUS)));
     }
     onDisplay() {
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {

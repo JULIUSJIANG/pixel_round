@@ -8,11 +8,11 @@ import DomExperimentRightPreviewImgBeforeWebglCutted from "./DomExperimentRightP
 import DomExperimentRightPreviewImgBeforeWebglOrigin from "./DomExperimentRightPreviewImgBeforeWebglOrigin.js";
 class DomExperimentRightPreviewImgBefore extends ReactComponentExtend {
     render() {
-        let listImgData = MgrData.inst.get(MgrDataItem.LIST_IMG_DATA);
+        let listImgData = MgrData.inst.get(MgrDataItem.EXP_LIST_IMG_DATA);
         let listImgDataInst;
         for (let i = 0; i < listImgData.length; i++) {
             let listImgDataI = listImgData[i];
-            if (listImgDataI.id == MgrData.inst.get(MgrDataItem.CURRENT_IMG)) {
+            if (listImgDataI.id == MgrData.inst.get(MgrDataItem.EXP_CURRENT_IMG)) {
                 listImgDataInst = listImgDataI;
                 break;
             }

@@ -31,7 +31,7 @@ class MCRoot {
         }
         ;
         this.currStatus.onEnter();
-        MgrData.inst.set(MgrDataItem.MC_ROOT_STATUS, this.currStatus.id);
+        MgrData.inst.set(MgrDataItem.MC_STATUS, this.currStatus.id);
     }
     /**
      * 事件派发 - 初始化
@@ -42,7 +42,7 @@ class MCRoot {
             listStatusI.onInit();
         }
         ;
-        this.enter(this.mapIdToStatus.get(MgrData.inst.get(MgrDataItem.MC_ROOT_STATUS)));
+        this.enter(this.mapIdToStatus.get(MgrData.inst.get(MgrDataItem.MC_STATUS)));
     }
 }
 export default MCRoot;

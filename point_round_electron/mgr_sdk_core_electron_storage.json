@@ -1,7 +1,10 @@
 {
- "MC_STATUS_21": 1,
+ "AUTO_DEBUG_TOOLS_21": false,
+ "MC_STATUS_21": 0,
  "MC_STATUS_EXP_STATUS_21": 1,
  "SEED_21": 18,
+ "DB_LIST_IMG_DATA_21": [],
+ "DB_CURRENT_IMG_21": 0,
  "EXP_LIST_IMG_DATA_21": [
   {
    "id": 2,
@@ -144,6 +147,5 @@
    "pixelHeight": 2
   }
  ],
- "EXP_CURRENT_IMG_21": 11,
- "AUTO_DEBUG_TOOLS_21": false
+ "EXP_CURRENT_IMG_21": 8
 }

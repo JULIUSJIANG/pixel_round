@@ -15,7 +15,7 @@ export default class MCRootStatusExperimentStatusCreate extends MCRootStatusExpe
         this.enter(this.statusIdle);
     }
     onImg(id) {
-        MgrData.inst.set(MgrDataItem.CURRENT_IMG, id);
+        MgrData.inst.set(MgrDataItem.EXP_CURRENT_IMG, id);
         this.relMachine.enter(this.relMachine.statusPreview);
     }
     onRender() {

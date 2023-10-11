@@ -3,24 +3,23 @@ import NodeModules from "../NodeModules.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
-import MgrData from "../mgr/MgrData.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
+import DBImg from "../game/DBImg.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import MgrRes from "../mgr/MgrRes.js";
 
 class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLeftListImg.Args> {
 
     render (): ReactComponentExtendInstance {
-        let img = MgrRes.inst.getImg (this.props.imgData.dataOrigin);
         let imgInst: ReactComponentExtendInstance;
-        if (img.currStatus == img.statusFinished) {
+        // 加载完成再说
+        if (this.props.dbImg.initCurrStatus == this.props.dbImg.initStatusFinished) {
+            let image = this.props.dbImg.imgLoaded;
             let imgWidth = IndexGlobal.IMG_MINI_SIZE;
             let imgHeight = IndexGlobal.IMG_MINI_SIZE;
-            if (img.image.width < img.image.height) {
-                imgWidth = img.image.width / img.image.height * imgHeight;
+            if (image.width < image.height) {
+                imgWidth = image.width / image.height * imgHeight;
             };
-            if (img.image.height < img.image.width) {
-                imgHeight = img.image.height / img.image.width * imgWidth;
+            if (image.height < image.width) {
+                imgHeight = image.height / image.width * imgWidth;
             };
             let marginX = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgWidth) / 2;
             let marginY = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgHeight) / 2;
@@ -36,14 +35,14 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
                         [MgrDomDefine.STYLE_MARGIN_LEFT]: `${marginX}px`,
                         "imageRendering": `pixelated`,
                     },
-                    src: img.image.src
+                    src: image.src
                 }
             )
         };
         let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
-                IndexGlobal.mcExp ().currStatus.onImg (this.props.imgData.id);
+
             },
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: 0,
@@ -54,12 +53,7 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
         if (this.props.j != 0) {
             props.style [MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
         };
-        if (IndexGlobal.mcExp ().currStatus == IndexGlobal.mcExp ().statusPreview && this.props.imgData.id == MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG)) {
-            props [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
-        }
-        else {
-            props.style [MgrDomDefine.STYLE_BACKGROUND_COLOR] = MgrDomDefine.CONFIG_TXT_BG_COLOR;
-        };
+        props.style [MgrDomDefine.STYLE_BACKGROUND_COLOR] = MgrDomDefine.CONFIG_TXT_BG_COLOR;
         return ReactComponentExtend.instantiateTag (
             NodeModules.antd.Button,
             props,
@@ -80,7 +74,6 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
                         style: {
                             [MgrDomDefine.STYLE_HEIGHT]: `${eleSize}px`,
                             [MgrDomDefine.STYLE_WIDTH]: `${eleSize}px`,
-                            // [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
                             [MgrDomDefine.STYLE_POSITION]: MgrDomDefine.STYLE_POSITION_RELATIVE,
                             [MgrDomDefine.STYLE_LEFT]: `${-eleSize / 2}px`,
                             [MgrDomDefine.STYLE_TOP]: `${-(IndexGlobal.IMG_MINI_SIZE / 2 + MgrDomDefine.CONFIG_NUMBER_SPACING)}px`,
@@ -96,14 +89,14 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
 namespace DomDrawingBoardLeftListImg {
     export class Args {
 
-        imgData: MgrDataItem.ExpImgData;
+        dbImg: DBImg;
 
         i: number;
 
         j: number;
 
-        init (imgData: MgrDataItem.ExpImgData, i: number, j: number) {
-            this.imgData = imgData;
+        init (dbImg: DBImg, i: number, j: number) {
+            this.dbImg = dbImg;
             this.i = i;
             this.j = j;
         }

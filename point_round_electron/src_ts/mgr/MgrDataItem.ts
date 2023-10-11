@@ -69,6 +69,25 @@ namespace MgrDataItem {
     });
 
     /**
+     * 画板模式 - 图片数据
+     */
+    export interface DBImgData {
+        id: number;
+        dataOrigin: string
+    };
+    export const DB_LIST_IMG_DATA = new MgrDataItem <Array <DBImgData>> ({
+        key: `DB_LIST_IMG_DATA_${VERSION}`,
+        defVal: []
+    });
+    /**
+     * 画板模式 - 当前图片
+     */
+    export const DB_CURRENT_IMG = new MgrDataItem <number> ({
+        key: `DB_CURRENT_IMG_${VERSION}`,
+        defVal: 0
+    });
+
+    /**
      * 实验模式 - 图片数据
      */
     export interface ExpImgData {

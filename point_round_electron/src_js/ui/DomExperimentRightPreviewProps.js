@@ -39,7 +39,6 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                 ;
             },
             style: {
-                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
             }
         }, `删除`));

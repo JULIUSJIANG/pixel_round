@@ -27,6 +27,6 @@ export default class DomDrawingBoardLeft extends ReactComponentExtend <number> {
 
             ReactComponentExtend.instantiateComponent (DomDrawingBoardLeftList, null),
             ReactComponentExtend.instantiateComponent (DomDrawingBoardLeftGlobal, null)
-        )
+        );
     }
 }

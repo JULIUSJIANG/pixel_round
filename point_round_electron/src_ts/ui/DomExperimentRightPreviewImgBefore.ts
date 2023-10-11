@@ -4,7 +4,7 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import DomInputNumber from "./DomInputNumber.js";
+import DomInputNumberHor from "./DomInputNumberHor.js";
 import DomExperimentRightPreviewImgBeforeWebglCutted from "./DomExperimentRightPreviewImgBeforeWebglCutted.js";
 import DomExperimentRightPreviewImgBeforeWebglOrigin from "./DomExperimentRightPreviewImgBeforeWebglOrigin.js";
 
@@ -59,7 +59,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         },
                     },
     
-                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                    ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `左内边距`, 
                         listImgDataInst.paddingLeft,
                         (val) => {
@@ -68,7 +68,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         null,
                         null
                     )),
-                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                    ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `右内边距`, 
                         listImgDataInst.paddingRight,
                         (val) => {
@@ -87,7 +87,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         },
                     },
     
-                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                    ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `上内边距`,
                         listImgDataInst.paddingTop,
                         (val) => {
@@ -96,7 +96,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         null,
                         null
                     )),
-                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                    ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `下内边距`, 
                         listImgDataInst.paddingBottom,
                         (val) => {
@@ -119,7 +119,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         },
                     },
     
-                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                    ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `颗粒宽度`, 
                         listImgDataInst.pixelWidth,
                         (val) => {
@@ -129,7 +129,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         1,
                         null
                     )),
-                    ReactComponentExtend.instantiateComponent (DomInputNumber, DomInputNumber.Args.create (
+                    ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `颗粒高度`,
                         listImgDataInst.pixelHeight, 
                         (val) => {

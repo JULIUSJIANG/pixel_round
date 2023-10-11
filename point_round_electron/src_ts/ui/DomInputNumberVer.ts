@@ -5,15 +5,13 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-class DomInputNumber extends ReactComponentExtend <DomInputNumber.Args> {
+class DomInputNumberVer extends ReactComponentExtend <DomInputNumberVer.Args> {
 
     render (): ReactComponentExtendInstance {
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
                 style: {
-                    [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
-                    [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                     [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                     [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
 
@@ -65,7 +63,7 @@ class DomInputNumber extends ReactComponentExtend <DomInputNumber.Args> {
     }
 }
 
-namespace DomInputNumber {
+namespace DomInputNumberVer {
 
     export class Args {
 
@@ -99,4 +97,4 @@ namespace DomInputNumber {
     }
 }
 
-export default DomInputNumber;
+export default DomInputNumberVer;

@@ -2,6 +2,7 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomDrawingBoardLeft from "../ui/DomDrawingBoardLeft.js";
+import DomDrawingBoardRightCreate from "../ui/DomDrawingBoardRightCreate.js";
 import MCRootStatus from "./MCRootStatus.js";
 
 /**
@@ -23,6 +24,7 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
             },
 
             ReactComponentExtend.instantiateComponent (DomDrawingBoardLeft, null),
+            ReactComponentExtend.instantiateComponent (DomDrawingBoardRightCreate, null),
         );
     }
 }

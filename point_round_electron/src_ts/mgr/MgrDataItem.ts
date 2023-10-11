@@ -48,7 +48,7 @@ namespace MgrDataItem {
      * 根状态
      */
     export const MC_STATUS = new MgrDataItem <number> ({
-        key: `MC_ROOT_STATUS_${VERSION}`,
+        key: `MC_STATUS_${VERSION}`,
         defVal: 0
     });
 
@@ -56,7 +56,7 @@ namespace MgrDataItem {
      * 根状态 - 实验模式状态
      */
     export const MC_STATUS_EXP_STATUS = new MgrDataItem <number> ({
-        key: `DETAIL_MACHINE_STATUS_${VERSION}`,
+        key: `MC_STATUS_EXP_STATUS_${VERSION}`,
         defVal: 0
     });
 
@@ -64,7 +64,7 @@ namespace MgrDataItem {
      * id 种子
      */
     export const SEED = new MgrDataItem <number> ({
-        key: `LIST_SEED_${VERSION}`,
+        key: `SEED_${VERSION}`,
         defVal: 0
     });
 
@@ -82,14 +82,14 @@ namespace MgrDataItem {
         pixelHeight: number;
     }
     export const EXP_LIST_IMG_DATA = new MgrDataItem <Array <ExpImgData>> ({
-        key: `LIST_IMG_DATA_${VERSION}`,
+        key: `EXP_LIST_IMG_DATA_${VERSION}`,
         defVal: []
     });
     /**
      * 实验模式 - 当前图片
      */
     export const EXP_CURRENT_IMG = new MgrDataItem <number> ({
-        key: `CURRENT_IMG_${VERSION}`,
+        key: `EXP_CURRENT_IMG_${VERSION}`,
         defVal: 0
     });
 }

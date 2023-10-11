@@ -51,7 +51,7 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                     }
                 },
     
-                `删除`
+                `删除当前文档`
             )
         );
     }

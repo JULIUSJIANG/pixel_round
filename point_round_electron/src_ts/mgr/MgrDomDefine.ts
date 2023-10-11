@@ -52,6 +52,7 @@ namespace MgrDomDefine {
     export const STYLE_FLEX_DIRECTION = "flexDirection";
     export const STYLE_FLEX_DIRECTION_COLUMN = "column";
     export const STYLE_FLEX_DIRECTION_ROW = "row";
+    export const STYLE_FLEX_DIRECTION_ROW_REVERSE = "row-reverse";
 
     export const STYLE_FLEX_GROW = "flexGrow";
 

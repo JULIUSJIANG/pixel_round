@@ -17,7 +17,7 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
     onDisplay (): ReactComponentExtendInstance {
         let instDisplay: ReactComponentExtendInstance;
         // 有可用图片
-        if (IndexGlobal.inst.dbMapIdToImg.get (MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG))) {
+        if (this.getCurrentCache ()) {
             instDisplay = ReactComponentExtend.instantiateComponent (DomDrawingBoardRightPaint, null)
         }   
         else {
@@ -38,6 +38,14 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
             ReactComponentExtend.instantiateComponent (DomDrawingBoardLeft, null),
             instDisplay,
         );
+    }
+
+    /**
+     * 获取当前的缓存
+     * @returns 
+     */
+    getCurrentCache () {
+        return IndexGlobal.inst.dbMapIdToImg.get (MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG));
     }
 }
 

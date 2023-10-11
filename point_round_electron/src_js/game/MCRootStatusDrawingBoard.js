@@ -14,7 +14,7 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
     onDisplay() {
         let instDisplay;
         // 有可用图片
-        if (IndexGlobal.inst.dbMapIdToImg.get(MgrData.inst.get(MgrDataItem.DB_CURRENT_IMG))) {
+        if (this.getCurrentCache()) {
             instDisplay = ReactComponentExtend.instantiateComponent(DomDrawingBoardRightPaint, null);
         }
         else {
@@ -29,6 +29,13 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             }
         }, ReactComponentExtend.instantiateComponent(DomDrawingBoardLeft, null), instDisplay);
+    }
+    /**
+     * 获取当前的缓存
+     * @returns
+     */
+    getCurrentCache() {
+        return IndexGlobal.inst.dbMapIdToImg.get(MgrData.inst.get(MgrDataItem.DB_CURRENT_IMG));
     }
 }
 export default MCRootStatusDrawingBoard;

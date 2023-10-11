@@ -41,6 +41,7 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_FLEX_DIRECTION = "flexDirection";
     MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN = "column";
     MgrDomDefine.STYLE_FLEX_DIRECTION_ROW = "row";
+    MgrDomDefine.STYLE_FLEX_DIRECTION_ROW_REVERSE = "row-reverse";
     MgrDomDefine.STYLE_FLEX_GROW = "flexGrow";
     MgrDomDefine.STYLE_BACKGROUND_COLOR = "backgroundColor";
     MgrDomDefine.STYLE_BACKGROUND_COLOR_WHITE = "white";

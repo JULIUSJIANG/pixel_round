@@ -2,9 +2,28 @@
  "AUTO_DEBUG_TOOLS_21": false,
  "MC_STATUS_21": 0,
  "MC_STATUS_EXP_STATUS_21": 1,
- "SEED_21": 25,
- "DB_LIST_IMG_DATA_21": [],
- "DB_CURRENT_IMG_21": 24,
+ "SEED_21": 28,
+ "DB_LIST_IMG_DATA_21": [
+  {
+   "id": 26,
+   "dataOrigin": null,
+   "width": 50,
+   "height": 50
+  },
+  {
+   "id": 27,
+   "dataOrigin": null,
+   "width": 50,
+   "height": 50
+  },
+  {
+   "id": 28,
+   "dataOrigin": null,
+   "width": 50,
+   "height": 50
+  }
+ ],
+ "DB_CURRENT_IMG_21": 27,
  "EXP_LIST_IMG_DATA_21": [
   {
    "id": 2,

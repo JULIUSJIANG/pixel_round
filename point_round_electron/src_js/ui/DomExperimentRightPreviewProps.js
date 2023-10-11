@@ -41,6 +41,6 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
             }
-        }, `删除`));
+        }, `删除当前文档`));
     }
 }

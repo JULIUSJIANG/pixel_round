@@ -34,4 +34,5 @@ class MgrDom {
      */
     MgrDom.inst = new MgrDom();
 })(MgrDom || (MgrDom = {}));
+;
 export default MgrDom;

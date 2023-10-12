@@ -25,5 +25,10 @@ class MCRootStatusDrawingBoardHoverStatus {
      */
     onHoverExit() {
     }
+    /**
+     * 事件派发 - 绘制
+     */
+    onFocusDraw(jWebgl, color) {
+    }
 }
 export default MCRootStatusDrawingBoardHoverStatus;

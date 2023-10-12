@@ -134,7 +134,7 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
 
         // 绘制准星
         this.colorMark.initByHex (MgrData.inst.get (MgrDataItem.DB_COLOR));
-        IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onFocusDraw (this.jWebgl, this.colorMark);
+        IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onFocusDraw (this.jWebgl, this.colorMark);
     }
 
     /**

@@ -1,6 +1,7 @@
 import IndexGlobal from "./IndexGlobal.js";
 import MgrData from "./mgr/MgrData.js";
 import MgrDom from "./mgr/MgrDom.js";
+import MgrGlobal from "./mgr/MgrGlobal.js";
 import MgrRes from "./mgr/MgrRes.js";
 import MgrSdk from "./mgr/MgrSdk.js";
 Promise.resolve()
@@ -25,6 +26,10 @@ Promise.resolve()
     // 初始化渲染器
     .then(() => {
     return MgrDom.inst.init();
+})
+    // 初始化全局器
+    .then(() => {
+    return MgrGlobal.inst.init();
 })
     // 告知服务端已就绪
     .then(() => {

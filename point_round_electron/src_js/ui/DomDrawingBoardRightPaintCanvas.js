@@ -10,7 +10,7 @@ export default class DomDrawingBoardRightPaintCanvas extends ReactComponentExten
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             }
-        }, ReactComponentExtend.instantiateComponent(DomDrawingBoardRightPaintCanvasSource, null), ReactComponentExtend.instantiateComponent(DomDrawingBoardRightPaintCanvasSource, null));
+        }, ReactComponentExtend.instantiateComponent(DomDrawingBoardRightPaintCanvasSource, null));
     }
     ;
 }

@@ -95,7 +95,7 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         this.jWebgl.programLine.draw();
         // 绘制准星
         this.colorMark.initByHex(MgrData.inst.get(MgrDataItem.DB_COLOR));
-        IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onFocusDraw(this.jWebgl, this.colorMark);
+        IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onFocusDraw(this.jWebgl, this.colorMark);
     }
     /**
      * 绘制交叉线

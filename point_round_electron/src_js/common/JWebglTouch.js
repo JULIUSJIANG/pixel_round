@@ -2,7 +2,7 @@
  * 交互
  */
 export default class JWebglTouch {
-    constructor() {
+    constructor(jWebgl) {
         /**
          * 在客户端中的位置
          */
@@ -15,6 +15,7 @@ export default class JWebglTouch {
          * 在投影矩阵中的位置
          */
         this.posProj = new Float32Array([0, 0, 0, 0]);
+        this.jWebgl = jWebgl;
     }
     /**
      * 填充数据
@@ -27,7 +28,7 @@ export default class JWebglTouch {
         this.posClient[1] = y;
         this.posClient[2] = 0;
         this.posClient[3] = 1;
-        let canvas = evt.target;
+        let canvas = this.jWebgl.canvasWebgl;
         let rect = canvas.getBoundingClientRect();
         this.posCanvas[0] = x - rect.left;
         this.posCanvas[1] = rect.bottom - y;

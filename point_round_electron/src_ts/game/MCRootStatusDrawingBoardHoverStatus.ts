@@ -1,4 +1,5 @@
 import JWebgl from "../common/JWebgl.js";
+import JWebglColor from "../common/JWebglColor.js";
 import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";
 
 /**
@@ -37,6 +38,13 @@ class MCRootStatusDrawingBoardHoverStatus {
      * 事件派发 - 离开画布
      */
     onHoverExit () {
+
+    }
+
+    /**
+     * 事件派发 - 绘制
+     */
+    onFocusDraw (jWebgl: JWebgl, color: JWebglColor) {
 
     }
 }

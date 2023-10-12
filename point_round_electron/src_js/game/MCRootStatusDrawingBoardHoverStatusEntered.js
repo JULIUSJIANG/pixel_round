@@ -3,5 +3,8 @@ class MCRootStatusDrawingBoardHoverStatusEntered extends MCRootStatusDrawingBoar
     onHoverExit() {
         this.relMachine.hoverEnter(this.relMachine.hoverStatusLeaved);
     }
+    onFocusDraw(jWebgl, color) {
+        this.relMachine.touchCurrStatus.onFocusDraw(jWebgl, color);
+    }
 }
 export default MCRootStatusDrawingBoardHoverStatusEntered;

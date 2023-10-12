@@ -1,3 +1,6 @@
+import MgrGlobalCtxPos from "../mgr/MgrGlobalCtxPos.js";
+import JWebgl from "./JWebgl.js";
+
 /**
  * 交互
  */
@@ -19,10 +22,19 @@ export default class JWebglTouch {
     posProj = new Float32Array ([0, 0, 0, 0]);
 
     /**
+     * 归属的上下文
+     */
+    jWebgl: JWebgl;
+
+    constructor (jWebgl: JWebgl) {
+        this.jWebgl = jWebgl;
+    }
+
+    /**
      * 填充数据
      * @param evt 
      */
-    fill (evt: MouseEvent) {
+    fill (evt: MgrGlobalCtxPos) {
         let x = evt.clientX;
         let y = evt.clientY;
         this.posClient [0] = x;
@@ -30,7 +42,7 @@ export default class JWebglTouch {
         this.posClient [2] = 0;
         this.posClient [3] = 1;
 
-        let canvas = evt.target as HTMLCanvasElement;
+        let canvas = this.jWebgl.canvasWebgl;
         let rect = canvas.getBoundingClientRect ();
 
         this.posCanvas [0] = x - rect.left;

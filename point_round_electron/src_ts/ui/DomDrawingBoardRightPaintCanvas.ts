@@ -18,7 +18,6 @@ export default class DomDrawingBoardRightPaintCanvas extends ReactComponentExten
                 }
             },
 
-            ReactComponentExtend.instantiateComponent (DomDrawingBoardRightPaintCanvasSource, null),
             ReactComponentExtend.instantiateComponent (DomDrawingBoardRightPaintCanvasSource, null)
         )
     };

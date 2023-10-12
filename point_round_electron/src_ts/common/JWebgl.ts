@@ -26,6 +26,7 @@ import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide.j
 import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea.js";
 import JWebglProgramTypeSmoothDisplayCircle from "./JWebglProgramTypeSmoothDisplayCircle.js";
 import JWebglProgramTypeSmoothAngle from "./JWebglProgramTypeSmoothAngle.js";
+import MgrGlobal from "../mgr/MgrGlobal.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -80,6 +81,9 @@ class JWebgl {
     )
     {
         this.canvasWebgl = canvasWebgl;
+        this.touchStart = new JWebglTouch (this);
+        this.touchMove = new JWebglTouch (this);
+        this.touchEnd = new JWebglTouch (this);
     }
 
     /**
@@ -90,7 +94,7 @@ class JWebgl {
     /**
      * 交互起始位置
      */
-    touchStart = new JWebglTouch ();
+    touchStart: JWebglTouch;
     /**
      * 事件派发 - 交互起始
      */
@@ -99,7 +103,7 @@ class JWebgl {
     /**
      * 交互拖拽位置
      */
-    touchMove = new JWebglTouch ();
+    touchMove: JWebglTouch;
     /**
      * 事件派发 - 交互拖拽
      */
@@ -108,7 +112,7 @@ class JWebgl {
     /**
      * 交互结束位置
      */
-    touchEnd = new JWebglTouch ();
+    touchEnd: JWebglTouch;
     /**
      * 事件派发 - 交互结束
      */
@@ -117,7 +121,7 @@ class JWebgl {
     /**
      * 当前交互位置
      */
-    currentTouch = new JWebglTouch ();
+    currentTouch: JWebglTouch;
     /**
      * 事件派发 - 发生交互
      */
@@ -134,34 +138,57 @@ class JWebgl {
     evtLeave = new Eventer ();
 
     /**
+     * 监听 id - 开始
+     */
+    listenIdStart: number;
+    /**
+     * 监听 id - 交互中
+     */
+    listenIdMove: number;
+    /**
+     * 监听 id - 结束
+     */
+    listenIdEnd: number;
+
+    /**
+     * 监听 id - 进入
+     */
+    listenIdEnter: number;
+    /**
+     * 监听 id - 离开
+     */
+    listenIdExit: number;
+
+    /**
      * 初始化
      * @returns 
      */
     init () {
-        this.canvasWebgl.onmousedown = (evt: MouseEvent) => {
-            this.touchStart.fill (evt);
+        this.listenIdStart = MgrGlobal.inst.evtTouchStart.on (() => {
+            this.touchStart.fill (MgrGlobal.inst.evtTouchStartPos);
             this.currentTouch = this.touchStart;
             this.evtTouch.call (null);
             this.evtTouchStart.call (null);
-        };
-        this.canvasWebgl.onmousemove = (evt: MouseEvent) => {
-            this.touchMove.fill (evt);
+        });
+        this.listenIdMove = MgrGlobal.inst.evtTouchMove.on (() => {
+            this.touchMove.fill (MgrGlobal.inst.evtTouchMovePos);
             this.currentTouch = this.touchMove;
             this.evtTouch.call (null);
             this.evtTouchMove.call (null);
-        };
-        this.canvasWebgl.onmouseup = (evt: MouseEvent) => {
-            this.touchEnd.fill (evt);
+        });
+        this.listenIdEnd = MgrGlobal.inst.evtTouchEnd.on (() => {
+            this.touchEnd.fill (MgrGlobal.inst.evtTouchEndPos);
             this.currentTouch = this.touchEnd;
             this.evtTouch.call (null);
             this.evtTouchEnd.call (null);
-        };
-        this.canvasWebgl.onmouseenter = (evt: MouseEvent) => {
+        });
+
+        this.listenIdEnter = MgrGlobal.inst.evtEnter.on (() => {
             this.evtEnter.call (null);
-        };
-        this.canvasWebgl.onmouseleave = (evt: MouseEvent) => {
+        });
+        this.listenIdExit = MgrGlobal.inst.evtExit.on (() => {
             this.evtLeave.call (null);
-        };
+        });
 
         this.mat4M.setIdentity ();
         this.mat4V.setIdentity ();
@@ -205,6 +232,13 @@ class JWebgl {
      * 释放掉
      */
     release () {
+        MgrGlobal.inst.evtTouchStart.off (this.listenIdStart);
+        MgrGlobal.inst.evtTouchStart.off (this.listenIdMove);
+        MgrGlobal.inst.evtTouchStart.off (this.listenIdEnd);
+
+        MgrGlobal.inst.evtEnter.off (this.listenIdEnter);
+        MgrGlobal.inst.evtExit.off (this.listenIdExit);
+
         let ext = this.canvasWebglCtx.getExtension (`WEBGL_lose_context`);
         if (ext) {
             ext.loseContext();

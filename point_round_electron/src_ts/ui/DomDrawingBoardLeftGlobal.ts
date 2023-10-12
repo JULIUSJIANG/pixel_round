@@ -11,7 +11,7 @@ export default class DomDrawingBoardLeftGlobal extends ReactComponentExtend <num
     render (): ReactComponentExtendInstance {
         let propsAdd = {
             onClick: () => {
-                let idGen = IndexGlobal.inst.dbCreate (50, 50);
+                let idGen = IndexGlobal.inst.dbCreate (10, 10);
                 MgrData.inst.set (MgrDataItem.DB_CURRENT_IMG, idGen);
                 MgrData.inst.callDataChange ();
             },

@@ -396,7 +396,7 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
             MgrDomDefine.TAG_DIV,
             {
                 style: {
-                    [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
+                    [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
                     [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                     [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                     [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,

@@ -5,6 +5,7 @@ import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import DomImageSmooth from "./DomImageSmooth.js";
 const Z_GRID = 0.1;
 class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend {
     constructor() {
@@ -37,9 +38,8 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
     }
     reactComponentExtendOnDraw() {
         let dataSrc = IndexGlobal.mcExp().statusPreview;
-        let imgMachine = dataSrc.imgMachine;
         // 没加载完毕，不对画布进行改动
-        if (imgMachine.currStatus == imgMachine.statusIdle) {
+        if (dataSrc.argsSmooth.img == null) {
             return;
         }
         ;
@@ -49,7 +49,7 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
         }
         ;
         // 得到简略图
-        dataSrc.drawImgPadding(this.jWebgl, this.fbo);
+        DomImageSmooth.Args.drawImgPadding(dataSrc.argsSmooth, this.jWebgl, this.fbo);
         // 把 fbo 绘制到屏幕
         this.jWebgl.fillFboByFbo(null, this.fbo);
         // 网格

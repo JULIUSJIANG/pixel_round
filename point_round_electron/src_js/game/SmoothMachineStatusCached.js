@@ -3,9 +3,6 @@ import SmoothMachineStatus from "./SmoothMachineStatus.js";
  * 状态 - 图像信息缓存完毕
  */
 class SmoothMachineStatusCached extends SmoothMachineStatus {
-    onEnter() {
-        this.relMachine.rel.refreshCorner();
-    }
     onSizeChanged() {
         this.relMachine.enter(this.relMachine.statusLoaded);
     }

@@ -7,9 +7,10 @@ import SmoothMachine from "./SmoothMachine.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
+import DomImageSmooth from "../ui/DomImageSmooth.js";
 export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExperimentStatus {
-    constructor() {
-        super(...arguments);
+    constructor(machine, id) {
+        super(machine, id);
         /**
          * (源图宽度 + 内边距) + 缩放
          */
@@ -36,6 +37,7 @@ export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExpe
          * 标识到具体颜色的映射
          */
         this.mapIdToColor = new Map();
+        this.argsSmooth = objectPool.pop(DomImageSmooth.Args.poolType);
     }
     onEnter() {
         this.onImg(MgrData.inst.get(MgrDataItem.EXP_CURRENT_IMG));
@@ -75,10 +77,5 @@ export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExpe
         jWebgl.programImg.add(posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, this.imgWidth, this.imgHeight);
         objectPool.push(posImg);
         jWebgl.programImg.draw();
-    }
-    /**
-     * 刷新角平滑的处理
-     */
-    refreshCorner() {
     }
 }

@@ -6,10 +6,6 @@ import SmoothMachineStatus from "./SmoothMachineStatus.js";
  */
 class SmoothMachineStatusCached extends SmoothMachineStatus {
 
-    onEnter (): void {
-        this.relMachine.rel.refreshCorner ();
-    }
-
     onSizeChanged (): void {
         this.relMachine.enter (this.relMachine.statusLoaded);
     }

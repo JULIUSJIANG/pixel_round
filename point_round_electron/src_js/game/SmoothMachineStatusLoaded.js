@@ -1,9 +1,11 @@
+import DomImageSmoothRS from "../ui/DomImageSmoothRS.js";
 import SmoothMachineStatus from "./SmoothMachineStatus.js";
 /**
  * 状态 - 图片加载完毕
  */
 class SmoothMachineStatusLoaded extends SmoothMachineStatus {
     onEnter() {
+        this.relMachine.rel.argsSmooth.init(DomImageSmoothRS.exp, this.relMachine.assetsImg.image, 1, 1, this.relMachine.dataInst.paddingTop, this.relMachine.dataInst.paddingRight, this.relMachine.dataInst.paddingBottom, this.relMachine.dataInst.paddingLeft, this.relMachine.dataInst.pixelWidth, this.relMachine.dataInst.pixelHeight);
         this.relMachine.rel.imgWidth = this.relMachine.assetsImg.image.width;
         this.relMachine.rel.imgHeight = this.relMachine.assetsImg.image.height;
         this.relMachine.rel.imgWidthWithPadding = (this.relMachine.rel.imgWidth + this.relMachine.dataInst.paddingLeft + this.relMachine.dataInst.paddingRight);

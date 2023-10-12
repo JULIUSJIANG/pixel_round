@@ -11,8 +11,15 @@ import JWebgl from "../common/JWebgl.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
+import DomImageSmooth from "../ui/DomImageSmooth.js";
+import MCRootStatusExperiment from "./MCRootStatusExperiment.js";
 
 export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExperimentStatus {
+
+    constructor (machine: MCRootStatusExperiment, id: number) {
+        super (machine, id);
+        this.argsSmooth = objectPool.pop (DomImageSmooth.Args.poolType);
+    }
 
     onEnter (): void {
         this.onImg (MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG));
@@ -40,6 +47,11 @@ export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExpe
     onRender (): ReactComponentExtendInstance {
         return ReactComponentExtend.instantiateComponent (DomExperimentRightPreview, null);
     }
+
+    /**
+     * 平滑参数
+     */
+    argsSmooth: DomImageSmooth.Args;
 
     /**
      * 源图宽度
@@ -135,12 +147,5 @@ export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExpe
         );
         objectPool.push (posImg);
         jWebgl.programImg.draw ();
-    }
-
-    /**
-     * 刷新角平滑的处理
-     */
-    refreshCorner () {
-
     }
 }

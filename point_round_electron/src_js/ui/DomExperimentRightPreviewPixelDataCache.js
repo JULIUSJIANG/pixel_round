@@ -6,6 +6,7 @@ import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import TextureColor from "../game/TextureColor.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import DomImageSmooth from "./DomImageSmooth.js";
 class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
     constructor() {
         super(...arguments);
@@ -31,9 +32,8 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
     }
     reactComponentExtendOnDraw() {
         let dataSrc = IndexGlobal.mcExp().statusPreview;
-        let imgMachine = dataSrc.imgMachine;
         // 只有加载完毕等待缓存的时候才进行下述的缓存内容
-        if (imgMachine.currStatus != imgMachine.statusLoaded) {
+        if (dataSrc.argsSmooth.img == null) {
             return;
         }
         ;
@@ -43,7 +43,7 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
         }
         ;
         // 得到简略图
-        dataSrc.drawImgPadding(this.jWebgl, this.fbo);
+        DomImageSmooth.Args.drawImgPadding(dataSrc.argsSmooth, this.jWebgl, this.fbo);
         // 把 fbo 绘制到屏幕
         this.jWebgl.fillFboByFbo(null, this.fbo);
         // 回收颜色对象

@@ -896,32 +896,78 @@ namespace DomImageSmooth {
         ) 
         {
             let inst = objectPool.pop (this.poolType);
-            inst.rs = rs;
-            inst.img = img;
+            inst.init (
+                rs,
+                img,
+
+                imgWidth,
+                imgHeight,
+
+                paddingTop,
+                paddingRight,
+                paddingBottom,
+                paddingLeft,
+
+                pixelSizeWidth,
+                pixelSizeHeight
+            );
+            return inst;
+        }
+
+        /**
+         * 构造实例
+         * @param rs 
+         * @param img 
+         * @param imgWidth 
+         * @param imgHeight 
+         * @param paddingTop 
+         * @param paddingRight 
+         * @param paddingBottom 
+         * @param paddingLeft 
+         * @param pixelSizeWidth 
+         * @param pixelSizeHeight 
+         * @returns 
+         */
+        init (
+            rs: DomImageSmoothRS,
+            img: HTMLImageElement,
+
+            imgWidth: number,
+            imgHeight: number,
+
+            paddingTop: number,
+            paddingRight: number,
+            paddingBottom: number,
+            paddingLeft: number,
+
+            pixelSizeWidth: number,
+            pixelSizeHeight: number
+        ) 
+        {
+            this.rs = rs;
+            this.img = img;
 
             // 如果已经加载完毕，那当然采纳真实的数据
-            inst.imgWidth = imgWidth;
-            inst.imgHeight = imgHeight;
-            if (inst.img != null) {
-                inst.imgWidth = inst.img.width;
-                inst.imgHeight = inst.img.height;
+            this.imgWidth = imgWidth;
+            this.imgHeight = imgHeight;
+            if (this.img != null) {
+                this.imgWidth = this.img.width;
+                this.imgHeight = this.img.height;
             };
 
-            inst.paddingTop = paddingTop;
-            inst.paddingRight = paddingRight;
-            inst.paddingBottom = paddingBottom;
-            inst.paddingLeft = paddingLeft;
+            this.paddingTop = paddingTop;
+            this.paddingRight = paddingRight;
+            this.paddingBottom = paddingBottom;
+            this.paddingLeft = paddingLeft;
 
-            inst.pixelSizeWidth = pixelSizeWidth;
-            inst.pixelSizeHeight = pixelSizeHeight;
+            this.pixelSizeWidth = pixelSizeWidth;
+            this.pixelSizeHeight = pixelSizeHeight;
 
-            inst.cachePaddingWidth = inst.paddingLeft + inst.imgWidth + inst.paddingRight;
-            inst.cachePaddingHeight = inst.paddingTop + inst.imgHeight + inst.paddingBottom;
+            this.cachePaddingWidth = this.paddingLeft + this.imgWidth + this.paddingRight;
+            this.cachePaddingHeight = this.paddingTop + this.imgHeight + this.paddingBottom;
 
-            inst.cacheTexWidth = Math.ceil (inst.cachePaddingWidth / inst.pixelSizeWidth);
-            inst.cacheTexHeight = Math.ceil (inst.cachePaddingHeight / inst.pixelSizeHeight);
-
-            return inst;
+            this.cacheTexWidth = Math.ceil (this.cachePaddingWidth / this.pixelSizeWidth);
+            this.cacheTexHeight = Math.ceil (this.cachePaddingHeight / this.pixelSizeHeight);
         }
 
         /**

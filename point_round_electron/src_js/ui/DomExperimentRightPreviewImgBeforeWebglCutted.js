@@ -44,8 +44,8 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
         }
         ;
         // 初始化 fbo
-        if (this.fbo == null || this.fbo.width != dataSrc.textureWidth || this.fbo.height != dataSrc.textureHeight) {
-            this.fbo = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
+        if (this.fbo == null || this.fbo.width != dataSrc.argsSmooth.cacheTexWidth || this.fbo.height != dataSrc.argsSmooth.cacheTexHeight) {
+            this.fbo = this.jWebgl.getFbo(dataSrc.argsSmooth.cacheTexWidth, dataSrc.argsSmooth.cacheTexHeight);
         }
         ;
         // 得到简略图
@@ -53,23 +53,23 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
         // 把 fbo 绘制到屏幕
         this.jWebgl.fillFboByFbo(null, this.fbo);
         // 网格
-        this.jWebgl.mat4V.setLookAt(dataSrc.textureWidth / 2, dataSrc.textureHeight / 2, 1, dataSrc.textureWidth / 2, dataSrc.textureHeight / 2, 0, 0, 1, 0);
-        this.jWebgl.mat4P.setOrtho(-dataSrc.textureWidth / 2, dataSrc.textureWidth / 2, -dataSrc.textureHeight / 2, dataSrc.textureHeight / 2, 0, 2);
+        this.jWebgl.mat4V.setLookAt(dataSrc.argsSmooth.cacheTexWidth / 2, dataSrc.argsSmooth.cacheTexHeight / 2, 1, dataSrc.argsSmooth.cacheTexWidth / 2, dataSrc.argsSmooth.cacheTexHeight / 2, 0, 0, 1, 0);
+        this.jWebgl.mat4P.setOrtho(-dataSrc.argsSmooth.cacheTexWidth / 2, dataSrc.argsSmooth.cacheTexWidth / 2, -dataSrc.argsSmooth.cacheTexHeight / 2, dataSrc.argsSmooth.cacheTexHeight / 2, 0, 2);
         this.jWebgl.refreshMat4Mvp();
         this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
         let colorGrid = JWebglColor.COLOR_BLACK;
-        for (let i = 0; i <= dataSrc.textureWidth; i++) {
+        for (let i = 0; i <= dataSrc.argsSmooth.cacheTexWidth; i++) {
             this.posFrom.elements[0] = i;
             this.posFrom.elements[1] = 0;
             this.posTo.elements[0] = i;
-            this.posTo.elements[1] = dataSrc.textureHeight;
+            this.posTo.elements[1] = dataSrc.argsSmooth.cacheTexHeight;
             this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
         }
         ;
-        for (let i = 0; i <= dataSrc.textureHeight; i++) {
+        for (let i = 0; i <= dataSrc.argsSmooth.cacheTexHeight; i++) {
             this.posFrom.elements[0] = 0;
             this.posFrom.elements[1] = i;
-            this.posTo.elements[0] = dataSrc.textureWidth;
+            this.posTo.elements[0] = dataSrc.argsSmooth.cacheTexWidth;
             this.posTo.elements[1] = i;
             this.jWebgl.programLine.add(this.posFrom, colorGrid, this.posTo, colorGrid);
         }
@@ -79,16 +79,16 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
         this.canvas2dCtx.font = `10px Microsoft YaHei`;
         this.canvas2dCtx.textAlign = "center";
         this.canvas2dCtx.textBaseline = `middle`;
-        for (let x = 0; x < dataSrc.textureWidth; x++) {
-            for (let y = 0; y < dataSrc.textureHeight; y++) {
-                let colorId = dataSrc.binXYToColorUint[y * dataSrc.textureWidth + x];
+        for (let x = 0; x < dataSrc.argsSmooth.cacheTexWidth; x++) {
+            for (let y = 0; y < dataSrc.argsSmooth.cacheTexHeight; y++) {
+                let colorId = dataSrc.binXYToColorUint[y * dataSrc.argsSmooth.cacheTexWidth + x];
                 let colorInst = dataSrc.mapIdToColor.get(colorId);
                 if (colorInst == null) {
                     continue;
                 }
                 ;
                 this.canvas2dCtx.fillStyle = colorInst.colorRel.str2dText;
-                this.canvas2dCtx.fillText(`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, ((dataSrc.textureHeight - y) - 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
+                this.canvas2dCtx.fillText(`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, ((dataSrc.argsSmooth.cacheTexHeight - y) - 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
             }
             ;
         }
@@ -122,8 +122,8 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
         // 滚动的列表
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.argsSmooth.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.argsSmooth.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -136,11 +136,11 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvasWebglRef,
-            width: dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
-            height: dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+            width: dataSrc.argsSmooth.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+            height: dataSrc.argsSmooth.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.argsSmooth.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.argsSmooth.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
         })), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -153,11 +153,11 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvas2dRef,
-            width: dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN,
-            height: dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN,
+            width: dataSrc.argsSmooth.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN,
+            height: dataSrc.argsSmooth.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN,
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.argsSmooth.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.argsSmooth.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
         })))));

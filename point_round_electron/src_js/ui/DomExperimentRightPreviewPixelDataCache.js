@@ -38,8 +38,8 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
         }
         ;
         // 绘制 fbo
-        if (this.fbo == null || this.fbo.width != dataSrc.textureWidth || this.fbo.height != dataSrc.textureHeight) {
-            this.fbo = this.jWebgl.getFbo(dataSrc.textureWidth, dataSrc.textureHeight);
+        if (this.fbo == null || this.fbo.width != dataSrc.argsSmooth.cacheTexWidth || this.fbo.height != dataSrc.argsSmooth.cacheTexHeight) {
+            this.fbo = this.jWebgl.getFbo(dataSrc.argsSmooth.cacheTexWidth, dataSrc.argsSmooth.cacheTexHeight);
         }
         ;
         // 得到简略图
@@ -53,7 +53,7 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
         }
         ;
         dataSrc.listColor.length = 0;
-        dataSrc.binXYToRgbaUintSize = dataSrc.textureWidth * dataSrc.textureHeight * 4;
+        dataSrc.binXYToRgbaUintSize = dataSrc.argsSmooth.cacheTexWidth * dataSrc.argsSmooth.cacheTexHeight * 4;
         let binRgbaLength = dataSrc.binXYToRgbaUint.length;
         // 尺寸不够，扩容
         if (binRgbaLength < dataSrc.binXYToRgbaUintSize) {
@@ -64,8 +64,8 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
             dataSrc.binXYToRgbaUint = new Uint8Array(binRgbaLength);
         }
         ;
-        this.jWebgl.canvasWebglCtx.readPixels(0, 0, dataSrc.textureWidth, dataSrc.textureHeight, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, dataSrc.binXYToRgbaUint);
-        dataSrc.binXYToColorUintSize = dataSrc.textureWidth * dataSrc.textureHeight;
+        this.jWebgl.canvasWebglCtx.readPixels(0, 0, dataSrc.argsSmooth.cacheTexWidth, dataSrc.argsSmooth.cacheTexHeight, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, dataSrc.binXYToRgbaUint);
+        dataSrc.binXYToColorUintSize = dataSrc.argsSmooth.cacheTexWidth * dataSrc.argsSmooth.cacheTexHeight;
         let binColorLength = dataSrc.binXYToColorUint.length;
         // 尺寸不够，扩容
         if (binColorLength < dataSrc.binXYToColorUintSize) {
@@ -159,8 +159,8 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
         // 滚动的列表
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.argsSmooth.cacheTexWidth}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.argsSmooth.cacheTexHeight}px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -173,11 +173,11 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvasWebglRef,
-            width: dataSrc.textureWidth,
-            height: dataSrc.textureHeight,
+            width: dataSrc.argsSmooth.cacheTexWidth,
+            height: dataSrc.argsSmooth.cacheTexHeight,
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.textureWidth}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.textureHeight}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.argsSmooth.cacheTexWidth}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.argsSmooth.cacheTexHeight}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
         })))));

@@ -54,22 +54,6 @@ export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExpe
     argsSmooth: DomImageSmooth.Args;
 
     /**
-     * 源图宽度
-     */
-    imgWidth: number;
-    /**
-     * 源图高度
-     */
-    imgHeight: number;
-    /**
-     * 源图宽度 + 内边距
-     */
-    imgWidthWithPadding: number;
-    /**
-     * 源图高度 + 内边距
-     */
-    imgHeightWidthPadding: number;
-    /**
      * 展示裁切内容时候图片宽度
      */
     imgWidthShowAll: number;
@@ -77,14 +61,6 @@ export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExpe
      * 展示裁切内容时候图片高度
      */
     imgHeightShowAll: number;
-    /**
-     * (源图宽度 + 内边距) + 缩放
-     */
-    textureWidth: number = 1;
-    /**
-     * (源图高度 + 内边距) + 缩放
-     */
-    textureHeight: number = 1;
 
     /**
      * 每四个数字代表一个颜色
@@ -106,46 +82,4 @@ export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExpe
      * 标识到具体颜色的映射
      */
     mapIdToColor = new Map <number, TextureColor> ();
-
-    /**
-     * 把附带内边距的图片绘制到一个帧缓冲区里面
-     * @param jWebgl 
-     * @param fbo 
-     */
-    drawImgPadding (jWebgl: JWebgl, fbo: JWebglFrameBuffer) {
-        jWebgl.useFbo (fbo);
-        jWebgl.clear ();
-
-        jWebgl.mat4M.setIdentity ();
-        jWebgl.mat4V.setLookAt(
-            this.imgWidthWithPadding / 2, this.imgHeightWidthPadding / 2, 1,
-            this.imgWidthWithPadding / 2, this.imgHeightWidthPadding / 2, 0,
-            0, 1, 0
-        );
-        jWebgl.mat4P.setOrtho (
-            -this.imgWidthWithPadding / 2, this.imgWidthWithPadding / 2,
-            -this.imgHeightWidthPadding / 2, this.imgHeightWidthPadding / 2,
-            0, 2
-        );
-        JWebglMathMatrix4.multiplayMat4List (
-            jWebgl.mat4P,
-            jWebgl.mat4V,
-            jWebgl.mat4M,
-            jWebgl.mat4Mvp
-        );
-
-        // 图片
-        jWebgl.programImg.uMvp.fill (jWebgl.mat4Mvp);
-        jWebgl.programImg.uTexture.fillByImg (jWebgl.getImg (this.imgMachine.dataInst.dataOrigin));
-        let posImg = JWebglMathVector4.create (this.imgWidth / 2 + this.imgMachine.dataInst.paddingLeft, this.imgHeight / 2 + this.imgMachine.dataInst.paddingBottom, 0);
-        jWebgl.programImg.add (
-            posImg,
-            JWebglMathVector4.axisZStart,
-            JWebglMathVector4.axisYEnd,
-            this.imgWidth,
-            this.imgHeight
-        );
-        objectPool.push (posImg);
-        jWebgl.programImg.draw ();
-    }
 }

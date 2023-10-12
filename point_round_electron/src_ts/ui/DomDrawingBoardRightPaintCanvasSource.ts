@@ -7,6 +7,7 @@ import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrData from "../mgr/MgrData.js";
+import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
 
@@ -73,6 +74,11 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
      * 线的结束位置
      */
     posTo = new JWebglMathVector4 (0, 0, 0);
+    
+    /**
+     * 准星颜色
+     */
+    colorMark = new JWebglColor ();
 
     reactComponentExtendOnDraw (): void {
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
@@ -130,13 +136,13 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
             return;
         };
 
-        let colorMark = JWebglColor.COLOR_PURE_RED;
-        this.drawCross (colorMark, -1);
-        this.drawCross (colorMark, 0);
-        this.drawCross (colorMark, 1);
-        this.drawMark (colorMark, -1);
-        this.drawMark (colorMark, 0);
-        this.drawMark (colorMark, 1);
+        this.colorMark.initByHex (MgrData.inst.get (MgrDataItem.DB_COLOR));
+        this.drawCross (this.colorMark, -1);
+        this.drawCross (this.colorMark, 0);
+        this.drawCross (this.colorMark, 1);
+        this.drawMark (this.colorMark, -1);
+        this.drawMark (this.colorMark, 0);
+        this.drawMark (this.colorMark, 1);
     }
 
     /**

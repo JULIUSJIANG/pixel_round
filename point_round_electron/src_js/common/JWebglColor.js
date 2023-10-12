@@ -12,9 +12,9 @@ class JWebglColor {
          * 数据，区间 0 - 255
          */
         this.data255 = new Uint8Array(4);
-        this.init(r, g, b, a);
+        this.initByRGBA(r, g, b, a);
     }
-    init(r, g, b, a) {
+    initByRGBA(r, g, b, a) {
         this.data255[0] = r * 255;
         this.data255[1] = g * 255;
         this.data255[2] = b * 255;
@@ -23,16 +23,81 @@ class JWebglColor {
             this.data01[i] = this.data255[i] / 255;
         }
         ;
-        this.str16 = `#${this.to16(this.data255[0])}${this.to16(this.data255[1])}${this.to16(this.data255[2])}${this.to16(this.data255[3])}`;
+        this.str16 = `#${this.parseNumberToHex(this.data255[0])}${this.parseNumberToHex(this.data255[1])}${this.parseNumberToHex(this.data255[2])}${this.parseNumberToHex(this.data255[3])}`;
         this.str2dText = `rgba(${this.data255[0]}, ${this.data255[1]}, ${this.data255[2]}, ${this.data01[3]})`;
     }
-    to16(num) {
+    initByHex(hex) {
+        let r = 1, g = 1, b = 1, a = 1;
+        if (hex != null) {
+            r = this.parseHexToNumber(hex[0]) * 16 + this.parseHexToNumber(hex[1]);
+            r /= 255;
+            g = this.parseHexToNumber(hex[2]) * 16 + this.parseHexToNumber(hex[3]);
+            g /= 255;
+            b = this.parseHexToNumber(hex[4]) * 16 + this.parseHexToNumber(hex[5]);
+            b /= 255;
+            a = this.parseHexToNumber(hex[6]) * 16 + this.parseHexToNumber(hex[7]);
+            a /= 255;
+        }
+        ;
+        this.initByRGBA(r, g, b, a);
+    }
+    parseNumberToHex(num) {
         let str = num.toString(16);
         if (str.length == 1) {
             return `0${str}`;
         }
         ;
         return str;
+    }
+    parseHexToNumber(hex) {
+        if (hex == null) {
+            return 16;
+        }
+        ;
+        hex = hex.toLowerCase();
+        switch (hex) {
+            case `a`:
+                {
+                    return 10;
+                }
+                ;
+            case `b`:
+                {
+                    return 11;
+                }
+                ;
+            case `c`:
+                {
+                    return 12;
+                }
+                ;
+            case `d`:
+                {
+                    return 13;
+                }
+                ;
+            case `e`:
+                {
+                    return 14;
+                }
+                ;
+            case `f`:
+                {
+                    return 15;
+                }
+                ;
+            default:
+                {
+                    let val = Number.parseFloat(hex);
+                    if (!Number.isNaN(val)) {
+                        return val;
+                    }
+                    ;
+                    return 16;
+                }
+                ;
+        }
+        ;
     }
 }
 JWebglColor.poolType = new ObjectPoolType({

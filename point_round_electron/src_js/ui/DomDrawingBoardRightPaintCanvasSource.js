@@ -6,6 +6,7 @@ import JWebglEnum from "../common/JWebglEnum.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
+import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 /**
  * 尝试更为灵魂的平滑
@@ -25,6 +26,10 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
          * 线的结束位置
          */
         this.posTo = new JWebglMathVector4(0, 0, 0);
+        /**
+         * 准星颜色
+         */
+        this.colorMark = new JWebglColor();
     }
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
@@ -92,13 +97,13 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
             return;
         }
         ;
-        let colorMark = JWebglColor.COLOR_PURE_RED;
-        this.drawCross(colorMark, -1);
-        this.drawCross(colorMark, 0);
-        this.drawCross(colorMark, 1);
-        this.drawMark(colorMark, -1);
-        this.drawMark(colorMark, 0);
-        this.drawMark(colorMark, 1);
+        this.colorMark.initByHex(MgrData.inst.get(MgrDataItem.DB_COLOR));
+        this.drawCross(this.colorMark, -1);
+        this.drawCross(this.colorMark, 0);
+        this.drawCross(this.colorMark, 1);
+        this.drawMark(this.colorMark, -1);
+        this.drawMark(this.colorMark, 0);
+        this.drawMark(this.colorMark, 1);
     }
     /**
      * 绘制交叉线

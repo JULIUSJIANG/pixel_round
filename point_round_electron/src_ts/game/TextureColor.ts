@@ -22,12 +22,12 @@ class TextureColor {
     init (id: number, idx: number, r: number, g: number, b: number, a: number) {
         this.id = id;
         this.idx = idx;
-        this.colorMain.init (r, g, b, a);
+        this.colorMain.initByRGBA (r, g, b, a);
         if (a == 0) {
-            this.colorRel.init (0, 0, 0, 1);
+            this.colorRel.initByRGBA (0, 0, 0, 1);
         }
         else {
-            this.colorRel.init ((r + 127 / 255) % 1, (g + 127 / 255) % 1, (b + 127 / 255) % 1, 1);
+            this.colorRel.initByRGBA ((r + 127 / 255) % 1, (g + 127 / 255) % 1, (b + 127 / 255) % 1, 1);
         };
     }
 

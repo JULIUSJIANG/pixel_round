@@ -51,7 +51,7 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
         // 得到简略图
         dataSrc.drawImgPadding(this.jWebgl, this.fbo);
         // 把 fbo 绘制到屏幕
-        this.jWebgl.fillFbo(null, this.fbo);
+        this.jWebgl.fillFboByFbo(null, this.fbo);
         // 网格
         this.jWebgl.mat4V.setLookAt(dataSrc.textureWidth / 2, dataSrc.textureHeight / 2, 1, dataSrc.textureWidth / 2, dataSrc.textureHeight / 2, 0, 0, 1, 0);
         this.jWebgl.mat4P.setOrtho(-dataSrc.textureWidth / 2, dataSrc.textureWidth / 2, -dataSrc.textureHeight / 2, dataSrc.textureHeight / 2, 0, 2);

@@ -59,7 +59,7 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend <numb
         // 得到简略图
         dataSrc.drawImgPadding (this.jWebgl, this.fbo);
         // 把 fbo 绘制到屏幕
-        this.jWebgl.fillFbo (null, this.fbo);
+        this.jWebgl.fillFboByFbo (null, this.fbo);
 
         // 回收颜色对象
         for (let i = 0; i < dataSrc.listColor.length; i++) {

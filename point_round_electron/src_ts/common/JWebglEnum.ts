@@ -6,6 +6,19 @@ import JWebglDefine from "./JWebglDefine.js";
 JWebglDefine.POLYGON_OFFSET_FILL
 namespace JWebglEnum {
     /**
+     * 读取的格式
+     */
+    export enum ReadPixelsFormat {
+        RGBA = JWebglDefine.RGBA
+    };
+    /**
+     * 读取的类型
+     */
+    export enum ReadPixelType {
+        FLOAT = JWebglDefine.FLOAT,
+        UNSIGNED_BYTE = JWebglDefine.UNSIGNED_BYTE
+    };
+    /**
      * 深度缓冲区的绑定
      */
     export enum FramebufferRenderbufferAttachment {

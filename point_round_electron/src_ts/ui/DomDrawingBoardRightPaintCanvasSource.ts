@@ -41,6 +41,10 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
      * 当前已确定的内容
      */
     fboCache: JWebglFrameBuffer;
+    /**
+     * 当前已确定的内容 - y 反转
+     */
+    fboCacheRevY: JWebglFrameBuffer;
 
     reactComponentExtendOnInit (): void {
         this.jWebgl = new JWebgl (this.canvasWebglRef.current);
@@ -107,6 +111,7 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
         // 确保缓冲区存在
         if (this.fboCache == null) {
             this.fboCache = this.jWebgl.getFbo (dataSrc.dbImgData.width, dataSrc.dbImgData.height);
+            this.fboCacheRevY = this.jWebgl.getFbo (dataSrc.dbImgData.width, dataSrc.dbImgData.height)
         };
 
         // 准备好颜色
@@ -129,8 +134,12 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
         this.jWebgl.programPoint.add (JWebglMathVector4.centerO);
         this.jWebgl.programPoint.draw ();
 
+        // 同步数据到缓冲区
+        dataSrc.initForJWebgl (this.jWebgl);
+        this.jWebgl.fillFboByTex (this.fboCache, dataSrc.texture);
+
         // 先绘制已确定的内容
-        this.jWebgl.fillFbo (null, this.fboCache);
+        this.jWebgl.fillFboByFbo (null, this.fboCache);
 
         // 绘制操作相关的东西
         IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onOpUpdate (this);

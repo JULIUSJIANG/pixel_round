@@ -502,7 +502,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
         );
         this.jWebgl.programSmoothCornerRemoveA.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
-        this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
+        this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
         this.smoothOrdinaryTo (posX, posY + 0);
     }
 
@@ -528,7 +528,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
         );
         this.jWebgl.programSmoothCornerRemoveX.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
-        this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
+        this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
         this.smoothOrdinaryTo (posX, posY + 0);
     }
 
@@ -552,7 +552,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
         );
         this.jWebgl.programSmoothCornerRemoveT.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
-        this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
+        this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
         this.smoothOrdinaryTo (posX, posY + 0);
     }
 
@@ -576,7 +576,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
         );
         this.jWebgl.programSmoothCornerRemoveI.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
-        this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
+        this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
         this.smoothOrdinaryTo (posX, posY + 0);
     }
     
@@ -601,7 +601,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
         );
         this.jWebgl.programSmoothCornerRemoveV.draw ();
         this.drawFbo (this.fboCornerDataCache, posX, posY + 1);
-        this.jWebgl.fillFbo (this.fboCornerData, this.fboCornerDataCache);
+        this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
         this.smoothOrdinaryTo (posX, posY + 0);
     }
 
@@ -626,7 +626,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
         );
         this.jWebgl.programSmoothEnumRound.draw ();
         this.drawFbo (this.fboEnumDataCache, posX, posY + 1);
-        this.jWebgl.fillFbo (this.fboEnumData, this.fboEnumDataCache);
+        this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);
         this.smoothOrdinaryTo (posX, posY + 0);
     }
 
@@ -652,7 +652,7 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
         );
         this.jWebgl.programSmoothEnumSide.draw ();
         this.drawFbo (this.fboEnumDataCache, posX, posY + 1);
-        this.jWebgl.fillFbo (this.fboEnumData, this.fboEnumDataCache);
+        this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);
         this.smoothOrdinaryTo (posX, posY + 0);
     }
 

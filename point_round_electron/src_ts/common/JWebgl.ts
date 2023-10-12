@@ -433,7 +433,16 @@ class JWebgl {
      * @param fboDisplay 
      * @param fboSrc 
      */
-    fillFbo (fboDisplay: JWebglFrameBuffer, fboSrc: JWebglFrameBuffer) {
+    fillFboByFbo (fboDisplay: JWebglFrameBuffer, fboSrc: JWebglFrameBuffer) {
+        this.fillFboByTex (fboDisplay, fboSrc.renderTexture);
+    }
+
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay 
+     * @param fboSrc 
+     */
+    fillFboByTex (fboDisplay: JWebglFrameBuffer, tex: WebGLTexture) {
         this.useFbo (fboDisplay);
         this.clear ();
 
@@ -460,7 +469,52 @@ class JWebgl {
         );
         this.programImg.uMvp.fill (mat4Mvp);
 
-        this.programImg.uTexture.fillByFbo (fboSrc);
+        this.programImg.uTexture.fillByTexture (tex);
+        this.programImg.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.programImg.draw ();
+
+        objectPool.push (mat4M, mat4V, mat4P, mat4Mvp);
+    }
+
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay 
+     * @param fboSrc 
+     */
+    fillFboByTexRev (fboDisplay: JWebglFrameBuffer, tex: WebGLTexture) {
+        this.useFbo (fboDisplay);
+        this.clear ();
+
+        let mat4M = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4M.setIdentity ();
+        let mat4V = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4V.setLookAt(
+            0, 0, -1,
+            0, 0, 0,
+            0, -1, 0
+        );
+        let mat4P = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4P.setOrtho (
+            -1, 1,
+            -1, 1,
+             0, 2
+        );
+        let mat4Mvp = objectPool.pop (JWebglMathMatrix4.poolType);
+        JWebglMathMatrix4.multiplayMat4List (
+            mat4P,
+            mat4V,
+            mat4M,
+            mat4Mvp
+        );
+        this.programImg.uMvp.fill (mat4Mvp);
+
+        this.programImg.uTexture.fillByTexture (tex);
         this.programImg.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,

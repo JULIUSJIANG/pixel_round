@@ -6,6 +6,23 @@ JWebglDefine.POLYGON_OFFSET_FILL;
 var JWebglEnum;
 (function (JWebglEnum) {
     /**
+     * 读取的格式
+     */
+    let ReadPixelsFormat;
+    (function (ReadPixelsFormat) {
+        ReadPixelsFormat[ReadPixelsFormat["RGBA"] = JWebglDefine.RGBA] = "RGBA";
+    })(ReadPixelsFormat = JWebglEnum.ReadPixelsFormat || (JWebglEnum.ReadPixelsFormat = {}));
+    ;
+    /**
+     * 读取的类型
+     */
+    let ReadPixelType;
+    (function (ReadPixelType) {
+        ReadPixelType[ReadPixelType["FLOAT"] = JWebglDefine.FLOAT] = "FLOAT";
+        ReadPixelType[ReadPixelType["UNSIGNED_BYTE"] = JWebglDefine.UNSIGNED_BYTE] = "UNSIGNED_BYTE";
+    })(ReadPixelType = JWebglEnum.ReadPixelType || (JWebglEnum.ReadPixelType = {}));
+    ;
+    /**
      * 深度缓冲区的绑定
      */
     let FramebufferRenderbufferAttachment;

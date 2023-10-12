@@ -1,4 +1,5 @@
 import MgrDataItem from "./MgrDataItem.js";
+import MgrDom from "./MgrDom.js";
 import MgrSdk from "./MgrSdk.js";
 
 /**

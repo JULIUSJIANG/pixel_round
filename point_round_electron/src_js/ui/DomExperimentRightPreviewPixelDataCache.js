@@ -26,6 +26,7 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
+        this.texSrc = this.jWebgl.canvasWebglCtx.createTexture();
     }
     reactComponentExtendOnRelease() {
         this.jWebgl.release();
@@ -43,7 +44,7 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend {
         }
         ;
         // 得到简略图
-        DomImageSmooth.Args.drawImgPadding(dataSrc.argsSmooth, this.jWebgl, this.fbo);
+        DomImageSmooth.Args.drawImgPadding(dataSrc.argsSmooth, this.jWebgl, this.fbo, this.texSrc);
         // 把 fbo 绘制到屏幕
         this.jWebgl.fillFboByFbo(null, this.fbo);
         // 回收颜色对象

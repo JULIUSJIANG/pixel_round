@@ -2,6 +2,7 @@ import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
+import JWebglEnum from "../common/JWebglEnum.js";
 import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
@@ -51,10 +52,15 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
      * 绘制用的辅助类
      */
     jWebgl: JWebgl;
+    /**
+     * 源图纹理
+     */
+    texSrc: WebGLTexture;
 
     reactComponentExtendOnInit (): void {
         this.jWebgl = new JWebgl (this.canvasWebglRef.current);
         this.jWebgl.init ();
+        this.texSrc = this.jWebgl.canvasWebglCtx.createTexture ();
 
         // 准备好图片的 mvp 矩阵
         this.mat4M.setIdentity ();
@@ -194,10 +200,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
     reactComponentExtendOnDraw (): void {
         // 图片没加载完毕，什么也别动
         if (this.props.img == null) {
-            console.log (`A`);
             return;
         };
-        console.log (`B`);
 
         // 绘制 fbo
         if (this.fboTexture == null || this.fboTexture.width != this.props.cacheTexWidth || this.fboTexture.height != this.props.cacheTexHeight) {
@@ -416,7 +420,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
      */
     step0Texture () {
         // 得到简略图
-        DomImageSmooth.Args.drawImgPadding (this.props, this.jWebgl, this.fboTexture);
+        DomImageSmooth.Args.drawImgPadding (this.props, this.jWebgl, this.fboTexture, this.texSrc);
         // 原图
         this.drawFbo (this.fboTexture, 0, 0);
     }
@@ -989,7 +993,16 @@ namespace DomImageSmooth {
          * @param jWebgl 
          * @param fbo 
          */
-        static drawImgPadding (self: DomImageSmooth.Args, jWebgl: JWebgl, fbo: JWebglFrameBuffer) {
+        static drawImgPadding (self: DomImageSmooth.Args, jWebgl: JWebgl, fbo: JWebglFrameBuffer, texSrc: WebGLTexture) {
+            jWebgl.canvasWebglCtx.pixelStorei (JWebglEnum.PixelStoreIPName.UNPACK_FLIP_Y_WEBGL, 1);
+            jWebgl.canvasWebglCtx.activeTexture (JWebglEnum.ActiveTexture.TEXTURE0);
+            jWebgl.canvasWebglCtx.bindTexture (JWebglEnum.BindTexture.TEXTURE_2D, texSrc);
+            jWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MIN_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
+            jWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MAG_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
+            jWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_S, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
+            jWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_T, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
+            jWebgl.canvasWebglCtx.texImage2D (JWebglEnum.BindTexture.TEXTURE_2D, 0, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, self.img);
+
             jWebgl.useFbo (fbo);
             jWebgl.clear ();
     
@@ -1013,7 +1026,7 @@ namespace DomImageSmooth {
     
             // 图片
             jWebgl.programImg.uMvp.fill (jWebgl.mat4Mvp);
-            jWebgl.programImg.uTexture.fillByImg (jWebgl.getImg (self.img.src));
+            jWebgl.programImg.uTexture.fillByTexture (texSrc);
             let posImg = JWebglMathVector4.create (self.imgWidth / 2 + self.paddingLeft, self.imgHeight / 2 + self.paddingBottom, 0);
             jWebgl.programImg.add (
                 posImg,

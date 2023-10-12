@@ -21,9 +21,15 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend <numb
      */
     jWebgl: JWebgl;
 
+    /**
+     * 源图纹理
+     */
+    texSrc: WebGLTexture;
+
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
+        this.texSrc = this.jWebgl.canvasWebglCtx.createTexture ();
     }
 
     reactComponentExtendOnRelease (): void {
@@ -57,7 +63,7 @@ class DomExperimentRightPreviewPixelDataCache extends ReactComponentExtend <numb
         };
         
         // 得到简略图
-        DomImageSmooth.Args.drawImgPadding (dataSrc.argsSmooth, this.jWebgl, this.fbo);
+        DomImageSmooth.Args.drawImgPadding (dataSrc.argsSmooth, this.jWebgl, this.fbo, this.texSrc);
         // 把 fbo 绘制到屏幕
         this.jWebgl.fillFboByFbo (null, this.fbo);
 

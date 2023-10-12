@@ -2,6 +2,7 @@ import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
+import JWebglEnum from "../common/JWebglEnum.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
@@ -69,6 +70,7 @@ class DomImageSmooth extends ReactComponentExtend {
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
+        this.texSrc = this.jWebgl.canvasWebglCtx.createTexture();
         // 准备好图片的 mvp 矩阵
         this.mat4M.setIdentity();
         this.mat4V.setLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
@@ -112,11 +114,9 @@ class DomImageSmooth extends ReactComponentExtend {
     reactComponentExtendOnDraw() {
         // 图片没加载完毕，什么也别动
         if (this.props.img == null) {
-            console.log(`A`);
             return;
         }
         ;
-        console.log(`B`);
         // 绘制 fbo
         if (this.fboTexture == null || this.fboTexture.width != this.props.cacheTexWidth || this.fboTexture.height != this.props.cacheTexHeight) {
             this.jWebgl.destroyFbo(this.fboTexture);
@@ -274,7 +274,7 @@ class DomImageSmooth extends ReactComponentExtend {
      */
     step0Texture() {
         // 得到简略图
-        DomImageSmooth.Args.drawImgPadding(this.props, this.jWebgl, this.fboTexture);
+        DomImageSmooth.Args.drawImgPadding(this.props, this.jWebgl, this.fboTexture, this.texSrc);
         // 原图
         this.drawFbo(this.fboTexture, 0, 0);
     }
@@ -620,7 +620,15 @@ class DomImageSmooth extends ReactComponentExtend {
          * @param jWebgl
          * @param fbo
          */
-        static drawImgPadding(self, jWebgl, fbo) {
+        static drawImgPadding(self, jWebgl, fbo, texSrc) {
+            jWebgl.canvasWebglCtx.pixelStorei(JWebglEnum.PixelStoreIPName.UNPACK_FLIP_Y_WEBGL, 1);
+            jWebgl.canvasWebglCtx.activeTexture(JWebglEnum.ActiveTexture.TEXTURE0);
+            jWebgl.canvasWebglCtx.bindTexture(JWebglEnum.BindTexture.TEXTURE_2D, texSrc);
+            jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MIN_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
+            jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MAG_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
+            jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_S, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
+            jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_T, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
+            jWebgl.canvasWebglCtx.texImage2D(JWebglEnum.BindTexture.TEXTURE_2D, 0, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, self.img);
             jWebgl.useFbo(fbo);
             jWebgl.clear();
             jWebgl.mat4M.setIdentity();
@@ -629,7 +637,7 @@ class DomImageSmooth extends ReactComponentExtend {
             JWebglMathMatrix4.multiplayMat4List(jWebgl.mat4P, jWebgl.mat4V, jWebgl.mat4M, jWebgl.mat4Mvp);
             // 图片
             jWebgl.programImg.uMvp.fill(jWebgl.mat4Mvp);
-            jWebgl.programImg.uTexture.fillByImg(jWebgl.getImg(self.img.src));
+            jWebgl.programImg.uTexture.fillByTexture(texSrc);
             let posImg = JWebglMathVector4.create(self.imgWidth / 2 + self.paddingLeft, self.imgHeight / 2 + self.paddingBottom, 0);
             jWebgl.programImg.add(posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, self.imgWidth, self.imgHeight);
             objectPool.push(posImg);

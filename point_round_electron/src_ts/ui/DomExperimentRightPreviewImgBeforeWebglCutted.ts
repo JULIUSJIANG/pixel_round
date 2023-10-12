@@ -22,7 +22,15 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
      */
     jWebgl: JWebgl;
 
+    /**
+     * 帧缓冲区
+     */
     fbo: JWebglFrameBuffer;
+
+    /**
+     * 源图纹理
+     */
+    texSrc: WebGLTexture;
 
     /**
      * 2d canvas 引用器
@@ -40,6 +48,7 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
+        this.texSrc = this.jWebgl.canvasWebglCtx.createTexture ();
         this.canvas2d = this.canvas2dRef.current;
         this.canvas2dCtx = this.canvas2d.getContext (`2d`);
     }
@@ -69,7 +78,7 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
             this.fbo = this.jWebgl.getFbo (dataSrc.argsSmooth.cacheTexWidth, dataSrc.argsSmooth.cacheTexHeight);
         };
         // 得到简略图
-        DomImageSmooth.Args.drawImgPadding (dataSrc.argsSmooth, this.jWebgl, this.fbo);
+        DomImageSmooth.Args.drawImgPadding (dataSrc.argsSmooth, this.jWebgl, this.fbo, this.texSrc);
         // 把 fbo 绘制到屏幕
         this.jWebgl.fillFboByFbo (null, this.fbo);
 

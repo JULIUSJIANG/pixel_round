@@ -1,3 +1,4 @@
+import JWebgl from "../common/JWebgl.js";
 import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";
 
 /**

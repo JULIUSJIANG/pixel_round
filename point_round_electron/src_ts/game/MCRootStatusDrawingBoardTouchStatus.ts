@@ -1,3 +1,5 @@
+import JWebgl from "../common/JWebgl.js";
+import JWebglColor from "../common/JWebglColor.js";
 import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";
 
 /**
@@ -25,15 +27,37 @@ class MCRootStatusDrawingBoardTouchStatus {
 
     }
 
+    /**
+     * 事件派发 - 交互开始
+     * @param canvasX 
+     * @param canvasY 
+     */
     onStart (canvasX: number, canvasY: number) {
 
     }
 
+    /**
+     * 事件派发 - 交互中
+     * @param canvasX 
+     * @param canvasY 
+     */
     onMove (canvasX: number, canvasY: number) {
 
     }
 
+    /**
+     * 事件派发 - 交互结束
+     * @param canvasX 
+     * @param canvasY 
+     */
     onEnd (canvasX: number, canvasY: number) {
+
+    }
+
+    /**
+     * 事件派发 - 绘制
+     */
+    onFocusDraw (jWebgl: JWebgl, color: JWebglColor) {
 
     }
 }

@@ -15,11 +15,31 @@ class MCRootStatusDrawingBoardTouchStatus {
      */
     onExit() {
     }
+    /**
+     * 事件派发 - 交互开始
+     * @param canvasX
+     * @param canvasY
+     */
     onStart(canvasX, canvasY) {
     }
+    /**
+     * 事件派发 - 交互中
+     * @param canvasX
+     * @param canvasY
+     */
     onMove(canvasX, canvasY) {
     }
+    /**
+     * 事件派发 - 交互结束
+     * @param canvasX
+     * @param canvasY
+     */
     onEnd(canvasX, canvasY) {
+    }
+    /**
+     * 事件派发 - 绘制
+     */
+    onFocusDraw(jWebgl, color) {
     }
 }
 export default MCRootStatusDrawingBoardTouchStatus;

@@ -5,10 +5,13 @@ import JWebglColor from "../common/JWebglColor.js";
 import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
+import objectPool from "../common/ObjectPool.js";
+import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import DomImageSmoothRS from "./DomImageSmoothRS.js";
 
 const HORIZON_COUNT = 7;
 
@@ -22,7 +25,7 @@ const Z_GRID = 0.1;
 /**
  * 尝试更为灵魂的平滑
  */
-class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
+class DomImageSmooth extends ReactComponentExtend <number> {
     /**
      * 模型
      */
@@ -817,4 +820,33 @@ class DomExperimentRightSmoothCanvas extends ReactComponentExtend <number> {
     }
 }
 
-export default DomExperimentRightSmoothCanvas;
+namespace DomImageSmooth {
+
+    export class Args {
+
+        rs: DomImageSmoothRS;
+
+        img: HTMLImageElement;
+
+        static create (
+            rs: DomImageSmoothRS,
+            img: HTMLImageElement,
+        ) 
+        {
+            let inst = objectPool.pop (this.poolType);
+            inst.rs = rs;
+            inst.img = img;
+            return inst;
+        }
+
+        static poolType = new ObjectPoolType ({
+            instantiate: () => {
+                return new Args ();
+            },
+            onPop: null,
+            onPush: null
+        });
+    }
+}
+
+export default DomImageSmooth;

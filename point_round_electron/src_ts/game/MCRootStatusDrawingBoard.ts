@@ -114,7 +114,7 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         let instDisplay: ReactComponentExtendInstance;
         let currentImg = this.getCurrentCache ();
         // 有可用图片
-        if (currentImg != null && currentImg.initCurrStatus == currentImg.initStatusFinished) {
+        if (currentImg != null) {
             instDisplay = ReactComponentExtend.instantiateComponent (DomDrawingBoardRightPaint, null)
         }   
         else {

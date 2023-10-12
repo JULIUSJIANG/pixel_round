@@ -42,6 +42,12 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         // 空的帧缓冲区
         this.fboEmpty = this.jWebgl.getFbo(1, 1);
         this.jWebgl.evtTouchStart.on(() => {
+            let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
+            // 该纹理没加载完毕，忽略
+            if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
+                return;
+            }
+            ;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart.fill(this.jWebgl.currentTouch.posCanvas[0], this.jWebgl.currentTouch.posCanvas[1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onStart(this);
@@ -74,6 +80,11 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
     }
     reactComponentExtendOnDraw() {
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
+        // 该纹理没加载完毕，忽略
+        if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
+            return;
+        }
+        ;
         // 画笔颜色
         this.colorMark.initByHex(MgrData.inst.get(MgrDataItem.DB_COLOR));
         // 确保缓冲区存在

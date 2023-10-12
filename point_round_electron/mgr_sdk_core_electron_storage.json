@@ -1,6 +1,6 @@
 {
  "AUTO_DEBUG_TOOLS_21": false,
- "MC_STATUS_21": 0,
+ "MC_STATUS_21": 1,
  "MC_STATUS_EXP_STATUS_21": 1,
  "SEED_21": 40,
  "DB_LIST_IMG_DATA_21": [
@@ -155,5 +155,5 @@
    "pixelHeight": 2
   }
  ],
- "EXP_CURRENT_IMG_21": 5
+ "EXP_CURRENT_IMG_21": 6
 }

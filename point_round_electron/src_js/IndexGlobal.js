@@ -63,7 +63,7 @@ class IndexGlobal {
         MgrData.inst.set(MgrDataItem.SEED, id);
         let imgData = {
             id: id,
-            dataOrigin: null,
+            dataOrigin: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC`,
             width: width,
             height: height
         };

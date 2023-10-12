@@ -11,11 +11,9 @@ export default class DBImgSrcStatusLoading extends DBImgSrcStatus {
     }
     loadUrl(url) {
         // 有得加载才进行加载
-        if (url != null) {
-            this.relImg.imgLoading.src = url;
-        }
-        // 否则直接认为加载完成
-        else {
+        this.relImg.imgLoading.src = url;
+        // 空路径时候永远无法加载完成
+        if (url == ``) {
             this.relImg.srcEnter(this.relImg.srcStatusFinished);
         }
         ;

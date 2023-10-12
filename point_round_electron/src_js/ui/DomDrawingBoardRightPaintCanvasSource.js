@@ -48,6 +48,7 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
             MgrData.inst.callDataChange();
         });
         this.jWebgl.evtTouchMove.on(() => {
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onHoverEnter();
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove.fill(this.jWebgl.currentTouch.posCanvas[0], this.jWebgl.currentTouch.posCanvas[1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onMove(this);

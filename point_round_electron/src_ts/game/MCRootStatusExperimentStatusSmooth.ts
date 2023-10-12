@@ -6,7 +6,6 @@ import DomExperimentRightPreview from "../ui/DomExperimentRightPreview.js";
 import MCRootStatusExperimentStatus from "./MCRootStatusExperimentStatus.js";
 import TextureColor from "./TextureColor.js";
 import SmoothMachine from "./SmoothMachine.js";
-import MCRootStatusExperiment from "./MCRootStatusExperiment.js";
 import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";

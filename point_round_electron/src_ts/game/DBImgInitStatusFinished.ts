@@ -1,3 +1,4 @@
+import MgrData from "../mgr/MgrData.js";
 import DBImgInitStatus from "./DBImgInitStatus.js";
 
 export default class DBImgInitStatusFinished extends DBImgInitStatus {
@@ -6,5 +7,6 @@ export default class DBImgInitStatusFinished extends DBImgInitStatus {
         let t = this.relImg.imgLoading;
         this.relImg.imgLoading = this.relImg.imgLoaded;
         this.relImg.imgLoaded = t;
+        MgrData.inst.callDataChange ();
     }
 }

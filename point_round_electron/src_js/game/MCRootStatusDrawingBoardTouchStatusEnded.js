@@ -1,7 +1,7 @@
 import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
 import MCRootStatusDrawingBoardTouchStatus from "./MCRootStatusDrawingBoardTouchStatus.js";
 class MCRootStatusDrawingBoardTouchStatusEnded extends MCRootStatusDrawingBoardTouchStatus {
-    onStart() {
+    onStart(dataSrc) {
         this.relMachine.touchEnter(this.relMachine.touchStatusStarted);
     }
     onFocusDraw(dataSrc) {

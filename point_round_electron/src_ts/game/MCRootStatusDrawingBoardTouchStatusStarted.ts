@@ -5,12 +5,13 @@ import MCRootStatusDrawingBoardTouchStatus from "./MCRootStatusDrawingBoardTouch
 
 class MCRootStatusDrawingBoardTouchStatusStarted extends MCRootStatusDrawingBoardTouchStatus {
 
-    onMove (): void {
+    onMove (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
         this.relMachine.touchEnter (this.relMachine.touchStatusMoved);
     }
 
-    onEnd (): void {
+    onEnd (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
         this.relMachine.touchEnter (this.relMachine.touchStatusEnded);
+        this.relMachine.opCurrStatus.onDo (dataSrc, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1);
     }
 
     onOpUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {

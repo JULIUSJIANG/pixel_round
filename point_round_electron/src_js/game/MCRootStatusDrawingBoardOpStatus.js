@@ -24,5 +24,10 @@ class MCRootStatusDrawingBoardOpStatus {
      */
     onUpdate(dataSrc, x, y, w, h) {
     }
+    /**
+     * 执行状态
+     */
+    onDo(dataSrc, x, y, w, h) {
+    }
 }
 export default MCRootStatusDrawingBoardOpStatus;

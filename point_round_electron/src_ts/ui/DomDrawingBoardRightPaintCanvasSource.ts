@@ -32,6 +32,16 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
      */
     fboPure: JWebglFrameBuffer;
 
+    /**
+     * 空的帧缓冲区
+     */
+    fboEmpty: JWebglFrameBuffer;
+
+    /**
+     * 当前已确定的内容
+     */
+    fboCache: JWebglFrameBuffer;
+
     reactComponentExtendOnInit (): void {
         this.jWebgl = new JWebgl (this.canvasWebglRef.current);
         this.jWebgl.init ();
@@ -40,23 +50,25 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
 
         // 纯色缓冲区
         this.fboPure = this.jWebgl.getFbo (1, 1);
+        // 空的帧缓冲区
+        this.fboEmpty = this.jWebgl.getFbo (1, 1);
 
         this.jWebgl.evtTouchStart.on (() => {
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart.fill (this.jWebgl.currentTouch.posCanvas [0], this.jWebgl.currentTouch.posCanvas [1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart;
-            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onStart ();
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onStart (this);
             MgrData.inst.callDataChange ();
         });
         this.jWebgl.evtTouchMove.on (() => {
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove.fill (this.jWebgl.currentTouch.posCanvas [0], this.jWebgl.currentTouch.posCanvas [1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove;
-            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onMove ();
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onMove (this);
             MgrData.inst.callDataChange ();
         });
         this.jWebgl.evtTouchEnd.on (() => {
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd.fill (this.jWebgl.currentTouch.posCanvas [0], this.jWebgl.currentTouch.posCanvas [1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd;
-            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onEnd ();
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onEnd (this);
             MgrData.inst.callDataChange ();
         });
         this.jWebgl.evtEnter.on (() => {
@@ -92,9 +104,10 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
         // 画笔颜色
         this.colorMark.initByHex (MgrData.inst.get (MgrDataItem.DB_COLOR));
 
-        // 清空画布
-        this.jWebgl.useFbo (null);
-        this.jWebgl.clear ();
+        // 确保缓冲区存在
+        if (this.fboCache == null) {
+            this.fboCache = this.jWebgl.getFbo (dataSrc.dbImgData.width, dataSrc.dbImgData.height);
+        };
 
         // 准备好颜色
         this.jWebgl.useFbo (this.fboPure);
@@ -115,6 +128,9 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
         this.jWebgl.programPoint.uSize.fill (1);
         this.jWebgl.programPoint.add (JWebglMathVector4.centerO);
         this.jWebgl.programPoint.draw ();
+
+        // 先绘制已确定的内容
+        this.jWebgl.fillFbo (null, this.fboCache);
 
         // 绘制操作相关的东西
         IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onOpUpdate (this);

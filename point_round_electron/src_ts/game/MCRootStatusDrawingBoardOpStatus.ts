@@ -40,6 +40,13 @@ class MCRootStatusDrawingBoardOpStatus {
     onUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource, x: number, y: number, w: number, h: number) {
 
     }
+
+    /**
+     * 执行状态
+     */
+    onDo (dataSrc: DomDrawingBoardRightPaintCanvasSource, x: number, y: number, w: number, h: number) {
+
+    }
 }
 
 export default MCRootStatusDrawingBoardOpStatus;

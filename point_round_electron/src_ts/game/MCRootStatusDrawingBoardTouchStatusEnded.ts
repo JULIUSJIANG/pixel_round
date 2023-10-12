@@ -1,11 +1,9 @@
-import JWebgl from "../common/JWebgl.js";
-import JWebglColor from "../common/JWebglColor.js";
 import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
 import MCRootStatusDrawingBoardTouchStatus from "./MCRootStatusDrawingBoardTouchStatus.js";
 
 class MCRootStatusDrawingBoardTouchStatusEnded extends MCRootStatusDrawingBoardTouchStatus {
 
-    onStart (): void {
+    onStart (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
         this.relMachine.touchEnter (this.relMachine.touchStatusStarted);
     }
 

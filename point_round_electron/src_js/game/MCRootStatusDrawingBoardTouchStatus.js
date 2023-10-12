@@ -18,17 +18,17 @@ class MCRootStatusDrawingBoardTouchStatus {
     /**
      * 事件派发 - 交互开始
      */
-    onStart() {
+    onStart(dataSrc) {
     }
     /**
      * 事件派发 - 交互中
      */
-    onMove() {
+    onMove(dataSrc) {
     }
     /**
      * 事件派发 - 交互结束
      */
-    onEnd() {
+    onEnd(dataSrc) {
     }
     /**
      * 操作更新

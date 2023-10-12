@@ -31,21 +31,21 @@ class MCRootStatusDrawingBoardTouchStatus {
     /**
      * 事件派发 - 交互开始
      */
-    onStart () {
+    onStart (dataSrc: DomDrawingBoardRightPaintCanvasSource) {
 
     }
 
     /**
      * 事件派发 - 交互中
      */
-    onMove () {
+    onMove (dataSrc: DomDrawingBoardRightPaintCanvasSource) {
 
     }
 
     /**
      * 事件派发 - 交互结束
      */
-    onEnd () {
+    onEnd (dataSrc: DomDrawingBoardRightPaintCanvasSource) {
 
     }
 

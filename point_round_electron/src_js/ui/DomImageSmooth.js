@@ -112,9 +112,11 @@ class DomImageSmooth extends ReactComponentExtend {
     reactComponentExtendOnDraw() {
         // 图片没加载完毕，什么也别动
         if (this.props.img == null) {
+            console.log(`A`);
             return;
         }
         ;
+        console.log(`B`);
         // 绘制 fbo
         if (this.fboTexture == null || this.fboTexture.width != this.props.cacheTexWidth || this.fboTexture.height != this.props.cacheTexHeight) {
             this.jWebgl.destroyFbo(this.fboTexture);

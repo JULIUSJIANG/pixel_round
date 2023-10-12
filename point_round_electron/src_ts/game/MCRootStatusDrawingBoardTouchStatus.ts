@@ -29,28 +29,22 @@ class MCRootStatusDrawingBoardTouchStatus {
 
     /**
      * 事件派发 - 交互开始
-     * @param canvasX 
-     * @param canvasY 
      */
-    onStart (canvasX: number, canvasY: number) {
+    onStart () {
 
     }
 
     /**
      * 事件派发 - 交互中
-     * @param canvasX 
-     * @param canvasY 
      */
-    onMove (canvasX: number, canvasY: number) {
+    onMove () {
 
     }
 
     /**
      * 事件派发 - 交互结束
-     * @param canvasX 
-     * @param canvasY 
      */
-    onEnd (canvasX: number, canvasY: number) {
+    onEnd () {
 
     }
 

@@ -17,24 +17,18 @@ class MCRootStatusDrawingBoardTouchStatus {
     }
     /**
      * 事件派发 - 交互开始
-     * @param canvasX
-     * @param canvasY
      */
-    onStart(canvasX, canvasY) {
+    onStart() {
     }
     /**
      * 事件派发 - 交互中
-     * @param canvasX
-     * @param canvasY
      */
-    onMove(canvasX, canvasY) {
+    onMove() {
     }
     /**
      * 事件派发 - 交互结束
-     * @param canvasX
-     * @param canvasY
      */
-    onEnd(canvasX, canvasY) {
+    onEnd() {
     }
     /**
      * 事件派发 - 绘制

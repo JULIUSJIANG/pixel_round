@@ -5,22 +5,17 @@ import MCRootStatusDrawingBoardTouchStatus from "./MCRootStatusDrawingBoardTouch
 
 class MCRootStatusDrawingBoardTouchStatusStarted extends MCRootStatusDrawingBoardTouchStatus {
 
-    onMove (canvasX: number, canvasY: number): void {
-        this.relMachine.touchPosMove.fill (canvasX, canvasY);
-        this.relMachine.touchCurrentPos = this.relMachine.touchPosMove;
+    onMove (): void {
         this.relMachine.touchEnter (this.relMachine.touchStatusMoved);
     }
 
-    onEnd (canvasX: number, canvasY: number): void {
-        this.relMachine.touchPosEnd.fill (canvasX, canvasY);
-        this.relMachine.touchCurrentPos = this.relMachine.touchPosEnd;
+    onEnd (): void {
         this.relMachine.touchEnter (this.relMachine.touchStatusEnded);
     }
 
     onFocusDraw (jWebgl: JWebgl, color: JWebglColor): void {
-        DomDrawingBoardRightPaintCanvasSource.drawMark (jWebgl, color, -1);
-        DomDrawingBoardRightPaintCanvasSource.drawMark (jWebgl, color, 0);
-        DomDrawingBoardRightPaintCanvasSource.drawMark (jWebgl, color, 1);
+        // DomDrawingBoardRightPaintCanvasSource.drawCross (jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
+        DomDrawingBoardRightPaintCanvasSource.drawMark (jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
     }
 }
 

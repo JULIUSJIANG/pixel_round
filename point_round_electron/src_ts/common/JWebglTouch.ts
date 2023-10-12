@@ -17,11 +17,6 @@ export default class JWebglTouch {
     posCanvas = new Float32Array ([0, 0, 0, 0]);
 
     /**
-     * 在投影矩阵中的位置
-     */
-    posProj = new Float32Array ([0, 0, 0, 0]);
-
-    /**
      * 归属的上下文
      */
     jWebgl: JWebgl;
@@ -47,12 +42,5 @@ export default class JWebglTouch {
 
         this.posCanvas [0] = x - rect.left;
         this.posCanvas [1] = rect.bottom - y;
-
-        x = ((x - rect.left) - canvas.height / 2) / (canvas.height / 2);
-        y = (canvas.width / 2 - (y - rect.top)) / (canvas.width / 2);
-        this.posProj [0] = x;
-        this.posProj [1] = y;
-        this.posProj [2] = 0;
-        this.posProj [3] = 1;
     }
 }

@@ -6,13 +6,13 @@
  "DB_LIST_IMG_DATA_21": [
   {
    "id": 41,
-   "dataOrigin": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADZJREFUKFNjZCASMILU/Wdg+M/IwABm4wKkKSTGVLh1hKxHcRc+xeQpxOdWjCDBZT3esEMOUwBa7BALdrcj7gAAAABJRU5ErkJggg==",
+   "dataOrigin": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAEVJREFUKFOVkNEKADAIAvX/P9rRYCMKR/OphyMPiWEYnAAR2LfLHzj5eutcvSQxkp0qfKBgLJihBh5XSKhtbRLn+twu+y9SMx4LwxNgVQAAAABJRU5ErkJggg==",
    "width": 10,
    "height": 10
   }
  ],
  "DB_CURRENT_IMG_21": 41,
- "DB_COLOR_21": "ff0000",
+ "DB_COLOR_21": "ffffff",
  "EXP_LIST_IMG_DATA_21": [
   {
    "id": 2,

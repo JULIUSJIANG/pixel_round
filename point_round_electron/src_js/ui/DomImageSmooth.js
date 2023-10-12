@@ -74,7 +74,16 @@ class DomImageSmooth extends ReactComponentExtend {
         this.mat4V.setLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
         this.mat4P.setOrtho(-1, 1, -1, 1, 0, 2);
         JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.mat4Mvp);
+        let canvasWidth = this.props.cacheTexWidth * HORIZON_COUNT * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+        let canvasHeight = this.props.cacheTexHeight * VERTICAL_COUNT * IndexGlobal.PIXEL_TEX_TO_SCREEN;
         this.jWebgl.evtTouchStart.on(() => {
+            if (this.jWebgl.currentTouch.posCanvas[0] < 0
+                || canvasWidth < this.jWebgl.currentTouch.posCanvas[0]
+                || this.jWebgl.currentTouch.posCanvas[1] < 0
+                || canvasHeight < this.jWebgl.currentTouch.posCanvas[1]) {
+                return;
+            }
+            ;
             let touchX = Math.floor(this.jWebgl.currentTouch.posCanvas[0]);
             let touchY = Math.floor(this.jWebgl.currentTouch.posCanvas[1]);
             let gridX = Math.floor(touchX / IndexGlobal.PIXEL_TEX_TO_SCREEN);

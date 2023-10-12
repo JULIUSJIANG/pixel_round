@@ -96,6 +96,14 @@ class JWebgl {
          */
         this.evtTouch = new Eventer();
         /**
+         * 事件派发 - 进入
+         */
+        this.evtEnter = new Eventer();
+        /**
+         * 事件派发 - 离开
+         */
+        this.evtLeave = new Eventer();
+        /**
          * 模型矩阵
          */
         this.mat4M = new JWebglMathMatrix4();
@@ -139,6 +147,12 @@ class JWebgl {
             this.currentTouch = this.touchEnd;
             this.evtTouch.call(null);
             this.evtTouchEnd.call(null);
+        };
+        this.canvasWebgl.onmouseenter = (evt) => {
+            this.evtEnter.call(null);
+        };
+        this.canvasWebgl.onmouseleave = (evt) => {
+            this.evtLeave.call(null);
         };
         this.mat4M.setIdentity();
         this.mat4V.setIdentity();

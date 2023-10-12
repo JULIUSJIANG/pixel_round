@@ -9,6 +9,9 @@ import DomDrawingBoardRightEmpty from "../ui/DomDrawingBoardRightEmpty.js";
 import DomDrawingBoardRightPaint from "../ui/DomDrawingBoardRightPaint.js";
 import MCRoot from "./MCRoot.js";
 import MCRootStatus from "./MCRootStatus.js";
+import MCRootStatusDrawingBoardHoverStatus from "./MCRootStatusDrawingBoardHoverStatus.js";
+import MCRootStatusDrawingBoardHoverStatusEntered from "./MCRootStatusDrawingBoardHoverStatusEntered.js";
+import MCRootStatusDrawingBoardHoverStatusLeaved from "./MCRootStatusDrawingBoardHoverStatusLeaved.js";
 import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus.js";
 import MCRootStatusDrawingBoardOpStatusEraser from "./MCRootStatusDrawingBoardOpStatusEraser.js";
 import MCRootStatusDrawingBoardOpStatusPencil from "./MCRootStatusDrawingBoardOpStatusPencil.js";
@@ -37,11 +40,15 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         this.touchStatusEnded = new MCRootStatusDrawingBoardTouchStatusEnded (this);
         this.touchStatusStarted = new MCRootStatusDrawingBoardTouchStatusStarted (this);
         this.touchStatusMoved = new MCRootStatusDrawingBoardTouchStatusMoved (this);
+
+        this.hoverStatusEntered = new MCRootStatusDrawingBoardHoverStatusEntered (this);
+        this.hoverStatusLeaved = new MCRootStatusDrawingBoardHoverStatusLeaved (this);
     }
 
     onInit (): void {
         this.opEnter (this.opStatusPencil);
         this.touchEnter (this.touchStatusEnded);
+        this.hoverEnter (this.hoverStatusLeaved);
     }
     
     opListStatus = new Array <MCRootStatusDrawingBoardOpStatus> ();
@@ -86,6 +93,21 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
             rec.onExit ();
         };
         this.opCurrStatus.onEnter ();
+    }
+
+    hoverStatusEntered: MCRootStatusDrawingBoardHoverStatusEntered;
+
+    hoverStatusLeaved: MCRootStatusDrawingBoardHoverStatusLeaved;
+
+    hoverCurrStatus: MCRootStatusDrawingBoardHoverStatus;
+
+    hoverEnter (status: MCRootStatusDrawingBoardHoverStatus) {
+        let rec = this.hoverCurrStatus;
+        this.hoverCurrStatus = status;
+        if (rec) {
+            rec.onExit ();
+        };
+        this.hoverCurrStatus.onEnter ();
     }
 
     onDisplay (): ReactComponentExtendInstance {

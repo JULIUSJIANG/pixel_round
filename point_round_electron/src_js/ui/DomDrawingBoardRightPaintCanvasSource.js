@@ -43,6 +43,14 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onEnd(this.jWebgl.currentTouch.posCanvas[0], this.jWebgl.currentTouch.posCanvas[1]);
             MgrData.inst.callDataChange();
         });
+        this.jWebgl.evtEnter.on(() => {
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onHoverEnter();
+            MgrData.inst.callDataChange();
+        });
+        this.jWebgl.evtLeave.on(() => {
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onHoverExit();
+            MgrData.inst.callDataChange();
+        });
     }
     reactComponentExtendOnRelease() {
         this.jWebgl.release();
@@ -79,6 +87,11 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         }
         ;
         this.jWebgl.programLine.draw();
+        // 已离开窗口，不绘制准星
+        if (IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus == IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverStatusLeaved) {
+            return;
+        }
+        ;
         let colorMark = JWebglColor.COLOR_PURE_RED;
         this.drawCross(colorMark, -1);
         this.drawCross(colorMark, 0);

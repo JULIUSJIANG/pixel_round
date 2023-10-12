@@ -7,6 +7,8 @@ import DomDrawingBoardLeft from "../ui/DomDrawingBoardLeft.js";
 import DomDrawingBoardRightEmpty from "../ui/DomDrawingBoardRightEmpty.js";
 import DomDrawingBoardRightPaint from "../ui/DomDrawingBoardRightPaint.js";
 import MCRootStatus from "./MCRootStatus.js";
+import MCRootStatusDrawingBoardHoverStatusEntered from "./MCRootStatusDrawingBoardHoverStatusEntered.js";
+import MCRootStatusDrawingBoardHoverStatusLeaved from "./MCRootStatusDrawingBoardHoverStatusLeaved.js";
 import MCRootStatusDrawingBoardOpStatusEraser from "./MCRootStatusDrawingBoardOpStatusEraser.js";
 import MCRootStatusDrawingBoardOpStatusPencil from "./MCRootStatusDrawingBoardOpStatusPencil.js";
 import MCRootStatusDrawingBoardTouchPos from "./MCRootStatusDrawingBoardTouchPos.js";
@@ -30,10 +32,13 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         this.touchStatusEnded = new MCRootStatusDrawingBoardTouchStatusEnded(this);
         this.touchStatusStarted = new MCRootStatusDrawingBoardTouchStatusStarted(this);
         this.touchStatusMoved = new MCRootStatusDrawingBoardTouchStatusMoved(this);
+        this.hoverStatusEntered = new MCRootStatusDrawingBoardHoverStatusEntered(this);
+        this.hoverStatusLeaved = new MCRootStatusDrawingBoardHoverStatusLeaved(this);
     }
     onInit() {
         this.opEnter(this.opStatusPencil);
         this.touchEnter(this.touchStatusEnded);
+        this.hoverEnter(this.hoverStatusLeaved);
     }
     opEnter(status) {
         let rec = this.opCurrStatus;
@@ -52,6 +57,15 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         }
         ;
         this.opCurrStatus.onEnter();
+    }
+    hoverEnter(status) {
+        let rec = this.hoverCurrStatus;
+        this.hoverCurrStatus = status;
+        if (rec) {
+            rec.onExit();
+        }
+        ;
+        this.hoverCurrStatus.onEnter();
     }
     onDisplay() {
         let instDisplay;

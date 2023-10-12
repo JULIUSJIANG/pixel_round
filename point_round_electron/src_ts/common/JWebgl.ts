@@ -124,6 +124,16 @@ class JWebgl {
     evtTouch = new Eventer ();
 
     /**
+     * 事件派发 - 进入
+     */
+    evtEnter = new Eventer ();
+
+    /**
+     * 事件派发 - 离开
+     */
+    evtLeave = new Eventer ();
+
+    /**
      * 初始化
      * @returns 
      */
@@ -145,6 +155,12 @@ class JWebgl {
             this.currentTouch = this.touchEnd;
             this.evtTouch.call (null);
             this.evtTouchEnd.call (null);
+        };
+        this.canvasWebgl.onmouseenter = (evt: MouseEvent) => {
+            this.evtEnter.call (null);
+        };
+        this.canvasWebgl.onmouseleave = (evt: MouseEvent) => {
+            this.evtLeave.call (null);
         };
 
         this.mat4M.setIdentity ();

@@ -103,6 +103,10 @@ let colorData255 = [
      * 蓝色
      */
     JWebglColor.COLOR_BLUE_ALPHA = new JWebglColor(0.4039, 0.4039, 0.9254, 0.7);
+    /**
+     * 红色
+     */
+    JWebglColor.COLOR_PURE_RED = new JWebglColor(1, 0, 0, 1);
 })(JWebglColor || (JWebglColor = {}));
 for (let i = 0; i < colorData255.length; i += 4) {
     JWebglColor.listColor.push(new JWebglColor(colorData255[i + 0] / 255, colorData255[i + 1] / 255, colorData255[i + 2] / 255, colorData255[i + 3] / 255));

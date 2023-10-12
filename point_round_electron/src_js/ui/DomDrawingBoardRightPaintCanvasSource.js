@@ -2,14 +2,11 @@ import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
+import JWebglEnum from "../common/JWebglEnum.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-/**
- * 线的深度
- */
-const Z_GRID = 0.1;
 /**
  * 尝试更为灵魂的平滑
  */
@@ -23,15 +20,17 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         /**
          * 线的起始位置
          */
-        this.posFrom = new JWebglMathVector4(0, 0, Z_GRID);
+        this.posFrom = new JWebglMathVector4(0, 0, 0);
         /**
          * 线的结束位置
          */
-        this.posTo = new JWebglMathVector4(0, 0, Z_GRID);
+        this.posTo = new JWebglMathVector4(0, 0, 0);
     }
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
+        this.jWebgl.canvasWebglCtx.disable(JWebglEnum.EnableCap.DEPTH_TEST);
+        this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
         this.jWebgl.evtTouchStart.on(() => {
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onStart(this.jWebgl.currentTouch.posCanvas[0], this.jWebgl.currentTouch.posCanvas[1]);
             MgrData.inst.callDataChange();
@@ -52,6 +51,8 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
         this.jWebgl.useFbo(null);
         this.jWebgl.clear();
+        // 画布像素单位
+        let canvasTextureUnit = 1 / (IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA);
         // 网格
         let cameraWidth = dataSrc.dbImgData.width;
         let cameraHeight = dataSrc.dbImgData.height;
@@ -78,17 +79,94 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         }
         ;
         this.jWebgl.programLine.draw();
-        // 准星
-        this.posFrom.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXFloat;
-        this.posFrom.elements[1] = 0;
-        this.posTo.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXFloat;
+        let colorMark = JWebglColor.COLOR_PURE_RED;
+        this.drawCross(colorMark, -1);
+        this.drawCross(colorMark, 0);
+        this.drawCross(colorMark, 1);
+        this.drawMark(colorMark, -1);
+        this.drawMark(colorMark, 0);
+        this.drawMark(colorMark, 1);
+    }
+    /**
+     * 绘制交叉线
+     */
+    drawCross(colorMark, unitOffset) {
+        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
+        // 画布像素单位
+        let canvasTextureUnit = 1 / (IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA);
+        // 网格
+        let cameraWidth = dataSrc.dbImgData.width;
+        let cameraHeight = dataSrc.dbImgData.height;
+        this.jWebgl.mat4V.setLookAt(cameraWidth / 2, cameraHeight / 2, 1, cameraWidth / 2, cameraHeight / 2, 0, 0, 1, 0);
+        this.jWebgl.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
+        this.jWebgl.refreshMat4Mvp();
+        this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
+        let offset = canvasTextureUnit * unitOffset;
+        // 竖线 - 上
+        this.posFrom.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXFloat + offset;
+        this.posFrom.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYInt + 1;
+        this.posTo.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXFloat + offset;
         this.posTo.elements[1] = cameraHeight;
-        this.jWebgl.programLine.add(this.posFrom, JWebglColor.COLOR_RED, this.posTo, JWebglColor.COLOR_RED);
+        this.jWebgl.programLine.add(this.posFrom, colorMark, this.posTo, colorMark);
+        // 竖线 - 下
+        this.posFrom.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXFloat + offset;
+        this.posFrom.elements[1] = 0;
+        this.posTo.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXFloat + offset;
+        this.posTo.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYInt;
+        this.jWebgl.programLine.add(this.posFrom, colorMark, this.posTo, colorMark);
+        // 横线 - 左
         this.posFrom.elements[0] = 0;
-        this.posFrom.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYFloat;
+        this.posFrom.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYFloat + offset;
+        this.posTo.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXInt;
+        this.posTo.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYFloat + offset;
+        this.jWebgl.programLine.add(this.posFrom, colorMark, this.posTo, colorMark);
+        // 横线 - 右
+        this.posFrom.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXInt + 1;
+        this.posFrom.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYFloat + offset;
         this.posTo.elements[0] = cameraWidth;
-        this.posTo.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYFloat;
-        this.jWebgl.programLine.add(this.posFrom, JWebglColor.COLOR_RED, this.posTo, JWebglColor.COLOR_RED);
+        this.posTo.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYFloat + offset;
+        this.jWebgl.programLine.add(this.posFrom, colorMark, this.posTo, colorMark);
+    }
+    /**
+     * 绘制方块
+     */
+    drawMark(colorMark, unitOffset) {
+        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
+        // 画布像素单位
+        let canvasTextureUnit = 1 / (IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA);
+        // 网格
+        let cameraWidth = dataSrc.dbImgData.width;
+        let cameraHeight = dataSrc.dbImgData.height;
+        this.jWebgl.mat4V.setLookAt(cameraWidth / 2, cameraHeight / 2, 1, cameraWidth / 2, cameraHeight / 2, 0, 0, 1, 0);
+        this.jWebgl.mat4P.setOrtho(-cameraWidth / 2, cameraWidth / 2, -cameraHeight / 2, cameraHeight / 2, 0, 2);
+        this.jWebgl.refreshMat4Mvp();
+        this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
+        // 【准星 - 方块】
+        let offset = canvasTextureUnit * unitOffset;
+        // 线 - 左
+        this.posFrom.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXInt + offset;
+        this.posFrom.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYInt + offset;
+        this.posTo.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXInt + offset;
+        this.posTo.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYInt - offset + 1;
+        this.jWebgl.programLine.add(this.posFrom, colorMark, this.posTo, colorMark);
+        // 线 - 上
+        this.posFrom.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXInt + offset;
+        this.posFrom.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYInt - offset + 1;
+        this.posTo.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXInt - offset + 1;
+        this.posTo.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYInt - offset + 1;
+        this.jWebgl.programLine.add(this.posFrom, colorMark, this.posTo, colorMark);
+        // 线 - 右
+        this.posFrom.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXInt - offset + 1;
+        this.posFrom.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYInt - offset + 1;
+        this.posTo.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXInt - offset + 1;
+        this.posTo.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYInt + offset;
+        this.jWebgl.programLine.add(this.posFrom, colorMark, this.posTo, colorMark);
+        // 线 - 下
+        this.posFrom.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXInt - offset + 1;
+        this.posFrom.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYInt + offset;
+        this.posTo.elements[0] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridXInt + offset;
+        this.posTo.elements[1] = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos.gridYInt + offset;
+        this.jWebgl.programLine.add(this.posFrom, colorMark, this.posTo, colorMark);
         this.jWebgl.programLine.draw();
     }
     render() {

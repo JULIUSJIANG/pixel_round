@@ -35,7 +35,7 @@ void main() {
      * @param color
      * @returns
      */
-    add(posA, posAColor, posB, posBColor, posC, posCColor) {
+    addTriangle(posA, posAColor, posB, posBColor, posC, posCColor) {
         let idxA = this.addAttributeData(posA, posAColor);
         let idxB = this.addAttributeData(posB, posBColor);
         let idxC = this.addAttributeData(posC, posCColor);

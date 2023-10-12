@@ -28,6 +28,15 @@ class MCRootStatusDrawingBoardTouchPos {
     gridYFloat: number;
 
     /**
+     * 格子位置 x - 整型
+     */
+    gridXInt: number;
+    /**
+     * 格子位置 y - 整型
+     */
+    gridYInt: number;
+
+    /**
      * 填充数据
      * @param canvasX 
      * @param canvasY 
@@ -38,6 +47,9 @@ class MCRootStatusDrawingBoardTouchPos {
 
         this.gridXFloat = canvasX / IndexGlobal.PIXEL_TEX_TO_SCREEN;
         this.gridYFloat = canvasY / IndexGlobal.PIXEL_TEX_TO_SCREEN;
+
+        this.gridXInt = Math.floor (this.gridXFloat);
+        this.gridYInt = Math.floor (this.gridYFloat);
     }
 }
 

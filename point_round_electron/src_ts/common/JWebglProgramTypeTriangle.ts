@@ -5,6 +5,7 @@ import JWebglProgram from "./JWebglProgram.js";
 import JWebglProgramAttributeVec4 from "./JWebglProgramAttributeVec4.js";
 import JWebglProgramUniformMat4 from "./JWebglProgramUniformMat4.js";
 import JWebglProgramVaryingVec4 from "./JWebglProgramVaryingVec4.js";
+import objectPool from "./ObjectPool.js";
 
 export default class JWebglProgramTypeTriangle extends JWebglProgram {
 
@@ -48,7 +49,7 @@ void main() {
      * @param color 
      * @returns 
      */
-    add (
+    addTriangle (
         posA: JWebglMathVector4,
         posAColor: JWebglColor,
 

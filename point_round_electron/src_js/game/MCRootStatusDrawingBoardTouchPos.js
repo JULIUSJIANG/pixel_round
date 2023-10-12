@@ -13,6 +13,8 @@ class MCRootStatusDrawingBoardTouchPos {
         this.canvasY = canvasY;
         this.gridXFloat = canvasX / IndexGlobal.PIXEL_TEX_TO_SCREEN;
         this.gridYFloat = canvasY / IndexGlobal.PIXEL_TEX_TO_SCREEN;
+        this.gridXInt = Math.floor(this.gridXFloat);
+        this.gridYInt = Math.floor(this.gridYFloat);
     }
 }
 export default MCRootStatusDrawingBoardTouchPos;

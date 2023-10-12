@@ -105,14 +105,14 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
         this.posInLT.elements[1] = posTop;
         this.posInRT.elements[0] = posRight;
         this.posInRT.elements[1] = posTop;
-        this.jWebgl.programTriangle.add(this.posOutLB, colorMask, this.posInLB, colorMask, this.posOutRB, colorMask);
-        this.jWebgl.programTriangle.add(this.posOutLB, colorMask, this.posInLB, colorMask, this.posInLT, colorMask);
-        this.jWebgl.programTriangle.add(this.posOutRB, colorMask, this.posInRB, colorMask, this.posOutRT, colorMask);
-        this.jWebgl.programTriangle.add(this.posOutRB, colorMask, this.posInRB, colorMask, this.posInLB, colorMask);
-        this.jWebgl.programTriangle.add(this.posOutRT, colorMask, this.posInRT, colorMask, this.posOutLT, colorMask);
-        this.jWebgl.programTriangle.add(this.posOutRT, colorMask, this.posInRT, colorMask, this.posInRB, colorMask);
-        this.jWebgl.programTriangle.add(this.posOutLT, colorMask, this.posInLT, colorMask, this.posOutLB, colorMask);
-        this.jWebgl.programTriangle.add(this.posOutLT, colorMask, this.posInLT, colorMask, this.posInRT, colorMask);
+        this.jWebgl.programTriangle.addTriangle(this.posOutLB, colorMask, this.posInLB, colorMask, this.posOutRB, colorMask);
+        this.jWebgl.programTriangle.addTriangle(this.posOutLB, colorMask, this.posInLB, colorMask, this.posInLT, colorMask);
+        this.jWebgl.programTriangle.addTriangle(this.posOutRB, colorMask, this.posInRB, colorMask, this.posOutRT, colorMask);
+        this.jWebgl.programTriangle.addTriangle(this.posOutRB, colorMask, this.posInRB, colorMask, this.posInLB, colorMask);
+        this.jWebgl.programTriangle.addTriangle(this.posOutRT, colorMask, this.posInRT, colorMask, this.posOutLT, colorMask);
+        this.jWebgl.programTriangle.addTriangle(this.posOutRT, colorMask, this.posInRT, colorMask, this.posInRB, colorMask);
+        this.jWebgl.programTriangle.addTriangle(this.posOutLT, colorMask, this.posInLT, colorMask, this.posOutLB, colorMask);
+        this.jWebgl.programTriangle.addTriangle(this.posOutLT, colorMask, this.posInLT, colorMask, this.posInRT, colorMask);
         this.jWebgl.programTriangle.draw();
     }
     render() {

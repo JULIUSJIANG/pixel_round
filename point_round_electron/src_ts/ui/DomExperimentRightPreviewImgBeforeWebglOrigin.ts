@@ -149,7 +149,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
         this.posInRT.elements [0] = posRight;
         this.posInRT.elements [1] = posTop;
 
-        this.jWebgl.programTriangle.add (
+        this.jWebgl.programTriangle.addTriangle (
             this.posOutLB,
             colorMask,
             this.posInLB,
@@ -157,7 +157,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
             this.posOutRB,
             colorMask
         );
-        this.jWebgl.programTriangle.add (
+        this.jWebgl.programTriangle.addTriangle (
             this.posOutLB,
             colorMask,
             this.posInLB,
@@ -166,7 +166,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
             colorMask
         );
 
-        this.jWebgl.programTriangle.add (
+        this.jWebgl.programTriangle.addTriangle (
             this.posOutRB,
             colorMask,
             this.posInRB,
@@ -174,7 +174,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
             this.posOutRT,
             colorMask
         );
-        this.jWebgl.programTriangle.add (
+        this.jWebgl.programTriangle.addTriangle (
             this.posOutRB,
             colorMask,
             this.posInRB,
@@ -183,7 +183,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
             colorMask
         );
 
-        this.jWebgl.programTriangle.add (
+        this.jWebgl.programTriangle.addTriangle (
             this.posOutRT,
             colorMask,
             this.posInRT,
@@ -191,7 +191,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
             this.posOutLT,
             colorMask
         );
-        this.jWebgl.programTriangle.add (
+        this.jWebgl.programTriangle.addTriangle (
             this.posOutRT,
             colorMask,
             this.posInRT,
@@ -200,7 +200,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
             colorMask
         );
 
-        this.jWebgl.programTriangle.add (
+        this.jWebgl.programTriangle.addTriangle (
             this.posOutLT,
             colorMask,
             this.posInLT,
@@ -208,7 +208,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
             this.posOutLB,
             colorMask
         );
-        this.jWebgl.programTriangle.add (
+        this.jWebgl.programTriangle.addTriangle (
             this.posOutLT,
             colorMask,
             this.posInLT,

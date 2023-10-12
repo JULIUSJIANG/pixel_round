@@ -119,6 +119,11 @@ namespace JWebglColor {
      * 蓝色
      */
     export const COLOR_BLUE_ALPHA = new JWebglColor (0.4039, 0.4039, 0.9254, 0.7);
+
+    /**
+     * 红色
+     */
+    export const COLOR_PURE_RED = new JWebglColor (1, 0, 0, 1);
 }
 
 for (let i = 0; i < colorData255.length; i+=4) {

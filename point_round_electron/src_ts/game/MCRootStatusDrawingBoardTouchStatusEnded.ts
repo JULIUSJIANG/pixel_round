@@ -9,7 +9,9 @@ class MCRootStatusDrawingBoardTouchStatusEnded extends MCRootStatusDrawingBoardT
         this.relMachine.touchEnter (this.relMachine.touchStatusStarted);
     }
 
-    onFocusDraw (jWebgl: JWebgl, color: JWebglColor): void {
+    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
+        let jWebgl = dataSrc.jWebgl;
+        let color = dataSrc.colorMark;
         DomDrawingBoardRightPaintCanvasSource.drawCross (jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
         DomDrawingBoardRightPaintCanvasSource.drawMark (jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
     }

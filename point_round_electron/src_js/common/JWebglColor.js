@@ -51,7 +51,7 @@ class JWebglColor {
     }
     parseHexToNumber(hex) {
         if (hex == null) {
-            return 16;
+            return 15;
         }
         ;
         hex = hex.toLowerCase();
@@ -93,7 +93,7 @@ class JWebglColor {
                         return val;
                     }
                     ;
-                    return 16;
+                    return 15;
                 }
                 ;
         }

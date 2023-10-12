@@ -9,14 +9,23 @@ class MCRootStatusDrawingBoardTouchStatusMoved extends MCRootStatusDrawingBoardT
         this.relMachine.touchEnter (this.relMachine.touchStatusEnded);
     }
 
-    onFocusDraw (jWebgl: JWebgl, color: JWebglColor): void {
+    onOpUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
         let x: number, y: number, w: number, h: number;
         x = Math.min (this.relMachine.touchPosStart.gridXInt, this.relMachine.touchPosMove.gridXInt);
         y = Math.min (this.relMachine.touchPosStart.gridYInt, this.relMachine.touchPosMove.gridYInt);
         w = Math.abs (this.relMachine.touchPosStart.gridXInt - this.relMachine.touchPosMove.gridXInt) + 1;
         h = Math.abs (this.relMachine.touchPosStart.gridYInt - this.relMachine.touchPosMove.gridYInt) + 1;
+        this.relMachine.opCurrStatus.onUpdate (dataSrc, x, y, w, h);
+    }
 
-        // DomDrawingBoardRightPaintCanvasSource.drawCross (jWebgl, x, y, w, h, color);
+    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
+        let jWebgl = dataSrc.jWebgl;
+        let color = dataSrc.colorMark;
+        let x: number, y: number, w: number, h: number;
+        x = Math.min (this.relMachine.touchPosStart.gridXInt, this.relMachine.touchPosMove.gridXInt);
+        y = Math.min (this.relMachine.touchPosStart.gridYInt, this.relMachine.touchPosMove.gridYInt);
+        w = Math.abs (this.relMachine.touchPosStart.gridXInt - this.relMachine.touchPosMove.gridXInt) + 1;
+        h = Math.abs (this.relMachine.touchPosStart.gridYInt - this.relMachine.touchPosMove.gridYInt) + 1;
         DomDrawingBoardRightPaintCanvasSource.drawMark (jWebgl, x, y, w, h, color);
     }
 }

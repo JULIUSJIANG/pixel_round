@@ -1,5 +1,6 @@
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
+import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
 import MCRootStatusDrawingBoardHoverStatus from "./MCRootStatusDrawingBoardHoverStatus.js";
 
 class MCRootStatusDrawingBoardHoverStatusEntered extends MCRootStatusDrawingBoardHoverStatus {
@@ -8,8 +9,12 @@ class MCRootStatusDrawingBoardHoverStatusEntered extends MCRootStatusDrawingBoar
         this.relMachine.hoverEnter (this.relMachine.hoverStatusLeaved);
     }
 
-    onFocusDraw (jWebgl: JWebgl, color: JWebglColor): void {
-        this.relMachine.touchCurrStatus.onFocusDraw (jWebgl, color);
+    onOpUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
+        this.relMachine.touchCurrStatus.onOpUpdate (dataSrc);
+    }
+
+    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
+        this.relMachine.touchCurrStatus.onFocusDraw (dataSrc);
     }
 }
 

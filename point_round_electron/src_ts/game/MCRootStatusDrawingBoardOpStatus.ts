@@ -1,3 +1,4 @@
+import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
 import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";
 
 /**
@@ -30,6 +31,13 @@ class MCRootStatusDrawingBoardOpStatus {
      * 事件派发 - 离开状态
      */
     onExit () {
+
+    }
+
+    /**
+     * 更新状态
+     */
+    onUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource, x: number, y: number, w: number, h: number) {
 
     }
 }

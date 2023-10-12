@@ -31,9 +31,15 @@ class MCRootStatusDrawingBoardTouchStatus {
     onEnd() {
     }
     /**
+     * 操作更新
+     * @param dataSrc
+     */
+    onOpUpdate(dataSrc) {
+    }
+    /**
      * 事件派发 - 绘制
      */
-    onFocusDraw(jWebgl, color) {
+    onFocusDraw(dataSrc) {
     }
 }
 export default MCRootStatusDrawingBoardTouchStatus;

@@ -3,6 +3,7 @@ import NodeModules from "../NodeModules.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
 import JWebglEnum from "../common/JWebglEnum.js";
+import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
@@ -26,11 +27,19 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
      */
     jWebgl: JWebgl;
 
+    /**
+     * 纯色帧缓冲区
+     */
+    fboPure: JWebglFrameBuffer;
+
     reactComponentExtendOnInit (): void {
         this.jWebgl = new JWebgl (this.canvasWebglRef.current);
         this.jWebgl.init ();
         this.jWebgl.canvasWebglCtx.disable (JWebglEnum.EnableCap.DEPTH_TEST);
         this.jWebgl.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
+
+        // 纯色缓冲区
+        this.fboPure = this.jWebgl.getFbo (1, 1);
 
         this.jWebgl.evtTouchStart.on (() => {
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart.fill (this.jWebgl.currentTouch.posCanvas [0], this.jWebgl.currentTouch.posCanvas [1]);
@@ -80,10 +89,38 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
 
     reactComponentExtendOnDraw (): void {
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
+        // 画笔颜色
+        this.colorMark.initByHex (MgrData.inst.get (MgrDataItem.DB_COLOR));
+
+        // 清空画布
         this.jWebgl.useFbo (null);
         this.jWebgl.clear ();
 
+        // 准备好颜色
+        this.jWebgl.useFbo (this.fboPure);
+        this.jWebgl.clear ();
+        this.jWebgl.mat4V.setLookAt (
+            0, 0, 1,
+            0, 0, 0,
+            0, 1, 0
+        );
+        this.jWebgl.mat4P.setOrtho (
+            - 0.5, 0.5,
+            - 0.5, 0.5,
+            0, 2
+        );
+        this.jWebgl.refreshMat4Mvp ();
+        this.jWebgl.programPoint.uMvp.fill (this.jWebgl.mat4Mvp);
+        this.jWebgl.programPoint.uColor.fill (this.colorMark.data01);
+        this.jWebgl.programPoint.uSize.fill (1);
+        this.jWebgl.programPoint.add (JWebglMathVector4.centerO);
+        this.jWebgl.programPoint.draw ();
+
+        // 绘制操作相关的东西
+        IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onOpUpdate (this);
+
         // 网格
+        this.jWebgl.useFbo (null);
         let cameraWidth = dataSrc.dbImgData.width;
         let cameraHeight = dataSrc.dbImgData.height;
         this.jWebgl.mat4V.setLookAt (
@@ -127,8 +164,7 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
         this.jWebgl.programLine.draw ();
 
         // 绘制准星
-        this.colorMark.initByHex (MgrData.inst.get (MgrDataItem.DB_COLOR));
-        IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onFocusDraw (this.jWebgl, this.colorMark);
+        IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onFocusDraw (this);
     }
 
     /**

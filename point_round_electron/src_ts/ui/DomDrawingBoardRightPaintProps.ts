@@ -105,6 +105,9 @@ function resizeTo (dataSrc: MCRootStatusDrawingBoard, imgCurr: DBImg, w: number,
     dataSrc.dom.jWebgl.programImg.draw ();
     objectPool.push (posImg);
 
+    // 重新等待初始化完毕
+    imgCurr.initEnter (imgCurr.initStatusIdle);
+
     let fboRev = dataSrc.dom.jWebgl.getFbo (cameraWidth, cameraHeight);
     dataSrc.dom.jWebgl.fillFboByTexRev (fboRev, fboResize.renderTexture);
     dataSrc.dom.jWebgl.destroyFbo (fboResize);

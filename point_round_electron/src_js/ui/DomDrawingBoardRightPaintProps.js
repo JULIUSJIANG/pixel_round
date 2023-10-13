@@ -67,6 +67,8 @@ function resizeTo(dataSrc, imgCurr, w, h) {
         dataSrc.dom.jWebgl.programImg.add(posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     dataSrc.dom.jWebgl.programImg.draw();
     objectPool.push(posImg);
+    // 重新等待初始化完毕
+    imgCurr.initEnter(imgCurr.initStatusIdle);
     let fboRev = dataSrc.dom.jWebgl.getFbo(cameraWidth, cameraHeight);
     dataSrc.dom.jWebgl.fillFboByTexRev(fboRev, fboResize.renderTexture);
     dataSrc.dom.jWebgl.destroyFbo(fboResize);

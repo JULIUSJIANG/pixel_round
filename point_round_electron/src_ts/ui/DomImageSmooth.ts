@@ -196,6 +196,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
     reactComponentExtendOnDraw (): void {
         // 图片没加载完毕，什么也别动
         if (this.props.img == null) {
+            this.jWebgl.useFbo (null);
+            this.jWebgl.clear ();
             return;
         };
 

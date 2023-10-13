@@ -86,6 +86,8 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
         // 该纹理没加载完毕，忽略
         if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
+            this.jWebgl.useFbo(null);
+            this.jWebgl.clear();
             return;
         }
         ;

@@ -77,8 +77,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             this.mat4Mvp
         );
 
-        let canvasWidth = this.props.cacheTexWidth * DomImageSmooth.HORIZON_COUNT * IndexGlobal.PIXEL_TEX_TO_SCREEN;
-        let canvasHeight = this.props.cacheTexHeight * DomImageSmooth.VERTICAL_COUNT * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+        let canvasWidth = this.props.cacheTexWidth * this.props.rs.commonHorCount * IndexGlobal.PIXEL_TEX_TO_SCREEN;
+        let canvasHeight = this.props.cacheTexHeight * this.props.rs.commonVerCount * IndexGlobal.PIXEL_TEX_TO_SCREEN;
         this.jWebgl.evtTouchStart.on (() => {
             if (
                    this.jWebgl.currentTouch.posCanvas [0] < 0
@@ -256,12 +256,14 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
 
         this.step9Area (3, 2);
         this.step10Angle (3, 3);
+        this.props.rs.expSmoothCircleTo (this, 5, 2);
 
-        this.props.rs.debugSmoothCircleTo (this, 5, 2);
+        this.props.rs.dbFinally (this);
 
         // 网格
-        let cameraWidth = this.props.cacheTexWidth * DomImageSmooth.HORIZON_COUNT;
-        let cameraHeight = this.props.cacheTexHeight * DomImageSmooth.VERTICAL_COUNT;
+        this.jWebgl.useFbo (null);
+        let cameraWidth = this.props.cacheTexWidth * this.props.rs.commonHorCount;
+        let cameraHeight = this.props.cacheTexHeight * this.props.rs.commonVerCount;
         this.jWebgl.mat4V.setLookAt (
             cameraWidth / 2, cameraHeight / 2, 1,
             cameraWidth / 2, cameraHeight / 2, 0,
@@ -302,36 +304,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         };
         this.jWebgl.programLine.draw ();
 
-        // 准星
-        let gridXMod = this.gridX % this.props.cacheTexWidth + 0.5;
-        let gridYMod = this.gridY % this.props.cacheTexHeight + 0.5;
-        // 竖线
-        for (let i = 0; i < DomImageSmooth.HORIZON_COUNT; i++) {
-            this.posFrom.elements [0] = i * this.props.cacheTexWidth + gridXMod;
-            this.posFrom.elements [1] = 0;
-            this.posTo.elements [0] = i * this.props.cacheTexWidth + gridXMod;
-            this.posTo.elements [1] = cameraHeight;
-            this.jWebgl.programLine.add (
-                this.posFrom,
-                this.colorFocus,
-                this.posTo,
-                this.colorFocus
-            );
-        };
-        // 横线
-        for (let i = 0; i < DomImageSmooth.VERTICAL_COUNT; i++) {
-            this.posFrom.elements [0] = 0;
-            this.posFrom.elements [1] = i * this.props.cacheTexHeight + gridYMod;
-            this.posTo.elements [0] = cameraWidth;
-            this.posTo.elements [1] = i * this.props.cacheTexHeight + gridYMod;
-            this.jWebgl.programLine.add (
-                this.posFrom,
-                this.colorFocus,
-                this.posTo,
-                this.colorFocus
-            );
-        };
-        this.jWebgl.programLine.draw ();
+        // 绘制准星
+        this.props.rs.expDrawFocus (this);
     }
 
     /**
@@ -341,7 +315,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         // 得到简略图
         DomImageSmooth.Args.drawImgPadding (this.props, this.jWebgl, this.fboTexture, this.texSrc);
         // 原图
-        this.props.rs.debugDrawFbo (this, this.fboTexture, 0, 0);
+        this.props.rs.expDrawFbo (this, this.fboTexture, 0, 0);
     }
 
     /**
@@ -362,7 +336,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothTickness.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboTickness, 0, 1);
+        this.props.rs.expDrawFbo (this, this.fboTickness, 0, 1);
     }
 
     /**
@@ -384,7 +358,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothFlat.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboFlat, 0, 2);
+        this.props.rs.expDrawFbo (this, this.fboFlat, 0, 2);
     }
 
     /**
@@ -407,8 +381,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerData.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboCornerData, posX, posY + 1);
-        this.props.rs.debugSmoothOrdinaryTo (this, posX, posY + 0);
+        this.props.rs.expDrawFbo (this, this.fboCornerData, posX, posY + 1);
+        this.props.rs.expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
     /**
@@ -430,9 +404,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveA.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
+        this.props.rs.expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
-        this.props.rs.debugSmoothOrdinaryTo (this, posX, posY + 0);
+        this.props.rs.expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
     /**
@@ -455,9 +429,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveX.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
+        this.props.rs.expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
-        this.props.rs.debugSmoothOrdinaryTo (this, posX, posY + 0);
+        this.props.rs.expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
     /**
@@ -478,9 +452,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveT.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
+        this.props.rs.expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
-        this.props.rs.debugSmoothOrdinaryTo (this, posX, posY + 0);
+        this.props.rs.expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
     /**
@@ -501,9 +475,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveI.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
+        this.props.rs.expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
-        this.props.rs.debugSmoothOrdinaryTo (this, posX, posY + 0);
+        this.props.rs.expSmoothOrdinaryTo (this, posX, posY + 0);
     }
     
     /**
@@ -525,9 +499,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveV.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
+        this.props.rs.expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
-        this.props.rs.debugSmoothOrdinaryTo (this, posX, posY + 0);
+        this.props.rs.expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
     /**
@@ -549,9 +523,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothEnumRound.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
+        this.props.rs.expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);
-        this.props.rs.debugSmoothOrdinaryTo (this, posX, posY + 0);
+        this.props.rs.expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
     /**
@@ -574,9 +548,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothEnumSide.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
+        this.props.rs.expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);
-        this.props.rs.debugSmoothOrdinaryTo (this, posX, posY + 0);
+        this.props.rs.expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
     /**
@@ -601,7 +575,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         );
         this.jWebgl.programSmoothArea.uRight.fill (1);
         this.jWebgl.programSmoothArea.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboAreaLeft, posX, posY);
+        this.props.rs.expDrawFbo (this, this.fboAreaLeft, posX, posY);
 
         this.jWebgl.programSmoothArea.uTextureMain.fillByFbo (this.fboTexture);
         this.jWebgl.programSmoothArea.uTextureCorner.fillByFbo (this.fboCornerData);
@@ -617,7 +591,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         );
         this.jWebgl.programSmoothArea.uRight.fill (- 1);
         this.jWebgl.programSmoothArea.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboAreaRight, posX + 1, posY);
+        this.props.rs.expDrawFbo (this, this.fboAreaRight, posX + 1, posY);
     }
 
     /**
@@ -643,7 +617,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         );
         this.jWebgl.programSmoothAngle.uRight.fill (1);
         this.jWebgl.programSmoothAngle.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboAngleLeft, posX, posY);
+        this.props.rs.expDrawFbo (this, this.fboAngleLeft, posX, posY);
 
         this.jWebgl.programSmoothAngle.uTextureMain.fillByFbo (this.fboTexture);
         this.jWebgl.programSmoothAngle.uTextureCorner.fillByFbo (this.fboCornerData);
@@ -659,7 +633,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         );
         this.jWebgl.programSmoothAngle.uRight.fill (- 1);
         this.jWebgl.programSmoothAngle.draw ();
-        this.props.rs.debugDrawFbo (this, this.fboAngleRight, posX + 1, posY);
+        this.props.rs.expDrawFbo (this, this.fboAngleRight, posX + 1, posY);
     }
 
     render (): ReactComponentExtendInstance {
@@ -699,8 +673,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `${this.props.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * DomImageSmooth.HORIZON_COUNT}px`,
-                            [MgrDomDefine.STYLE_HEIGHT]: `${this.props.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * DomImageSmooth.VERTICAL_COUNT}px`,
+                            [MgrDomDefine.STYLE_WIDTH]: `${this.props.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonHorCount}px`,
+                            [MgrDomDefine.STYLE_HEIGHT]: `${this.props.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonVerCount}px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                         }
                     },
@@ -721,11 +695,11 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
                             MgrDomDefine.TAG_CANVAS,
                             {
                                 ref: this.canvasWebglRef,
-                                width: this.props.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * DomImageSmooth.HORIZON_COUNT * IndexGlobal.ANTINA,
-                                height: this.props.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * DomImageSmooth.VERTICAL_COUNT * IndexGlobal.ANTINA,
+                                width: this.props.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonHorCount * IndexGlobal.ANTINA,
+                                height: this.props.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonVerCount * IndexGlobal.ANTINA,
                                 style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${this.props.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * DomImageSmooth.HORIZON_COUNT}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${this.props.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * DomImageSmooth.VERTICAL_COUNT}px`,
+                                    [MgrDomDefine.STYLE_WIDTH]: `${this.props.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonHorCount}px`,
+                                    [MgrDomDefine.STYLE_HEIGHT]: `${this.props.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonVerCount}px`,
                                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                 }
                             }
@@ -738,10 +712,6 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
 }
 
 namespace DomImageSmooth {
-
-    export const HORIZON_COUNT = 7;
-
-    export const VERTICAL_COUNT = 4;
 
     export class Args {
         /**

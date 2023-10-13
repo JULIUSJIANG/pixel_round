@@ -66,6 +66,7 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_OVERFLOW_Y_SCROLL = "scroll";
     MgrDomDefine.STYLE_ALIGN_ITEMS = "alignItems";
     MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER = "center";
+    MgrDomDefine.STYLE_ALIGN_ITEMS_STRETCH = "stretch";
     MgrDomDefine.STYLE_JUSTIFY_CONTENT = "justifyContent";
     MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER = "center";
     MgrDomDefine.STYLE_JUSTIFY_CONTENT_SPACE_BETWEEN = "space-between";

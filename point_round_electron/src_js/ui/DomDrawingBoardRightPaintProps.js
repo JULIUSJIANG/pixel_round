@@ -1,8 +1,10 @@
 import IndexGlobal from "../IndexGlobal.js";
 import NodeModules from "../NodeModules.js";
+import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
+import DBImg from "../game/DBImg.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
@@ -76,12 +78,13 @@ function resizeTo(dataSrc, imgCurr, w, h) {
 export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend {
     constructor() {
         super(...arguments);
-        this.listChildren = new Array();
+        this.listChildrenA = new Array();
+        this.listChildrenB = new Array();
     }
     render() {
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard;
         let imgCurr = dataSrc.getCurrentCache();
-        this.listChildren.length = 0;
+        this.listChildrenA.length = 0;
         for (let i = 0; i < IndexGlobal.inst.mcRoot.statusDrawingBoard.opListStatus.length; i++) {
             let opListStatusI = IndexGlobal.inst.mcRoot.statusDrawingBoard.opListStatus[i];
             let propsBtn = {
@@ -101,7 +104,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                 propsBtn[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
             }
             ;
-            this.listChildren.push(ReactComponentExtend.instantiateTag(NodeModules.antd.Button, propsBtn, opListStatusI.name));
+            this.listChildrenA.push(ReactComponentExtend.instantiateTag(NodeModules.antd.Button, propsBtn, opListStatusI.name));
         }
         ;
         let argsWidth = DomInputNumberApplicationHor.Args.create(`宽 ${imgCurr.dbImgData.width}`, MgrData.inst.get(MgrDataItem.DB_WIDTH), null, null, (val) => {
@@ -132,6 +135,25 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
         }, () => {
             offset(dataSrc, imgCurr, 0, MgrData.inst.get(MgrDataItem.DB_OFFSET_Y));
         });
+        this.listChildrenB.length = 0;
+        for (let i = 0; i < DBImg.BACK_UP_COUNT_MAX; i++) {
+            let color = JWebglColor.COLOR_GREY.str16;
+            if (i <= imgCurr.idxStatus) {
+                color = JWebglColor.COLOR_WHITE.str16;
+            }
+            else if (i < imgCurr.listStatus.length) {
+                color = JWebglColor.COLOR_LIGHT.str16;
+            }
+            ;
+            this.listChildrenB.push(ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+                style: {
+                    [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.CONFIG_TXT_SPACING,
+                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                    [MgrDomDefine.STYLE_BACKGROUND_COLOR]: color,
+                }
+            }));
+        }
+        ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
@@ -155,7 +177,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                 [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
                 [MgrDomDefine.STYLE_JUSTIFY_CONTENT]: MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER,
             }
-        }, ...this.listChildren), 
+        }, ...this.listChildrenA), 
         // 板块 - 颜色
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
@@ -185,7 +207,40 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                 MgrData.inst.callDataChange();
             }
         })), 
-        // 颜色 - 宽
+        // 撤销 - 恢复
+        ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            style: {
+                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_STRETCH,
+                [MgrDomDefine.STYLE_JUSTIFY_CONTENT]: MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER,
+            }
+        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
+            style: {
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+            },
+            "disabled": imgCurr.idxStatus == 0,
+            onClick: () => {
+                imgCurr.cancel();
+            }
+        }, `撤销`), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            style: {
+                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+            }
+        }, ...this.listChildrenB), ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
+            style: {
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+            },
+            "disabled": imgCurr.idxStatus == imgCurr.listStatus.length - 1,
+            onClick: () => {
+                imgCurr.recovery();
+            }
+        }, `恢复`)), 
+        // 宽
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
@@ -193,7 +248,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
             }
         }, ReactComponentExtend.instantiateComponent(DomInputNumberApplicationHor, argsWidth)), 
-        // 颜色 - 高
+        // 高
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,

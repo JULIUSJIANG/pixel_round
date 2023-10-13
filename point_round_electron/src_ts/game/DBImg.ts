@@ -11,7 +11,7 @@ import DBImgSrcStatusLoading from "./DBImgSrcStatusLoading.js";
 /**
  * 画板数据的缓存
  */
-export default class DBImg {
+class DBImg {
 
     /**
      * 标识
@@ -39,7 +39,8 @@ export default class DBImg {
         this.srcStatusLoading = new DBImgSrcStatusLoading (this);
         this.srcStatusFinished = new DBImgSrcStatusFinished (this);
         this.srcEnter (this.srcStatusLoading);
-        this.srcCurrStatus.onSrcChanged (this.dbImgData.dataOrigin, this.dbImgData.width, this.dbImgData.height);
+        this.backUpStatus (this.dbImgData.dataOrigin, this.dbImgData.width, this.dbImgData.height)
+        this.srcCurrStatus.onSrcChanged ();
     }
 
     /**
@@ -111,6 +112,69 @@ export default class DBImg {
         if (this.srcCurrStatus == this.srcStatusFinished && this.imgLoaded.src == url) {
             return;
         };
-        this.srcCurrStatus.onSrcChanged (url, width, height);
+        // 把状态压入队列
+        this.backUpStatus (url, width, height);
+        this.srcCurrStatus.onSrcChanged ();
+    }
+
+    /**
+     * 所有的历史记录
+     */
+    listStatus = new Array <MgrDataItem.DBImgData> ();
+
+    /**
+     * 当前状态的索引
+     */
+    idxStatus: number = -1;
+
+    /**
+     * 对状态进行备份
+     * @param url 
+     * @param width 
+     * @param height 
+     */
+    backUpStatus (url: string, width: number, height: number) {
+        // 核心数据的备份
+        let backup: MgrDataItem.DBImgData = {
+            id: null,
+            dataOrigin: url,
+            width: width,
+            height: height
+        };
+        // 把当前状态后面的状态都给去了
+        this.listStatus.splice (this.idxStatus + 1);
+        this.listStatus.push (backup);
+        this.idxStatus = this.listStatus.length - 1;
+        // 超量，剔除首个
+        if (DBImg.BACK_UP_COUNT_MAX < this.listStatus.length) {
+            this.listStatus.shift ();
+        };
+    }
+
+    /**
+     * 撤销
+     */
+    cancel () {
+        if (0 < this.idxStatus) {
+            this.idxStatus--;
+            this.srcCurrStatus.onSrcChanged ();
+        };
+    }
+
+    /**
+     * 恢复
+     */
+    recovery () {
+        if (this.idxStatus < this.listStatus.length - 1) {
+            this.idxStatus++;
+            this.srcCurrStatus.onSrcChanged ();
+        };
     }
 }
+
+namespace DBImg {
+
+    export const BACK_UP_COUNT_MAX = 20;
+};
+
+export default DBImg;

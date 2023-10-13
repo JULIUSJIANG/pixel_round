@@ -151,6 +151,10 @@ namespace JWebglColor {
      * 灰色
      */
     export const COLOR_GREY = new JWebglColor (0.5, 0.5, 0.5, 1);
+    /**
+     * 灰色
+     */
+    export const COLOR_LIGHT = new JWebglColor (0.75, 0.75, 0.75, 1);
 
     /**
      * 红色

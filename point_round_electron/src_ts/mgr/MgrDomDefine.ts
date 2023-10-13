@@ -85,6 +85,7 @@ namespace MgrDomDefine {
 
     export const STYLE_ALIGN_ITEMS = "alignItems";
     export const STYLE_ALIGN_ITEMS_CENTER = "center";
+    export const STYLE_ALIGN_ITEMS_STRETCH = "stretch";
 
     export const STYLE_JUSTIFY_CONTENT = "justifyContent";
     export const STYLE_JUSTIFY_CONTENT_CENTER = "center";

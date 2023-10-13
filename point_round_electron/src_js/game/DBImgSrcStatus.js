@@ -15,6 +15,6 @@ export default class DBImgSrcStatus {
     /**
      * 事件派发 - 源数据发生变化
      */
-    onSrcChanged(url, width, height) {
+    onSrcChanged() {
     }
 }

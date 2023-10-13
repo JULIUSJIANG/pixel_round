@@ -3,9 +3,9 @@ export default class DBImgSrcStatusFinished extends DBImgSrcStatus {
     onEnter() {
         this.relImg.initCurrStatus.onLoaded();
     }
-    onSrcChanged(url, width, height) {
+    onSrcChanged() {
         // 重新加载
         this.relImg.srcEnter(this.relImg.srcStatusLoading);
-        this.relImg.srcCurrStatus.onSrcChanged(url, width, height);
+        this.relImg.srcCurrStatus.onSrcChanged();
     }
 }

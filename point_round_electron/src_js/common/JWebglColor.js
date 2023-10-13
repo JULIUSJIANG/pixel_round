@@ -153,6 +153,10 @@ let colorData255 = [
      */
     JWebglColor.COLOR_GREY = new JWebglColor(0.5, 0.5, 0.5, 1);
     /**
+     * 灰色
+     */
+    JWebglColor.COLOR_LIGHT = new JWebglColor(0.75, 0.75, 0.75, 1);
+    /**
      * 红色
      */
     JWebglColor.COLOR_RED = new JWebglColor(0.9686, 0.4274, 0.4549, 1);

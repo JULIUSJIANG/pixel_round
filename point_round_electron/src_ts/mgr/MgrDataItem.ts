@@ -96,6 +96,37 @@ namespace MgrDataItem {
         defVal: `#ffffffff`
     });
 
+    export const DB_SIZE_NEW = 64;
+    /**
+     * 宽
+     */
+    export const DB_WIDTH = new MgrDataItem <number> ({
+        key: `DB_WIDTH_${VERSION}`,
+        defVal: DB_SIZE_NEW,
+    });
+    /**
+     * 高
+     */
+    export const DB_HEIGHT = new MgrDataItem <number> ({
+        key: `DB_HEIGHT_${VERSION}`,
+        defVal: DB_SIZE_NEW,
+    });
+
+    /**
+     * 水平移动
+     */
+    export const DB_OFFSET_X = new MgrDataItem <number> ({
+        key: `DB_OFFSET_X_${VERSION}`,
+        defVal: 1
+    });
+    /**
+     * 垂直移动
+     */
+    export const DB_OFFSET_Y = new MgrDataItem <number> ({
+        key: `DB_OFFSET_Y_${VERSION}`,
+        defVal: 1
+    });
+
     /**
      * 实验模式 - 图片数据
      */

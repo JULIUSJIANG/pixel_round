@@ -3,7 +3,7 @@ import objectPool from "../common/ObjectPool.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-class DomInputNumberHor extends ReactComponentExtend {
+class DomInputNumberApplicationHor extends ReactComponentExtend {
     render() {
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
@@ -43,19 +43,28 @@ class DomInputNumberHor extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                 [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+            },
+        }), ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
+            style: {
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+            },
+            size: `large`,
+            onClick: () => {
+                this.props.onApply();
             }
-        }));
+        }, `应用`));
     }
 }
-(function (DomInputNumberHor) {
+(function (DomInputNumberApplicationHor) {
     class Args {
-        static create(name, val, onValChanged, min, max) {
+        static create(name, val, min, max, onValChanged, onApply) {
             let inst = objectPool.pop(Args.poolType);
             inst.name = name;
             inst.val = val;
             inst.min = min;
             inst.max = max;
             inst.onValChanged = onValChanged;
+            inst.onApply = onApply;
             return inst;
         }
     }
@@ -66,6 +75,6 @@ class DomInputNumberHor extends ReactComponentExtend {
         onPop: null,
         onPush: null
     });
-    DomInputNumberHor.Args = Args;
-})(DomInputNumberHor || (DomInputNumberHor = {}));
-export default DomInputNumberHor;
+    DomInputNumberApplicationHor.Args = Args;
+})(DomInputNumberApplicationHor || (DomInputNumberApplicationHor = {}));
+export default DomInputNumberApplicationHor;

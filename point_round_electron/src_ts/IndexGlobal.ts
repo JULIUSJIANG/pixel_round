@@ -128,6 +128,15 @@ namespace IndexGlobal {
      * 高清值，每个屏幕像素对应多少个渲染缓冲区像素
      */
     export const ANTINA = 2;
+    
+    /**
+     * 新建的画板宽度
+     */
+    export const DB_SIZE_NEW = 64;
+    /**
+     * 最大的画板尺寸
+     */
+    export const DB_SIZE_MAX = 256;
 }
 
 export default IndexGlobal;

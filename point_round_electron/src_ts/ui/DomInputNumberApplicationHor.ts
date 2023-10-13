@@ -5,7 +5,7 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
-class DomInputNumberHor extends ReactComponentExtend <DomInputNumberHor.Args> {
+class DomInputNumberApplicationHor extends ReactComponentExtend <DomInputNumberApplicationHor.Args> {
 
     render (): ReactComponentExtendInstance {
         return ReactComponentExtend.instantiateTag (
@@ -58,14 +58,28 @@ class DomInputNumberHor extends ReactComponentExtend <DomInputNumberHor.Args> {
                         [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                         [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                         [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                    }
+                    },
                 }
+            ),
+            ReactComponentExtend.instantiateTag (
+                NodeModules.antd.Button,
+                {
+                    style: {
+                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                    },
+                    size: `large`,
+                    onClick: () => {
+                        this.props.onApply ();
+                    }
+                },
+
+                `应用`
             )
         );
     }
 }
 
-namespace DomInputNumberHor {
+namespace DomInputNumberApplicationHor {
 
     export class Args {
 
@@ -78,13 +92,16 @@ namespace DomInputNumberHor {
         max: number;
 
         onValChanged: (val: number) => void;
+
+        onApply: () => void;
         
         static create (
             name: string, 
             val: number, 
-            onValChanged: (val: number) => void, 
             min: number, 
-            max: number
+            max: number,
+            onValChanged: (val: number) => void, 
+            onApply: () => void,
         ) 
         {
             let inst = objectPool.pop (Args.poolType);
@@ -93,6 +110,7 @@ namespace DomInputNumberHor {
             inst.min = min;
             inst.max = max;
             inst.onValChanged = onValChanged;
+            inst.onApply = onApply;
             return inst;
         }
 
@@ -106,4 +124,4 @@ namespace DomInputNumberHor {
     }
 }
 
-export default DomInputNumberHor;
+export default DomInputNumberApplicationHor;

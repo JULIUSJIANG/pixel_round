@@ -113,5 +113,13 @@ class IndexGlobal {
      * 高清值，每个屏幕像素对应多少个渲染缓冲区像素
      */
     IndexGlobal.ANTINA = 2;
+    /**
+     * 新建的画板宽度
+     */
+    IndexGlobal.DB_SIZE_NEW = 64;
+    /**
+     * 最大的画板尺寸
+     */
+    IndexGlobal.DB_SIZE_MAX = 256;
 })(IndexGlobal || (IndexGlobal = {}));
 export default IndexGlobal;

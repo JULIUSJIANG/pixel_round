@@ -64,6 +64,35 @@ const VERSION = 21;
         key: `DB_COLOR_${VERSION}`,
         defVal: `#ffffffff`
     });
+    MgrDataItem.DB_SIZE_NEW = 64;
+    /**
+     * 宽
+     */
+    MgrDataItem.DB_WIDTH = new MgrDataItem({
+        key: `DB_WIDTH_${VERSION}`,
+        defVal: MgrDataItem.DB_SIZE_NEW,
+    });
+    /**
+     * 高
+     */
+    MgrDataItem.DB_HEIGHT = new MgrDataItem({
+        key: `DB_HEIGHT_${VERSION}`,
+        defVal: MgrDataItem.DB_SIZE_NEW,
+    });
+    /**
+     * 水平移动
+     */
+    MgrDataItem.DB_OFFSET_X = new MgrDataItem({
+        key: `DB_OFFSET_X_${VERSION}`,
+        defVal: 1
+    });
+    /**
+     * 垂直移动
+     */
+    MgrDataItem.DB_OFFSET_Y = new MgrDataItem({
+        key: `DB_OFFSET_Y_${VERSION}`,
+        defVal: 1
+    });
     MgrDataItem.EXP_LIST_IMG_DATA = new MgrDataItem({
         key: `EXP_LIST_IMG_DATA_${VERSION}`,
         defVal: []

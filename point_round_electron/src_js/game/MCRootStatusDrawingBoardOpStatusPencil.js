@@ -1,6 +1,5 @@
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
-import MgrGlobal from "../mgr/MgrGlobal.js";
 import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus.js";
 class MCRootStatusDrawingBoardOpStatusPencil extends MCRootStatusDrawingBoardOpStatus {
     onDo(dataSrc, x, y, w, h) {
@@ -20,8 +19,7 @@ class MCRootStatusDrawingBoardOpStatusPencil extends MCRootStatusDrawingBoardOpS
         dataSrc.jWebgl.programImg.draw();
         objectPool.push(posImg);
         dataSrc.jWebgl.fillFboByTexRev(dataSrc.fboCacheRevY, dataSrc.fboCache.renderTexture);
-        dataSrc.fboCacheRevY.cacheToArrUint8();
-        currImg.loadUrl(MgrGlobal.inst.arrUint8ToBase64(dataSrc.fboCacheRevY.arrUint8, dataSrc.fboCacheRevY.width, dataSrc.fboCacheRevY.height));
+        currImg.loadUrl(dataSrc.fboCacheRevY.toBase64());
     }
     onUpdate(dataSrc, x, y, w, h) {
         let currImg = this.relMachine.getCurrentCache();

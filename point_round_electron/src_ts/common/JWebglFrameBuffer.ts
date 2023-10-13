@@ -1,3 +1,4 @@
+import MgrGlobal from "../mgr/MgrGlobal.js";
 import JWebgl from "./JWebgl.js";
 import JWebglEnum from "./JWebglEnum.js";
 
@@ -42,12 +43,17 @@ class JWebglFrameBuffer {
         this.relWebgl.canvasWebglCtx.framebufferTexture2D (JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, JWebglEnum.FramebufferTexture2DAttachment.COLOR_ATTACHMENT0, JWebglEnum.BindTexture.TEXTURE_2D, this.renderTexture, 0);
     }
 
-    cacheToArrUint8 () {
+    toArrUint8 () {
         if (!this.arrUint8) {
             this.arrUint8 = new Uint8Array (this.width * this.height * 4);
         };
         this.relWebgl.useFbo (this);
         this.relWebgl.canvasWebglCtx.readPixels (0, 0, this.width, this.height, JWebglEnum.ReadPixelsFormat.RGBA, JWebglEnum.ReadPixelType.UNSIGNED_BYTE, this.arrUint8);
+        return this.arrUint8;
+    }
+
+    toBase64 () {
+        return MgrGlobal.inst.arrUint8ToBase64 (this.toArrUint8 (), this.width, this.height);
     }
 }
 

@@ -112,6 +112,7 @@ class JWebgl {
         this.touchStart = new JWebglTouch(this);
         this.touchMove = new JWebglTouch(this);
         this.touchEnd = new JWebglTouch(this);
+        this.id = ++JWebgl._seed;
     }
     /**
      * 初始化
@@ -178,8 +179,8 @@ class JWebgl {
      */
     release() {
         MgrGlobal.inst.evtTouchStart.off(this.listenIdStart);
-        MgrGlobal.inst.evtTouchStart.off(this.listenIdMove);
-        MgrGlobal.inst.evtTouchStart.off(this.listenIdEnd);
+        MgrGlobal.inst.evtTouchMove.off(this.listenIdMove);
+        MgrGlobal.inst.evtTouchEnd.off(this.listenIdEnd);
         MgrGlobal.inst.evtEnter.off(this.listenIdEnter);
         MgrGlobal.inst.evtExit.off(this.listenIdExit);
         let ext = this.canvasWebglCtx.getExtension(`WEBGL_lose_context`);
@@ -323,6 +324,7 @@ class JWebgl {
         objectPool.push(mat4M, mat4V, mat4P, mat4Mvp);
     }
 }
+JWebgl._seed = 0;
 __decorate([
     program(JWebglProgramTypeLine)
 ], JWebgl.prototype, "programLine", void 0);

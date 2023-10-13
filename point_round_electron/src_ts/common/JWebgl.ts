@@ -76,6 +76,10 @@ class JWebgl {
      */
     canvasWebglCtx: WebGLRenderingContext;
 
+    private static _seed = 0;
+
+    id: number;
+
     constructor (
         canvasWebgl: HTMLCanvasElement
     )
@@ -84,6 +88,8 @@ class JWebgl {
         this.touchStart = new JWebglTouch (this);
         this.touchMove = new JWebglTouch (this);
         this.touchEnd = new JWebglTouch (this);
+
+        this.id = ++JWebgl._seed;
     }
 
     /**
@@ -233,8 +239,8 @@ class JWebgl {
      */
     release () {
         MgrGlobal.inst.evtTouchStart.off (this.listenIdStart);
-        MgrGlobal.inst.evtTouchStart.off (this.listenIdMove);
-        MgrGlobal.inst.evtTouchStart.off (this.listenIdEnd);
+        MgrGlobal.inst.evtTouchMove.off (this.listenIdMove);
+        MgrGlobal.inst.evtTouchEnd.off (this.listenIdEnd);
 
         MgrGlobal.inst.evtEnter.off (this.listenIdEnter);
         MgrGlobal.inst.evtExit.off (this.listenIdExit);

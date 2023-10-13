@@ -64,20 +64,21 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
             if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
                 return;
             };
-            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart.fill (this.jWebgl.currentTouch.posCanvas [0], this.jWebgl.currentTouch.posCanvas [1]);
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart.fill (this.jWebgl.touchStart.posCanvas [0], this.jWebgl.touchStart.posCanvas [1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onStart (this);
             MgrData.inst.callDataChange ();
         });
         this.jWebgl.evtTouchMove.on (() => {
             IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onHoverEnter ();
-            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove.fill (this.jWebgl.currentTouch.posCanvas [0], this.jWebgl.currentTouch.posCanvas [1]);
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove.fill (this.jWebgl.touchMove.posCanvas [0], this.jWebgl.touchMove.posCanvas [1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onMove (this);
             MgrData.inst.callDataChange ();
         });
+        let jWebgl = this.jWebgl;
         this.jWebgl.evtTouchEnd.on (() => {
-            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd.fill (this.jWebgl.currentTouch.posCanvas [0], this.jWebgl.currentTouch.posCanvas [1]);
+            IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd.fill (this.jWebgl.touchEnd.posCanvas [0], this.jWebgl.touchEnd.posCanvas [1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onEnd (this);
             MgrData.inst.callDataChange ();

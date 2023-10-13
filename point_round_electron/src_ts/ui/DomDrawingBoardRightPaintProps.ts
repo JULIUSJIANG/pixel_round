@@ -155,32 +155,40 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
         let argsWidth = DomInputNumberApplicationHor.Args.create (
             `宽 ${imgCurr.dbImgData.width}`,
             MgrData.inst.get (MgrDataItem.DB_WIDTH),
-            1, 
-            IndexGlobal.DB_SIZE_MAX,
+            null, 
+            null,
             (val) => {
                 MgrData.inst.set (MgrDataItem.DB_WIDTH, val);
             },
             () => {
+                if (MgrData.inst.get (MgrDataItem.DB_WIDTH) < 1 || IndexGlobal.DB_SIZE_MAX < MgrData.inst.get (MgrDataItem.DB_WIDTH)) {
+
+                    return;
+                };
                 resizeTo (dataSrc, imgCurr, MgrData.inst.get (MgrDataItem.DB_WIDTH), imgCurr.dbImgData.height);
             }
         );
         let argsHeight = DomInputNumberApplicationHor.Args.create (
             `高 ${imgCurr.dbImgData.height}`,
             MgrData.inst.get (MgrDataItem.DB_HEIGHT),
-            1, 
-            IndexGlobal.DB_SIZE_MAX,
+            null, 
+            null,
             (val) => {
                 MgrData.inst.set (MgrDataItem.DB_HEIGHT, val);
             },
             () => {
+                if (MgrData.inst.get (MgrDataItem.DB_WIDTH) < 1 || IndexGlobal.DB_SIZE_MAX < MgrData.inst.get (MgrDataItem.DB_WIDTH)) {
+
+                    return;
+                };
                 resizeTo (dataSrc, imgCurr, imgCurr.dbImgData.width, MgrData.inst.get (MgrDataItem.DB_HEIGHT));
             }
         );
         let argsOffsetX = DomInputNumberApplicationHor.Args.create (
             `水平移动`,
             MgrData.inst.get (MgrDataItem.DB_OFFSET_X),
-            -IndexGlobal.DB_SIZE_MAX, 
-            IndexGlobal.DB_SIZE_MAX,
+            null, 
+            null,
             (val) => {
                 MgrData.inst.set (MgrDataItem.DB_OFFSET_X, val);
             },
@@ -191,8 +199,8 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
         let argsOffsetY = DomInputNumberApplicationHor.Args.create (
             `垂直移动`,
             MgrData.inst.get (MgrDataItem.DB_OFFSET_Y),
-            -IndexGlobal.DB_SIZE_MAX, 
-            IndexGlobal.DB_SIZE_MAX,
+            null, 
+            null,
             (val) => {
                 MgrData.inst.set (MgrDataItem.DB_OFFSET_Y, val);
             },

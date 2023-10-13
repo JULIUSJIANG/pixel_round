@@ -158,7 +158,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
             },
             () => {
                 if (MgrData.inst.get (MgrDataItem.DB_WIDTH) < 1 || IndexGlobal.DB_SIZE_MAX < MgrData.inst.get (MgrDataItem.DB_WIDTH)) {
-
+                    NodeModules.antd.message.error(`宽度范围应为 1 - ${IndexGlobal.DB_SIZE_MAX}，当前为 ${MgrData.inst.get (MgrDataItem.DB_WIDTH)}`);
                     return;
                 };
                 resizeTo (dataSrc, imgCurr, MgrData.inst.get (MgrDataItem.DB_WIDTH), imgCurr.dbImgData.height);
@@ -173,8 +173,8 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                 MgrData.inst.set (MgrDataItem.DB_HEIGHT, val);
             },
             () => {
-                if (MgrData.inst.get (MgrDataItem.DB_WIDTH) < 1 || IndexGlobal.DB_SIZE_MAX < MgrData.inst.get (MgrDataItem.DB_WIDTH)) {
-
+                if (MgrData.inst.get (MgrDataItem.DB_HEIGHT) < 1 || IndexGlobal.DB_SIZE_MAX < MgrData.inst.get (MgrDataItem.DB_HEIGHT)) {
+                    NodeModules.antd.message.error(`高度范围应为 1 - ${IndexGlobal.DB_SIZE_MAX}，当前为 ${MgrData.inst.get (MgrDataItem.DB_HEIGHT)}`);
                     return;
                 };
                 resizeTo (dataSrc, imgCurr, imgCurr.dbImgData.width, MgrData.inst.get (MgrDataItem.DB_HEIGHT));

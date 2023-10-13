@@ -113,31 +113,4 @@ export default class DBImg {
         this.dbImgData.dataOrigin = url;
         this.srcCurrStatus.onSrcChanged ();
     }
-
-    /**
-     * 最新针对的上下文
-     */
-    private _jwebgl: JWebgl;
-    /**
-     * 对应的纹理
-     */
-    texture: WebGLTexture;
-    /**
-     * 初始化
-     * @param jWebgl 
-     */
-    initForJWebgl (jWebgl: JWebgl) {
-        if (jWebgl != this._jwebgl) {
-            this._jwebgl = jWebgl;
-            this.texture = this._jwebgl.canvasWebglCtx.createTexture ();
-        };
-        this._jwebgl.canvasWebglCtx.pixelStorei (JWebglEnum.PixelStoreIPName.UNPACK_FLIP_Y_WEBGL, 1);
-        this._jwebgl.canvasWebglCtx.activeTexture (JWebglEnum.ActiveTexture.TEXTURE0);
-        this._jwebgl.canvasWebglCtx.bindTexture (JWebglEnum.BindTexture.TEXTURE_2D, this.texture);
-        this._jwebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MIN_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
-        this._jwebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MAG_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
-        this._jwebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_S, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
-        this._jwebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_T, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
-        this._jwebgl.canvasWebglCtx.texImage2D (JWebglEnum.BindTexture.TEXTURE_2D, 0, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, this.imgLoaded);
-    }
 }

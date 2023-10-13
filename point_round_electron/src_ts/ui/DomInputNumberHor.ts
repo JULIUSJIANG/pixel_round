@@ -58,6 +58,9 @@ class DomInputNumberHor extends ReactComponentExtend <DomInputNumberHor.Args> {
                         [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                         [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                         [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                    },
+                    onPressEnter: (val) => {
+                        console.log ( `onPressEnter val[${val}]`);
                     }
                 }
             )
@@ -79,7 +82,14 @@ namespace DomInputNumberHor {
 
         onValChanged: (val: number) => void;
         
-        static create (name: string, val: number, onValChanged: (val: number) => void, min: number, max: number) {
+        static create (
+            name: string, 
+            val: number, 
+            onValChanged: (val: number) => void, 
+            min: number, 
+            max: number
+        ) 
+        {
             let inst = objectPool.pop (Args.poolType);
             inst.name = name;
             inst.val = val;

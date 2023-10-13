@@ -37,6 +37,7 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         this.jWebgl.init();
         this.jWebgl.canvasWebglCtx.disable(JWebglEnum.EnableCap.DEPTH_TEST);
         this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
+        this.textureMain = this.jWebgl.canvasWebglCtx.createTexture();
         // 纯色缓冲区
         this.fboPure = this.jWebgl.getFbo(1, 1);
         // 空的帧缓冲区
@@ -60,7 +61,6 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onMove(this);
             MgrData.inst.callDataChange();
         });
-        let jWebgl = this.jWebgl;
         this.jWebgl.evtTouchEnd.on(() => {
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd.fill(this.jWebgl.touchEnd.posCanvas[0], this.jWebgl.touchEnd.posCanvas[1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd;
@@ -80,6 +80,9 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         this.jWebgl.release();
     }
     reactComponentExtendOnDraw() {
+        // 记录下来，后续要用
+        IndexGlobal.inst.mcRoot.statusDrawingBoard.catchDom(this);
+        // 获取当前要操作的目标
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
         // 该纹理没加载完毕，忽略
         if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
@@ -89,9 +92,9 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         // 画笔颜色
         this.colorMark.initByHex(MgrData.inst.get(MgrDataItem.DB_COLOR));
         // 确保缓冲区存在
-        if (this.fboCache == null) {
+        if (this.fboCache == null || this.fboCache.width != dataSrc.dbImgData.width || this.fboCache.height != dataSrc.dbImgData.height) {
             this.fboCache = this.jWebgl.getFbo(dataSrc.dbImgData.width, dataSrc.dbImgData.height);
-            this.fboCacheRevY = this.jWebgl.getFbo(dataSrc.dbImgData.width, dataSrc.dbImgData.height);
+            this.fboCacheBackup = this.jWebgl.getFbo(dataSrc.dbImgData.width, dataSrc.dbImgData.height);
         }
         ;
         // 准备好颜色
@@ -106,8 +109,15 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend {
         this.jWebgl.programPoint.add(JWebglMathVector4.centerO);
         this.jWebgl.programPoint.draw();
         // 同步数据到缓冲区
-        dataSrc.initForJWebgl(this.jWebgl);
-        this.jWebgl.fillFboByTex(this.fboCache, dataSrc.texture);
+        this.jWebgl.canvasWebglCtx.pixelStorei(JWebglEnum.PixelStoreIPName.UNPACK_FLIP_Y_WEBGL, 1);
+        this.jWebgl.canvasWebglCtx.activeTexture(JWebglEnum.ActiveTexture.TEXTURE0);
+        this.jWebgl.canvasWebglCtx.bindTexture(JWebglEnum.BindTexture.TEXTURE_2D, this.textureMain);
+        this.jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MIN_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
+        this.jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MAG_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
+        this.jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_S, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
+        this.jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_T, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
+        this.jWebgl.canvasWebglCtx.texImage2D(JWebglEnum.BindTexture.TEXTURE_2D, 0, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, dataSrc.imgLoaded);
+        this.jWebgl.fillFboByTex(this.fboCache, this.textureMain);
         // 先绘制已确定的内容
         this.jWebgl.fillFboByFbo(null, this.fboCache);
         // 绘制操作相关的东西

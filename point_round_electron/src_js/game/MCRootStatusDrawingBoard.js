@@ -94,5 +94,11 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
     getCurrentCache() {
         return IndexGlobal.inst.dbMapIdToImg.get(MgrData.inst.get(MgrDataItem.DB_CURRENT_IMG));
     }
+    /**
+     * 捕获 dom
+     */
+    catchDom(dom) {
+        this.dom = dom;
+    }
 }
 export default MCRootStatusDrawingBoard;

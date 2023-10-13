@@ -16,6 +16,7 @@ export default class DBImg {
         this.srcStatusLoading = new DBImgSrcStatusLoading(this);
         this.srcStatusFinished = new DBImgSrcStatusFinished(this);
         this.srcEnter(this.srcStatusLoading);
+        this.srcCurrStatus.onSrcChanged(this.dbImgData.dataOrigin, this.dbImgData.width, this.dbImgData.height);
     }
     /**
      * 切换状态
@@ -49,7 +50,7 @@ export default class DBImg {
      * @param w
      * @param h
      */
-    loadUrl(url) {
+    loadUrl(url, width, height) {
         // 加载中，且和加载中的目标一致，那么忽略
         if (this.srcCurrStatus == this.srcStatusLoading && this.imgLoading.src == url) {
             return;
@@ -60,7 +61,6 @@ export default class DBImg {
             return;
         }
         ;
-        this.dbImgData.dataOrigin = url;
-        this.srcCurrStatus.onSrcChanged();
+        this.srcCurrStatus.onSrcChanged(url, width, height);
     }
 }

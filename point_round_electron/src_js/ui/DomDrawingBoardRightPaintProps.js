@@ -35,11 +35,9 @@ function offset(dataSrc, imgCurr, offsetX, offsetY) {
     let fboRev = dataSrc.dom.jWebgl.getFbo(cameraWidth, cameraHeight);
     dataSrc.dom.jWebgl.fillFboByTexRev(fboRev, fboResize.renderTexture);
     dataSrc.dom.jWebgl.destroyFbo(fboResize);
-    imgCurr.dbImgData.width = cameraWidth;
-    imgCurr.dbImgData.height = cameraHeight;
     let dataBase64 = fboRev.toBase64();
     dataSrc.dom.jWebgl.destroyFbo(fboRev);
-    imgCurr.loadUrl(dataBase64);
+    imgCurr.loadUrl(dataBase64, imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     MgrData.inst.callDataChange();
 }
 /**
@@ -67,16 +65,12 @@ function resizeTo(dataSrc, imgCurr, w, h) {
         dataSrc.dom.jWebgl.programImg.add(posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     dataSrc.dom.jWebgl.programImg.draw();
     objectPool.push(posImg);
-    // 重新等待初始化完毕
-    imgCurr.initEnter(imgCurr.initStatusIdle);
     let fboRev = dataSrc.dom.jWebgl.getFbo(cameraWidth, cameraHeight);
     dataSrc.dom.jWebgl.fillFboByTexRev(fboRev, fboResize.renderTexture);
     dataSrc.dom.jWebgl.destroyFbo(fboResize);
-    imgCurr.dbImgData.width = cameraWidth;
-    imgCurr.dbImgData.height = cameraHeight;
     let dataBase64 = fboRev.toBase64();
     dataSrc.dom.jWebgl.destroyFbo(fboRev);
-    imgCurr.loadUrl(dataBase64);
+    imgCurr.loadUrl(dataBase64, w, h);
     MgrData.inst.callDataChange();
 }
 export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend {
@@ -194,7 +188,6 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
         // 颜色 - 宽
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `280px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
@@ -203,7 +196,6 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
         // 颜色 - 高
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `280px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
@@ -212,7 +204,6 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
         // 水平移动
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `280px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
@@ -221,7 +212,6 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
         // 垂直移动
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `280px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,

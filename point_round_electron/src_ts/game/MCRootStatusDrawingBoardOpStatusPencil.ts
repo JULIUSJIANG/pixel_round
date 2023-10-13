@@ -36,7 +36,7 @@ class MCRootStatusDrawingBoardOpStatusPencil extends MCRootStatusDrawingBoardOpS
         dataSrc.jWebgl.programImg.draw ();
         objectPool.push (posImg);
         dataSrc.jWebgl.fillFboByTexRev (dataSrc.fboCacheBackup, dataSrc.fboCache.renderTexture);
-        currImg.loadUrl (dataSrc.fboCacheBackup.toBase64 ());
+        currImg.loadUrl (dataSrc.fboCacheBackup.toBase64 (), currImg.dbImgData.width, currImg.dbImgData.height);
     }
 
     onUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource, x: number, y: number, w: number, h: number): void {

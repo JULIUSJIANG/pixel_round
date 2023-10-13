@@ -56,11 +56,9 @@ function offset (dataSrc: MCRootStatusDrawingBoard, imgCurr: DBImg, offsetX: num
     let fboRev = dataSrc.dom.jWebgl.getFbo (cameraWidth, cameraHeight);
     dataSrc.dom.jWebgl.fillFboByTexRev (fboRev, fboResize.renderTexture);
     dataSrc.dom.jWebgl.destroyFbo (fboResize);
-    imgCurr.dbImgData.width = cameraWidth;
-    imgCurr.dbImgData.height = cameraHeight;
     let dataBase64 = fboRev.toBase64 ();
     dataSrc.dom.jWebgl.destroyFbo (fboRev);
-    imgCurr.loadUrl (dataBase64);
+    imgCurr.loadUrl (dataBase64, imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     MgrData.inst.callDataChange ();
 }
 
@@ -105,17 +103,12 @@ function resizeTo (dataSrc: MCRootStatusDrawingBoard, imgCurr: DBImg, w: number,
     dataSrc.dom.jWebgl.programImg.draw ();
     objectPool.push (posImg);
 
-    // 重新等待初始化完毕
-    imgCurr.initEnter (imgCurr.initStatusIdle);
-
     let fboRev = dataSrc.dom.jWebgl.getFbo (cameraWidth, cameraHeight);
     dataSrc.dom.jWebgl.fillFboByTexRev (fboRev, fboResize.renderTexture);
     dataSrc.dom.jWebgl.destroyFbo (fboResize);
-    imgCurr.dbImgData.width = cameraWidth;
-    imgCurr.dbImgData.height = cameraHeight;
     let dataBase64 = fboRev.toBase64 ();
     dataSrc.dom.jWebgl.destroyFbo (fboRev);
-    imgCurr.loadUrl (dataBase64);
+    imgCurr.loadUrl (dataBase64, w, h);
     MgrData.inst.callDataChange ();
 }
 
@@ -298,7 +291,6 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `280px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
 
                             [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
@@ -317,7 +309,6 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `280px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
 
                             [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
@@ -336,7 +327,6 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `280px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
             
                             [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
@@ -355,7 +345,6 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `280px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
             
                             [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,

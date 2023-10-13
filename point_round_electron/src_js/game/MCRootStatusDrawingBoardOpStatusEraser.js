@@ -19,7 +19,7 @@ class MCRootStatusDrawingBoardOpStatusEraser extends MCRootStatusDrawingBoardOpS
         dataSrc.jWebgl.programImg.draw();
         objectPool.push(posImg);
         dataSrc.jWebgl.fillFboByTexRev(dataSrc.fboCacheBackup, dataSrc.fboCache.renderTexture);
-        currImg.loadUrl(dataSrc.fboCacheBackup.toBase64());
+        currImg.loadUrl(dataSrc.fboCacheBackup.toBase64(), currImg.dbImgData.width, currImg.dbImgData.height);
     }
     onUpdate(dataSrc, x, y, w, h) {
         let currImg = this.relMachine.getCurrentCache();

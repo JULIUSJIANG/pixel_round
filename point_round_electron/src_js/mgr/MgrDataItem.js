@@ -18,6 +18,13 @@ const VERSION = 21;
      */
     MgrDataItem.listItem = new Array();
     /**
+     * 左侧栏文件数量
+     */
+    MgrDataItem.COLUMN_COUNT = new MgrDataItem({
+        key: `COLUMN_COUNT_${VERSION}`,
+        defVal: 1
+    });
+    /**
      * 启动时自动打开调试工具
      */
     MgrDataItem.AUTO_DEBUG_TOOLS = new MgrDataItem({

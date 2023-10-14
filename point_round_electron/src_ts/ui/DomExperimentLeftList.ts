@@ -6,6 +6,7 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomExperimentLeftListImg from "./DomExperimentLeftListImg.js";
+import FileColumnRS from "./FileColumnRS.js";
 
 export default class DomExperimentLeftList extends ReactComponentExtend <number> {
 
@@ -14,9 +15,10 @@ export default class DomExperimentLeftList extends ReactComponentExtend <number>
     listChildrenContainer = new Array <ReactComponentExtendInstance> ();
 
     render (): ReactComponentExtendInstance {
+        let rsCurrent = FileColumnRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.COLUMN_COUNT));
         this.listChildren.length = 0;
         let listImgData = MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA);
-        for (let i = 0; i < listImgData.length; i+= IndexGlobal.IMG_LIST_COLUMN_COUNT) {
+        for (let i = 0; i < listImgData.length; i+= rsCurrent.count) {
             let containerProps = {
                 style: {
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX
@@ -26,7 +28,7 @@ export default class DomExperimentLeftList extends ReactComponentExtend <number>
                 containerProps.style [MgrDomDefine.STYLE_MARGIN_TOP] = MgrDomDefine.CONFIG_TXT_SPACING;
             };
             this.listChildrenContainer.length = 0;
-            for (let j = 0; j < IndexGlobal.IMG_LIST_COLUMN_COUNT; j++) {
+            for (let j = 0; j < rsCurrent.count; j++) {
                 let idx = i + j;
                 if (listImgData.length <= idx) {
                     this.listChildrenContainer.push (ReactComponentExtend.instantiateTag (MgrDomDefine.TAG_DIV, {

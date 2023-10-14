@@ -114,11 +114,6 @@ namespace IndexGlobal {
     export const IMG_MINI_SIZE = 100;
 
     /**
-     * 缩略图列数
-     */
-    export const IMG_LIST_COLUMN_COUNT = 1;
-
-    /**
      * 纹素尺寸到屏幕尺寸的转换
      */
     export const PIXEL_TEX_TO_SCREEN = 16;

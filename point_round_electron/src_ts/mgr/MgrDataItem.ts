@@ -37,6 +37,14 @@ namespace MgrDataItem {
     export const listItem: Array <MgrDataItem <unknown>> = new Array ();
 
     /**
+     * 左侧栏文件数量
+     */
+    export const COLUMN_COUNT = new MgrDataItem <number> ({
+        key: `COLUMN_COUNT_${VERSION}`,
+        defVal: 1
+    });
+
+    /**
      * 启动时自动打开调试工具
      */
     export const AUTO_DEBUG_TOOLS = new MgrDataItem <boolean> ({

@@ -15,8 +15,11 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN,
             }
-        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
-            onClick: () => {
+        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Popconfirm, {
+            title: "该操作不可撤销，请谨慎操作",
+            okText: "确定",
+            cancelText: "取消",
+            onConfirm: () => {
                 let listImgData = MgrData.inst.get(MgrDataItem.EXP_LIST_IMG_DATA);
                 let targetIdx;
                 for (let i = 0; i < listImgData.length; i++) {
@@ -37,10 +40,16 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                     IndexGlobal.mcExp().currStatus.onCreate();
                 }
                 ;
+                MgrData.inst.callDataChange();
+            },
+            onCancel: () => {
+            },
+        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
+            onClick: () => {
             },
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
             }
-        }, `删除当前文档`));
+        }, `删除当前文档`)));
     }
 }

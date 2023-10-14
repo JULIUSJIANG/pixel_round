@@ -458,9 +458,12 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
 
                     // 板块 - 删除
                     ReactComponentExtend.instantiateTag (
-                        NodeModules.antd.Button,
+                        NodeModules.antd.Popconfirm,
                         {
-                            onClick: () => {
+                            title: "该操作不可撤销，请谨慎操作",
+                            okText: "确定",
+                            cancelText: "取消",
+                            onConfirm: () => {
                                 let listImgData = MgrData.inst.get (MgrDataItem.DB_LIST_IMG_DATA);
                                 let targetIdx: number;
                                 for (let i = 0; i < listImgData.length; i++) {
@@ -480,12 +483,24 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                                 };
                                 MgrData.inst.callDataChange ();
                             },
-                            style: {
-                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            }
+                            onCancel: () => {
+        
+                            },
                         },
-                    
-                        `删除当前文档`
+                        ReactComponentExtend.instantiateTag (
+                            NodeModules.antd.Button,
+                            {
+                                onClick: () => {
+                                    
+                                },
+                                style: {
+                                    [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                }
+                            },
+                
+                            `删除当前文档`
+                        )
                     )
                 )
             )

@@ -988,8 +988,8 @@ namespace DomImageSmooth {
             this.imgWidth = imgWidth;
             this.imgHeight = imgHeight;
             if (this.img != null) {
-                this.imgWidth = this.img.width;
-                this.imgHeight = this.img.height;
+                this.imgWidth = Math.max (this.imgWidth, this.img.width);
+                this.imgHeight = Math.max (this.imgWidth, this.img.height);
             };
 
             this.paddingTop = paddingTop;

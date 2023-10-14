@@ -123,7 +123,7 @@ namespace MgrDataItem {
      */
     export const DB_COLOR = new MgrDataItem <string> ({
         key: `DB_COLOR_${VERSION}`,
-        defVal: `#ffffffff`
+        defVal: `ffffffff`
     });
 
     export const DB_SIZE_NEW = 64;

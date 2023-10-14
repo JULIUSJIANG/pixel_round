@@ -16,6 +16,7 @@ import MCRootStatusDrawingBoardHoverStatusLeaved from "./MCRootStatusDrawingBoar
 import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus.js";
 import MCRootStatusDrawingBoardOpStatusEraser from "./MCRootStatusDrawingBoardOpStatusEraser.js";
 import MCRootStatusDrawingBoardOpStatusPencil from "./MCRootStatusDrawingBoardOpStatusPencil.js";
+import MCRootStatusDrawingBoardOpStatusStraw from "./MCRootStatusDrawingBoardOpStatusStraw.js";
 import MCRootStatusDrawingBoardTouchPos from "./MCRootStatusDrawingBoardTouchPos.js";
 import MCRootStatusDrawingBoardTouchStatus from "./MCRootStatusDrawingBoardTouchStatus.js";
 import MCRootStatusDrawingBoardTouchStatusEnded from "./MCRootStatusDrawingBoardTouchStatusEnded.js";
@@ -36,7 +37,8 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         this.touchCurrentPos = this.touchPosMove;
 
         this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil (this, 0, `画笔`);
-        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser (this, 1, `橡皮擦`);
+        this.opStatusStraw = new MCRootStatusDrawingBoardOpStatusStraw (this, 1, `拾色器`);
+        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser (this, 2, `橡皮擦`);
 
         this.touchStatusEnded = new MCRootStatusDrawingBoardTouchStatusEnded (this);
         this.touchStatusStarted = new MCRootStatusDrawingBoardTouchStatusStarted (this);
@@ -59,6 +61,8 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
     opStatusPencil: MCRootStatusDrawingBoardOpStatusPencil;
 
     opStatusEraser: MCRootStatusDrawingBoardOpStatusEraser;
+
+    opStatusStraw: MCRootStatusDrawingBoardOpStatusStraw;
 
     opCurrStatus: MCRootStatusDrawingBoardOpStatus;
 

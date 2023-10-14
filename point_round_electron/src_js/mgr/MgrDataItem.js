@@ -90,7 +90,7 @@ const VERSION = 21;
      */
     MgrDataItem.DB_COLOR = new MgrDataItem({
         key: `DB_COLOR_${VERSION}`,
-        defVal: `#ffffffff`
+        defVal: `ffffffff`
     });
     MgrDataItem.DB_SIZE_NEW = 64;
     /**

@@ -29,5 +29,11 @@ class MCRootStatusDrawingBoardOpStatus {
      */
     onDo(dataSrc, x, y, w, h) {
     }
+    /**
+     * 进行准星提示
+     * @param dataSrc
+     */
+    onFocusDraw(dataSrc) {
+    }
 }
 export default MCRootStatusDrawingBoardOpStatus;

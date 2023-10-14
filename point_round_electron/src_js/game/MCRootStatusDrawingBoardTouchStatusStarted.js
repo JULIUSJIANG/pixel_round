@@ -1,4 +1,3 @@
-import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRootStatusDrawingBoardTouchStatus from "./MCRootStatusDrawingBoardTouchStatus.js";
 class MCRootStatusDrawingBoardTouchStatusStarted extends MCRootStatusDrawingBoardTouchStatus {
     onMove(dataSrc) {
@@ -12,9 +11,7 @@ class MCRootStatusDrawingBoardTouchStatusStarted extends MCRootStatusDrawingBoar
         this.relMachine.opCurrStatus.onUpdate(dataSrc, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1);
     }
     onFocusDraw(dataSrc) {
-        let jWebgl = dataSrc.jWebgl;
-        let color = dataSrc.colorMark;
-        DomDrawingBoardRightPaintCanvas.drawMark(jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
+        this.relMachine.opCurrStatus.onFocusDraw(dataSrc);
     }
 }
 export default MCRootStatusDrawingBoardTouchStatusStarted;

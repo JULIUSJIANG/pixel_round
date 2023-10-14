@@ -1,5 +1,3 @@
-import JWebgl from "../common/JWebgl.js";
-import JWebglColor from "../common/JWebglColor.js";
 import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";
 

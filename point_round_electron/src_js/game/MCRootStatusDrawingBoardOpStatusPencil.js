@@ -1,5 +1,6 @@
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
+import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus.js";
 class MCRootStatusDrawingBoardOpStatusPencil extends MCRootStatusDrawingBoardOpStatus {
     onDo(dataSrc, x, y, w, h) {
@@ -36,6 +37,16 @@ class MCRootStatusDrawingBoardOpStatusPencil extends MCRootStatusDrawingBoardOpS
         dataSrc.jWebgl.programImg.add(posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, w, h);
         dataSrc.jWebgl.programImg.draw();
         objectPool.push(posImg);
+    }
+    onFocusDraw(dataSrc) {
+        let jWebgl = dataSrc.jWebgl;
+        let color = dataSrc.colorMark;
+        let x, y, w, h;
+        x = Math.min(this.relMachine.touchPosStart.gridXInt, this.relMachine.touchPosMove.gridXInt);
+        y = Math.min(this.relMachine.touchPosStart.gridYInt, this.relMachine.touchPosMove.gridYInt);
+        w = Math.abs(this.relMachine.touchPosStart.gridXInt - this.relMachine.touchPosMove.gridXInt) + 1;
+        h = Math.abs(this.relMachine.touchPosStart.gridYInt - this.relMachine.touchPosMove.gridYInt) + 1;
+        DomDrawingBoardRightPaintCanvas.drawMark(jWebgl, x, y, w, h, color);
     }
 }
 export default MCRootStatusDrawingBoardOpStatusPencil;

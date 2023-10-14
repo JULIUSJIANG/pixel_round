@@ -17,9 +17,7 @@ class MCRootStatusDrawingBoardTouchStatusStarted extends MCRootStatusDrawingBoar
     }
 
     onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvas): void {
-        let jWebgl = dataSrc.jWebgl;
-        let color = dataSrc.colorMark;
-        DomDrawingBoardRightPaintCanvas.drawMark (jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
+        this.relMachine.opCurrStatus.onFocusDraw (dataSrc);
     }
 }
 

@@ -47,6 +47,14 @@ class MCRootStatusDrawingBoardOpStatus {
     onDo (dataSrc: DomDrawingBoardRightPaintCanvas, x: number, y: number, w: number, h: number) {
 
     }
+
+    /**
+     * 进行准星提示
+     * @param dataSrc 
+     */
+    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvas) {
+
+    }
 }
 
 export default MCRootStatusDrawingBoardOpStatus;

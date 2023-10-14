@@ -1,4 +1,3 @@
-import MCRootStatusExperimentStatusCreate from "./game/MCRootStatusExperimentStatusCreate.js";
 import MCRoot from "./game/MCRoot.js";
 import MgrData from "./mgr/MgrData.js";
 import MgrDataItem from "./mgr/MgrDataItem.js";
@@ -137,6 +136,15 @@ namespace IndexGlobal {
      * 最大的画板尺寸
      */
     export const DB_SIZE_MAX = 256;
+
+    /**
+     * 像素尺寸到屏幕尺寸的转换 - 最小值
+     */
+    export const DB_PIXEL_TO_SCREEN_MIN = 2;
+    /**
+     * 像素尺寸到屏幕尺寸的转换 - 最大值
+     */
+    export const DB_PIXEL_TO_SCREEN_MAX = 64;
 }
 
 export default IndexGlobal;

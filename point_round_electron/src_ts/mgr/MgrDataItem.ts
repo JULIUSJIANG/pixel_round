@@ -69,6 +69,21 @@ namespace MgrDataItem {
     });
 
     /**
+     * 像素到屏幕显示的比率
+     */
+    export const SMOOTH_PIXEL_TO_SCREEN_APPLICATION = new MgrDataItem <number> ({
+        key: `SMOOTH_PIXEL_TO_SCREEN_APPLICATION_${VERSION}`,
+        defVal: 16
+    });
+    /**
+     * 像素到屏幕显示的比率
+     */
+    export const SMOOTH_PIXEL_TO_SCREEN_TEMP = new MgrDataItem <number> ({
+        key: `SMOOTH_PIXEL_TO_SCREEN_TEMP_${VERSION}`,
+        defVal: 16
+    });
+
+    /**
      * 画板模式 - 图片数据
      */
     export interface DBImgData {
@@ -125,6 +140,21 @@ namespace MgrDataItem {
     export const DB_OFFSET_Y = new MgrDataItem <number> ({
         key: `DB_OFFSET_Y_${VERSION}`,
         defVal: 1
+    });
+
+    /**
+     * 像素到屏幕显示的比率
+     */
+    export const DB_PIXEL_TO_SCREEN_APPLICATION = new MgrDataItem <number> ({
+        key: `DB_PIXEL_TO_SCREEN_APPLICATION_${VERSION}`,
+        defVal: 16
+    });
+    /**
+     * 像素到屏幕显示的比率
+     */
+    export const DB_PIXEL_TO_SCREEN_TEMP = new MgrDataItem <number> ({
+        key: `DB_PIXEL_TO_SCREEN_TEMP_${VERSION}`,
+        defVal: 16
     });
 
     /**

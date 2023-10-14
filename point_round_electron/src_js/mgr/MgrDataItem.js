@@ -45,6 +45,20 @@ const VERSION = 21;
         key: `SEED_${VERSION}`,
         defVal: 0
     });
+    /**
+     * 像素到屏幕显示的比率
+     */
+    MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION = new MgrDataItem({
+        key: `SMOOTH_PIXEL_TO_SCREEN_APPLICATION_${VERSION}`,
+        defVal: 16
+    });
+    /**
+     * 像素到屏幕显示的比率
+     */
+    MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_TEMP = new MgrDataItem({
+        key: `SMOOTH_PIXEL_TO_SCREEN_TEMP_${VERSION}`,
+        defVal: 16
+    });
     ;
     MgrDataItem.DB_LIST_IMG_DATA = new MgrDataItem({
         key: `DB_LIST_IMG_DATA_${VERSION}`,
@@ -92,6 +106,20 @@ const VERSION = 21;
     MgrDataItem.DB_OFFSET_Y = new MgrDataItem({
         key: `DB_OFFSET_Y_${VERSION}`,
         defVal: 1
+    });
+    /**
+     * 像素到屏幕显示的比率
+     */
+    MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION = new MgrDataItem({
+        key: `DB_PIXEL_TO_SCREEN_APPLICATION_${VERSION}`,
+        defVal: 16
+    });
+    /**
+     * 像素到屏幕显示的比率
+     */
+    MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP = new MgrDataItem({
+        key: `DB_PIXEL_TO_SCREEN_TEMP_${VERSION}`,
+        defVal: 16
     });
     MgrDataItem.EXP_LIST_IMG_DATA = new MgrDataItem({
         key: `EXP_LIST_IMG_DATA_${VERSION}`,

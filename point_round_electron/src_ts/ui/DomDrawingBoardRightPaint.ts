@@ -20,7 +20,18 @@ export default class DomDrawingBoardRightPaint extends ReactComponentExtend <num
             },
 
             ReactComponentExtend.instantiateComponent (DomDrawingBoardRightPaintCanvas, null),
-            ReactComponentExtend.instantiateComponent (DomDrawingBoardRightPaintProps, null)
+            ReactComponentExtend.instantiateTag (
+                MgrDomDefine.TAG_DIV,
+                {
+                    style: {
+                        [MgrDomDefine.STYLE_FLEX_GROW]: 0,
+                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                        [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.CONFIG_TXT_SPACING,
+                        [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+                    }
+                }
+            ),
+            ReactComponentExtend.instantiateComponent (DomDrawingBoardRightPaintProps, null),
         )
     }
 }

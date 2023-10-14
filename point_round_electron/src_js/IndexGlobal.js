@@ -121,5 +121,13 @@ class IndexGlobal {
      * 最大的画板尺寸
      */
     IndexGlobal.DB_SIZE_MAX = 256;
+    /**
+     * 像素尺寸到屏幕尺寸的转换 - 最小值
+     */
+    IndexGlobal.DB_PIXEL_TO_SCREEN_MIN = 2;
+    /**
+     * 像素尺寸到屏幕尺寸的转换 - 最大值
+     */
+    IndexGlobal.DB_PIXEL_TO_SCREEN_MAX = 64;
 })(IndexGlobal || (IndexGlobal = {}));
 export default IndexGlobal;

@@ -1,12 +1,14 @@
+import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomExperimentRightPreviewImgBefore from "./DomExperimentRightPreviewImgBefore.js";
-import DomExperimentRightSmooth from "./DomExperimentRightSmooth.js";
+import DomImageSmooth from "./DomImageSmooth.js";
 
 export default class DomExperimentRightPreviewImg extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
+        let dataSrc = IndexGlobal.mcExp ().statusPreview;
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -20,7 +22,7 @@ export default class DomExperimentRightPreviewImg extends ReactComponentExtend <
             },
 
             ReactComponentExtend.instantiateComponent (DomExperimentRightPreviewImgBefore, null),
-            ReactComponentExtend.instantiateComponent (DomExperimentRightSmooth, null),
+            ReactComponentExtend.instantiateComponent (DomImageSmooth, dataSrc.argsSmooth),
         )
     };
 }

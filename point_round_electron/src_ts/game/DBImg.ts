@@ -149,6 +149,7 @@ class DBImg {
         // 超量，剔除首个
         if (IndexGlobal.BACK_UP_COUNT_MAX < this.listStatus.length) {
             this.listStatus.shift ();
+            this.idxStatus = this.listStatus.length - 1;
         };
     }
 

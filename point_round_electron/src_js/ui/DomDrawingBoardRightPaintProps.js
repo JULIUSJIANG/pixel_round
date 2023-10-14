@@ -62,7 +62,7 @@ function resizeTo(dataSrc, imgCurr, w, h) {
         dataSrc.dom.jWebgl.programImg.add(posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     dataSrc.dom.jWebgl.programImg.draw();
     objectPool.push(posImg);
-    imgCurr.loadUrl(fboResize.toBase64(), imgCurr.dbImgData.width, imgCurr.dbImgData.height);
+    imgCurr.loadUrl(fboResize.toBase64(), w, h);
     dataSrc.dom.jWebgl.destroyFbo(fboResize);
     MgrData.inst.callDataChange();
 }

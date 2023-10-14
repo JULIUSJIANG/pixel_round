@@ -100,7 +100,7 @@ function resizeTo (dataSrc: MCRootStatusDrawingBoard, imgCurr: DBImg, w: number,
     dataSrc.dom.jWebgl.programImg.draw ();
     objectPool.push (posImg);
 
-    imgCurr.loadUrl (fboResize.toBase64 (), imgCurr.dbImgData.width, imgCurr.dbImgData.height);
+    imgCurr.loadUrl (fboResize.toBase64 (), w, h);
     dataSrc.dom.jWebgl.destroyFbo (fboResize);
     MgrData.inst.callDataChange ();
 }

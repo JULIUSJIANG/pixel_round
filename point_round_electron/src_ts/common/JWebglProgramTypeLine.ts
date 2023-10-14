@@ -58,7 +58,10 @@ void main() {
     {
         let idxFrom = this.addAttributeData (argsPosFrom, argsPosFromColor);
         let idxTo = this.addAttributeData (argsPosTo, argsPowToColor);
-        this._addIndexData (idxFrom, idxTo);
+        let idx = this._addIndexData (idxFrom, idxTo);
+        if () {
+
+        };
     }
 
     /**

@@ -53,7 +53,6 @@ export default class DomDrawingBoardRightPaintCanvas extends ReactComponentExten
             }
             ;
             MgrData.inst.set(MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION, MgrData.inst.get(MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP));
-            console.log(`比值改为[${MgrData.inst.get(MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}]`);
         }))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,

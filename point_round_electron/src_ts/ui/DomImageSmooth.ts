@@ -286,6 +286,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         this.jWebgl.programLine.uMvp.fill (this.jWebgl.mat4Mvp);
         let colorGrid = JWebglColor.COLOR_BLACK;
         for (let i = 0; i <= cameraWidth; i++) {
+            if (i != 0 && i != cameraWidth && !MgrData.inst.get (MgrDataItem.SMOOTH_DRAW_GRID)) {
+                continue;
+            };
             this.posFrom.elements [0] = i;
             this.posFrom.elements [1] = 0;
             this.posTo.elements [0] = i;
@@ -299,6 +302,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         };
         this.jWebgl.programLine.draw ();
         for (let i = 0; i <= cameraHeight; i++) {
+            if (i != 0 && i != cameraHeight && !MgrData.inst.get (MgrDataItem.SMOOTH_DRAW_GRID)) {
+                continue;
+            };
             this.posFrom.elements [0] = 0;
             this.posFrom.elements [1] = i;
             this.posTo.elements [0] = cameraWidth;
@@ -645,6 +651,18 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
     }
 
     render (): ReactComponentExtendInstance {
+        let propsBtnGrid = {
+            style: {
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+            },
+            onClick: () => {
+                MgrData.inst.set (MgrDataItem.SMOOTH_DRAW_GRID, !MgrData.inst.get (MgrDataItem.SMOOTH_DRAW_GRID));
+                MgrData.inst.callDataChange ();
+            }
+        };
+        if (MgrData.inst.get (MgrDataItem.SMOOTH_DRAW_GRID)) {
+            propsBtnGrid [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
+        };
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -795,14 +813,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
 
                         ReactComponentExtend.instantiateTag (
                             NodeModules.antd.Button,
-                            {
-                                style: {
-                                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                                },
-                                onClick: () => {
-    
-                                }
-                            },
+                            propsBtnGrid,
             
                             `显示网格`
                         ),

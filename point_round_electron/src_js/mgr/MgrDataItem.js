@@ -59,6 +59,13 @@ const VERSION = 21;
         key: `SMOOTH_PIXEL_TO_SCREEN_TEMP_${VERSION}`,
         defVal: 16
     });
+    /**
+     * 显示格子
+     */
+    MgrDataItem.SMOOTH_DRAW_GRID = new MgrDataItem({
+        key: `SMOOTH_DRAW_GRID_${VERSION}`,
+        defVal: true
+    });
     ;
     MgrDataItem.DB_LIST_IMG_DATA = new MgrDataItem({
         key: `DB_LIST_IMG_DATA_${VERSION}`,
@@ -120,6 +127,13 @@ const VERSION = 21;
     MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP = new MgrDataItem({
         key: `DB_PIXEL_TO_SCREEN_TEMP_${VERSION}`,
         defVal: 16
+    });
+    /**
+     * 绘制格子
+     */
+    MgrDataItem.DB_DRAW_GRID = new MgrDataItem({
+        key: `DB_DRAW_GRID_${VERSION}`,
+        defVal: true
     });
     MgrDataItem.EXP_LIST_IMG_DATA = new MgrDataItem({
         key: `EXP_LIST_IMG_DATA_${VERSION}`,

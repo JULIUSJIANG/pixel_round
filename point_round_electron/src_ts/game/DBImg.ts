@@ -1,3 +1,4 @@
+import IndexGlobal from "../IndexGlobal.js";
 import JWebgl from "../common/JWebgl.js";
 import JWebglEnum from "../common/JWebglEnum.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
@@ -146,7 +147,7 @@ class DBImg {
         this.listStatus.push (backup);
         this.idxStatus = this.listStatus.length - 1;
         // 超量，剔除首个
-        if (DBImg.BACK_UP_COUNT_MAX < this.listStatus.length) {
+        if (IndexGlobal.BACK_UP_COUNT_MAX < this.listStatus.length) {
             this.listStatus.shift ();
         };
     }
@@ -171,10 +172,5 @@ class DBImg {
         };
     }
 }
-
-namespace DBImg {
-
-    export const BACK_UP_COUNT_MAX = 20;
-};
 
 export default DBImg;

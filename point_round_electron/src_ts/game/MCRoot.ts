@@ -27,8 +27,8 @@ class MCRoot {
     constructor (indexGlobal: IndexGlobal) {
         this.relGlobal = indexGlobal;
 
-        this.statusDrawingBoard = new MCRootStatusDrawingBoard (this, 0, `画板模式`);
-        this.statusExperiment = new MCRootStatusExperiment (this, 1, `实验模式`);
+        this.statusDrawingBoard = new MCRootStatusDrawingBoard (this, 0, `手绘画板`);
+        this.statusExperiment = new MCRootStatusExperiment (this, 1, `图片处理`);
     }
 
     /**

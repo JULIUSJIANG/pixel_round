@@ -145,6 +145,10 @@ namespace IndexGlobal {
      * 像素尺寸到屏幕尺寸的转换 - 最大值
      */
     export const DB_PIXEL_TO_SCREEN_MAX = 64;
+    /**
+     * 步骤存储数量
+     */
+    export const BACK_UP_COUNT_MAX = 10;
 }
 
 export default IndexGlobal;

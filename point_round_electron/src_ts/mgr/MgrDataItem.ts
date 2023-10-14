@@ -82,6 +82,13 @@ namespace MgrDataItem {
         key: `SMOOTH_PIXEL_TO_SCREEN_TEMP_${VERSION}`,
         defVal: 16
     });
+    /**
+     * 显示格子
+     */
+    export const SMOOTH_DRAW_GRID = new MgrDataItem <boolean> ({
+        key: `SMOOTH_DRAW_GRID_${VERSION}`,
+        defVal: true
+    });
 
     /**
      * 画板模式 - 图片数据
@@ -155,6 +162,14 @@ namespace MgrDataItem {
     export const DB_PIXEL_TO_SCREEN_TEMP = new MgrDataItem <number> ({
         key: `DB_PIXEL_TO_SCREEN_TEMP_${VERSION}`,
         defVal: 16
+    });
+
+    /**
+     * 绘制格子
+     */
+    export const DB_DRAW_GRID = new MgrDataItem <boolean> ({
+        key: `DB_DRAW_GRID_${VERSION}`,
+        defVal: true
     });
 
     /**

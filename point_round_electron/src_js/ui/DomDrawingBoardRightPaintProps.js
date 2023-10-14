@@ -4,7 +4,6 @@ import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import DBImg from "../game/DBImg.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
@@ -138,7 +137,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
             offset(dataSrc, imgCurr, 0, MgrData.inst.get(MgrDataItem.DB_OFFSET_Y));
         });
         this.listChildrenB.length = 0;
-        for (let i = 0; i < DBImg.BACK_UP_COUNT_MAX; i++) {
+        for (let i = 0; i < IndexGlobal.BACK_UP_COUNT_MAX; i++) {
             let color = JWebglColor.COLOR_GREY.str16;
             if (i <= imgCurr.idxStatus) {
                 color = JWebglColor.COLOR_WHITE.str16;

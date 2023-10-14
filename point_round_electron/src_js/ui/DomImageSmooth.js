@@ -182,6 +182,10 @@ class DomImageSmooth extends ReactComponentExtend {
         this.jWebgl.programLine.uMvp.fill(this.jWebgl.mat4Mvp);
         let colorGrid = JWebglColor.COLOR_BLACK;
         for (let i = 0; i <= cameraWidth; i++) {
+            if (i != 0 && i != cameraWidth && !MgrData.inst.get(MgrDataItem.SMOOTH_DRAW_GRID)) {
+                continue;
+            }
+            ;
             this.posFrom.elements[0] = i;
             this.posFrom.elements[1] = 0;
             this.posTo.elements[0] = i;
@@ -191,6 +195,10 @@ class DomImageSmooth extends ReactComponentExtend {
         ;
         this.jWebgl.programLine.draw();
         for (let i = 0; i <= cameraHeight; i++) {
+            if (i != 0 && i != cameraHeight && !MgrData.inst.get(MgrDataItem.SMOOTH_DRAW_GRID)) {
+                continue;
+            }
+            ;
             this.posFrom.elements[0] = 0;
             this.posFrom.elements[1] = i;
             this.posTo.elements[0] = cameraWidth;
@@ -431,6 +439,19 @@ class DomImageSmooth extends ReactComponentExtend {
         this.props.rs.expDrawFbo(this, this.fboAngleRight, posX + 1, posY);
     }
     render() {
+        let propsBtnGrid = {
+            style: {
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+            },
+            onClick: () => {
+                MgrData.inst.set(MgrDataItem.SMOOTH_DRAW_GRID, !MgrData.inst.get(MgrDataItem.SMOOTH_DRAW_GRID));
+                MgrData.inst.callDataChange();
+            }
+        };
+        if (MgrData.inst.get(MgrDataItem.SMOOTH_DRAW_GRID)) {
+            propsBtnGrid[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
+        }
+        ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
@@ -507,7 +528,6 @@ class DomImageSmooth extends ReactComponentExtend {
             }
             ;
             MgrData.inst.set(MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION, MgrData.inst.get(MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_TEMP));
-            console.log(`比值改为[${MgrData.inst.get(MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION)}]`);
         }))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,
@@ -522,13 +542,7 @@ class DomImageSmooth extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
             }
-        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
-            style: {
-                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-            },
-            onClick: () => {
-            }
-        }, `显示网格`)), ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
+        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, propsBtnGrid, `显示网格`)), ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
             },

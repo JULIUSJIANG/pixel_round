@@ -206,7 +206,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
         );
 
         this.listChildrenB.length = 0;
-        for (let i = 0; i < DBImg.BACK_UP_COUNT_MAX; i++) {
+        for (let i = 0; i < IndexGlobal.BACK_UP_COUNT_MAX; i++) {
             let color = JWebglColor.COLOR_GREY.str16;
             if (i <= imgCurr.idxStatus) {
                 color = JWebglColor.COLOR_WHITE.str16;

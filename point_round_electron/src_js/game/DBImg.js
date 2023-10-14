@@ -1,3 +1,4 @@
+import IndexGlobal from "../IndexGlobal.js";
 import DBImgInitStatusFinished from "./DBImgInitStatusFinished.js";
 import DBImgInitStatusIdle from "./DBImgInitStatusIdle.js";
 import DBImgSrcStatusFinished from "./DBImgSrcStatusFinished.js";
@@ -93,7 +94,7 @@ class DBImg {
         this.listStatus.push(backup);
         this.idxStatus = this.listStatus.length - 1;
         // 超量，剔除首个
-        if (DBImg.BACK_UP_COUNT_MAX < this.listStatus.length) {
+        if (IndexGlobal.BACK_UP_COUNT_MAX < this.listStatus.length) {
             this.listStatus.shift();
         }
         ;
@@ -119,8 +120,4 @@ class DBImg {
         ;
     }
 }
-(function (DBImg) {
-    DBImg.BACK_UP_COUNT_MAX = 20;
-})(DBImg || (DBImg = {}));
-;
 export default DBImg;

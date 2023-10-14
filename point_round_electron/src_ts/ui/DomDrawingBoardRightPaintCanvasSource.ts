@@ -191,6 +191,9 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
         this.jWebgl.programLine.uMvp.fill (this.jWebgl.mat4Mvp);
         let colorGrid = JWebglColor.COLOR_BLACK;
         for (let i = 0; i <= cameraWidth; i++) {
+            if (i != 0 && i != cameraWidth && !MgrData.inst.get (MgrDataItem.DB_DRAW_GRID)) {
+                continue;
+            };
             this.posFrom.elements [0] = i;
             this.posFrom.elements [1] = 0;
             this.posTo.elements [0] = i;
@@ -204,6 +207,9 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
         };
         this.jWebgl.programLine.draw ();
         for (let i = 0; i <= cameraHeight; i++) {
+            if (i != 0 && i != cameraHeight && !MgrData.inst.get (MgrDataItem.DB_DRAW_GRID)) {
+                continue;
+            };
             this.posFrom.elements [0] = 0;
             this.posFrom.elements [1] = i;
             this.posTo.elements [0] = cameraWidth;

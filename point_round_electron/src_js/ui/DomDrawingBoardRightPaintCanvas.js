@@ -17,6 +17,19 @@ export default class DomDrawingBoardRightPaintCanvas extends ReactComponentExten
         }
         ;
         let domImageSmoothArgs = DomImageSmooth.Args.create(DomImageSmoothRS.db, img, dataSrc.dbImgData.width, dataSrc.dbImgData.height, 0, 0, 0, 0, 1, 1);
+        let propsBtnGrid = {
+            style: {
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+            },
+            onClick: () => {
+                MgrData.inst.set(MgrDataItem.DB_DRAW_GRID, !MgrData.inst.get(MgrDataItem.DB_DRAW_GRID));
+                MgrData.inst.callDataChange();
+            }
+        };
+        if (MgrData.inst.get(MgrDataItem.DB_DRAW_GRID)) {
+            propsBtnGrid[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
+        }
+        ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
@@ -67,13 +80,7 @@ export default class DomDrawingBoardRightPaintCanvas extends ReactComponentExten
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
             }
-        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
-            style: {
-                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-            },
-            onClick: () => {
-            }
-        }, `显示网格`)), ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
+        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, propsBtnGrid, `显示网格`)), ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
             },

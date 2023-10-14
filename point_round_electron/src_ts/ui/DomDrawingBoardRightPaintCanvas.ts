@@ -29,6 +29,18 @@ export default class DomDrawingBoardRightPaintCanvas extends ReactComponentExten
 
             1, 1
         );
+        let propsBtnGrid = {
+            style: {
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+            },
+            onClick: () => {
+                MgrData.inst.set (MgrDataItem.DB_DRAW_GRID, !MgrData.inst.get (MgrDataItem.DB_DRAW_GRID));
+                MgrData.inst.callDataChange ();
+            }
+        };
+        if (MgrData.inst.get (MgrDataItem.DB_DRAW_GRID)) {
+            propsBtnGrid [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
+        };
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -121,14 +133,7 @@ export default class DomDrawingBoardRightPaintCanvas extends ReactComponentExten
 
                             ReactComponentExtend.instantiateTag (
                                 NodeModules.antd.Button,
-                                {
-                                    style: {
-                                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                                    },
-                                    onClick: () => {
-        
-                                    }
-                                },
+                                propsBtnGrid,
                 
                                 `显示网格`
                             ),

@@ -4,6 +4,8 @@ import JWebglMathVector4 from "../common/JWebglMathVector4.js";
  */
 class DomImageSmoothRS {
     constructor(args) {
+        this.id = args.id;
+        this.name = args.name;
         this.dbFinally = args.dbFinally;
         this.expDrawFbo = args.expDrawFbo;
         this.expSmoothOrdinaryTo = args.expSmoothOrdinaryTo;
@@ -11,13 +13,25 @@ class DomImageSmoothRS {
         this.expDrawFocus = args.expDrawFocus;
         this.commonHorCount = args.commonHorCount;
         this.commonVerCount = args.commonVerCount;
+        DomImageSmoothRS.listInst.push(this);
+        DomImageSmoothRS.mapIdToInst.set(this.id, this);
     }
 }
 (function (DomImageSmoothRS) {
     /**
+     * 全部实例
+     */
+    DomImageSmoothRS.listInst = new Array();
+    /**
+     * 标识到实例的映射
+     */
+    DomImageSmoothRS.mapIdToInst = new Map();
+    /**
      * 绘板模式
      */
     DomImageSmoothRS.db = new DomImageSmoothRS({
+        id: 0,
+        name: `正常模式`,
         dbFinally: (com) => {
             // 最终结果
             com.jWebgl.useFbo(com.fboDisplay);
@@ -50,6 +64,8 @@ class DomImageSmoothRS {
      * 实验模式
      */
     DomImageSmoothRS.exp = new DomImageSmoothRS({
+        id: 1,
+        name: `调试模式`,
         dbFinally: (com) => {
         },
         expDrawFbo: (com, fbo, x, y) => {

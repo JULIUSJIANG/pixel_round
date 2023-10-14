@@ -430,7 +430,6 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
             img = dataSrc.imgLoaded;
         };
         let domImageSmoothArgs = DomImageSmooth.Args.create (
-            DomImageSmoothRS.db,
             img,
 
             dataSrc.dbImgData.width,

@@ -11,7 +11,6 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrSdk from "../mgr/MgrSdk.js";
 import DomImageSmooth from "./DomImageSmooth.js";
-import DomImageSmoothRS from "./DomImageSmoothRS.js";
 import DomInputNumberApplicationHor from "./DomInputNumberApplicationHor.js";
 /**
  * 尝试更为灵魂的平滑
@@ -279,7 +278,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
             img = dataSrc.imgLoaded;
         }
         ;
-        let domImageSmoothArgs = DomImageSmooth.Args.create(DomImageSmoothRS.db, img, dataSrc.dbImgData.width, dataSrc.dbImgData.height, 0, 0, 0, 0, 1, 1);
+        let domImageSmoothArgs = DomImageSmooth.Args.create(img, dataSrc.dbImgData.width, dataSrc.dbImgData.height, 0, 0, 0, 0, 1, 1);
         let propsBtnGrid = {
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,

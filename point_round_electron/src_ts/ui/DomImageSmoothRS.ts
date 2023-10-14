@@ -7,6 +7,16 @@ import DomImageSmooth from "./DomImageSmooth.js";
  */
 class DomImageSmoothRS {
     /**
+     * 标识
+     */
+    id: number;
+
+    /**
+     * 昵称
+     */
+    name: string;
+
+    /**
      * 最终结果
      */
     dbFinally: (com: DomImageSmooth) => void;
@@ -38,6 +48,9 @@ class DomImageSmoothRS {
     commonVerCount: number;
 
     constructor (args: {
+        id: number,
+        name: string,
+
         dbFinally: (com: DomImageSmooth) => void,
 
         expDrawFbo: (com: DomImageSmooth, fbo: JWebglFrameBuffer, x: number, y: number) => void,
@@ -49,6 +62,9 @@ class DomImageSmoothRS {
         commonVerCount: number,
     }) 
     {
+        this.id = args.id;
+        this.name = args.name;
+
         this.dbFinally = args.dbFinally;
 
         this.expDrawFbo = args.expDrawFbo;
@@ -58,14 +74,29 @@ class DomImageSmoothRS {
 
         this.commonHorCount = args.commonHorCount;
         this.commonVerCount = args.commonVerCount;
+
+        DomImageSmoothRS.listInst.push (this);
+        DomImageSmoothRS.mapIdToInst.set (this.id, this);
     }
 }
 
 namespace DomImageSmoothRS {
     /**
+     * 全部实例
+     */
+    export const listInst = new Array <DomImageSmoothRS> ();
+    /**
+     * 标识到实例的映射
+     */
+    export const mapIdToInst = new Map <number, DomImageSmoothRS> ();
+
+    /**
      * 绘板模式
      */
     export const db = new DomImageSmoothRS ({
+        id: 0,
+        name: `正常模式`,
+
         dbFinally: (com) => {
             // 最终结果
             com.jWebgl.useFbo (com.fboDisplay);
@@ -110,6 +141,9 @@ namespace DomImageSmoothRS {
      * 实验模式
      */
     export const exp = new DomImageSmoothRS ({
+        id: 1,
+        name: `调试模式`,
+
         dbFinally: (com) => {
 
         },

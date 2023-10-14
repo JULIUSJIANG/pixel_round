@@ -66,6 +66,13 @@ const VERSION = 21;
         key: `SMOOTH_DRAW_GRID_${VERSION}`,
         defVal: true
     });
+    /**
+     * 平滑模式
+     */
+    MgrDataItem.SMOOTH_RS = new MgrDataItem({
+        key: `SMOOTH_RS_${VERSION}`,
+        defVal: 0
+    });
     ;
     MgrDataItem.DB_LIST_IMG_DATA = new MgrDataItem({
         key: `DB_LIST_IMG_DATA_${VERSION}`,

@@ -91,6 +91,14 @@ namespace MgrDataItem {
     });
 
     /**
+     * 平滑模式
+     */
+    export const SMOOTH_RS = new MgrDataItem <number> ({
+        key: `SMOOTH_RS_${VERSION}`,
+        defVal: 0
+    });
+
+    /**
      * 画板模式 - 图片数据
      */
     export interface DBImgData {

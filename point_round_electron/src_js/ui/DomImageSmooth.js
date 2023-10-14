@@ -12,6 +12,7 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrSdk from "../mgr/MgrSdk.js";
+import DomImageSmoothRS from "./DomImageSmoothRS.js";
 import DomInputNumberApplicationHor from "./DomInputNumberApplicationHor.js";
 /**
  * 线的深度
@@ -67,6 +68,7 @@ class DomImageSmooth extends ReactComponentExtend {
          * 准星颜色
          */
         this.colorFocus = new JWebglColor(1, 0, 0, 1);
+        this.listChildren = new Array();
     }
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
@@ -453,6 +455,29 @@ class DomImageSmooth extends ReactComponentExtend {
             propsBtnGrid[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         ;
+        this.listChildren.length = 0;
+        for (let i = 0; i < DomImageSmoothRS.listInst.length; i++) {
+            let listInstI = DomImageSmoothRS.listInst[i];
+            let propsBtn = {
+                style: {
+                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                },
+                onClick: () => {
+                    if (MgrData.inst.get(MgrDataItem.SMOOTH_RS) == listInstI.id) {
+                        return;
+                    }
+                    ;
+                    MgrData.inst.set(MgrDataItem.SMOOTH_RS, listInstI.id);
+                    MgrData.inst.callDataChange();
+                },
+            };
+            if (listInstI.id == MgrData.inst.get(MgrDataItem.SMOOTH_RS)) {
+                propsBtn[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
+            }
+            ;
+            this.listChildren.push(ReactComponentExtend.instantiateTag(NodeModules.antd.Button, propsBtn, listInstI.name));
+        }
+        ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
@@ -529,7 +554,17 @@ class DomImageSmooth extends ReactComponentExtend {
             }
             ;
             MgrData.inst.set(MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION, MgrData.inst.get(MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_TEMP));
-        }))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+        }))), 
+        // 操作栏
+        ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            style: {
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_NUMBER_HALF_SPACING,
+                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_NUMBER_HALF_SPACING,
+                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+            },
+        }, ...this.listChildren), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_NUMBER_HALF_SPACING,
@@ -579,9 +614,9 @@ class DomImageSmooth extends ReactComponentExtend {
          * @param pixelSizeHeight
          * @returns
          */
-        static create(rs, img, imgWidth, imgHeight, paddingTop, paddingRight, paddingBottom, paddingLeft, pixelSizeWidth, pixelSizeHeight) {
+        static create(img, imgWidth, imgHeight, paddingTop, paddingRight, paddingBottom, paddingLeft, pixelSizeWidth, pixelSizeHeight) {
             let inst = objectPool.pop(this.poolType);
-            inst.init(rs, img, imgWidth, imgHeight, paddingTop, paddingRight, paddingBottom, paddingLeft, pixelSizeWidth, pixelSizeHeight);
+            inst.init(img, imgWidth, imgHeight, paddingTop, paddingRight, paddingBottom, paddingLeft, pixelSizeWidth, pixelSizeHeight);
             return inst;
         }
         /**
@@ -598,15 +633,17 @@ class DomImageSmooth extends ReactComponentExtend {
          * @param pixelSizeHeight
          * @returns
          */
-        init(rs, img, imgWidth, imgHeight, paddingTop, paddingRight, paddingBottom, paddingLeft, pixelSizeWidth, pixelSizeHeight) {
-            this.rs = rs;
+        init(img, imgWidth, imgHeight, paddingTop, paddingRight, paddingBottom, paddingLeft, pixelSizeWidth, pixelSizeHeight) {
+            this.rs = DomImageSmoothRS.mapIdToInst.get(MgrData.inst.get(MgrDataItem.SMOOTH_RS));
             this.img = img;
             // 如果已经加载完毕，那当然采纳真实的数据
             this.imgWidth = imgWidth;
             this.imgHeight = imgHeight;
             if (this.img != null) {
-                this.imgWidth = Math.max(this.imgWidth, this.img.width);
-                this.imgHeight = Math.max(this.imgHeight, this.img.height);
+                this.imgWidth = this.img.width;
+                this.imgHeight = this.img.height;
+                // this.imgWidth = Math.max (this.imgWidth, this.img.width);
+                // this.imgHeight = Math.max (this.imgHeight, this.img.height);
             }
             ;
             this.paddingTop = paddingTop;

@@ -8,7 +8,6 @@ class SmoothMachineStatusLoaded extends SmoothMachineStatus {
 
     onEnter (): void {
         this.relMachine.rel.argsSmooth.init (
-            DomImageSmoothRS.exp,
             this.relMachine.assetsImg.image,
 
             1,

@@ -79,9 +79,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             this.mat4Mvp
         );
 
-        let canvasWidth = this.props.cacheTexWidth * this.props.rs.commonHorCount * IndexGlobal.PIXEL_TEX_TO_SCREEN;
-        let canvasHeight = this.props.cacheTexHeight * this.props.rs.commonVerCount * IndexGlobal.PIXEL_TEX_TO_SCREEN;
         this.jWebgl.evtTouchStart.on (() => {
+            let canvasWidth = this.props.cacheTexWidth * this.props.rs.commonHorCount * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION);
+            let canvasHeight = this.props.cacheTexHeight * this.props.rs.commonVerCount * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION);
             if (
                    this.jWebgl.currentTouch.posCanvas [0] < 0
                 || canvasWidth < this.jWebgl.currentTouch.posCanvas [0] 
@@ -94,8 +94,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
 
             let touchX = Math.floor (this.jWebgl.currentTouch.posCanvas [0]);
             let touchY = Math.floor (this.jWebgl.currentTouch.posCanvas [1]);
-            let gridX = Math.floor (touchX / IndexGlobal.PIXEL_TEX_TO_SCREEN);
-            let gridY = Math.floor (touchY / IndexGlobal.PIXEL_TEX_TO_SCREEN);
+            let gridX = Math.floor (touchX / MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION));
+            let gridY = Math.floor (touchY / MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION));
             this.loadGridX (gridX, gridY);
         });
     }
@@ -233,9 +233,13 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
 
             this.jWebgl.destroyFbo (this.fboAngleRight);
             this.fboAngleRight = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2);
+        };
 
+        let fboDisplayWidth = this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA;
+        let fboDisplayHeight = this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA;
+        if (this.fboDisplay == null || this.fboDisplay.width != fboDisplayWidth || this.fboDisplay.height != fboDisplayHeight) {
             this.jWebgl.destroyFbo (this.fboDisplay);
-            this.fboDisplay = this.jWebgl.getFbo (this.props.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA, this.props.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA);
+            this.fboDisplay = this.jWebgl.getFbo (fboDisplayWidth, fboDisplayHeight);
         };
 
         // 清除所有
@@ -689,8 +693,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
                         MgrDomDefine.TAG_DIV,
                         {
                             style: {
-                                [MgrDomDefine.STYLE_WIDTH]: `${this.props.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonHorCount}px`,
-                                [MgrDomDefine.STYLE_HEIGHT]: `${this.props.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonVerCount}px`,
+                                [MgrDomDefine.STYLE_WIDTH]: `${this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * this.props.rs.commonHorCount}px`,
+                                [MgrDomDefine.STYLE_HEIGHT]: `${this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * this.props.rs.commonVerCount}px`,
                                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                             }
                         },
@@ -711,11 +715,11 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
                                 MgrDomDefine.TAG_CANVAS,
                                 {
                                     ref: this.canvasWebglRef,
-                                    width: this.props.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonHorCount * IndexGlobal.ANTINA,
-                                    height: this.props.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonVerCount * IndexGlobal.ANTINA,
+                                    width: this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * this.props.rs.commonHorCount * IndexGlobal.ANTINA,
+                                    height: this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * this.props.rs.commonVerCount * IndexGlobal.ANTINA,
                                     style: {
-                                        [MgrDomDefine.STYLE_WIDTH]: `${this.props.cacheTexWidth * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonHorCount}px`,
-                                        [MgrDomDefine.STYLE_HEIGHT]: `${this.props.cacheTexHeight * IndexGlobal.PIXEL_TEX_TO_SCREEN * this.props.rs.commonVerCount}px`,
+                                        [MgrDomDefine.STYLE_WIDTH]: `${this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * this.props.rs.commonHorCount}px`,
+                                        [MgrDomDefine.STYLE_HEIGHT]: `${this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * this.props.rs.commonVerCount}px`,
                                         [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                     }
                                 }
@@ -762,7 +766,6 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
                                     return;
                                 };
                                 MgrData.inst.set (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION, MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_TEMP));
-                                console.log (`比值改为[${MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION)}]`);
                             }
                         ),
                     ),

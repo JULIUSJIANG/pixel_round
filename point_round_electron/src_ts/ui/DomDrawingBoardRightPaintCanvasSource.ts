@@ -236,7 +236,7 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
     private static doDrawCross (jWebgl: JWebgl, x: number, y: number, w: number, h: number, colorMark: JWebglColor, unitOffset: number) {
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
         // 画布像素单位
-        let canvasTextureUnit = 1 / (IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA);
+        let canvasTextureUnit = 1 / (MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA);
         // 网格
         let cameraWidth = dataSrc.dbImgData.width;
         let cameraHeight = dataSrc.dbImgData.height;
@@ -339,7 +339,7 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
     {
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
         // 画布像素单位
-        let canvasTextureUnit = 1 / (IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA);
+        let canvasTextureUnit = 1 / (MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA);
         // 网格
         let cameraWidth = dataSrc.dbImgData.width;
         let cameraHeight = dataSrc.dbImgData.height;
@@ -446,8 +446,8 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.dbImgData.width * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.dbImgData.height * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
+                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                         }
                     },
@@ -468,11 +468,11 @@ class DomDrawingBoardRightPaintCanvasSource extends ReactComponentExtend <number
                             MgrDomDefine.TAG_CANVAS,
                             {
                                 ref: this.canvasWebglRef,
-                                width: dataSrc.dbImgData.width * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
-                                height: dataSrc.dbImgData.height * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+                                width: dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA,
+                                height: dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA,
                                 style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.dbImgData.width * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.dbImgData.height * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
+                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
                                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                 }
                             }

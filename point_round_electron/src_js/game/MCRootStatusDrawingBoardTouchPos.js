@@ -1,4 +1,5 @@
-import IndexGlobal from "../IndexGlobal.js";
+import MgrData from "../mgr/MgrData.js";
+import MgrDataItem from "../mgr/MgrDataItem.js";
 class MCRootStatusDrawingBoardTouchPos {
     constructor(dataSrc) {
         this.dataSrc = dataSrc;
@@ -11,8 +12,8 @@ class MCRootStatusDrawingBoardTouchPos {
     fill(canvasX, canvasY) {
         this.canvasX = canvasX;
         this.canvasY = canvasY;
-        this.gridXFloat = canvasX / IndexGlobal.PIXEL_TEX_TO_SCREEN;
-        this.gridYFloat = canvasY / IndexGlobal.PIXEL_TEX_TO_SCREEN;
+        this.gridXFloat = canvasX / MgrData.inst.get(MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION);
+        this.gridYFloat = canvasY / MgrData.inst.get(MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION);
         this.gridXInt = Math.floor(this.gridXFloat);
         this.gridYInt = Math.floor(this.gridYFloat);
     }

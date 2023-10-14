@@ -1,6 +1,6 @@
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
-import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
+import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";
 
 /**
@@ -31,21 +31,21 @@ class MCRootStatusDrawingBoardTouchStatus {
     /**
      * 事件派发 - 交互开始
      */
-    onStart (dataSrc: DomDrawingBoardRightPaintCanvasSource) {
+    onStart (dataSrc: DomDrawingBoardRightPaintCanvas) {
 
     }
 
     /**
      * 事件派发 - 交互中
      */
-    onMove (dataSrc: DomDrawingBoardRightPaintCanvasSource) {
+    onMove (dataSrc: DomDrawingBoardRightPaintCanvas) {
 
     }
 
     /**
      * 事件派发 - 交互结束
      */
-    onEnd (dataSrc: DomDrawingBoardRightPaintCanvasSource) {
+    onEnd (dataSrc: DomDrawingBoardRightPaintCanvas) {
 
     }
 
@@ -53,14 +53,14 @@ class MCRootStatusDrawingBoardTouchStatus {
      * 操作更新
      * @param dataSrc 
      */
-    onOpUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource) {
+    onOpUpdate (dataSrc: DomDrawingBoardRightPaintCanvas) {
 
     }
 
     /**
      * 事件派发 - 绘制
      */
-    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvasSource) {
+    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvas) {
 
     }
 }

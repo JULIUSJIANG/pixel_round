@@ -1,4 +1,5 @@
 import Eventer from "../common/Eventer.js";
+import JWebgl from "../common/JWebgl.js";
 import MgrGlobalCtxPos from "./MgrGlobalCtxPos.js";
 
 class MgrGlobal {
@@ -91,7 +92,7 @@ class MgrGlobal {
         this.canvas2d.width = w;
         this.canvas2d.height = h;
         let imgData = this.getImgData (w, h);
-        imgData.data.set (arrUint8);
+        imgData.data.set (arrUint8, 0);
         this.canvas2dCtx.putImageData (imgData, 0, 0);
         return this.canvas2d.toDataURL ();
     }

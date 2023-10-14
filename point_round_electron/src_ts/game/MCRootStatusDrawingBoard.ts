@@ -7,7 +7,7 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomDrawingBoardLeft from "../ui/DomDrawingBoardLeft.js";
 import DomDrawingBoardRightEmpty from "../ui/DomDrawingBoardRightEmpty.js";
 import DomDrawingBoardRightPaint from "../ui/DomDrawingBoardRightPaint.js";
-import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
+import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRoot from "./MCRoot.js";
 import MCRootStatus from "./MCRootStatus.js";
 import MCRootStatusDrawingBoardHoverStatus from "./MCRootStatusDrawingBoardHoverStatus.js";
@@ -149,11 +149,11 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
     /**
      * 要捕获的组件
      */
-    dom: DomDrawingBoardRightPaintCanvasSource;
+    dom: DomDrawingBoardRightPaintCanvas;
     /**
      * 捕获 dom
      */
-    catchDom (dom: DomDrawingBoardRightPaintCanvasSource) {
+    catchDom (dom: DomDrawingBoardRightPaintCanvas) {
         this.dom = dom;
     }
 }

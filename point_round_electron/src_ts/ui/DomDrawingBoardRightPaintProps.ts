@@ -54,12 +54,8 @@ function offset (dataSrc: MCRootStatusDrawingBoard, imgCurr: DBImg, offsetX: num
     dataSrc.dom.jWebgl.programImg.draw ();
     objectPool.push (posImg);
 
-    let fboRev = dataSrc.dom.jWebgl.getFbo (cameraWidth, cameraHeight);
-    dataSrc.dom.jWebgl.fillFboByTexRev (fboRev, fboResize.renderTexture);
+    imgCurr.loadUrl (fboResize.toBase64 (), imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     dataSrc.dom.jWebgl.destroyFbo (fboResize);
-    let dataBase64 = fboRev.toBase64 ();
-    dataSrc.dom.jWebgl.destroyFbo (fboRev);
-    imgCurr.loadUrl (dataBase64, imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     MgrData.inst.callDataChange ();
 }
 
@@ -104,12 +100,8 @@ function resizeTo (dataSrc: MCRootStatusDrawingBoard, imgCurr: DBImg, w: number,
     dataSrc.dom.jWebgl.programImg.draw ();
     objectPool.push (posImg);
 
-    let fboRev = dataSrc.dom.jWebgl.getFbo (cameraWidth, cameraHeight);
-    dataSrc.dom.jWebgl.fillFboByTexRev (fboRev, fboResize.renderTexture);
+    imgCurr.loadUrl (fboResize.toBase64 (), imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     dataSrc.dom.jWebgl.destroyFbo (fboResize);
-    let dataBase64 = fboRev.toBase64 ();
-    dataSrc.dom.jWebgl.destroyFbo (fboRev);
-    imgCurr.loadUrl (dataBase64, w, h);
     MgrData.inst.callDataChange ();
 }
 

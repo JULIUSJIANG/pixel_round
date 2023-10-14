@@ -1,6 +1,6 @@
 import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
-import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
+import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";
 
 /**
@@ -46,14 +46,14 @@ class MCRootStatusDrawingBoardHoverStatus {
      * 事件派发 - 操作更新
      * @param dataSrc 
      */
-    onOpUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource) {
+    onOpUpdate (dataSrc: DomDrawingBoardRightPaintCanvas) {
 
     }
 
     /**
      * 事件派发 - 绘制
      */
-    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvasSource) {
+    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvas) {
 
     }
 }

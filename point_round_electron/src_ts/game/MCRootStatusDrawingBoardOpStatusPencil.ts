@@ -1,11 +1,11 @@
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
-import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
+import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus.js";
 
 class MCRootStatusDrawingBoardOpStatusPencil extends MCRootStatusDrawingBoardOpStatus {
 
-    onDo (dataSrc: DomDrawingBoardRightPaintCanvasSource, x: number, y: number, w: number, h: number): void {
+    onDo (dataSrc: DomDrawingBoardRightPaintCanvas, x: number, y: number, w: number, h: number): void {
         let currImg = this.relMachine.getCurrentCache ();
         let cameraWidth = currImg.dbImgData.width;
         let cameraHeight = currImg.dbImgData.height;
@@ -35,11 +35,10 @@ class MCRootStatusDrawingBoardOpStatusPencil extends MCRootStatusDrawingBoardOpS
         );
         dataSrc.jWebgl.programImg.draw ();
         objectPool.push (posImg);
-        dataSrc.jWebgl.fillFboByTexRev (dataSrc.fboCacheBackup, dataSrc.fboCache.renderTexture);
-        currImg.loadUrl (dataSrc.fboCacheBackup.toBase64 (), currImg.dbImgData.width, currImg.dbImgData.height);
+        currImg.loadUrl (dataSrc.fboCache.toBase64 (), currImg.dbImgData.width, currImg.dbImgData.height);
     }
 
-    onUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource, x: number, y: number, w: number, h: number): void {
+    onUpdate (dataSrc: DomDrawingBoardRightPaintCanvas, x: number, y: number, w: number, h: number): void {
         let currImg = this.relMachine.getCurrentCache ();
         let cameraWidth = currImg.dbImgData.width;
         let cameraHeight = currImg.dbImgData.height;

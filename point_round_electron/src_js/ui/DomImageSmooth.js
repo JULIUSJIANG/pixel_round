@@ -11,6 +11,7 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import MgrSdk from "../mgr/MgrSdk.js";
 import DomInputNumberApplicationHor from "./DomInputNumberApplicationHor.js";
 /**
  * 线的深度
@@ -547,6 +548,7 @@ class DomImageSmooth extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
             },
             onClick: () => {
+                MgrSdk.inst.core.saveFile(`image.png`, this.fboDisplay.toBase64());
             }
         }, `导出 png`))));
     }
@@ -604,7 +606,7 @@ class DomImageSmooth extends ReactComponentExtend {
             this.imgHeight = imgHeight;
             if (this.img != null) {
                 this.imgWidth = Math.max(this.imgWidth, this.img.width);
-                this.imgHeight = Math.max(this.imgWidth, this.img.height);
+                this.imgHeight = Math.max(this.imgHeight, this.img.height);
             }
             ;
             this.paddingTop = paddingTop;

@@ -1,4 +1,4 @@
-import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
+import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";
 
 /**
@@ -37,14 +37,14 @@ class MCRootStatusDrawingBoardOpStatus {
     /**
      * 更新状态
      */
-    onUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource, x: number, y: number, w: number, h: number) {
+    onUpdate (dataSrc: DomDrawingBoardRightPaintCanvas, x: number, y: number, w: number, h: number) {
 
     }
 
     /**
      * 执行状态
      */
-    onDo (dataSrc: DomDrawingBoardRightPaintCanvasSource, x: number, y: number, w: number, h: number) {
+    onDo (dataSrc: DomDrawingBoardRightPaintCanvas, x: number, y: number, w: number, h: number) {
 
     }
 }

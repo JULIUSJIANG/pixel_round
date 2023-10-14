@@ -1,17 +1,17 @@
-import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
+import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRootStatusDrawingBoardTouchStatus from "./MCRootStatusDrawingBoardTouchStatus.js";
 
 class MCRootStatusDrawingBoardTouchStatusEnded extends MCRootStatusDrawingBoardTouchStatus {
 
-    onStart (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
+    onStart (dataSrc: DomDrawingBoardRightPaintCanvas): void {
         this.relMachine.touchEnter (this.relMachine.touchStatusStarted);
     }
 
-    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
+    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvas): void {
         let jWebgl = dataSrc.jWebgl;
         let color = dataSrc.colorMark;
-        DomDrawingBoardRightPaintCanvasSource.drawCross (jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
-        DomDrawingBoardRightPaintCanvasSource.drawMark (jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
+        DomDrawingBoardRightPaintCanvas.drawCross (jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
+        DomDrawingBoardRightPaintCanvas.drawMark (jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
     }
 }
 

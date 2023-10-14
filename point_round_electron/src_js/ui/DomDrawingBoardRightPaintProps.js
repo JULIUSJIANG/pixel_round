@@ -33,12 +33,8 @@ function offset(dataSrc, imgCurr, offsetX, offsetY) {
         dataSrc.dom.jWebgl.programImg.add(posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     dataSrc.dom.jWebgl.programImg.draw();
     objectPool.push(posImg);
-    let fboRev = dataSrc.dom.jWebgl.getFbo(cameraWidth, cameraHeight);
-    dataSrc.dom.jWebgl.fillFboByTexRev(fboRev, fboResize.renderTexture);
+    imgCurr.loadUrl(fboResize.toBase64(), imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     dataSrc.dom.jWebgl.destroyFbo(fboResize);
-    let dataBase64 = fboRev.toBase64();
-    dataSrc.dom.jWebgl.destroyFbo(fboRev);
-    imgCurr.loadUrl(dataBase64, imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     MgrData.inst.callDataChange();
 }
 /**
@@ -66,12 +62,8 @@ function resizeTo(dataSrc, imgCurr, w, h) {
         dataSrc.dom.jWebgl.programImg.add(posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     dataSrc.dom.jWebgl.programImg.draw();
     objectPool.push(posImg);
-    let fboRev = dataSrc.dom.jWebgl.getFbo(cameraWidth, cameraHeight);
-    dataSrc.dom.jWebgl.fillFboByTexRev(fboRev, fboResize.renderTexture);
+    imgCurr.loadUrl(fboResize.toBase64(), imgCurr.dbImgData.width, imgCurr.dbImgData.height);
     dataSrc.dom.jWebgl.destroyFbo(fboResize);
-    let dataBase64 = fboRev.toBase64();
-    dataSrc.dom.jWebgl.destroyFbo(fboRev);
-    imgCurr.loadUrl(dataBase64, w, h);
     MgrData.inst.callDataChange();
 }
 export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend {

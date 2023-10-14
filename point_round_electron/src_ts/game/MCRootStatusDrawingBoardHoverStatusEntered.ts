@@ -1,4 +1,4 @@
-import DomDrawingBoardRightPaintCanvasSource from "../ui/DomDrawingBoardRightPaintCanvasSource.js";
+import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRootStatusDrawingBoardHoverStatus from "./MCRootStatusDrawingBoardHoverStatus.js";
 
 class MCRootStatusDrawingBoardHoverStatusEntered extends MCRootStatusDrawingBoardHoverStatus {
@@ -7,11 +7,11 @@ class MCRootStatusDrawingBoardHoverStatusEntered extends MCRootStatusDrawingBoar
         this.relMachine.hoverEnter (this.relMachine.hoverStatusLeaved);
     }
 
-    onOpUpdate (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
+    onOpUpdate (dataSrc: DomDrawingBoardRightPaintCanvas): void {
         this.relMachine.touchCurrStatus.onOpUpdate (dataSrc);
     }
 
-    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvasSource): void {
+    onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvas): void {
         this.relMachine.touchCurrStatus.onFocusDraw (dataSrc);
     }
 }

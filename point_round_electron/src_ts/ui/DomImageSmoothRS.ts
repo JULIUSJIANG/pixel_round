@@ -1,3 +1,4 @@
+import IndexGlobal from "../IndexGlobal.js";
 import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import DomImageSmooth from "./DomImageSmooth.js";
@@ -193,7 +194,7 @@ namespace DomImageSmoothRS {
                 2
             );
             com.jWebgl.programSmoothDisplayOrdinary.draw ();
-            com.props.rs.expDrawFbo (com, com.fboDisplay, x, y);
+            IndexGlobal.smoothRS ().expDrawFbo (com, com.fboDisplay, x, y);
         },
         expSmoothCircleTo: (com, x, y) => {
             // 最终结果
@@ -216,12 +217,12 @@ namespace DomImageSmoothRS {
                 2
             );
             com.jWebgl.programSmoothDisplayCircle.draw ();
-            com.props.rs.expDrawFbo (com, com.fboDisplay, x, y);
+            IndexGlobal.smoothRS ().expDrawFbo (com, com.fboDisplay, x, y);
         },
         expDrawFocus: (com) => {
             com.jWebgl.useFbo (null);
-            let cameraWidth = com.props.cacheTexWidth * com.props.rs.commonHorCount;
-            let cameraHeight = com.props.cacheTexHeight * com.props.rs.commonVerCount;
+            let cameraWidth = com.props.cacheTexWidth * IndexGlobal.smoothRS ().commonHorCount;
+            let cameraHeight = com.props.cacheTexHeight * IndexGlobal.smoothRS ().commonVerCount;
             com.jWebgl.mat4V.setLookAt (
                 cameraWidth / 2, cameraHeight / 2, 1,
                 cameraWidth / 2, cameraHeight / 2, 0,
@@ -238,7 +239,7 @@ namespace DomImageSmoothRS {
             let gridXMod = com.gridX % com.props.cacheTexWidth + 0.5;
             let gridYMod = com.gridY % com.props.cacheTexHeight + 0.5;
             // 竖线
-            for (let i = 0; i < com.props.rs.commonHorCount; i++) {
+            for (let i = 0; i < IndexGlobal.smoothRS ().commonHorCount; i++) {
                 com.posFrom.elements [0] = i * com.props.cacheTexWidth + gridXMod;
                 com.posFrom.elements [1] = 0;
                 com.posTo.elements [0] = i * com.props.cacheTexWidth + gridXMod;
@@ -251,7 +252,7 @@ namespace DomImageSmoothRS {
                 );
             };
             // 横线
-            for (let i = 0; i < com.props.rs.commonVerCount; i++) {
+            for (let i = 0; i < IndexGlobal.smoothRS ().commonVerCount; i++) {
                 com.posFrom.elements [0] = 0;
                 com.posFrom.elements [1] = i * com.props.cacheTexHeight + gridYMod;
                 com.posTo.elements [0] = cameraWidth;

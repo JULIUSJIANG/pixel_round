@@ -3,6 +3,7 @@ import MgrData from "./mgr/MgrData.js";
 import MgrDataItem from "./mgr/MgrDataItem.js";
 import MgrSdk from "./mgr/MgrSdk.js";
 import DBImg from "./game/DBImg.js";
+import DomImageSmoothRS from "./ui/DomImageSmoothRS.js";
 class IndexGlobal {
     constructor() {
         /**
@@ -97,6 +98,15 @@ class IndexGlobal {
         return IndexGlobal.inst.mcRoot.statusExperiment.statusCreate;
     }
     IndexGlobal.mcExpCreate = mcExpCreate;
+    /**
+     * 当前平滑策略
+     * @returns
+     */
+    function smoothRS() {
+        let smoothRS = DomImageSmoothRS.mapIdToInst.get(MgrData.inst.get(MgrDataItem.SMOOTH_RS));
+        return smoothRS;
+    }
+    IndexGlobal.smoothRS = smoothRS;
     /**
      * 缩略图边长
      */

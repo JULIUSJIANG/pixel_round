@@ -17,7 +17,7 @@ export default class DomExperimentRightPreviewImg extends ReactComponentExtend {
         ;
         let instRight;
         if (relativeRS.isRightVisiable()) {
-            instRight = ReactComponentExtend.instantiateComponent(DomImageSmooth, dataSrc.argsSmooth);
+            instRight = ReactComponentExtend.instantiateComponent(DomImageSmooth, dataSrc.argsSmooth.clone());
         }
         ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {

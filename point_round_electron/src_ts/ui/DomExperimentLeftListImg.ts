@@ -47,8 +47,8 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
                 IndexGlobal.mcExp ().currStatus.onImg (this.props.imgData.id);
             },
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: 0,
-                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
+                [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
             }
         };
@@ -81,7 +81,6 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
                         style: {
                             [MgrDomDefine.STYLE_HEIGHT]: `${eleSize}px`,
                             [MgrDomDefine.STYLE_WIDTH]: `${eleSize}px`,
-                            // [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
                             [MgrDomDefine.STYLE_POSITION]: MgrDomDefine.STYLE_POSITION_RELATIVE,
                             [MgrDomDefine.STYLE_LEFT]: `${-eleSize / 2}px`,
                             [MgrDomDefine.STYLE_TOP]: `${-(IndexGlobal.IMG_MINI_SIZE / 2 + MgrDomDefine.CONFIG_NUMBER_SPACING)}px`,

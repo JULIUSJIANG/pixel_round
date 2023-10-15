@@ -18,7 +18,7 @@ export default class DomExperimentLeft extends ReactComponentExtend <number> {
             MgrDomDefine.TAG_DIV,
             {
                 style: {
-                    [MgrDomDefine.STYLE_FLEX]: `${width}px`,
+                    [MgrDomDefine.STYLE_WIDTH]: `${width}px`,
                     [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                     [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                     [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,

@@ -111,7 +111,7 @@ namespace IndexGlobal {
     /**
      * 缩略图边长
      */
-    export const IMG_MINI_SIZE = 100;
+    export const IMG_MINI_SIZE = 64;
 
     /**
      * 纹素尺寸到屏幕尺寸的转换

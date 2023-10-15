@@ -35,19 +35,19 @@ namespace FileColumnRS {
      * 列数控制
      */
     export const column1 = new FileColumnRS ({
-        id: 1,
+        id: 0,
         count: 1
     });
     export const column2 = new FileColumnRS ({
-        id: 2,
+        id: 1,
         count: 2
     });
     export const column3 = new FileColumnRS ({
-        id: 3,
+        id: 2,
         count: 3
     });
     export const column4 = new FileColumnRS ({
-        id: 4,
+        id: 3,
         count: 4
     });
 }

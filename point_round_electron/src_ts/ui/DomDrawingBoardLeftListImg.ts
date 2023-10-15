@@ -48,8 +48,8 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
                 MgrData.inst.callDataChange ();
             },
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: 0,
-                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
+                [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
             }
         };

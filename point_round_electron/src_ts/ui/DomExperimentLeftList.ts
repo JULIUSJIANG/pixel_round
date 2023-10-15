@@ -33,7 +33,8 @@ export default class DomExperimentLeftList extends ReactComponentExtend <number>
                 if (listImgData.length <= idx) {
                     this.listChildrenContainer.push (ReactComponentExtend.instantiateTag (MgrDomDefine.TAG_DIV, {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 4}px`,
+                            [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
+                            [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                             [MgrDomDefine.STYLE_MARGIN_LEFT]: MgrDomDefine.CONFIG_TXT_SPACING
                         }
                     }));

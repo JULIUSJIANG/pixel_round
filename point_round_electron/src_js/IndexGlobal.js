@@ -100,7 +100,7 @@ class IndexGlobal {
     /**
      * 缩略图边长
      */
-    IndexGlobal.IMG_MINI_SIZE = 100;
+    IndexGlobal.IMG_MINI_SIZE = 64;
     /**
      * 纹素尺寸到屏幕尺寸的转换
      */

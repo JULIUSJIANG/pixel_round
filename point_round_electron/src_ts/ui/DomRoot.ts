@@ -126,32 +126,32 @@ export default class DomRoot extends ReactComponentExtend <number> {
                         }
                     },
 
-                    // ReactComponentExtend.instantiateTag (
-                    //     MgrDomDefine.TAG_DIV,
-                    //     {
-                    //         style: {
-                    //             [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                    //             [MgrDomDefine.STYLE_FONT_SIZE]: MgrDomDefine.STYLE_FONT_SIZE_14,
-                    //             [MgrDomDefine.STYLE_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
-                    //             [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                    //             [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                    //             [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
-                    //         },
-                    //     },
-                    //     `文件列数`,
-                    // ),
-                    // ...this.listChildrenB,
-                    // // 分割线
-                    // ReactComponentExtend.instantiateTag (
-                    //     MgrDomDefine.TAG_DIV,
-                    //     {
-                    //         style: {
-                    //             [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.CONFIG_TXT_SPACING,
-                    //             [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                    //             [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
-                    //         }
-                    //     }
-                    // ),
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                [MgrDomDefine.STYLE_FONT_SIZE]: MgrDomDefine.STYLE_FONT_SIZE_14,
+                                [MgrDomDefine.STYLE_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                                [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
+                            },
+                        },
+                        `文件列数`,
+                    ),
+                    ...this.listChildrenB,
+                    // 分割线
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.CONFIG_TXT_SPACING,
+                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
+                            }
+                        }
+                    ),
 
                     ReactComponentExtend.instantiateTag (
                         NodeModules.antd.Button,

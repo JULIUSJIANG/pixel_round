@@ -11,10 +11,11 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 const EVT_NAME_DRAG_START = `dragstart`;
 const EVT_NAME_DRAG_ING = `drag`;
 const EVT_NAME_DRAG_END = `dragend`;
-
 const EVT_NAME_DRAG_ENTER = `dragenter`;
 const EVT_NAME_DRAG_OVER = `dragover`;
 const EVT_NAME_DRAG_LEAVE = `dragleave`;
+const EVT_NAME_DRAG_EXIT = `dragexit`;
+const EVT_NAME_DROP = `drop`;
 
 class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLeftListImg.Args> {
 
@@ -25,37 +26,49 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
         tag.addEventListener (
             EVT_NAME_DRAG_START, 
             (event) => {
-                // console.log (EVT_NAME_DRAG_START);
+                IndexGlobal.mcDB ().dragCurrStatus.onStart (this.relDbImg);
             }
         );
         tag.addEventListener (
             EVT_NAME_DRAG_ING, 
             (event) => {
-                // console.log (EVT_NAME_DRAG_ING);
             }
         );
         tag.addEventListener (
             EVT_NAME_DRAG_END, 
             (event) => {
-                // console.log (EVT_NAME_DRAG_END);
+                IndexGlobal.mcDB ().dragCurrStatus.onEnd ();
             }
         );
+        
         tag.addEventListener (
             EVT_NAME_DRAG_ENTER, 
             (event) => {
-                // console.log (EVT_NAME_DRAG_ENTER);
+                IndexGlobal.mcDB ().dragCurrStatus.onTargetEnter (this.relDbImg);
             }
         );
         tag.addEventListener (
             EVT_NAME_DRAG_OVER, 
             (event) => {
-                // console.log (EVT_NAME_DRAG_OVER);
+                event.preventDefault();
             }
         );
         tag.addEventListener (
             EVT_NAME_DRAG_LEAVE, 
             (event) => {
-                // console.log (EVT_NAME_DRAG_LEAVE);
+                IndexGlobal.mcDB ().dragCurrStatus.onTargetEnterLeave ();
+            }
+        );
+
+        tag.addEventListener (
+            EVT_NAME_DRAG_EXIT, 
+            (event) => {
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DROP, 
+            (event) => {
+
             }
         );
     }
@@ -72,8 +85,9 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
     render (): ReactComponentExtendInstance {
         let imgInst: ReactComponentExtendInstance;
         // 加载完成再说
-        if (this.props.dbImg.initCurrStatus == this.props.dbImg.initStatusFinished) {
-            let image = this.props.dbImg.imgLoaded;
+        let imgDataSrc = this.props.dbImg.maskCurrStatus.onGetData ();
+        if (imgDataSrc.initCurrStatus == imgDataSrc.initStatusFinished) {
+            let image = imgDataSrc.imgLoaded;
             let imgWidth = IndexGlobal.IMG_MINI_SIZE;
             let imgHeight = IndexGlobal.IMG_MINI_SIZE;
             if (image.width < image.height) {
@@ -97,7 +111,7 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
                         "imageRendering": `pixelated`,
                     },
                     src: image.src,
-                    draggable: `false`,
+                    ref: this.ref,
                 }
             )
         };
@@ -112,8 +126,6 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
             },
-            draggable: `true`,
-            ref: this.ref,
         };
         if (this.props.j != 0) {
             props.style [MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;

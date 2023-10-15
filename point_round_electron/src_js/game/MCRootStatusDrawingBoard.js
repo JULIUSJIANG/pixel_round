@@ -7,6 +7,9 @@ import DomDrawingBoardLeft from "../ui/DomDrawingBoardLeft.js";
 import DomDrawingBoardRightEmpty from "../ui/DomDrawingBoardRightEmpty.js";
 import DomDrawingBoardRightPaint from "../ui/DomDrawingBoardRightPaint.js";
 import MCRootStatus from "./MCRootStatus.js";
+import MCRootStatusDrawingBoardDragStatusHover from "./MCRootStatusDrawingBoardDragStatusHover.js";
+import MCRootStatusDrawingBoardDragStatusIdle from "./MCRootStatusDrawingBoardDragStatusIdle.js";
+import MCRootStatusDrawingBoardDragStatusTargeted from "./MCRootStatusDrawingBoardDragStatusTargeted.js";
 import MCRootStatusDrawingBoardHoverStatusEntered from "./MCRootStatusDrawingBoardHoverStatusEntered.js";
 import MCRootStatusDrawingBoardHoverStatusLeaved from "./MCRootStatusDrawingBoardHoverStatusLeaved.js";
 import MCRootStatusDrawingBoardOpStatusEraser from "./MCRootStatusDrawingBoardOpStatusEraser.js";
@@ -36,11 +39,15 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         this.touchStatusMoved = new MCRootStatusDrawingBoardTouchStatusMoved(this);
         this.hoverStatusEntered = new MCRootStatusDrawingBoardHoverStatusEntered(this);
         this.hoverStatusLeaved = new MCRootStatusDrawingBoardHoverStatusLeaved(this);
+        this.dragStatusIdle = new MCRootStatusDrawingBoardDragStatusIdle(this);
+        this.dargStatusHover = new MCRootStatusDrawingBoardDragStatusHover(this);
+        this.dragStatusTargeted = new MCRootStatusDrawingBoardDragStatusTargeted(this);
     }
     onInit() {
         this.opEnter(this.opStatusPencil);
         this.touchEnter(this.touchStatusEnded);
         this.hoverEnter(this.hoverStatusLeaved);
+        this.dragEnter(this.dragStatusIdle);
     }
     opEnter(status) {
         let rec = this.opCurrStatus;
@@ -68,6 +75,15 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         }
         ;
         this.hoverCurrStatus.onEnter();
+    }
+    dragEnter(status) {
+        let rec = this.dragCurrStatus;
+        this.dragCurrStatus = status;
+        if (rec) {
+            rec.onExit();
+        }
+        ;
+        this.dragCurrStatus.onEnter();
     }
     onDisplay() {
         let instDisplay;

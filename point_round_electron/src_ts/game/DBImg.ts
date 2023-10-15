@@ -5,6 +5,9 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import DBImgInitStatus from "./DBImgInitStatus.js";
 import DBImgInitStatusFinished from "./DBImgInitStatusFinished.js";
 import DBImgInitStatusIdle from "./DBImgInitStatusIdle.js";
+import DBImgMaskStatus from "./DBImgMaskStatus.js";
+import DBImgMaskStatusActive from "./DBImgMaskStatusActive.js";
+import DBImgMaskStatusIdle from "./DBImgMaskStatusIdle.js";
 import DBImgSrcStatus from "./DBImgSrcStatus.js";
 import DBImgSrcStatusFinished from "./DBImgSrcStatusFinished.js";
 import DBImgSrcStatusLoading from "./DBImgSrcStatusLoading.js";
@@ -42,6 +45,10 @@ class DBImg {
         this.srcEnter (this.srcStatusLoading);
         this.backUpStatus (this.dbImgData.dataOrigin, this.dbImgData.width, this.dbImgData.height)
         this.srcCurrStatus.onSrcChanged ();
+
+        this.maskStatusIdle = new DBImgMaskStatusIdle (this);
+        this.maskStatusActive = new DBImgMaskStatusActive (this);
+        this.maskEnter (this.maskStatusIdle);
     }
 
     /**
@@ -96,6 +103,38 @@ class DBImg {
             rec.onExit ();
         };
         this.srcCurrStatus.onEnter ();
+    }
+
+    /**
+     * 面具
+     */
+    mask: DBImg;
+
+    /**
+     * 状态 - 待机
+     */
+    maskStatusIdle: DBImgMaskStatusIdle;
+    /**
+     * 状态 - 面具已激活
+     */
+    maskStatusActive: DBImgMaskStatusActive;
+
+    /**
+     * 面具 - 当前状态
+     */
+    maskCurrStatus: DBImgMaskStatus;
+
+    /**
+     * 切换状态
+     * @param status 
+     */
+    maskEnter (status: DBImgMaskStatus) {
+        let rec = this.maskCurrStatus;
+        this.maskCurrStatus = status;
+        if (rec) {
+            rec.onExit ();
+        };
+        this.maskCurrStatus.onEnter ();
     }
 
     /**

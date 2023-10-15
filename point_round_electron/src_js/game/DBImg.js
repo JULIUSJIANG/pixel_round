@@ -1,6 +1,8 @@
 import IndexGlobal from "../IndexGlobal.js";
 import DBImgInitStatusFinished from "./DBImgInitStatusFinished.js";
 import DBImgInitStatusIdle from "./DBImgInitStatusIdle.js";
+import DBImgMaskStatusActive from "./DBImgMaskStatusActive.js";
+import DBImgMaskStatusIdle from "./DBImgMaskStatusIdle.js";
 import DBImgSrcStatusFinished from "./DBImgSrcStatusFinished.js";
 import DBImgSrcStatusLoading from "./DBImgSrcStatusLoading.js";
 /**
@@ -27,6 +29,9 @@ class DBImg {
         this.srcEnter(this.srcStatusLoading);
         this.backUpStatus(this.dbImgData.dataOrigin, this.dbImgData.width, this.dbImgData.height);
         this.srcCurrStatus.onSrcChanged();
+        this.maskStatusIdle = new DBImgMaskStatusIdle(this);
+        this.maskStatusActive = new DBImgMaskStatusActive(this);
+        this.maskEnter(this.maskStatusIdle);
     }
     /**
      * 切换状态
@@ -53,6 +58,19 @@ class DBImg {
         }
         ;
         this.srcCurrStatus.onEnter();
+    }
+    /**
+     * 切换状态
+     * @param status
+     */
+    maskEnter(status) {
+        let rec = this.maskCurrStatus;
+        this.maskCurrStatus = status;
+        if (rec) {
+            rec.onExit();
+        }
+        ;
+        this.maskCurrStatus.onEnter();
     }
     /**
      * 载入数据

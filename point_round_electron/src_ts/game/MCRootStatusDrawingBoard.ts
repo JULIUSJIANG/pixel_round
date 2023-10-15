@@ -8,8 +8,13 @@ import DomDrawingBoardLeft from "../ui/DomDrawingBoardLeft.js";
 import DomDrawingBoardRightEmpty from "../ui/DomDrawingBoardRightEmpty.js";
 import DomDrawingBoardRightPaint from "../ui/DomDrawingBoardRightPaint.js";
 import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
+import DBImg from "./DBImg.js";
 import MCRoot from "./MCRoot.js";
 import MCRootStatus from "./MCRootStatus.js";
+import MCRootStatusDrawingBoardDragStatus from "./MCRootStatusDrawingBoardDragStatus.js";
+import MCRootStatusDrawingBoardDragStatusHover from "./MCRootStatusDrawingBoardDragStatusHover.js";
+import MCRootStatusDrawingBoardDragStatusIdle from "./MCRootStatusDrawingBoardDragStatusIdle.js";
+import MCRootStatusDrawingBoardDragStatusTargeted from "./MCRootStatusDrawingBoardDragStatusTargeted.js";
 import MCRootStatusDrawingBoardHoverStatus from "./MCRootStatusDrawingBoardHoverStatus.js";
 import MCRootStatusDrawingBoardHoverStatusEntered from "./MCRootStatusDrawingBoardHoverStatusEntered.js";
 import MCRootStatusDrawingBoardHoverStatusLeaved from "./MCRootStatusDrawingBoardHoverStatusLeaved.js";
@@ -46,12 +51,17 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
 
         this.hoverStatusEntered = new MCRootStatusDrawingBoardHoverStatusEntered (this);
         this.hoverStatusLeaved = new MCRootStatusDrawingBoardHoverStatusLeaved (this);
+
+        this.dragStatusIdle = new MCRootStatusDrawingBoardDragStatusIdle (this);
+        this.dargStatusHover = new MCRootStatusDrawingBoardDragStatusHover (this);
+        this.dragStatusTargeted = new MCRootStatusDrawingBoardDragStatusTargeted (this);
     }
 
     onInit (): void {
         this.opEnter (this.opStatusPencil);
         this.touchEnter (this.touchStatusEnded);
         this.hoverEnter (this.hoverStatusLeaved);
+        this.dragEnter (this.dragStatusIdle);
     }
     
     opListStatus = new Array <MCRootStatusDrawingBoardOpStatus> ();
@@ -113,6 +123,27 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
             rec.onExit ();
         };
         this.hoverCurrStatus.onEnter ();
+    }
+
+    dragTargetStart: DBImg;
+
+    dragTargetHover: DBImg;
+
+    dragStatusIdle: MCRootStatusDrawingBoardDragStatusIdle;
+
+    dargStatusHover: MCRootStatusDrawingBoardDragStatusHover;
+
+    dragStatusTargeted: MCRootStatusDrawingBoardDragStatusTargeted;
+
+    dragCurrStatus: MCRootStatusDrawingBoardDragStatus;
+
+    dragEnter (status: MCRootStatusDrawingBoardDragStatus) {
+        let rec = this.dragCurrStatus;
+        this.dragCurrStatus = status;
+        if (rec) {
+            rec.onExit ();
+        };
+        this.dragCurrStatus.onEnter ();
     }
 
     onDisplay (): ReactComponentExtendInstance {

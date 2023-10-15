@@ -4,7 +4,7 @@
  "AUTO_DEBUG_TOOLS_21": false,
  "MC_STATUS_21": 0,
  "MC_STATUS_EXP_STATUS_21": 1,
- "SEED_21": 90,
+ "SEED_21": 95,
  "SMOOTH_PIXEL_TO_SCREEN_APPLICATION_21": 16,
  "SMOOTH_PIXEL_TO_SCREEN_TEMP_21": 16,
  "SMOOTH_DRAW_GRID_21": true,
@@ -33,9 +33,39 @@
    "dataOrigin": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAD9JREFUOE9jZKAQMFKonwFuwP////+DDGNkZMRrKLq6UQMYMAOR2FiBBTZGIJJtALEacUbjqAHEhgCmOopzIwCqTUQRFEYB8gAAAABJRU5ErkJggg==",
    "width": 16,
    "height": 16
+  },
+  {
+   "id": 91,
+   "dataOrigin": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEVJREFUOE9jZKAQMFKonwFuwP////+TYhgjIyNYL/UNgJlMrGswXDDwBhDtdKoHIrE2w6IbIxoH3oCBT4nEhgG6OopzIwDnJTARuFG8EgAAAABJRU5ErkJggg==",
+   "width": 16,
+   "height": 16
+  },
+  {
+   "id": 92,
+   "dataOrigin": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEVJREFUOE9jZKAQMFKonwFuwP////+TYhgjIyNYL/UNgJlMrGswXDDwBhDt9AELRFh044xGQoFIewMGLhCJtRldHcW5EQCx0zwRKKr3DAAAAABJRU5ErkJggg==",
+   "width": 16,
+   "height": 16
+  },
+  {
+   "id": 93,
+   "dataOrigin": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADpJREFUOE9jZKAQMFKonwFuwP////+TYhgjIyNYL/UMINZ2mEsxXDBqALEhwMAwGohUCAP04KY4NwIAiWkwEXCsOogAAAAASUVORK5CYII=",
+   "width": 16,
+   "height": 16
+  },
+  {
+   "id": 94,
+   "dataOrigin": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEFJREFUOE9jZKAQMFKonwFuwP////+TYhgjIyNYL/UNgJmMyzUwl+J0wcAbQGxAjgYiAwPtwoDsWCBWI7o6inMjANlESBFHtW35AAAAAElFTkSuQmCC",
+   "width": 16,
+   "height": 16
+  },
+  {
+   "id": 95,
+   "dataOrigin": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEVJREFUOE9jZKAQMFKonwFuwP////+TYhgjIyNYL/UNgJmMyzUwl+J0wcAbQGxAUj8QibUZZyAOvAEDnxKJDQN0dRTnRgAOpTwRZjrlowAAAABJRU5ErkJggg==",
+   "width": 16,
+   "height": 16
   }
  ],
- "DB_CURRENT_IMG_21": 90,
+ "DB_CURRENT_IMG_21": 95,
  "DB_COLOR_21": "ffffff",
  "DB_WIDTH_21": 16,
  "DB_HEIGHT_21": 16,

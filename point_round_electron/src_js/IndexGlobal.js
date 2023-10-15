@@ -72,6 +72,21 @@ class IndexGlobal {
         this.dbAddCache(imgData);
         return id;
     }
+    /**
+     * 迁移
+     * @param idxFrom
+     * @param idxTo
+     */
+    dbMove(idxFrom, idxTo) {
+        // 缓存图片数据
+        let listImg = MgrData.inst.get(MgrDataItem.DB_LIST_IMG_DATA);
+        let listImgFrom = listImg[idxFrom];
+        listImg.splice(idxFrom, 1);
+        listImg.splice(idxTo, 0, listImgFrom);
+        let dbListImgFrom = this.dbListImg[idxFrom];
+        this.dbListImg.splice(idxFrom, 1);
+        this.dbListImg.splice(idxTo, 0, dbListImgFrom);
+    }
 }
 (function (IndexGlobal) {
     IndexGlobal.inst = new IndexGlobal();

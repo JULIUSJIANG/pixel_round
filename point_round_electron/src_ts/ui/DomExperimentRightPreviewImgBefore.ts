@@ -7,10 +7,12 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomInputNumberHor from "./DomInputNumberHor.js";
 import DomExperimentRightPreviewImgBeforeWebglCutted from "./DomExperimentRightPreviewImgBeforeWebglCutted.js";
 import DomExperimentRightPreviewImgBeforeWebglOrigin from "./DomExperimentRightPreviewImgBeforeWebglOrigin.js";
+import ViewRelativeRateRS from "./ViewRelativeRateRS.js";
 
 class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
+        let relativeRS = ViewRelativeRateRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.VIEW_RELATIVE_RATE));
         let listImgData = MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA);
         let listImgDataInst: MgrDataItem.ExpImgData;
         for (let i = 0; i < listImgData.length; i++) {
@@ -26,7 +28,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
             {
                 style: {
                     [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
-                    [MgrDomDefine.STYLE_FLEX_GROW]: 0.5,
+                    [MgrDomDefine.STYLE_FLEX_GROW]: relativeRS.rateLeft,
 
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                     [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN

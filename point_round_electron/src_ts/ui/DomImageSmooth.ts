@@ -16,6 +16,7 @@ import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrSdk from "../mgr/MgrSdk.js";
 import DomImageSmoothRS from "./DomImageSmoothRS.js";
 import DomInputNumberApplicationHor from "./DomInputNumberApplicationHor.js";
+import ViewRelativeRateRS from "./ViewRelativeRateRS.js";
 
 /**
  * 线的深度
@@ -654,6 +655,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
     private listChildren = new Array <ReactComponentExtendInstance> ();
 
     render (): ReactComponentExtendInstance {
+        let relativeRS = ViewRelativeRateRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.VIEW_RELATIVE_RATE));
         let propsBtnGrid = {
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
@@ -697,7 +699,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             {
                 style: {
                     [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
-                    [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                    [MgrDomDefine.STYLE_FLEX_GROW]: relativeRS.rateRight,
 
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                     [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN

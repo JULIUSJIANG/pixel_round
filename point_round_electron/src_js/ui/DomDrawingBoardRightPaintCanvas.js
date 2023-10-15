@@ -10,8 +10,8 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrSdk from "../mgr/MgrSdk.js";
-import DomImageSmooth from "./DomImageSmooth.js";
 import DomInputNumberApplicationHor from "./DomInputNumberApplicationHor.js";
+import ViewRelativeRateRS from "./ViewRelativeRateRS.js";
 /**
  * 尝试更为灵魂的平滑
  */
@@ -272,13 +272,8 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
         jWebgl.programLine.draw();
     }
     render() {
-        let img;
+        let relativeRS = ViewRelativeRateRS.mapIdToInst.get(MgrData.inst.get(MgrDataItem.VIEW_RELATIVE_RATE));
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
-        if (dataSrc.initCurrStatus == dataSrc.initStatusFinished) {
-            img = dataSrc.imgLoaded;
-        }
-        ;
-        let domImageSmoothArgs = DomImageSmooth.Args.create(img, dataSrc.dbImgData.width, dataSrc.dbImgData.height, 0, 0, 0, 0, 1, 1);
         let propsBtnGrid = {
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
@@ -294,15 +289,8 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
         ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
-                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
-                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
-            }
-        }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
-            style: {
                 [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
-                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                [MgrDomDefine.STYLE_FLEX_GROW]: relativeRS.rateLeft,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
             }
@@ -396,7 +384,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
             onClick: () => {
                 MgrSdk.inst.core.saveFile(`image.png`, this.fboScreen.toBase64());
             }
-        }, `导出 png`)))), ReactComponentExtend.instantiateComponent(DomImageSmooth, domImageSmoothArgs));
+        }, `导出 png`))));
     }
 }
 export default DomDrawingBoardRightPaintCanvas;

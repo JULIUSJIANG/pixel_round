@@ -18,6 +18,13 @@ const VERSION = 21;
      */
     MgrDataItem.listItem = new Array();
     /**
+     * 窗口比值
+     */
+    MgrDataItem.VIEW_RELATIVE_RATE = new MgrDataItem({
+        key: `VIEW_RELATIVE_RATE_${VERSION}`,
+        defVal: 2
+    });
+    /**
      * 左侧栏文件数量
      */
     MgrDataItem.COLUMN_COUNT = new MgrDataItem({

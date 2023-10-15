@@ -31,9 +31,6 @@ namespace FileColumnRS {
      */
     export const mapIdToInst = new Map <number, FileColumnRS> ();
 
-    /**
-     * 列数控制
-     */
     export const column1 = new FileColumnRS ({
         id: 0,
         count: 1

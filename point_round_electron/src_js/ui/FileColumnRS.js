@@ -16,9 +16,6 @@ class FileColumnRS {
      * 标识到实例的映射
      */
     FileColumnRS.mapIdToInst = new Map();
-    /**
-     * 列数控制
-     */
     FileColumnRS.column1 = new FileColumnRS({
         id: 0,
         count: 1

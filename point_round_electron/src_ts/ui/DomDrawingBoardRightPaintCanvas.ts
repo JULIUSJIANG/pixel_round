@@ -16,6 +16,7 @@ import MgrSdk from "../mgr/MgrSdk.js";
 import DomImageSmooth from "./DomImageSmooth.js";
 import DomImageSmoothRS from "./DomImageSmoothRS.js";
 import DomInputNumberApplicationHor from "./DomInputNumberApplicationHor.js";
+import ViewRelativeRateRS from "./ViewRelativeRateRS.js";
 
 /**
  * 尝试更为灵魂的平滑
@@ -424,21 +425,8 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
     }
 
     render (): ReactComponentExtendInstance {
-        let img: HTMLImageElement;
+        let relativeRS = ViewRelativeRateRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.VIEW_RELATIVE_RATE));
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
-        if (dataSrc.initCurrStatus == dataSrc.initStatusFinished) {
-            img = dataSrc.imgLoaded;
-        };
-        let domImageSmoothArgs = DomImageSmooth.Args.create (
-            img,
-
-            dataSrc.dbImgData.width,
-            dataSrc.dbImgData.height,
-
-            0, 0, 0, 0,
-
-            1, 1
-        );
         let propsBtnGrid = {
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
@@ -455,11 +443,11 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
             MgrDomDefine.TAG_DIV,
             {
                 style: {
-                    [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
-                    [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                    [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
+                    [MgrDomDefine.STYLE_FLEX_GROW]: relativeRS.rateLeft,
 
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                    [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                    [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
                 }
             },
 
@@ -467,14 +455,18 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
                 MgrDomDefine.TAG_DIV,
                 {
                     style: {
-                        [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
+                        [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
                         [MgrDomDefine.STYLE_FLEX_GROW]: 1,
-
+                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                        [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                        [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+    
                         [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                         [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
                     }
                 },
-
+    
+                // 滚动视图的遮罩
                 ReactComponentExtend.instantiateTag (
                     MgrDomDefine.TAG_DIV,
                     {
@@ -482,163 +474,144 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
                             [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                             [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
-        
-                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
+                            [MgrDomDefine.STYLE_PADDING_RIGHT]: MgrDomDefine.CONFIG_TXT_SPACING,
+                            [MgrDomDefine.STYLE_PADDING_BOTTOM]: MgrDomDefine.CONFIG_TXT_SPACING,
+    
+                            [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_SCROLL,
+                            [MgrDomDefine.STYLE_OVERFLOW_Y]: MgrDomDefine.STYLE_OVERFLOW_Y_SCROLL
                         }
                     },
-        
-                    // 滚动视图的遮罩
+    
+                    // 滚动的列表
                     ReactComponentExtend.instantiateTag (
                         MgrDomDefine.TAG_DIV,
                         {
                             style: {
-                                [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
-                                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
-                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                                [MgrDomDefine.STYLE_PADDING_RIGHT]: MgrDomDefine.CONFIG_TXT_SPACING,
-                                [MgrDomDefine.STYLE_PADDING_BOTTOM]: MgrDomDefine.CONFIG_TXT_SPACING,
-        
-                                [MgrDomDefine.STYLE_OVERFLOW_X]: MgrDomDefine.STYLE_OVERFLOW_X_SCROLL,
-                                [MgrDomDefine.STYLE_OVERFLOW_Y]: MgrDomDefine.STYLE_OVERFLOW_Y_SCROLL
+                                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
+                                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
+                                [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                             }
                         },
-        
-                        // 滚动的列表
+                    
                         ReactComponentExtend.instantiateTag (
                             MgrDomDefine.TAG_DIV,
                             {
                                 style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
-                                    [MgrDomDefine.STYLE_FLEX_GROW]: 0,
+                                    [MgrDomDefine.STYLE_WIDTH]: 0,
+                                    [MgrDomDefine.STYLE_HEIGHT]: 0,
+                                    [MgrDomDefine.STYLE_POSITION]: MgrDomDefine.STYLE_POSITION_RELATIVE,
+                                    [MgrDomDefine.STYLE_LEFT]: 0,
+                                    [MgrDomDefine.STYLE_TOP]: 0,
                                 }
                             },
                         
                             ReactComponentExtend.instantiateTag (
-                                MgrDomDefine.TAG_DIV,
+                                MgrDomDefine.TAG_CANVAS,
                                 {
+                                    ref: this.canvasWebglRef,
+                                    width: dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA,
+                                    height: dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA,
                                     style: {
-                                        [MgrDomDefine.STYLE_WIDTH]: 0,
-                                        [MgrDomDefine.STYLE_HEIGHT]: 0,
-                                        [MgrDomDefine.STYLE_POSITION]: MgrDomDefine.STYLE_POSITION_RELATIVE,
-                                        [MgrDomDefine.STYLE_LEFT]: 0,
-                                        [MgrDomDefine.STYLE_TOP]: 0,
+                                        [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
+                                        [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
+                                        [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                     }
-                                },
-                            
-                                ReactComponentExtend.instantiateTag (
-                                    MgrDomDefine.TAG_CANVAS,
-                                    {
-                                        ref: this.canvasWebglRef,
-                                        width: dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA,
-                                        height: dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA,
-                                        style: {
-                                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
-                                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}px`,
-                                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
-                                        }
-                                    }
-                                )
+                                }
                             )
                         )
-                    ),
+                    )
                 ),
+            ),
 
-                // 控制栏
+            // 控制栏
+            ReactComponentExtend.instantiateTag (
+                MgrDomDefine.TAG_DIV,
+                {
+                    style: {
+                        [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                    }
+                },
+
                 ReactComponentExtend.instantiateTag (
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
+                            [MgrDomDefine.STYLE_FLEX_GROW]: 0,
+
                             [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
                         }
                     },
 
-                    ReactComponentExtend.instantiateTag (
-                        MgrDomDefine.TAG_DIV,
-                        {
-                            style: {
-                                [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-    
-                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                            }
-                        },
-    
-                        ReactComponentExtend.instantiateComponent (
-                            DomInputNumberApplicationHor,
-                            DomInputNumberApplicationHor.Args.create (
-                                `像素尺寸 1 : ${MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}`,
-                                MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP),
-                                null,
-                                null,
-                                (val) => {
-                                    MgrData.inst.set (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP, val);
-                                },
-                                () => {
-                                    if (MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP) < IndexGlobal.DB_PIXEL_TO_SCREEN_MIN || IndexGlobal.DB_PIXEL_TO_SCREEN_MAX < MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP)) {
-                                        NodeModules.antd.message.error(`比值范围为 ${IndexGlobal.DB_PIXEL_TO_SCREEN_MIN} - ${IndexGlobal.DB_PIXEL_TO_SCREEN_MAX}，当前为 ${MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP)}`);
-                                        return;
-                                    };
-                                    MgrData.inst.set (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION, MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP));
-                                }
-                            ),
-                        ),
-                    ),
-
-                    ReactComponentExtend.instantiateTag (
-                        MgrDomDefine.TAG_DIV,
-                        {
-                            style: {
-                                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
-                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_NUMBER_HALF_SPACING,
-                                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_NUMBER_HALF_SPACING,
-                                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
-
-                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                            }
-                        },
-                        ReactComponentExtend.instantiateTag (
-                            MgrDomDefine.TAG_DIV,
-                            {
-                                style: {
-                                    [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                                    [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                                }
+                    ReactComponentExtend.instantiateComponent (
+                        DomInputNumberApplicationHor,
+                        DomInputNumberApplicationHor.Args.create (
+                            `像素尺寸 1 : ${MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION)}`,
+                            MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP),
+                            null,
+                            null,
+                            (val) => {
+                                MgrData.inst.set (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP, val);
                             },
-
-                            ReactComponentExtend.instantiateTag (
-                                NodeModules.antd.Button,
-                                propsBtnGrid,
-                
-                                `显示网格`
-                            ),
-                        ),
-                        ReactComponentExtend.instantiateTag (
-                            NodeModules.antd.Button,
-                            {
-                                style: {
-                                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                                },
-                                onClick: () => {
-                                    MgrSdk.inst.core.saveFile (
-                                        `image.png`,
-                                        this.fboScreen.toBase64 ()
-                                    );
-                                }
-                            },
-            
-                            `导出 png`
+                            () => {
+                                if (MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP) < IndexGlobal.DB_PIXEL_TO_SCREEN_MIN || IndexGlobal.DB_PIXEL_TO_SCREEN_MAX < MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP)) {
+                                    NodeModules.antd.message.error(`比值范围为 ${IndexGlobal.DB_PIXEL_TO_SCREEN_MIN} - ${IndexGlobal.DB_PIXEL_TO_SCREEN_MAX}，当前为 ${MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP)}`);
+                                    return;
+                                };
+                                MgrData.inst.set (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION, MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_TEMP));
+                            }
                         ),
                     ),
                 ),
-            ),
+
+                ReactComponentExtend.instantiateTag (
+                    MgrDomDefine.TAG_DIV,
+                    {
+                        style: {
+                            [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                            [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_NUMBER_HALF_SPACING,
+                            [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_NUMBER_HALF_SPACING,
+                            [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+
+                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                        }
+                    },
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                            }
+                        },
+
+                        ReactComponentExtend.instantiateTag (
+                            NodeModules.antd.Button,
+                            propsBtnGrid,
             
-            ReactComponentExtend.instantiateComponent (DomImageSmooth, domImageSmoothArgs),
+                            `显示网格`
+                        ),
+                    ),
+                    ReactComponentExtend.instantiateTag (
+                        NodeModules.antd.Button,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                            },
+                            onClick: () => {
+                                MgrSdk.inst.core.saveFile (
+                                    `image.png`,
+                                    this.fboScreen.toBase64 ()
+                                );
+                            }
+                        },
+        
+                        `导出 png`
+                    ),
+                ),
+            ),
         );
     }
 }

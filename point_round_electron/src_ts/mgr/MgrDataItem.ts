@@ -37,6 +37,14 @@ namespace MgrDataItem {
     export const listItem: Array <MgrDataItem <unknown>> = new Array ();
 
     /**
+     * 窗口比值
+     */
+    export const VIEW_RELATIVE_RATE = new MgrDataItem <number> ({
+        key: `VIEW_RELATIVE_RATE_${VERSION}`,
+        defVal: 2
+    });
+
+    /**
      * 左侧栏文件数量
      */
     export const COLUMN_COUNT = new MgrDataItem <number> ({

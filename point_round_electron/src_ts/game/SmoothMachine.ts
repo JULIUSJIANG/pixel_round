@@ -7,6 +7,8 @@ import MgrData from "../mgr/MgrData.js";
 import SmoothMachineStatusLoaded from "./SmoothMachineStatusLoaded.js";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 import MgrRes from "../mgr/MgrRes.js";
+import IndexGlobal from "../IndexGlobal.js";
+import ExpImg from "./ExpImg.js";
 
 /**
  * 图片存档的状态机
@@ -23,7 +25,7 @@ class SmoothMachine {
     /**
      * 存档的对象实例
      */
-    dataInst: MgrDataItem.ExpImgData;
+    dataInst: ExpImg;
     /**
      * 存档对应的图片资源
      */
@@ -33,16 +35,15 @@ class SmoothMachine {
         this.rel = rel;
         this.dataId = relId;
 
-        let listData = MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA);
-        for (let i = 0; i < listData.length; i++) {
-            let listDataI = listData [i];
-            if (listDataI.id == this.dataId) {
-                this.dataInst = listDataI;
+        for (let i = 0; i < IndexGlobal.inst.expListImg.length; i++) {
+            let expListImgI = IndexGlobal.inst.expListImg [i];
+            if (expListImgI.expImgData.id == this.dataId) {
+                this.dataInst = expListImgI;
                 break;
             };
         };
 
-        this.assetsImg = MgrRes.inst.getImg (this.dataInst.dataOrigin);
+        this.assetsImg = MgrRes.inst.getImg (this.dataInst.expImgData.dataOrigin);
 
         this.statusIdle = new SmoothMachineStatusIdle (this);
         this.statusLoaded = new SmoothMachineStatusLoaded (this);

@@ -4,6 +4,7 @@ import MgrDataItem from "./mgr/MgrDataItem.js";
 import MgrSdk from "./mgr/MgrSdk.js";
 import DBImg from "./game/DBImg.js";
 import DomImageSmoothRS from "./ui/DomImageSmoothRS.js";
+import ExpImg from "./game/ExpImg.js";
 
 class IndexGlobal {
     /**
@@ -21,14 +22,75 @@ class IndexGlobal {
         };
 
         // 缓存图片数据
-        let listImg = MgrData.inst.get (MgrDataItem.DB_LIST_IMG_DATA);
-        for (let i = 0; i < listImg.length; i++) {
-            let listImgI = listImg [i];
-            this.dbAddCache (listImgI);
+        let dbListImg = MgrData.inst.get (MgrDataItem.DB_LIST_IMG_DATA);
+        for (let i = 0; i < dbListImg.length; i++) {
+            let dbListImgI = dbListImg [i];
+            this.dbAddCache (dbListImgI);
+        };
+
+        // 缓存实验数据
+        let expListImg = MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA);
+        for (let i = 0; i < expListImg.length; i++) {
+            let expListImgI = expListImg [i];
+            this.expAddCache (expListImgI);
         };
 
         this.mcRoot = new MCRoot (this);
         this.mcRoot.onInit ();
+    }
+
+    /**
+     * 实验数据的集合
+     */
+    expListImg = new Array <ExpImg> ();
+
+    /**
+     * 标识到实验数据的映射
+     */
+    expMapIdToImg = new Map <number, ExpImg> ();
+
+    /**
+     * 加入到缓存
+     * @param imgData 
+     */
+    expAddCache (imgData: MgrDataItem.ExpImgData) {
+        let expImg = new ExpImg (imgData);
+        this.expListImg.push (expImg);
+        this.expMapIdToImg.set (expImg.expImgData.id, expImg);
+    }
+
+    /**
+     * 创建实例
+     * @param dataUrl 
+     */
+    expCreate (dataUrl: string) {
+        let id = MgrData.inst.get (MgrDataItem.SEED);
+        id++;
+        MgrData.inst.set (MgrDataItem.SEED, id);
+        let imgData: MgrDataItem.ExpImgData = {
+            id: id,
+            dataOrigin: IndexGlobal.mcExpCreate ().img.src,
+            paddingTop: 0,
+            paddingRight: 0,
+            paddingBottom: 0,
+            paddingLeft: 0,
+            pixelWidth: 1,
+            pixelHeight: 1
+        };
+        MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA).push (imgData);
+        this.expAddCache (imgData);
+        return id;
+    }
+
+    /**
+     * 删除某索引的记录
+     * @param idx 
+     */
+    expDelete (idx: number) {
+        let rec = this.expListImg [idx];
+        this.expMapIdToImg.delete (rec.expImgData.id);
+        this.expListImg.splice (idx, 1);
+        MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA).splice (idx, 1);
     }
 
     /**

@@ -15,7 +15,7 @@ class SmoothMachineStatusCached extends SmoothMachineStatus {
      * @param val 
      */
     onValPaddingLeft (val: number) {
-        this.relMachine.dataInst.paddingLeft = val;
+        this.relMachine.dataInst.expImgData.paddingLeft = val;
         this.onSizeChanged ();
     }
     /**
@@ -23,7 +23,7 @@ class SmoothMachineStatusCached extends SmoothMachineStatus {
      * @param val 
      */
     onValPaddingRight (val: number) {
-        this.relMachine.dataInst.paddingRight = val;
+        this.relMachine.dataInst.expImgData.paddingRight = val;
         this.onSizeChanged ();
     }
     /**
@@ -31,7 +31,7 @@ class SmoothMachineStatusCached extends SmoothMachineStatus {
      * @param val 
      */
     onValPaddingTop (val: number) {
-        this.relMachine.dataInst.paddingTop = val;
+        this.relMachine.dataInst.expImgData.paddingTop = val;
         this.onSizeChanged ();
     }
     /**
@@ -39,7 +39,7 @@ class SmoothMachineStatusCached extends SmoothMachineStatus {
      * @param val 
      */
     onValPaddingBottom (val: number) {
-        this.relMachine.dataInst.paddingBottom = val;
+        this.relMachine.dataInst.expImgData.paddingBottom = val;
         this.onSizeChanged ();
     }
     /**
@@ -47,7 +47,7 @@ class SmoothMachineStatusCached extends SmoothMachineStatus {
      * @param val 
      */
     onValPixelWidth (val: number) {
-        this.relMachine.dataInst.pixelWidth = val;
+        this.relMachine.dataInst.expImgData.pixelWidth = val;
         this.onSizeChanged ();
     }
     /**
@@ -55,7 +55,7 @@ class SmoothMachineStatusCached extends SmoothMachineStatus {
      * @param val 
      */
     onValPixelHeight (val: number) {
-        this.relMachine.dataInst.pixelHeight = val;
+        this.relMachine.dataInst.expImgData.pixelHeight = val;
         this.onSizeChanged ();
     }
 }

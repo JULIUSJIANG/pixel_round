@@ -456,11 +456,10 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                             okText: "确定",
                             cancelText: "取消",
                             onConfirm: () => {
-                                let listImgData = MgrData.inst.get (MgrDataItem.DB_LIST_IMG_DATA);
                                 let targetIdx: number;
-                                for (let i = 0; i < listImgData.length; i++) {
-                                    let imgData = listImgData [i];
-                                    if (imgData.id == MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG)) {
+                                for (let i = 0; i < IndexGlobal.inst.dbListImg.length; i++) {
+                                    let imgData = IndexGlobal.inst.dbListImg [i];
+                                    if (imgData.dbImgData.id == MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG)) {
                                         targetIdx = i;
                                         break;
                                     };
@@ -469,9 +468,9 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                                 IndexGlobal.inst.dbDelete (targetIdx);
                             
                                 // 尽量维持选择状态
-                                targetIdx = Math.min (targetIdx, listImgData.length - 1);
+                                targetIdx = Math.min (targetIdx, IndexGlobal.inst.dbListImg.length - 1);
                                 if (0 <= targetIdx) {
-                                    MgrData.inst.set (MgrDataItem.DB_CURRENT_IMG, listImgData [targetIdx].id);
+                                    MgrData.inst.set (MgrDataItem.DB_CURRENT_IMG, IndexGlobal.inst.dbListImg [targetIdx].dbImgData.id);
                                 };
                                 MgrData.inst.callDataChange ();
                             },

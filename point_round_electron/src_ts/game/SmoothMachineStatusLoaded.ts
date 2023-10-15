@@ -13,17 +13,17 @@ class SmoothMachineStatusLoaded extends SmoothMachineStatus {
             1,
             1,
 
-            this.relMachine.dataInst.paddingTop,
-            this.relMachine.dataInst.paddingRight,
-            this.relMachine.dataInst.paddingBottom,
-            this.relMachine.dataInst.paddingLeft,
+            this.relMachine.dataInst.expImgData.paddingTop,
+            this.relMachine.dataInst.expImgData.paddingRight,
+            this.relMachine.dataInst.expImgData.paddingBottom,
+            this.relMachine.dataInst.expImgData.paddingLeft,
 
-            this.relMachine.dataInst.pixelWidth,
-            this.relMachine.dataInst.pixelHeight,
+            this.relMachine.dataInst.expImgData.pixelWidth,
+            this.relMachine.dataInst.expImgData.pixelHeight,
         );
 
-        this.relMachine.rel.imgWidthShowAll = (this.relMachine.assetsImg.image.width + Math.max (this.relMachine.dataInst.paddingLeft, 0) + Math.max (this.relMachine.dataInst.paddingRight, 0));
-        this.relMachine.rel.imgHeightShowAll = (this.relMachine.assetsImg.image.height + Math.max (this.relMachine.dataInst.paddingBottom, 0) + Math.max (this.relMachine.dataInst.paddingTop, 0));
+        this.relMachine.rel.imgWidthShowAll = (this.relMachine.assetsImg.image.width + Math.max (this.relMachine.dataInst.expImgData.paddingLeft, 0) + Math.max (this.relMachine.dataInst.expImgData.paddingRight, 0));
+        this.relMachine.rel.imgHeightShowAll = (this.relMachine.assetsImg.image.height + Math.max (this.relMachine.dataInst.expImgData.paddingBottom, 0) + Math.max (this.relMachine.dataInst.expImgData.paddingTop, 0));
     }
 
     onCached (): void {

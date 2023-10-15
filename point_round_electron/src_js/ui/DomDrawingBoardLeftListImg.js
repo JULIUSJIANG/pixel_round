@@ -94,7 +94,7 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend {
             props.style[MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
         }
         ;
-        if (MgrData.inst.get(MgrDataItem.DB_CURRENT_IMG) == this.props.dbImg.dbImgData.id) {
+        if (MgrData.inst.get(MgrDataItem.DB_CURRENT_IMG) == this.props.dbImg.maskCurrStatus.onGetData().dbImgData.id) {
             props[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         else {

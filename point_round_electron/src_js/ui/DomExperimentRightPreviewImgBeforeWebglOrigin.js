@@ -46,10 +46,10 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
         this.jWebgl.clear();
         let imgWidth = imgMachine.assetsImg.image.width;
         let imgHeight = imgMachine.assetsImg.image.height;
-        let paddingTop = Math.max(imgMachine.dataInst.paddingTop, 0);
-        let paddingRight = Math.max(imgMachine.dataInst.paddingRight, 0);
-        let paddingBottom = Math.max(imgMachine.dataInst.paddingBottom, 0);
-        let paddingLeft = Math.max(imgMachine.dataInst.paddingLeft, 0);
+        let paddingTop = Math.max(imgMachine.dataInst.expImgData.paddingTop, 0);
+        let paddingRight = Math.max(imgMachine.dataInst.expImgData.paddingRight, 0);
+        let paddingBottom = Math.max(imgMachine.dataInst.expImgData.paddingBottom, 0);
+        let paddingLeft = Math.max(imgMachine.dataInst.expImgData.paddingLeft, 0);
         let viewWidth = imgMachine.assetsImg.image.width + paddingRight + paddingLeft;
         let viewHeight = imgMachine.assetsImg.image.height + paddingTop + paddingBottom;
         this.jWebgl.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);
@@ -57,7 +57,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
         this.jWebgl.refreshMat4Mvp();
         // 图片
         this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uTexture.fillByImg(this.jWebgl.getImg(imgMachine.dataInst.dataOrigin));
+        this.jWebgl.programImg.uTexture.fillByImg(this.jWebgl.getImg(imgMachine.dataInst.expImgData.dataOrigin));
         this.posImg.elements[0] = imgWidth / 2 + paddingLeft;
         this.posImg.elements[1] = imgHeight / 2 + paddingBottom;
         this.jWebgl.programImg.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgWidth, imgHeight);
@@ -84,10 +84,10 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
         this.jWebgl.programLine.draw();
         // 裁切
         this.jWebgl.programTriangle.uMvp.fill(this.jWebgl.mat4Mvp);
-        let posTop = viewHeight + Math.min(imgMachine.dataInst.paddingTop, 0);
-        let posRight = viewWidth + Math.min(imgMachine.dataInst.paddingRight, 0);
-        let posBottom = -Math.min(imgMachine.dataInst.paddingBottom, 0);
-        let posLeft = -Math.min(imgMachine.dataInst.paddingLeft, 0);
+        let posTop = viewHeight + Math.min(imgMachine.dataInst.expImgData.paddingTop, 0);
+        let posRight = viewWidth + Math.min(imgMachine.dataInst.expImgData.paddingRight, 0);
+        let posBottom = -Math.min(imgMachine.dataInst.expImgData.paddingBottom, 0);
+        let posLeft = -Math.min(imgMachine.dataInst.expImgData.paddingLeft, 0);
         let colorMask = JWebglColor.COLOR_BLUE_ALPHA;
         this.posOutLB.elements[0] = 0;
         this.posOutLB.elements[1] = 0;

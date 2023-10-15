@@ -31,19 +31,18 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                     okText: "确定",
                     cancelText: "取消",
                     onConfirm: () => {
-                        let listImgData = MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA);
                         let targetIdx: number;
-                        for (let i = 0; i < listImgData.length; i++) {
-                            let imgData = listImgData [i];
-                            if (imgData.id == MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG)) {
+                        for (let i = 0; i < IndexGlobal.inst.expListImg.length; i++) {
+                            let imgData = IndexGlobal.inst.expListImg [i];
+                            if (imgData.expImgData.id == MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG)) {
                                 targetIdx = i;
                                 break;
                             };
                         };
-                        listImgData.splice (targetIdx, 1);
-                        targetIdx = Math.min (targetIdx, listImgData.length - 1);
+                        IndexGlobal.inst.expDelete (targetIdx);
+                        targetIdx = Math.min (targetIdx, IndexGlobal.inst.expListImg.length - 1);
                         if (0 <= targetIdx) {
-                            IndexGlobal.mcExp ().currStatus.onImg (listImgData [targetIdx].id);
+                            IndexGlobal.mcExp ().currStatus.onImg (IndexGlobal.inst.expListImg [targetIdx].expImgData.id);
                         }
                         else {
                             IndexGlobal.mcExp ().currStatus.onCreate ();

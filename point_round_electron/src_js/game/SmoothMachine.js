@@ -1,9 +1,9 @@
 import SmoothMachineStatusIdle from "./SmoothMachineStatusIdle.js";
 import SmoothMachineStatusCached from "./SmoothMachineStatusCached.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrData from "../mgr/MgrData.js";
 import SmoothMachineStatusLoaded from "./SmoothMachineStatusLoaded.js";
 import MgrRes from "../mgr/MgrRes.js";
+import IndexGlobal from "../IndexGlobal.js";
 /**
  * 图片存档的状态机
  */
@@ -11,17 +11,16 @@ class SmoothMachine {
     constructor(rel, relId) {
         this.rel = rel;
         this.dataId = relId;
-        let listData = MgrData.inst.get(MgrDataItem.EXP_LIST_IMG_DATA);
-        for (let i = 0; i < listData.length; i++) {
-            let listDataI = listData[i];
-            if (listDataI.id == this.dataId) {
-                this.dataInst = listDataI;
+        for (let i = 0; i < IndexGlobal.inst.expListImg.length; i++) {
+            let expListImgI = IndexGlobal.inst.expListImg[i];
+            if (expListImgI.expImgData.id == this.dataId) {
+                this.dataInst = expListImgI;
                 break;
             }
             ;
         }
         ;
-        this.assetsImg = MgrRes.inst.getImg(this.dataInst.dataOrigin);
+        this.assetsImg = MgrRes.inst.getImg(this.dataInst.expImgData.dataOrigin);
         this.statusIdle = new SmoothMachineStatusIdle(this);
         this.statusLoaded = new SmoothMachineStatusLoaded(this);
         this.statusCached = new SmoothMachineStatusCached(this);

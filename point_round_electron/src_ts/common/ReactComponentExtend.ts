@@ -1,4 +1,5 @@
 import NodeModules from "../NodeModules.js";
+import Eventer from "./Eventer.js";
 import objectPool from "./ObjectPool.js";
 import ReactComponentExtendInstance from "./ReactComponentExtendInstance.js";
 

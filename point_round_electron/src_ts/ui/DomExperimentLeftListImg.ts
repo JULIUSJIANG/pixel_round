@@ -8,7 +8,73 @@ import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import MgrRes from "../mgr/MgrRes.js";
 
+const EVT_NAME_DRAG_START = `dragstart`;
+const EVT_NAME_DRAG_ING = `drag`;
+const EVT_NAME_DRAG_END = `dragend`;
+
+const EVT_NAME_DRAG_ENTER = `dragenter`;
+const EVT_NAME_DRAG_OVER = `dragover`;
+const EVT_NAME_DRAG_LEAVE = `dragleave`;
+
 class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftListImg.Args> {
+
+    /**
+     * 3d canvas 引用器
+     */
+    ref = NodeModules.react.createRef();
+
+    reactComponentExtendOnInit (): void {
+        let tag = this.ref.current as HTMLDivElement;
+        tag.addEventListener (
+            EVT_NAME_DRAG_START, 
+            (event) => {
+
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DRAG_ING, 
+            (event) => {
+
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DRAG_END, 
+            (event) => {
+
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DRAG_ENTER, 
+            (event) => {
+
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DRAG_OVER, 
+            (event) => {
+
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DRAG_LEAVE, 
+            (event) => {
+
+            }
+        );
+    }
+
+    /**
+     * 数据标识
+     */
+    idImgData: number;
+
+    reactComponentExtendOnDraw (): void {
+        this.idImgData = this.props.imgData.id;
+    }
+
+    reactComponentExtendOnRelease (): void {
+        
+    }
 
     render (): ReactComponentExtendInstance {
         let img = MgrRes.inst.getImg (this.props.imgData.dataOrigin);
@@ -37,7 +103,8 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
                         [MgrDomDefine.STYLE_MARGIN_LEFT]: `${marginX}px`,
                         "imageRendering": `pixelated`,
                     },
-                    src: img.image.src
+                    src: img.image.src,
+                    draggable: `false`,
                 }
             )
         };
@@ -50,7 +117,10 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
                 [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
-            }
+            },
+
+            draggable: `true`,
+            ref: this.ref,
         };
         if (this.props.j != 0) {
             props.style [MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;

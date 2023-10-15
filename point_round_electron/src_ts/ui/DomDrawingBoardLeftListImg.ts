@@ -8,7 +8,66 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 
+const EVT_NAME_DRAG_START = `dragstart`;
+const EVT_NAME_DRAG_ING = `drag`;
+const EVT_NAME_DRAG_END = `dragend`;
+
+const EVT_NAME_DRAG_ENTER = `dragenter`;
+const EVT_NAME_DRAG_OVER = `dragover`;
+const EVT_NAME_DRAG_LEAVE = `dragleave`;
+
 class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLeftListImg.Args> {
+
+    ref = NodeModules.react.createRef ();
+
+    reactComponentExtendOnInit (): void {
+        let tag = this.ref.current as HTMLDivElement;
+        tag.addEventListener (
+            EVT_NAME_DRAG_START, 
+            (event) => {
+                
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DRAG_ING, 
+            (event) => {
+
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DRAG_END, 
+            (event) => {
+
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DRAG_ENTER, 
+            (event) => {
+
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DRAG_OVER, 
+            (event) => {
+
+            }
+        );
+        tag.addEventListener (
+            EVT_NAME_DRAG_LEAVE, 
+            (event) => {
+
+            }
+        );
+    }
+
+    /**
+     * 数据标识
+     */
+    relDbImg: DBImg;
+
+    reactComponentExtendOnDraw (): void {
+        this.relDbImg = this.props.dbImg;
+    }
 
     render (): ReactComponentExtendInstance {
         let imgInst: ReactComponentExtendInstance;
@@ -37,7 +96,8 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
                         [MgrDomDefine.STYLE_MARGIN_LEFT]: `${marginX}px`,
                         "imageRendering": `pixelated`,
                     },
-                    src: image.src
+                    src: image.src,
+                    draggable: `false`,
                 }
             )
         };
@@ -51,7 +111,9 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
                 [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
-            }
+            },
+            draggable: `true`,
+            ref: this.ref,
         };
         if (this.props.j != 0) {
             props.style [MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;

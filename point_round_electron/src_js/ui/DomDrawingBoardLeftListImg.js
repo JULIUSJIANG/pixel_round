@@ -19,16 +19,22 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend {
     reactComponentExtendOnInit() {
         let tag = this.ref.current;
         tag.addEventListener(EVT_NAME_DRAG_START, (event) => {
+            // console.log (EVT_NAME_DRAG_START);
         });
         tag.addEventListener(EVT_NAME_DRAG_ING, (event) => {
+            // console.log (EVT_NAME_DRAG_ING);
         });
         tag.addEventListener(EVT_NAME_DRAG_END, (event) => {
+            // console.log (EVT_NAME_DRAG_END);
         });
         tag.addEventListener(EVT_NAME_DRAG_ENTER, (event) => {
+            // console.log (EVT_NAME_DRAG_ENTER);
         });
         tag.addEventListener(EVT_NAME_DRAG_OVER, (event) => {
+            // console.log (EVT_NAME_DRAG_OVER);
         });
         tag.addEventListener(EVT_NAME_DRAG_LEAVE, (event) => {
+            // console.log (EVT_NAME_DRAG_LEAVE);
         });
     }
     reactComponentExtendOnDraw() {

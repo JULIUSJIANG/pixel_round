@@ -1,4 +1,4 @@
-import MCRootStatusExperimentStatusSmooth from "./MCRootStatusExperimentStatusSmooth.js";
+import MCRootStatusExperimentDetailStatusSmooth from "./MCRootStatusExperimentDetailStatusSmooth.js";
 import SmoothMachineStatus from "./SmoothMachineStatus.js";
 import SmoothMachineStatusIdle from "./SmoothMachineStatusIdle.js";
 import SmoothMachineStatusCached from "./SmoothMachineStatusCached.js";
@@ -17,7 +17,7 @@ class SmoothMachine {
     /**
      * 归属的界面状态
      */
-    rel: MCRootStatusExperimentStatusSmooth;
+    rel: MCRootStatusExperimentDetailStatusSmooth;
     /**
      * 存档id
      */
@@ -31,7 +31,7 @@ class SmoothMachine {
      */
     assetsImg: MgrResAssetsImage;
 
-    constructor (rel: MCRootStatusExperimentStatusSmooth, relId: number) {
+    constructor (rel: MCRootStatusExperimentDetailStatusSmooth, relId: number) {
         this.rel = rel;
         this.dataId = relId;
 

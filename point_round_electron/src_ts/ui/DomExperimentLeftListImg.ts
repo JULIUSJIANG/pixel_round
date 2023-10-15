@@ -3,6 +3,7 @@ import NodeModules from "../NodeModules.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
+import ExpImg from "../game/ExpImg.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
@@ -28,7 +29,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
         tag.addEventListener (
             EVT_NAME_DRAG_START, 
             (event) => {
-
+                IndexGlobal.mcExp ().dragCurrStatus.onStart (this.relDbImg);
             }
         );
         tag.addEventListener (
@@ -40,25 +41,25 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
         tag.addEventListener (
             EVT_NAME_DRAG_END, 
             (event) => {
-
+                IndexGlobal.mcExp ().dragCurrStatus.onEnd ();
             }
         );
         tag.addEventListener (
             EVT_NAME_DRAG_ENTER, 
             (event) => {
-
+                IndexGlobal.mcExp ().dragCurrStatus.onTargetEnter (this.relDbImg);
             }
         );
         tag.addEventListener (
             EVT_NAME_DRAG_OVER, 
             (event) => {
-
+                event.preventDefault();
             }
         );
         tag.addEventListener (
             EVT_NAME_DRAG_LEAVE, 
             (event) => {
-
+                IndexGlobal.mcExp ().dragCurrStatus.onTargetEnterLeave ();
             }
         );
     }
@@ -66,10 +67,10 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
     /**
      * 数据标识
      */
-    idImgData: number;
+    relDbImg: ExpImg;
 
     reactComponentExtendOnDraw (): void {
-        this.idImgData = this.props.imgData.id;
+        this.idImgData = this.props.imgData;
     }
 
     reactComponentExtendOnRelease (): void {
@@ -77,7 +78,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
     }
 
     render (): ReactComponentExtendInstance {
-        let img = MgrRes.inst.getImg (this.props.imgData.dataOrigin);
+        let img = MgrRes.inst.getImg (this.props.imgData.maskCurrStatus.onGetData().expImgData.dataOrigin);
         let imgInst: ReactComponentExtendInstance;
         // 加载完成才显示
         if (img.currStatus == img.statusFinished) {
@@ -111,7 +112,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
         let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
-                IndexGlobal.mcExp ().currStatus.onImg (this.props.imgData.id);
+                IndexGlobal.mcExp ().detailCurrStatus.onImg (this.props.imgData.expImgData.id);
             },
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
@@ -125,7 +126,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
         if (this.props.j != 0) {
             props.style [MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
         };
-        if (IndexGlobal.mcExp ().currStatus == IndexGlobal.mcExp ().statusPreview && this.props.imgData.id == MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG)) {
+        if (IndexGlobal.mcExp ().detailCurrStatus == IndexGlobal.mcExp ().detailStatusPreview && this.props.imgData.maskCurrStatus.onGetData().expImgData.id == MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG)) {
             props [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         else {
@@ -166,13 +167,13 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
 namespace DomExperimentLeftListImg {
     export class Args {
 
-        imgData: MgrDataItem.ExpImgData;
+        imgData: ExpImg;
 
         i: number;
 
         j: number;
 
-        init (imgData: MgrDataItem.ExpImgData, i: number, j: number) {
+        init (imgData: ExpImg, i: number, j: number) {
             this.imgData = imgData;
             this.i = i;
             this.j = j;

@@ -94,6 +94,24 @@ class IndexGlobal {
     }
 
     /**
+     * 迁移
+     * @param idxFrom 
+     * @param idxTo 
+     */
+    expMove (idxFrom: number, idxTo: number) {
+        // 缓存图片数据
+        let listImg = MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA);
+        
+        let listImgFrom = listImg [idxFrom];
+        listImg.splice (idxFrom, 1);
+        listImg.splice (idxTo, 0, listImgFrom);
+
+        let expListImgFrom = this.expListImg [idxFrom];
+        this.expListImg.splice (idxFrom, 1);
+        this.expListImg.splice (idxTo, 0, expListImgFrom);
+    }
+
+    /**
      * 绘板数据的集合
      */
     dbListImg = new Array <DBImg> ();
@@ -186,7 +204,7 @@ namespace IndexGlobal {
      * 实验状态机 - 创建
      */
     export function mcExpCreate () {
-        return inst.mcRoot.statusExperiment.statusCreate;
+        return inst.mcRoot.statusExperiment.detailStatusCreate;
     }
 
     /**

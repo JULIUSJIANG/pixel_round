@@ -3,18 +3,14 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import DomExperimentRightPreview from "../ui/DomExperimentRightPreview.js";
-import MCRootStatusExperimentStatus from "./MCRootStatusExperimentStatus.js";
+import MCRootStatusExperimentDetailStatus from "./MCRootStatusExperimentDetailStatus.js";
 import TextureColor from "./TextureColor.js";
 import SmoothMachine from "./SmoothMachine.js";
-import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
-import JWebgl from "../common/JWebgl.js";
-import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
-import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import objectPool from "../common/ObjectPool.js";
 import DomImageSmooth from "../ui/DomImageSmooth.js";
 import MCRootStatusExperiment from "./MCRootStatusExperiment.js";
 
-export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExperimentStatus {
+export default class MCRootStatusExperimentDetailStatusSmooth extends MCRootStatusExperimentDetailStatus {
 
     constructor (machine: MCRootStatusExperiment, id: number) {
         super (machine, id);
@@ -26,7 +22,7 @@ export default class MCRootStatusExperimentStatusSmooth extends MCRootStatusExpe
     }
 
     onCreate (): void {
-        this.relMachine.enter (this.relMachine.statusCreate);
+        this.relMachine.detailEnter (this.relMachine.detailStatusCreate);
     }
 
     /**

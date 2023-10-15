@@ -42,7 +42,7 @@ export default class DomExperimentLeftList extends ReactComponentExtend <number>
                 };
                 let imgData = IndexGlobal.inst.expListImg [i + j];
                 let args = objectPool.pop (DomExperimentLeftListImg.Args.poolType);
-                args.init (imgData.expImgData, i, j);
+                args.init (imgData, i, j);
                 this.listChildrenContainer.push (ReactComponentExtend.instantiateComponent (DomExperimentLeftListImg, args));
             };
             this.listChildren.push (ReactComponentExtend.instantiateTag (

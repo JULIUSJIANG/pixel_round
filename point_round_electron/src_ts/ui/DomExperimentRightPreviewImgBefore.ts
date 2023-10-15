@@ -57,7 +57,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         `左内边距`, 
                         listImgDataInst.expImgData.paddingLeft,
                         (val) => {
-                            IndexGlobal.mcExp ().statusPreview.imgMachine.currStatus.onValPaddingLeft (Math.floor (val));
+                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPaddingLeft (Math.floor (val));
                         },
                         null,
                         null
@@ -66,7 +66,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         `右内边距`, 
                         listImgDataInst.expImgData.paddingRight,
                         (val) => {
-                            IndexGlobal.mcExp ().statusPreview.imgMachine.currStatus.onValPaddingRight (Math.floor (val));
+                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPaddingRight (Math.floor (val));
                         },
                         null,
                         null
@@ -85,7 +85,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         `上内边距`,
                         listImgDataInst.expImgData.paddingTop,
                         (val) => {
-                            IndexGlobal.mcExp ().statusPreview.imgMachine.currStatus.onValPaddingTop (Math.floor (val));
+                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPaddingTop (Math.floor (val));
                         },
                         null,
                         null
@@ -94,7 +94,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         `下内边距`, 
                         listImgDataInst.expImgData.paddingBottom,
                         (val) => {
-                            IndexGlobal.mcExp ().statusPreview.imgMachine.currStatus.onValPaddingBottom (Math.floor (val));
+                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPaddingBottom (Math.floor (val));
                         },
                         null,
                         null
@@ -118,7 +118,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         listImgDataInst.expImgData.pixelWidth,
                         (val) => {
                             listImgDataInst.expImgData.pixelWidth = Math.floor (val);
-                            IndexGlobal.mcExp ().statusPreview.imgMachine.currStatus.onValPixelWidth (Math.floor (val));
+                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPixelWidth (Math.floor (val));
                         },
                         1,
                         null
@@ -127,7 +127,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         `颗粒高度`,
                         listImgDataInst.expImgData.pixelHeight, 
                         (val) => {
-                            IndexGlobal.mcExp ().statusPreview.imgMachine.currStatus.onValPixelHeight (Math.floor (val));
+                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPixelHeight (Math.floor (val));
                         },
                         1,
                         null

@@ -14,8 +14,6 @@ const EVT_NAME_DRAG_END = `dragend`;
 const EVT_NAME_DRAG_ENTER = `dragenter`;
 const EVT_NAME_DRAG_OVER = `dragover`;
 const EVT_NAME_DRAG_LEAVE = `dragleave`;
-const EVT_NAME_DRAG_EXIT = `dragexit`;
-const EVT_NAME_DROP = `drop`;
 
 class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLeftListImg.Args> {
 
@@ -57,18 +55,6 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
             EVT_NAME_DRAG_LEAVE, 
             (event) => {
                 IndexGlobal.mcDB ().dragCurrStatus.onTargetEnterLeave ();
-            }
-        );
-
-        tag.addEventListener (
-            EVT_NAME_DRAG_EXIT, 
-            (event) => {
-            }
-        );
-        tag.addEventListener (
-            EVT_NAME_DROP, 
-            (event) => {
-
             }
         );
     }

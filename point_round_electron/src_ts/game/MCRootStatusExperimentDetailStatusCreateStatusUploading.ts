@@ -1,6 +1,6 @@
-import MCRootStatusExperimentStatusCreateStatus from "./MCRootStatusExperimentStatusCreateStatus.js";
+import MCRootStatusExperimentDetailStatusCreateStatus from "./MCRootStatusExperimentDetailStatusCreateStatus.js";
 
-export default class MCRootStatusExperimentStatusCreateStatusUploading extends MCRootStatusExperimentStatusCreateStatus {
+export default class MCRootStatusExperimentDetailStatusCreateStatusUploading extends MCRootStatusExperimentDetailStatusCreateStatus {
     
     targetUid: string;
 

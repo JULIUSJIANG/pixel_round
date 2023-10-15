@@ -1,7 +1,7 @@
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MCRootStatusExperiment from "./MCRootStatusExperiment.js";
 
-export default class MCRootStatusExperimentStatus {
+export default class MCRootStatusExperimentDetailStatus {
 
     relMachine: MCRootStatusExperiment;
 
@@ -11,8 +11,8 @@ export default class MCRootStatusExperimentStatus {
         this.relMachine = machine;
         this.id = id;
 
-        this.relMachine.listStatus.push (this);
-        this.relMachine.mapIdToStatus.set (this.id, this);
+        this.relMachine.detailListStatus.push (this);
+        this.relMachine.detailMapIdToStatus.set (this.id, this);
     }
 
     onEnter () {

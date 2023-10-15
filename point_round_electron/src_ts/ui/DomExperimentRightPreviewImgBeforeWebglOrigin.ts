@@ -49,7 +49,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
     posInRT = new JWebglMathVector4 (0, 0, Z_MASK);
 
     reactComponentExtendOnDraw (): void {
-        let dataSrc = IndexGlobal.mcExp ().statusPreview;
+        let dataSrc = IndexGlobal.mcExp ().detailStatusPreview;
         let imgMachine = dataSrc.imgMachine;
         // 没加载完毕，不对画布进行改动
         if (imgMachine.currStatus == imgMachine.statusIdle) {
@@ -221,7 +221,7 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
     }
 
     render (): ReactComponentExtendInstance {
-        let dataSrc = IndexGlobal.mcExp ().statusPreview;
+        let dataSrc = IndexGlobal.mcExp ().detailStatusPreview;
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {

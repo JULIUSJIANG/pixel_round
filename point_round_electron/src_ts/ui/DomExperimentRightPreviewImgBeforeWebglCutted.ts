@@ -67,7 +67,7 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
     posTo = new JWebglMathVector4 (0, 0, Z_GRID);
 
     reactComponentExtendOnDraw(): void {
-        let dataSrc = IndexGlobal.mcExp ().statusPreview;
+        let dataSrc = IndexGlobal.mcExp ().detailStatusPreview;
         // 没加载完毕，不对画布进行改动
         if (dataSrc.argsSmooth.img == null) {
             return;
@@ -140,7 +140,7 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
     }
 
     render (): ReactComponentExtendInstance {
-        let dataSrc = IndexGlobal.mcExp ().statusPreview;
+        let dataSrc = IndexGlobal.mcExp ().detailStatusPreview;
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {

@@ -9,14 +9,14 @@ export default class DomExperimentLeftGlobal extends ReactComponentExtend <numbe
     render (): ReactComponentExtendInstance {
         let propsAdd = {
             onClick: () => {
-                IndexGlobal.mcExp ().currStatus.onCreate ();
+                IndexGlobal.mcExp ().detailCurrStatus.onCreate ();
             },
             style: {
                 [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
             }
         };
-        if (IndexGlobal.mcExp ().currStatus == IndexGlobal.mcExp ().statusCreate) {
+        if (IndexGlobal.mcExp ().detailCurrStatus == IndexGlobal.mcExp ().detailStatusCreate) {
             propsAdd [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         };
         return ReactComponentExtend.instantiateTag (

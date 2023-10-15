@@ -31,6 +31,10 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
      * 绘制用的辅助类
      */
     jWebgl: JWebgl;
+    /**
+     * 范围引用器
+     */
+    tagDivRef = NodeModules.react.createRef ();
 
     /**
      * 纯色帧缓冲区
@@ -60,6 +64,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
     reactComponentExtendOnInit (): void {
         this.jWebgl = new JWebgl (this.canvasWebglRef.current);
         this.jWebgl.init ();
+        this.jWebgl.listenTouch (this.tagDivRef.current);
         this.jWebgl.canvasWebglCtx.disable (JWebglEnum.EnableCap.DEPTH_TEST);
         this.jWebgl.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
         this.textureMain = this.jWebgl.canvasWebglCtx.createTexture ();
@@ -460,6 +465,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
             ReactComponentExtend.instantiateTag (
                 MgrDomDefine.TAG_DIV,
                 {
+                    ref: this.tagDivRef,
                     style: {
                         [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
                         [MgrDomDefine.STYLE_FLEX_GROW]: 1,

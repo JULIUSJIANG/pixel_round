@@ -144,58 +144,41 @@ class JWebgl {
     evtLeave = new Eventer ();
 
     /**
-     * 监听 id - 开始
+     * 监听交互
      */
-    listenIdStart: number;
-    /**
-     * 监听 id - 交互中
-     */
-    listenIdMove: number;
-    /**
-     * 监听 id - 结束
-     */
-    listenIdEnd: number;
+    listenTouch (tag: HTMLElement) {
+        tag.onmousedown = (evt: MouseEvent) => {
+            this.touchStart.fillByClientPos (evt.clientX, evt.clientY);
+            this.currentTouch = this.touchStart;
+            this.evtTouch.call (null);
+            this.evtTouchStart.call (null);
+        };
+        tag.onmousemove = (evt: MouseEvent) => {
+            this.touchMove.fillByClientPos (evt.clientX, evt.clientY);
+            this.currentTouch = this.touchMove;
+            this.evtTouch.call (null);
+            this.evtTouchMove.call (null);
+        };
+        tag.onmouseup = (evt: MouseEvent) => {
+            this.touchEnd.fillByClientPos (evt.clientX, evt.clientY);
+            this.currentTouch = this.touchEnd;
+            this.evtTouch.call (null);
+            this.evtTouchEnd.call (null);
+        };
 
-    /**
-     * 监听 id - 进入
-     */
-    listenIdEnter: number;
-    /**
-     * 监听 id - 离开
-     */
-    listenIdExit: number;
+        tag.onmouseenter = () => {
+            this.evtEnter.call (null);
+        };
+        tag.onmouseleave = () => {
+            this.evtLeave.call (null);
+        };
+    }
 
     /**
      * 初始化
      * @returns 
      */
     init () {
-        this.listenIdStart = MgrGlobal.inst.evtTouchStart.on (() => {
-            this.touchStart.fill (MgrGlobal.inst.evtTouchStartPos);
-            this.currentTouch = this.touchStart;
-            this.evtTouch.call (null);
-            this.evtTouchStart.call (null);
-        });
-        this.listenIdMove = MgrGlobal.inst.evtTouchMove.on (() => {
-            this.touchMove.fill (MgrGlobal.inst.evtTouchMovePos);
-            this.currentTouch = this.touchMove;
-            this.evtTouch.call (null);
-            this.evtTouchMove.call (null);
-        });
-        this.listenIdEnd = MgrGlobal.inst.evtTouchEnd.on (() => {
-            this.touchEnd.fill (MgrGlobal.inst.evtTouchEndPos);
-            this.currentTouch = this.touchEnd;
-            this.evtTouch.call (null);
-            this.evtTouchEnd.call (null);
-        });
-
-        this.listenIdEnter = MgrGlobal.inst.evtEnter.on (() => {
-            this.evtEnter.call (null);
-        });
-        this.listenIdExit = MgrGlobal.inst.evtExit.on (() => {
-            this.evtLeave.call (null);
-        });
-
         this.mat4M.setIdentity ();
         this.mat4V.setIdentity ();
         this.mat4P.setIdentity ();
@@ -238,13 +221,6 @@ class JWebgl {
      * 释放掉
      */
     release () {
-        MgrGlobal.inst.evtTouchStart.off (this.listenIdStart);
-        MgrGlobal.inst.evtTouchMove.off (this.listenIdMove);
-        MgrGlobal.inst.evtTouchEnd.off (this.listenIdEnd);
-
-        MgrGlobal.inst.evtEnter.off (this.listenIdEnter);
-        MgrGlobal.inst.evtExit.off (this.listenIdExit);
-
         let ext = this.canvasWebglCtx.getExtension (`WEBGL_lose_context`);
         if (ext) {
             ext.loseContext();

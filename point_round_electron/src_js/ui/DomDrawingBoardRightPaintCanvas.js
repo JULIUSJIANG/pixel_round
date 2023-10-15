@@ -23,6 +23,10 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
          */
         this.canvasWebglRef = NodeModules.react.createRef();
         /**
+         * 范围引用器
+         */
+        this.tagDivRef = NodeModules.react.createRef();
+        /**
          * 线的起始位置
          */
         this.posFrom = new JWebglMathVector4(0, 0, 0);
@@ -38,6 +42,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
+        this.jWebgl.listenTouch(this.tagDivRef.current);
         this.jWebgl.canvasWebglCtx.disable(JWebglEnum.EnableCap.DEPTH_TEST);
         this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
         this.textureMain = this.jWebgl.canvasWebglCtx.createTexture();
@@ -46,7 +51,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
         // 空的帧缓冲区
         this.fboEmpty = this.jWebgl.getFbo(1, 1);
         this.jWebgl.evtTouchStart.on(() => {
-            console.log(`touchStart`);
+            // console.log (`touchStart`);
             let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
             // 该纹理没加载完毕，忽略
             if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
@@ -59,7 +64,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
             MgrData.inst.callDataChange();
         });
         this.jWebgl.evtTouchMove.on(() => {
-            console.log(`touchMove`);
+            // console.log (`touchMove`);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onHoverEnter();
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove.fill(this.jWebgl.touchMove.posCanvas[0], this.jWebgl.touchMove.posCanvas[1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove;
@@ -67,7 +72,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
             MgrData.inst.callDataChange();
         });
         this.jWebgl.evtTouchEnd.on(() => {
-            console.log(`touchEnd`);
+            // console.log (`touchEnd`);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd.fill(this.jWebgl.touchEnd.posCanvas[0], this.jWebgl.touchEnd.posCanvas[1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onEnd(this);
@@ -298,6 +303,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            ref: this.tagDivRef,
             style: {
                 [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,

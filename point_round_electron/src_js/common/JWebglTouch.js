@@ -17,9 +17,9 @@ export default class JWebglTouch {
      * 填充数据
      * @param evt
      */
-    fill(evt) {
-        let x = evt.clientX;
-        let y = evt.clientY;
+    fillByClientPos(clientX, clientY) {
+        let x = clientX;
+        let y = clientY;
         this.posClient[0] = x;
         this.posClient[1] = y;
         this.posClient[2] = 0;

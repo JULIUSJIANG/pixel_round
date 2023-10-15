@@ -46,6 +46,10 @@ class DomImageSmooth extends ReactComponentExtend {
          */
         this.canvasWebglRef = NodeModules.react.createRef();
         /**
+         * 范围引用器
+         */
+        this.tagDivRef = NodeModules.react.createRef();
+        /**
          * 格子位置 x
          */
         this.gridX = 0;
@@ -74,6 +78,7 @@ class DomImageSmooth extends ReactComponentExtend {
     reactComponentExtendOnInit() {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
+        this.jWebgl.listenTouch(this.tagDivRef.current);
         this.texSrc = this.jWebgl.canvasWebglCtx.createTexture();
         // 准备好图片的 mvp 矩阵
         this.mat4M.setIdentity();
@@ -488,6 +493,7 @@ class DomImageSmooth extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+            ref: this.tagDivRef,
             style: {
                 [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,

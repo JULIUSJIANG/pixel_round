@@ -148,7 +148,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend {
                 }
                 ;
                 let id = IndexGlobal.inst.expCreate(IndexGlobal.mcExpCreate().img.src);
-                IndexGlobal.mcExp().currStatus.onImg(id);
+                IndexGlobal.mcExp().detailCurrStatus.onImg(id);
                 MgrData.inst.callDataChange();
             }
         }, `确认添加`));

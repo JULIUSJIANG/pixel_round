@@ -92,6 +92,21 @@ class IndexGlobal {
         MgrData.inst.get(MgrDataItem.EXP_LIST_IMG_DATA).splice(idx, 1);
     }
     /**
+     * 迁移
+     * @param idxFrom
+     * @param idxTo
+     */
+    expMove(idxFrom, idxTo) {
+        // 缓存图片数据
+        let listImg = MgrData.inst.get(MgrDataItem.EXP_LIST_IMG_DATA);
+        let listImgFrom = listImg[idxFrom];
+        listImg.splice(idxFrom, 1);
+        listImg.splice(idxTo, 0, listImgFrom);
+        let expListImgFrom = this.expListImg[idxFrom];
+        this.expListImg.splice(idxFrom, 1);
+        this.expListImg.splice(idxTo, 0, expListImgFrom);
+    }
+    /**
      * 添加缓存
      * @param imgData
      */
@@ -167,7 +182,7 @@ class IndexGlobal {
      * 实验状态机 - 创建
      */
     function mcExpCreate() {
-        return IndexGlobal.inst.mcRoot.statusExperiment.statusCreate;
+        return IndexGlobal.inst.mcRoot.statusExperiment.detailStatusCreate;
     }
     IndexGlobal.mcExpCreate = mcExpCreate;
     /**

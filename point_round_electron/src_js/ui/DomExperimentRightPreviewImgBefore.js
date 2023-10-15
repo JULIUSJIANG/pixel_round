@@ -31,18 +31,18 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             },
         }, ReactComponentExtend.instantiateComponent(DomInputNumberHor, DomInputNumberHor.Args.create(`左内边距`, listImgDataInst.expImgData.paddingLeft, (val) => {
-            IndexGlobal.mcExp().statusPreview.imgMachine.currStatus.onValPaddingLeft(Math.floor(val));
+            IndexGlobal.mcExp().detailStatusPreview.imgMachine.currStatus.onValPaddingLeft(Math.floor(val));
         }, null, null)), ReactComponentExtend.instantiateComponent(DomInputNumberHor, DomInputNumberHor.Args.create(`右内边距`, listImgDataInst.expImgData.paddingRight, (val) => {
-            IndexGlobal.mcExp().statusPreview.imgMachine.currStatus.onValPaddingRight(Math.floor(val));
+            IndexGlobal.mcExp().detailStatusPreview.imgMachine.currStatus.onValPaddingRight(Math.floor(val));
         }, null, null))), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             },
         }, ReactComponentExtend.instantiateComponent(DomInputNumberHor, DomInputNumberHor.Args.create(`上内边距`, listImgDataInst.expImgData.paddingTop, (val) => {
-            IndexGlobal.mcExp().statusPreview.imgMachine.currStatus.onValPaddingTop(Math.floor(val));
+            IndexGlobal.mcExp().detailStatusPreview.imgMachine.currStatus.onValPaddingTop(Math.floor(val));
         }, null, null)), ReactComponentExtend.instantiateComponent(DomInputNumberHor, DomInputNumberHor.Args.create(`下内边距`, listImgDataInst.expImgData.paddingBottom, (val) => {
-            IndexGlobal.mcExp().statusPreview.imgMachine.currStatus.onValPaddingBottom(Math.floor(val));
+            IndexGlobal.mcExp().detailStatusPreview.imgMachine.currStatus.onValPaddingBottom(Math.floor(val));
         }, null, null))), ReactComponentExtend.instantiateComponent(DomExperimentRightPreviewImgBeforeWebglCutted, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
@@ -50,9 +50,9 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend {
             },
         }, ReactComponentExtend.instantiateComponent(DomInputNumberHor, DomInputNumberHor.Args.create(`颗粒宽度`, listImgDataInst.expImgData.pixelWidth, (val) => {
             listImgDataInst.expImgData.pixelWidth = Math.floor(val);
-            IndexGlobal.mcExp().statusPreview.imgMachine.currStatus.onValPixelWidth(Math.floor(val));
+            IndexGlobal.mcExp().detailStatusPreview.imgMachine.currStatus.onValPixelWidth(Math.floor(val));
         }, 1, null)), ReactComponentExtend.instantiateComponent(DomInputNumberHor, DomInputNumberHor.Args.create(`颗粒高度`, listImgDataInst.expImgData.pixelHeight, (val) => {
-            IndexGlobal.mcExp().statusPreview.imgMachine.currStatus.onValPixelHeight(Math.floor(val));
+            IndexGlobal.mcExp().detailStatusPreview.imgMachine.currStatus.onValPixelHeight(Math.floor(val));
         }, 1, null)))));
     }
 }

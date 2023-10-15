@@ -19,6 +19,8 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
 
     ref = NodeModules.react.createRef ();
 
+    isListened = false;
+
     reactComponentExtendOnInit (): void {
         let tag = this.ref.current as HTMLDivElement;
         tag.addEventListener (
@@ -100,6 +102,17 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
                     ref: this.ref,
                 }
             )
+        }
+        else {
+            imgInst = ReactComponentExtend.instantiateTag(
+                MgrDomDefine.TAG_IMG,
+                {
+                    style: {
+                        [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_NONE,
+                    },
+                    ref: this.ref,
+                }
+            );
         };
         let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {

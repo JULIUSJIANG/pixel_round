@@ -19,29 +19,33 @@ class DomExperimentLeftListImg extends ReactComponentExtend {
          * 3d canvas 引用器
          */
         this.ref = NodeModules.react.createRef();
+        this.isListened = false;
     }
     reactComponentExtendOnInit() {
         let tag = this.ref.current;
         tag.addEventListener(EVT_NAME_DRAG_START, (event) => {
+            IndexGlobal.mcExp().dragCurrStatus.onStart(this.relDbImg);
         });
         tag.addEventListener(EVT_NAME_DRAG_ING, (event) => {
         });
         tag.addEventListener(EVT_NAME_DRAG_END, (event) => {
+            IndexGlobal.mcExp().dragCurrStatus.onEnd();
         });
         tag.addEventListener(EVT_NAME_DRAG_ENTER, (event) => {
+            IndexGlobal.mcExp().dragCurrStatus.onTargetEnter(this.relDbImg);
         });
         tag.addEventListener(EVT_NAME_DRAG_OVER, (event) => {
+            event.preventDefault();
         });
         tag.addEventListener(EVT_NAME_DRAG_LEAVE, (event) => {
+            IndexGlobal.mcExp().dragCurrStatus.onTargetEnterLeave();
         });
     }
     reactComponentExtendOnDraw() {
-        this.idImgData = this.props.imgData.id;
-    }
-    reactComponentExtendOnRelease() {
+        this.relDbImg = this.props.imgData;
     }
     render() {
-        let img = MgrRes.inst.getImg(this.props.imgData.dataOrigin);
+        let img = MgrRes.inst.getImg(this.props.imgData.maskCurrStatus.onGetData().expImgData.dataOrigin);
         let imgInst;
         // 加载完成才显示
         if (img.currStatus == img.statusFinished) {
@@ -68,28 +72,34 @@ class DomExperimentLeftListImg extends ReactComponentExtend {
                     "imageRendering": `pixelated`,
                 },
                 src: img.image.src,
-                draggable: `false`,
+                ref: this.ref,
+            });
+        }
+        else {
+            imgInst = ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_IMG, {
+                style: {
+                    [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_NONE,
+                },
+                ref: this.ref,
             });
         }
         ;
         let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
-                IndexGlobal.mcExp().currStatus.onImg(this.props.imgData.id);
+                IndexGlobal.mcExp().detailCurrStatus.onImg(this.props.imgData.expImgData.id);
             },
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                 [MgrDomDefine.STYLE_HEIGHT]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
             },
-            draggable: `true`,
-            ref: this.ref,
         };
         if (this.props.j != 0) {
             props.style[MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
         }
         ;
-        if (IndexGlobal.mcExp().currStatus == IndexGlobal.mcExp().statusPreview && this.props.imgData.id == MgrData.inst.get(MgrDataItem.EXP_CURRENT_IMG)) {
+        if (IndexGlobal.mcExp().detailCurrStatus == IndexGlobal.mcExp().detailStatusPreview && this.props.imgData.maskCurrStatus.onGetData().expImgData.id == MgrData.inst.get(MgrDataItem.EXP_CURRENT_IMG)) {
             props[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         else {

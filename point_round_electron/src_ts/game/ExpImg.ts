@@ -1,7 +1,7 @@
-import MgrDataItem from "../mgr/MgrDataItem";
-import ExpImgMaskStatus from "./ExpImgMaskStatus";
-import ExpImgMaskStatusActive from "./ExpImgMaskStatusActive";
-import ExpImgMaskStatusIdle from "./ExpImgMaskStatusIdle";
+import MgrDataItem from "../mgr/MgrDataItem.js";
+import ExpImgMaskStatus from "./ExpImgMaskStatus.js";
+import ExpImgMaskStatusActive from "./ExpImgMaskStatusActive.js";
+import ExpImgMaskStatusIdle from "./ExpImgMaskStatusIdle.js";
 
 /**
  * 实验数据的缓存

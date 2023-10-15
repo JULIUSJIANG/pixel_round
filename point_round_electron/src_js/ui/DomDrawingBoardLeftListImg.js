@@ -11,12 +11,11 @@ const EVT_NAME_DRAG_END = `dragend`;
 const EVT_NAME_DRAG_ENTER = `dragenter`;
 const EVT_NAME_DRAG_OVER = `dragover`;
 const EVT_NAME_DRAG_LEAVE = `dragleave`;
-const EVT_NAME_DRAG_EXIT = `dragexit`;
-const EVT_NAME_DROP = `drop`;
 class DomDrawingBoardLeftListImg extends ReactComponentExtend {
     constructor() {
         super(...arguments);
         this.ref = NodeModules.react.createRef();
+        this.isListened = false;
     }
     reactComponentExtendOnInit() {
         let tag = this.ref.current;
@@ -36,10 +35,6 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend {
         });
         tag.addEventListener(EVT_NAME_DRAG_LEAVE, (event) => {
             IndexGlobal.mcDB().dragCurrStatus.onTargetEnterLeave();
-        });
-        tag.addEventListener(EVT_NAME_DRAG_EXIT, (event) => {
-        });
-        tag.addEventListener(EVT_NAME_DROP, (event) => {
         });
     }
     reactComponentExtendOnDraw() {
@@ -74,6 +69,14 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend {
                     "imageRendering": `pixelated`,
                 },
                 src: image.src,
+                ref: this.ref,
+            });
+        }
+        else {
+            imgInst = ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_IMG, {
+                style: {
+                    [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_NONE,
+                },
                 ref: this.ref,
             });
         }

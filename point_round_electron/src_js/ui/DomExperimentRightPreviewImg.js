@@ -8,7 +8,7 @@ import DomImageSmooth from "./DomImageSmooth.js";
 import ViewRelativeRateRS from "./ViewRelativeRateRS.js";
 export default class DomExperimentRightPreviewImg extends ReactComponentExtend {
     render() {
-        let dataSrc = IndexGlobal.mcExp().statusPreview;
+        let dataSrc = IndexGlobal.mcExp().detailStatusPreview;
         let relativeRS = ViewRelativeRateRS.mapIdToInst.get(MgrData.inst.get(MgrDataItem.VIEW_RELATIVE_RATE));
         let instLeft;
         if (relativeRS.isLeftVisiable()) {

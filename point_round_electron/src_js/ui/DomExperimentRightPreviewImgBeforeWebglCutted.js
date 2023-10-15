@@ -38,7 +38,7 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
         this.jWebgl.release();
     }
     reactComponentExtendOnDraw() {
-        let dataSrc = IndexGlobal.mcExp().statusPreview;
+        let dataSrc = IndexGlobal.mcExp().detailStatusPreview;
         // 没加载完毕，不对画布进行改动
         if (dataSrc.argsSmooth.img == null) {
             return;
@@ -96,7 +96,7 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
         ;
     }
     render() {
-        let dataSrc = IndexGlobal.mcExp().statusPreview;
+        let dataSrc = IndexGlobal.mcExp().detailStatusPreview;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,

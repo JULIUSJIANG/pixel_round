@@ -91,6 +91,7 @@ class IndexGlobal {
         this.expMapIdToImg.delete (rec.expImgData.id);
         this.expListImg.splice (idx, 1);
         MgrData.inst.get (MgrDataItem.EXP_LIST_IMG_DATA).splice (idx, 1);
+        rec.destroy ();
     }
 
     /**

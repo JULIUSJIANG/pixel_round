@@ -54,6 +54,21 @@ class MgrGlobal {
         };
     }
     /**
+     * 图片数据转字节数据
+     * @param img
+     * @param w
+     * @param h
+     * @returns
+     */
+    imageToUint8Arr(img, w, h) {
+        this.canvas2d.width = w;
+        this.canvas2d.height = h;
+        this.canvas2dCtx.clearRect(0, 0, w, h);
+        this.canvas2dCtx.drawImage(img, 0, 0);
+        let imgData = this.canvas2dCtx.getImageData(0, 0, w, h);
+        return imgData.data;
+    }
+    /**
      * 获取图片数据
      * @param w
      * @param h

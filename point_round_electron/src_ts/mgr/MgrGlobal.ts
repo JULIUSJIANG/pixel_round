@@ -1,5 +1,4 @@
 import Eventer from "../common/Eventer.js";
-import JWebgl from "../common/JWebgl.js";
 import MgrGlobalCtxPos from "./MgrGlobalCtxPos.js";
 
 class MgrGlobal {
@@ -65,6 +64,22 @@ class MgrGlobal {
         document.onmouseleave = () => {
             this.evtExit.call (null);
         };
+    }
+
+    /**
+     * 图片数据转字节数据
+     * @param img 
+     * @param w 
+     * @param h 
+     * @returns 
+     */
+    imageToUint8Arr (img: HTMLImageElement, w: number, h: number, ) {
+        this.canvas2d.width = w;
+        this.canvas2d.height = h;
+        this.canvas2dCtx.clearRect (0, 0, w, h);
+        this.canvas2dCtx.drawImage (img, 0, 0);
+        let imgData = this.canvas2dCtx.getImageData (0, 0, w, h);
+        return imgData.data;
     }
 
     private _imgData: ImageData;

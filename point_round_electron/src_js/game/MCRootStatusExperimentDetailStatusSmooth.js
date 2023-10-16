@@ -6,6 +6,7 @@ import MCRootStatusExperimentDetailStatus from "./MCRootStatusExperimentDetailSt
 import SmoothMachine from "./SmoothMachine.js";
 import objectPool from "../common/ObjectPool.js";
 import DomImageSmooth from "../ui/DomImageSmooth.js";
+import IndexGlobal from "../IndexGlobal.js";
 export default class MCRootStatusExperimentDetailStatusSmooth extends MCRootStatusExperimentDetailStatus {
     constructor(machine, id) {
         super(machine, id);
@@ -44,6 +45,8 @@ export default class MCRootStatusExperimentDetailStatusSmooth extends MCRootStat
         }
         ;
         this.imgMachine.onCreate();
+        let expImg = IndexGlobal.inst.expMapIdToImg.get(id);
+        expImg.uint8CurrStatus.onSelected();
     }
     onRender() {
         return ReactComponentExtend.instantiateComponent(DomExperimentRightPreview, null);

@@ -12,12 +12,16 @@ class MCRootStatusDrawingBoardOpStatus {
 
     name: string;
 
-    constructor (relMachine: MCRootStatusDrawingBoard, id: number, name: string) {
+    code: string;
+
+    constructor (relMachine: MCRootStatusDrawingBoard, id: number, name: string, code: string) {
         this.relMachine = relMachine;
         this.id = id;
         this.name = name;
+        this.code = code;
         this.relMachine.opListStatus.push (this);
         this.relMachine.opMapIdToStatus.set (this.id, this);
+        this.relMachine.opMapCodeToStatus.set (this.code, this);
     }
 
     /**

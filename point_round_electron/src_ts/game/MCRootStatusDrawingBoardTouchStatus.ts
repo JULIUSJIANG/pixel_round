@@ -61,6 +61,14 @@ class MCRootStatusDrawingBoardTouchStatus {
     onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvas) {
 
     }
+
+    /**
+     * 处理按键要求
+     * @param code 
+     */
+    onCode (code: string) {
+
+    }
 }
 
 export default MCRootStatusDrawingBoardTouchStatus;

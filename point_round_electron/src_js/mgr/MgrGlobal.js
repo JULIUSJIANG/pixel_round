@@ -26,6 +26,10 @@ class MgrGlobal {
          * 事件派发 - 离开
          */
         this.evtExit = new Eventer();
+        /**
+         * 按下按键
+         */
+        this.evtKey = new Eventer();
     }
     /**
      * 初始化
@@ -53,6 +57,9 @@ class MgrGlobal {
         };
         document.onmouseleave = () => {
             this.evtExit.call(null);
+        };
+        document.onkeydown = (evt) => {
+            this.evtKey.call(evt.code);
         };
     }
     /**

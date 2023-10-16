@@ -1,6 +1,7 @@
 import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import MgrGlobal from "../mgr/MgrGlobal.js";
 import DomDrawingBoardLeft from "../ui/DomDrawingBoardLeft.js";
 import DomDrawingBoardRightEmpty from "../ui/DomDrawingBoardRightEmpty.js";
 import DomDrawingBoardRightPaint from "../ui/DomDrawingBoardRightPaint.js";
@@ -25,13 +26,14 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         super(mcRoot, id, name);
         this.opListStatus = new Array();
         this.opMapIdToStatus = new Map();
+        this.opMapCodeToStatus = new Map();
         this.touchPosStart = new MCRootStatusDrawingBoardTouchPos(this);
         this.touchPosMove = new MCRootStatusDrawingBoardTouchPos(this);
         this.touchPosEnd = new MCRootStatusDrawingBoardTouchPos(this);
         this.touchCurrentPos = this.touchPosMove;
-        this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil(this, 0, `画笔`);
-        this.opStatusStraw = new MCRootStatusDrawingBoardOpStatusStraw(this, 1, `拾色器`);
-        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser(this, 2, `橡皮擦`);
+        this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil(this, 0, `画笔 [1]`, `Digit1`);
+        this.opStatusStraw = new MCRootStatusDrawingBoardOpStatusStraw(this, 1, `拾色器 [2]`, `Digit2`);
+        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser(this, 2, `橡皮擦 [3]`, `Digit3`);
         this.touchStatusEnded = new MCRootStatusDrawingBoardTouchStatusEnded(this);
         this.touchStatusStarted = new MCRootStatusDrawingBoardTouchStatusStarted(this);
         this.touchStatusMoved = new MCRootStatusDrawingBoardTouchStatusMoved(this);
@@ -46,6 +48,9 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         this.touchEnter(this.touchStatusEnded);
         this.hoverEnter(this.hoverStatusLeaved);
         this.dragEnter(this.dragStatusIdle);
+        MgrGlobal.inst.evtKey.on((evt) => {
+            this.touchCurrStatus.onCode(evt);
+        });
     }
     opEnter(status) {
         let rec = this.opCurrStatus;

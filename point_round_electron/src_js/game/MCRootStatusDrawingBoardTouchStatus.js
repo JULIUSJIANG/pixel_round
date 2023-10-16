@@ -41,5 +41,11 @@ class MCRootStatusDrawingBoardTouchStatus {
      */
     onFocusDraw(dataSrc) {
     }
+    /**
+     * 处理按键要求
+     * @param code
+     */
+    onCode(code) {
+    }
 }
 export default MCRootStatusDrawingBoardTouchStatus;

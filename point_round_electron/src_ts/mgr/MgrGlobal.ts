@@ -31,6 +31,11 @@ class MgrGlobal {
     evtExit = new Eventer ();
 
     /**
+     * 按下按键
+     */
+    evtKey = new Eventer <string> ();
+
+    /**
      * 2d canvas
      */
     canvas2d: HTMLCanvasElement;
@@ -77,6 +82,10 @@ class MgrGlobal {
         };
         document.onmouseleave = () => {
             this.evtExit.call (null);
+        };
+
+        document.onkeydown = (evt) => {
+            this.evtKey.call (evt.code);
         };
     }
 

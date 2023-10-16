@@ -5,6 +5,14 @@ import JWebglDefine from "./JWebglDefine.js";
 JWebglDefine.POLYGON_OFFSET_FILL;
 var JWebglEnum;
 (function (JWebglEnum) {
+    let TexImage2DType;
+    (function (TexImage2DType) {
+        TexImage2DType[TexImage2DType["UNSIGNED_BYTE"] = JWebglDefine.UNSIGNED_BYTE] = "UNSIGNED_BYTE";
+    })(TexImage2DType = JWebglEnum.TexImage2DType || (JWebglEnum.TexImage2DType = {}));
+    let TexImage2DTarget;
+    (function (TexImage2DTarget) {
+        TexImage2DTarget[TexImage2DTarget["TEXTURE_2D"] = JWebglDefine.TEXTURE_2D] = "TEXTURE_2D";
+    })(TexImage2DTarget = JWebglEnum.TexImage2DTarget || (JWebglEnum.TexImage2DTarget = {}));
     /**
      * 读取的格式
      */
@@ -101,6 +109,14 @@ var JWebglEnum;
         TexImage2DFormat[TexImage2DFormat["LUMINANCE"] = JWebglDefine.LUMINANCE] = "LUMINANCE";
         TexImage2DFormat[TexImage2DFormat["LUMINANCE_ALPHA"] = JWebglDefine.LUMINANCE_ALPHA] = "LUMINANCE_ALPHA";
     })(TexImage2DFormat = JWebglEnum.TexImage2DFormat || (JWebglEnum.TexImage2DFormat = {}));
+    ;
+    /**
+     * 纹理参数目标
+     */
+    let TexParameteriParamTarget;
+    (function (TexParameteriParamTarget) {
+        TexParameteriParamTarget[TexParameteriParamTarget["TEXTURE_2D"] = JWebglDefine.TEXTURE_2D] = "TEXTURE_2D";
+    })(TexParameteriParamTarget = JWebglEnum.TexParameteriParamTarget || (JWebglEnum.TexParameteriParamTarget = {}));
     ;
     /**
      * 纹理属性值

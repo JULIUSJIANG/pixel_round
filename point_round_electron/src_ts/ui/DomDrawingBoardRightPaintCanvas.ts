@@ -74,8 +74,6 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
         this.fboEmpty = this.jWebgl.getFbo (1, 1);
 
         this.jWebgl.evtTouchStart.on (() => {
-            // console.log (`touchStart`);
-
             let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
             // 该纹理没加载完毕，忽略
             if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
@@ -87,8 +85,6 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
             MgrData.inst.callDataChange ();
         });
         this.jWebgl.evtTouchMove.on (() => {
-            // console.log (`touchMove`);
-
             IndexGlobal.inst.mcRoot.statusDrawingBoard.hoverCurrStatus.onHoverEnter ();
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove.fill (this.jWebgl.touchMove.posCanvas [0], this.jWebgl.touchMove.posCanvas [1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosMove;
@@ -96,8 +92,6 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
             MgrData.inst.callDataChange ();
         });
         this.jWebgl.evtTouchEnd.on (() => {
-            // console.log (`touchEnd`);
-
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd.fill (this.jWebgl.touchEnd.posCanvas [0], this.jWebgl.touchEnd.posCanvas [1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosEnd;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onEnd (this);

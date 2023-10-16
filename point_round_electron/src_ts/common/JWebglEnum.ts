@@ -5,6 +5,14 @@ import JWebglDefine from "./JWebglDefine.js";
  */
 JWebglDefine.POLYGON_OFFSET_FILL
 namespace JWebglEnum {
+    export enum TexImage2DType {
+        UNSIGNED_BYTE = JWebglDefine.UNSIGNED_BYTE
+    }
+
+    export enum TexImage2DTarget {
+        TEXTURE_2D = JWebglDefine.TEXTURE_2D
+    }
+
     /**
      * 读取的格式
      */
@@ -81,6 +89,12 @@ namespace JWebglEnum {
         ALPHA = JWebglDefine.ALPHA,
         LUMINANCE = JWebglDefine.LUMINANCE,
         LUMINANCE_ALPHA = JWebglDefine.LUMINANCE_ALPHA
+    };
+    /**
+     * 纹理参数目标
+     */
+    export enum TexParameteriParamTarget {
+        TEXTURE_2D = JWebglDefine.TEXTURE_2D
     };
     /**
      * 纹理属性值

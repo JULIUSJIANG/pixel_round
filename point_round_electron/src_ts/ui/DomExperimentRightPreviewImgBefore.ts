@@ -5,8 +5,8 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomInputNumberHor from "./DomInputNumberHor.js";
-import DomExperimentRightPreviewImgBeforeWebglCutted from "./DomExperimentRightPreviewImgBeforeWebglCutted.js";
-import DomExperimentRightPreviewImgBeforeWebglOrigin from "./DomExperimentRightPreviewImgBeforeWebglOrigin.js";
+import DomExperimentRightPreviewImgBeforeCutted from "./DomExperimentRightPreviewImgBeforeCutted.js";
+import DomExperimentRightPreviewImgBeforeOrigin from "./DomExperimentRightPreviewImgBeforeOrigin.js";
 import ViewRelativeRateRS from "./ViewRelativeRateRS.js";
 
 class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
@@ -28,7 +28,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
             },
 
             ReactComponentExtend.instantiateComponent (
-                DomExperimentRightPreviewImgBeforeWebglOrigin,
+                DomExperimentRightPreviewImgBeforeOrigin,
                 this.props
             ),
 
@@ -101,7 +101,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                     )),
                 ),
                 ReactComponentExtend.instantiateComponent (
-                    DomExperimentRightPreviewImgBeforeWebglCutted,
+                    DomExperimentRightPreviewImgBeforeCutted,
                     this.props
                 ),
                 ReactComponentExtend.instantiateTag (

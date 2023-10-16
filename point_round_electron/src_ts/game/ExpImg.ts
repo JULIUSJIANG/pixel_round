@@ -1,3 +1,4 @@
+import DataUint8Array from "../common/DataUint8Array.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
 import ExpImgMaskStatus from "./ExpImgMaskStatus.js";
@@ -64,6 +65,21 @@ class ExpImg {
         };
         this.maskCurrStatus.onEnter ();
     }
+
+    /**
+     * 字节数据
+     */
+    uint8Bin = new DataUint8Array ();
+
+    /**
+     * 宽度
+     */
+    uint8Width: number;
+
+    /**
+     * 高度
+     */
+    uint8Height: number;
 
     /**
      * 用于加载的 image

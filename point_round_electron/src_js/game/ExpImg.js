@@ -1,3 +1,4 @@
+import DataUint8Array from "../common/DataUint8Array.js";
 import ExpImgMaskStatusActive from "./ExpImgMaskStatusActive.js";
 import ExpImgMaskStatusIdle from "./ExpImgMaskStatusIdle.js";
 import ExpImgUint8StatusDestroy from "./ExpImgUint8StatusDestroy.js";
@@ -9,6 +10,10 @@ import ExpImgUint8StatusLoading from "./ExpImgUint8StatusLoading.js";
  */
 class ExpImg {
     constructor(expImgData) {
+        /**
+         * 字节数据
+         */
+        this.uint8Bin = new DataUint8Array();
         this.expImgData = expImgData;
         this.maskStatusIdle = new ExpImgMaskStatusIdle(this);
         this.maskStatusActive = new ExpImgMaskStatusActive(this);

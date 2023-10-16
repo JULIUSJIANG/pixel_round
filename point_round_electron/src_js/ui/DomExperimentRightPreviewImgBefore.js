@@ -4,8 +4,8 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomInputNumberHor from "./DomInputNumberHor.js";
-import DomExperimentRightPreviewImgBeforeWebglCutted from "./DomExperimentRightPreviewImgBeforeWebglCutted.js";
-import DomExperimentRightPreviewImgBeforeWebglOrigin from "./DomExperimentRightPreviewImgBeforeWebglOrigin.js";
+import DomExperimentRightPreviewImgBeforeCutted from "./DomExperimentRightPreviewImgBeforeCutted.js";
+import DomExperimentRightPreviewImgBeforeOrigin from "./DomExperimentRightPreviewImgBeforeOrigin.js";
 import ViewRelativeRateRS from "./ViewRelativeRateRS.js";
 class DomExperimentRightPreviewImgBefore extends ReactComponentExtend {
     render() {
@@ -18,7 +18,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
             }
-        }, ReactComponentExtend.instantiateComponent(DomExperimentRightPreviewImgBeforeWebglOrigin, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+        }, ReactComponentExtend.instantiateComponent(DomExperimentRightPreviewImgBeforeOrigin, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 1,
@@ -43,7 +43,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend {
             IndexGlobal.mcExp().detailStatusPreview.imgMachine.currStatus.onValPaddingTop(Math.floor(val));
         }, null, null)), ReactComponentExtend.instantiateComponent(DomInputNumberHor, DomInputNumberHor.Args.create(`下内边距`, listImgDataInst.expImgData.paddingBottom, (val) => {
             IndexGlobal.mcExp().detailStatusPreview.imgMachine.currStatus.onValPaddingBottom(Math.floor(val));
-        }, null, null))), ReactComponentExtend.instantiateComponent(DomExperimentRightPreviewImgBeforeWebglCutted, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+        }, null, null))), ReactComponentExtend.instantiateComponent(DomExperimentRightPreviewImgBeforeCutted, this.props), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW

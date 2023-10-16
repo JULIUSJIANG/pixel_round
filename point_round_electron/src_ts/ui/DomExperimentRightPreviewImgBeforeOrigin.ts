@@ -16,7 +16,7 @@ const Z_GRID = 0.1;
 
 const Z_MASK = 0.2;
 
-class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend <number> {
+class DomExperimentRightPreviewImgBeforeOrigin extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -82,7 +82,11 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
 
         // 图片
         this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uTexture.fillByImg (this.jWebgl.getImg (imgMachine.dataInst.expImgData.dataOrigin));
+
+        // this.jWebgl.programImg.uTexture.fillByImg (this.jWebgl.getImg (imgMachine.dataInst.expImgData.dataOrigin));
+        let currExpImg = IndexGlobal.inst.expMapIdToImg.get (MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG));
+        this.jWebgl.programImg.uTexture.fillByUint8Array (currExpImg.uint8Bin.bin, currExpImg.uint8Width, currExpImg.uint8Height);
+
         this.posImg.elements [0] = imgWidth / 2 + paddingLeft;
         this.posImg.elements [1] = imgHeight / 2 + paddingBottom;
         this.jWebgl.programImg.add (
@@ -296,4 +300,4 @@ class DomExperimentRightPreviewImgBeforeWebglOrigin extends ReactComponentExtend
     }
 }
 
-export default DomExperimentRightPreviewImgBeforeWebglOrigin;
+export default DomExperimentRightPreviewImgBeforeOrigin;

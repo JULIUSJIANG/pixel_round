@@ -11,7 +11,7 @@ import DomImageSmooth from "./DomImageSmooth.js";
 
 const Z_GRID = 0.1;
 
-class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend <number> {
+class DomExperimentRightPreviewImgBeforeCutted extends ReactComponentExtend <number> {
     /**
      * 3d canvas 引用器
      */
@@ -241,4 +241,4 @@ class DomExperimentRightPreviewImgBeforeWebglCutted extends ReactComponentExtend
     }
 }
 
-export default DomExperimentRightPreviewImgBeforeWebglCutted;
+export default DomExperimentRightPreviewImgBeforeCutted;

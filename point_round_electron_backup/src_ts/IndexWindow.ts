@@ -2,6 +2,7 @@ import IndexGlobal from "./IndexGlobal.js";
 import MgrData from "./mgr/MgrData.js";
 import MgrDataItem from "./mgr/MgrDataItem.js";
 import MgrDom from "./mgr/MgrDom.js";
+import MgrGlobal from "./mgr/MgrGlobal.js";
 import MgrRes from "./mgr/MgrRes.js";
 import MgrSdk from "./mgr/MgrSdk.js";
 
@@ -28,6 +29,10 @@ Promise.resolve ()
     .then (() => {
         return MgrDom.inst.init ();
     })
+    // 初始化全局器
+    .then (() => {
+        return MgrGlobal.inst.init ();
+    })
     // 告知服务端已就绪
     .then (() => {
         IndexGlobal.inst.init ();
@@ -39,9 +44,9 @@ Promise.resolve ()
         // 关闭窗口时候自动存档一次
         window.addEventListener (`beforeunload`, () => {
             MgrSdk.inst.core.logToMain (`客户端关闭...`);
+            MgrSdk.inst.core.callDestoried ();
             MgrData.inst.save ();
         });
-
         let updatedDataVersion: number;
         let start= Date.now ();
         let called = 0;

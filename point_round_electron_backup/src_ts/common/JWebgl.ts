@@ -26,6 +26,7 @@ import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide.j
 import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea.js";
 import JWebglProgramTypeSmoothDisplayCircle from "./JWebglProgramTypeSmoothDisplayCircle.js";
 import JWebglProgramTypeSmoothAngle from "./JWebglProgramTypeSmoothAngle.js";
+import MgrGlobal from "../mgr/MgrGlobal.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -75,11 +76,20 @@ class JWebgl {
      */
     canvasWebglCtx: WebGLRenderingContext;
 
+    private static _seed = 0;
+
+    id: number;
+
     constructor (
         canvasWebgl: HTMLCanvasElement
     )
     {
         this.canvasWebgl = canvasWebgl;
+        this.touchStart = new JWebglTouch (this);
+        this.touchMove = new JWebglTouch (this);
+        this.touchEnd = new JWebglTouch (this);
+
+        this.id = ++JWebgl._seed;
     }
 
     /**
@@ -90,7 +100,7 @@ class JWebgl {
     /**
      * 交互起始位置
      */
-    touchStart = new JWebglTouch ();
+    touchStart: JWebglTouch;
     /**
      * 事件派发 - 交互起始
      */
@@ -99,7 +109,7 @@ class JWebgl {
     /**
      * 交互拖拽位置
      */
-    touchMove = new JWebglTouch ();
+    touchMove: JWebglTouch;
     /**
      * 事件派发 - 交互拖拽
      */
@@ -108,7 +118,7 @@ class JWebgl {
     /**
      * 交互结束位置
      */
-    touchEnd = new JWebglTouch ();
+    touchEnd: JWebglTouch;
     /**
      * 事件派发 - 交互结束
      */
@@ -117,36 +127,58 @@ class JWebgl {
     /**
      * 当前交互位置
      */
-    currentTouch = new JWebglTouch ();
+    currentTouch: JWebglTouch;
     /**
      * 事件派发 - 发生交互
      */
     evtTouch = new Eventer ();
 
     /**
-     * 初始化
-     * @returns 
+     * 事件派发 - 进入
      */
-    init () {
-        this.canvasWebgl.onmousedown = (evt: MouseEvent) => {
-            this.touchStart.fill (evt);
+    evtEnter = new Eventer ();
+
+    /**
+     * 事件派发 - 离开
+     */
+    evtLeave = new Eventer ();
+
+    /**
+     * 监听交互
+     */
+    listenTouch (tag: HTMLElement) {
+        tag.onmousedown = (evt: MouseEvent) => {
+            this.touchStart.fillByClientPos (evt.clientX, evt.clientY);
             this.currentTouch = this.touchStart;
             this.evtTouch.call (null);
             this.evtTouchStart.call (null);
         };
-        this.canvasWebgl.onmousemove = (evt: MouseEvent) => {
-            this.touchMove.fill (evt);
+        tag.onmousemove = (evt: MouseEvent) => {
+            this.touchMove.fillByClientPos (evt.clientX, evt.clientY);
             this.currentTouch = this.touchMove;
             this.evtTouch.call (null);
             this.evtTouchMove.call (null);
         };
-        this.canvasWebgl.onmouseup = (evt: MouseEvent) => {
-            this.touchEnd.fill (evt);
+        tag.onmouseup = (evt: MouseEvent) => {
+            this.touchEnd.fillByClientPos (evt.clientX, evt.clientY);
             this.currentTouch = this.touchEnd;
             this.evtTouch.call (null);
             this.evtTouchEnd.call (null);
         };
 
+        tag.onmouseenter = () => {
+            this.evtEnter.call (null);
+        };
+        tag.onmouseleave = () => {
+            this.evtLeave.call (null);
+        };
+    }
+
+    /**
+     * 初始化
+     * @returns 
+     */
+    init () {
         this.mat4M.setIdentity ();
         this.mat4V.setIdentity ();
         this.mat4P.setIdentity ();
@@ -183,6 +215,16 @@ class JWebgl {
             this._listProgram.push (program);
             this [propsName] = program;
         });
+    }
+
+    /**
+     * 释放掉
+     */
+    release () {
+        let ext = this.canvasWebglCtx.getExtension (`WEBGL_lose_context`);
+        if (ext) {
+            ext.loseContext();
+        };
     }
 
     private _program: JWebglProgram;
@@ -373,7 +415,16 @@ class JWebgl {
      * @param fboDisplay 
      * @param fboSrc 
      */
-    fillFbo (fboDisplay: JWebglFrameBuffer, fboSrc: JWebglFrameBuffer) {
+    fillFboByFbo (fboDisplay: JWebglFrameBuffer, fboSrc: JWebglFrameBuffer) {
+        this.fillFboByTex (fboDisplay, fboSrc.renderTexture);
+    }
+
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay 
+     * @param fboSrc 
+     */
+    fillFboByTex (fboDisplay: JWebglFrameBuffer, tex: WebGLTexture) {
         this.useFbo (fboDisplay);
         this.clear ();
 
@@ -400,7 +451,52 @@ class JWebgl {
         );
         this.programImg.uMvp.fill (mat4Mvp);
 
-        this.programImg.uTexture.fillByFbo (fboSrc);
+        this.programImg.uTexture.fillByTexture (tex);
+        this.programImg.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.programImg.draw ();
+
+        objectPool.push (mat4M, mat4V, mat4P, mat4Mvp);
+    }
+
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay 
+     * @param fboSrc 
+     */
+    fillFboByTexRev (fboDisplay: JWebglFrameBuffer, tex: WebGLTexture) {
+        this.useFbo (fboDisplay);
+        this.clear ();
+
+        let mat4M = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4M.setIdentity ();
+        let mat4V = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4V.setLookAt(
+            0, 0, -1,
+            0, 0, 0,
+            0, -1, 0
+        );
+        let mat4P = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4P.setOrtho (
+            -1, 1,
+            -1, 1,
+             0, 2
+        );
+        let mat4Mvp = objectPool.pop (JWebglMathMatrix4.poolType);
+        JWebglMathMatrix4.multiplayMat4List (
+            mat4P,
+            mat4V,
+            mat4M,
+            mat4Mvp
+        );
+        this.programImg.uMvp.fill (mat4Mvp);
+
+        this.programImg.uTexture.fillByTexture (tex);
         this.programImg.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,

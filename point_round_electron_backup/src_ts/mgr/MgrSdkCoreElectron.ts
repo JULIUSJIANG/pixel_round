@@ -93,7 +93,7 @@ namespace MgrSdkCoreElectronRequest {
     export interface ClientFetchSaveOutput {
 
     };
-    export const CLIENT_FETCH_SAVE = new MgrSdkCoreElectronRequest <ClientFetchSaveInput, ClientFetchSaveOutput> ({
+    export const CLIENT_FETCH_SAVE_FILE = new MgrSdkCoreElectronRequest <ClientFetchSaveInput, ClientFetchSaveOutput> ({
         code: 1003,
         analyse: null
     });
@@ -120,6 +120,28 @@ namespace MgrSdkCoreElectronRequest {
         code: 1005,
         analyse: null
     });
+
+    export interface ClientFetchDebugI {
+
+    };
+    export interface ClientFetchDebugO {
+
+    };
+    export const CLIENT_FETCH_DEBUG = new MgrSdkCoreElectronRequest <ClientFetchDebugI, ClientFetchDebugO> ({
+        code: 1006,
+        analyse: null
+    });
+
+    export interface ClientFetchDestoriedI {
+
+    };
+    export interface ClientFetchDestoriedO {
+
+    };
+    export const CLIENT_FETCH_DESTORIED = new MgrSdkCoreElectronRequest <ClientFetchDebugI, ClientFetchDebugO> ({
+        code: 1007,
+        analyse: null
+    }); 
 }
 
 NodeModules.electron.ipcRenderer.on (
@@ -197,7 +219,7 @@ class MgrSdkCoreElectron extends MgrSdkCore {
 
     saveFile (fileName: string, dataUrl: string): Promise<MgrSdkCtxSaveFile> {
         return this.fetch (
-            MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE,
+            MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_FILE,
             {
                 fileName: fileName,
                 fileUrl: dataUrl
@@ -208,6 +230,24 @@ class MgrSdkCoreElectron extends MgrSdkCore {
                     isSuccessed: true
                 }
             });
+    }
+
+    openDebugTools () {
+        this.fetch (
+            MgrSdkCoreElectronRequest.CLIENT_FETCH_DEBUG,
+            {
+
+            }
+        );
+    }
+
+    callDestoried () {
+        this.fetch (
+            MgrSdkCoreElectronRequest.CLIENT_FETCH_DESTORIED,
+            {
+
+            }
+        );
     }
 
     /**

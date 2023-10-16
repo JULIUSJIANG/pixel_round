@@ -42,6 +42,6 @@ namespace MgrDom {
      * 全局实例
      */
     export const inst = new MgrDom ();
-}
+};
 
 export default MgrDom;

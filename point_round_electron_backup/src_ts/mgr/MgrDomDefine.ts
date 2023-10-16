@@ -19,6 +19,8 @@ namespace MgrDomDefine {
 
     export const STYLE_TEXT_ALIGN = "textAlign";
     export const STYLE_TEXT_ALIGN_CENTER = "center";
+    export const STYLE_TEXT_ALIGN_LEFT = "left";
+    export const STYLE_TEXT_ALIGN_RIGHT = "right";
 
     export const STYLE_VERTICAL_ALIGN = "verticalAlign";
     export const STYLE_VERTICAL_ALIGN_MIDDLE = "middle";
@@ -50,6 +52,7 @@ namespace MgrDomDefine {
     export const STYLE_FLEX_DIRECTION = "flexDirection";
     export const STYLE_FLEX_DIRECTION_COLUMN = "column";
     export const STYLE_FLEX_DIRECTION_ROW = "row";
+    export const STYLE_FLEX_DIRECTION_ROW_REVERSE = "row-reverse";
 
     export const STYLE_FLEX_GROW = "flexGrow";
 
@@ -82,6 +85,7 @@ namespace MgrDomDefine {
 
     export const STYLE_ALIGN_ITEMS = "alignItems";
     export const STYLE_ALIGN_ITEMS_CENTER = "center";
+    export const STYLE_ALIGN_ITEMS_STRETCH = "stretch";
 
     export const STYLE_JUSTIFY_CONTENT = "justifyContent";
     export const STYLE_JUSTIFY_CONTENT_CENTER = "center";

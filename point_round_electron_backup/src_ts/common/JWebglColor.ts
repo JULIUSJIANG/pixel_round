@@ -23,10 +23,10 @@ class JWebglColor {
     str2dText: string;
 
     constructor (r = 1, g = 1, b = 1, a = 1) {
-        this.init (r, g, b, a);
+        this.initByRGBA (r, g, b, a);
     }
 
-    init (r: number, g: number, b: number, a: number) {
+    initByRGBA (r: number, g: number, b: number, a: number) {
         this.data255 [0] = r * 255;
         this.data255 [1] = g * 255;
         this.data255 [2] = b * 255;
@@ -35,16 +35,65 @@ class JWebglColor {
         for (let i = 0; i < 4; i++) {
             this.data01 [i] = this.data255 [i] / 255;
         };
-        this.str16 = `#${this.to16 (this.data255 [0])}${this.to16 (this.data255 [1])}${this.to16 (this.data255 [2])}${this.to16 (this.data255 [3])}`;
+        this.str16 = `#${this.parseNumberToHex (this.data255 [0])}${this.parseNumberToHex (this.data255 [1])}${this.parseNumberToHex (this.data255 [2])}${this.parseNumberToHex (this.data255 [3])}`;
         this.str2dText = `rgba(${this.data255 [0]}, ${this.data255 [1]}, ${this.data255 [2]}, ${this.data01 [3]})`;
     }
 
-    to16 (num: number) {
+    initByHex (hex: string) {
+        let r = 1, g = 1, b = 1, a = 1;
+        if (hex != null) {
+            r = this.parseHexToNumber (hex [0]) * 16 + this.parseHexToNumber (hex [1]);
+            r /= 255;
+            g = this.parseHexToNumber (hex [2]) * 16 + this.parseHexToNumber (hex [3]);
+            g /= 255;
+            b = this.parseHexToNumber (hex [4]) * 16 + this.parseHexToNumber (hex [5]);
+            b /= 255;
+            a = this.parseHexToNumber (hex [6]) * 16 + this.parseHexToNumber (hex [7]);
+            a /= 255;
+        };
+        this.initByRGBA (r, g, b, a);
+    }
+
+    parseNumberToHex (num: number) {
         let str = num.toString (16);
         if (str.length == 1) {
             return `0${str}`;
         };
         return str;
+    }
+
+    parseHexToNumber (hex: string) {
+        if (hex == null) {
+            return 15;
+        };
+        hex = hex.toLowerCase ();
+        switch (hex) {
+            case `a`: {
+                return 10;
+            };
+            case `b`: {
+                return 11;
+            };
+            case `c`: {
+                return 12;
+            };
+            case `d`: {
+                return 13;
+            };
+            case `e`: {
+                return 14;
+            };
+            case `f`: {
+                return 15;
+            };
+            default: {
+                let val = Number.parseFloat (hex);
+                if (!Number.isNaN (val)) {
+                    return val;
+                };
+                return 15;
+            };
+        };
     }
 
     static poolType = new ObjectPoolType ({
@@ -102,6 +151,10 @@ namespace JWebglColor {
      * 灰色
      */
     export const COLOR_GREY = new JWebglColor (0.5, 0.5, 0.5, 1);
+    /**
+     * 灰色
+     */
+    export const COLOR_LIGHT = new JWebglColor (0.75, 0.75, 0.75, 1);
 
     /**
      * 红色
@@ -119,6 +172,11 @@ namespace JWebglColor {
      * 蓝色
      */
     export const COLOR_BLUE_ALPHA = new JWebglColor (0.4039, 0.4039, 0.9254, 0.7);
+
+    /**
+     * 红色
+     */
+    export const COLOR_PURE_RED = new JWebglColor (1, 0, 0, 1);
 }
 
 for (let i = 0; i < colorData255.length; i+=4) {

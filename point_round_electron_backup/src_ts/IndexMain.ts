@@ -87,7 +87,7 @@ namespace MgrSdkCoreElectronRequest {
     export interface ClientFetchSaveOutput {
 
     };
-    export const CLIENT_FETCH_SAVE = new MgrSdkCoreElectronRequest <ClientFetchSaveInput, ClientFetchSaveOutput> ({
+    export const CLIENT_FETCH_SAVE_FILE = new MgrSdkCoreElectronRequest <ClientFetchSaveInput, ClientFetchSaveOutput> ({
         code: 1003,
         analyse: (ctx) => {
             let filters = [
@@ -169,6 +169,38 @@ namespace MgrSdkCoreElectronRequest {
             }); 
         }
     });
+
+    export interface ClientFetchDebugI {
+
+    };
+    export interface ClientFetchDebugO {
+
+    };
+    export const CLIENT_FETCH_DEBUG = new MgrSdkCoreElectronRequest <ClientFetchDebugI, ClientFetchDebugO> ({
+        code: 1006,
+        analyse: (ctx) => {
+            win.openDevTools ();
+            return Promise.resolve ({
+
+            });
+        }
+    });
+    
+    export interface ClientFetchDestoriedI {
+
+    };
+    export interface ClientFetchDestoriedO {
+
+    };
+    export const CLIENT_FETCH_DESTORIED = new MgrSdkCoreElectronRequest <ClientFetchDebugI, ClientFetchDebugO> ({
+        code: 1007,
+        analyse: (ctx) => {
+            isDestoried = true;
+            return Promise.resolve ({
+
+            });
+        }
+    }); 
 }
 
 let win;
@@ -184,7 +216,6 @@ const createWindow = () => {
     win.setMenu (null);
     win.loadFile (`./src_js/IndexWindow.html`);
     win.openDevTools ();
-
     win.webContents.session.on (
         'will-download', 
         (event, item, webContents) => {
@@ -219,6 +250,7 @@ Promise.resolve ()
         });
     });
 
+let isDestoried = false;
 _electron.ipcMain.on (
     MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE,
     (
@@ -231,6 +263,9 @@ _electron.ipcMain.on (
         // 让策略处理
         action.analyse (args.data)
             .then ((resp) => {
+                if (isDestoried) {
+                    return;
+                };
                 // 返回最终结果
                 win.webContents.send (MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, resp);
     });

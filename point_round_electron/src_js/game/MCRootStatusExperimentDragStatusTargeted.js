@@ -36,7 +36,7 @@ class MCRootStatusExperimentDragStatusTargeted extends MCRootStatusExperimentDra
         this.relMachine.dragTargetHover.maskCurrStatus.onMaskEnable(this.relMachine.dragTargetStart);
         MgrData.inst.callDataChange();
     }
-    onTargetEnterLeave() {
+    onTargetLeave() {
         for (let i = 0; i < IndexGlobal.inst.expListImg.length; i++) {
             let expImg = IndexGlobal.inst.expListImg[i];
             expImg.maskCurrStatus.onMaskDisable();

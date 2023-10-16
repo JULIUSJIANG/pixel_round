@@ -31,6 +31,7 @@ import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide.j
 import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea.js";
 import JWebglProgramTypeSmoothDisplayCircle from "./JWebglProgramTypeSmoothDisplayCircle.js";
 import JWebglProgramTypeSmoothAngle from "./JWebglProgramTypeSmoothAngle.js";
+import JWebglTexture from "./JWebglTexture.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
  * 获取原型上的缓存
@@ -255,6 +256,25 @@ class JWebgl {
         }
         ;
         this.canvasWebglCtx.deleteFramebuffer(fbo.frameBuffer);
+    }
+    /**
+     * 销毁纹理
+     * @param tex
+     * @returns
+     */
+    destroyTex(tex) {
+        if (tex == null) {
+            return;
+        }
+        ;
+        this.canvasWebglCtx.deleteTexture(tex.texture);
+    }
+    /**
+     * 创建纹理
+     * @returns
+     */
+    createTexture() {
+        return new JWebglTexture(this);
     }
     /**
      * 输出日志

@@ -1,11 +1,8 @@
 import IndexGlobal from "../IndexGlobal.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import MgrData from "../mgr/MgrData.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomDrawingBoardLeftListImg from "./DomDrawingBoardLeftListImg.js";
-import FileColumnRS from "./FileColumnRS.js";
 export default class DomDrawingBoardLeftList extends ReactComponentExtend {
     constructor() {
         super(...arguments);
@@ -13,7 +10,7 @@ export default class DomDrawingBoardLeftList extends ReactComponentExtend {
         this.listChildrenContainer = new Array();
     }
     render() {
-        let rsCurrent = FileColumnRS.mapIdToInst.get(MgrData.inst.get(MgrDataItem.COLUMN_COUNT));
+        let rsCurrent = IndexGlobal.fileColumnRS();
         this.listChildren.length = 0;
         let listImgData = IndexGlobal.inst.dbListImg;
         for (let i = 0; i < listImgData.length; i += rsCurrent.count) {

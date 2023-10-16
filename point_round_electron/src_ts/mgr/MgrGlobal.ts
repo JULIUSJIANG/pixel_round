@@ -57,6 +57,7 @@ class MgrGlobal {
 
         this.canvas3d = document.createElement (`canvas`);
         this.canvas3dCtx = new JWebgl (this.canvas3d);
+        this.canvas3dCtx.init ();
 
         document.onmousedown = (evt: MouseEvent) => {
             this.evtTouchStartPos.fill (evt.clientX, evt.clientY);
@@ -102,7 +103,7 @@ class MgrGlobal {
      * @param h 
      * @returns 
      */
-    getImgData (w: number, h: number): ImageData {
+    private getImgData (w: number, h: number): ImageData {
         if (this._imgData == null || this._imgData.width != w || this._imgData.height != h) {
             this._imgData = this.canvas2dCtx.createImageData (w, h);
         };
@@ -120,43 +121,12 @@ class MgrGlobal {
         this.canvas2d.width = w;
         this.canvas2d.height = h;
         let imgData = this.getImgData (w, h);
-        imgData.data.set (arrUint8, 0);
+        for (let i = 0; i < imgData.data.length; i++) {
+            imgData.data [i] = arrUint8 [i];
+        };
+        // imgData.data.set (arrUint8, 0);
         this.canvas2dCtx.putImageData (imgData, 0, 0);
         return this.canvas2d.toDataURL ();
-    }
-
-    private _arrUint8 = new Uint8Array (1);
-    /**
-     * 获取流数据 - 整型
-     * @param len 
-     * @returns 
-     */
-    getArrUint8 (len: number): Uint8Array {
-        let size = this._arrUint8.length;
-        if (size < len) {
-            while (size < len) {
-                size *= 2;
-            };
-            this._arrUint8 = new Uint8Array (size);
-        };
-        return this._arrUint8;
-    }
-
-    private _arrFloat32 = new Float32Array (1);
-    /**
-     * 获取流数据 - 浮点
-     * @param len 
-     * @returns 
-     */
-    getArrFloat32 (len: number): Float32Array {
-        let size = this._arrFloat32.length;
-        if (size < len) {
-            while (size < len) {
-                size *= 2;
-            };
-            this._arrFloat32 = new Float32Array (size);
-        };
-        return this._arrFloat32;
     }
 }
 

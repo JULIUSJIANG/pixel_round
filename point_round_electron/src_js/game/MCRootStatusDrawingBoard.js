@@ -1,7 +1,5 @@
 import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import MgrData from "../mgr/MgrData.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomDrawingBoardLeft from "../ui/DomDrawingBoardLeft.js";
 import DomDrawingBoardRightEmpty from "../ui/DomDrawingBoardRightEmpty.js";
@@ -87,7 +85,8 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
     }
     onDisplay() {
         let instDisplay;
-        let currentImg = this.getCurrentCache();
+        let currentImg = IndexGlobal.inst.dbCurrent();
+        ;
         // 有可用图片
         if (currentImg != null) {
             instDisplay = ReactComponentExtend.instantiateComponent(DomDrawingBoardRightPaint, null);
@@ -104,13 +103,6 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
             }
         }, ReactComponentExtend.instantiateComponent(DomDrawingBoardLeft, null), instDisplay);
-    }
-    /**
-     * 获取当前的缓存
-     * @returns
-     */
-    getCurrentCache() {
-        return IndexGlobal.inst.dbMapIdToImg.get(MgrData.inst.get(MgrDataItem.DB_CURRENT_IMG));
     }
     /**
      * 捕获 dom

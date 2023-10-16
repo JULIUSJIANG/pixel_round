@@ -2,12 +2,12 @@ import ObjectPoolType from "./ObjectPoolType.js";
 /**
  * 字节数据
  */
-export default class DataUint8Array {
+export default class DataUint32Array {
     constructor() {
         /**
          * 核心数据
          */
-        this.bin = new Uint8Array(1);
+        this.bin = new Uint32Array(1);
     }
     /**
      * 确保长度足够
@@ -21,7 +21,7 @@ export default class DataUint8Array {
                 size *= 2;
             }
             ;
-            this.bin = new Uint8Array(len);
+            this.bin = new Uint32Array(len);
         }
         ;
     }
@@ -37,9 +37,9 @@ export default class DataUint8Array {
         ;
     }
 }
-DataUint8Array.poolType = new ObjectPoolType({
+DataUint32Array.poolType = new ObjectPoolType({
     instantiate: () => {
-        return new DataUint8Array();
+        return new DataUint32Array();
     },
     onPop: (t) => {
     },

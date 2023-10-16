@@ -76,6 +76,9 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
     }
 
     render (): ReactComponentExtendInstance {
+        // 表现出来的数据源
+        let dataSrc = this.props.imgData.maskCurrStatus.onGetData ();
+
         // 处理容器参数
         let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
@@ -92,20 +95,21 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
         if (this.props.j != 0) {
             props.style [MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
         };
-        if (IndexGlobal.mcExp ().detailCurrStatus == IndexGlobal.mcExp ().detailStatusPreview && this.props.imgData.maskCurrStatus.onGetData().expImgData.id == MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG)) {
+        if (IndexGlobal.mcExp ().detailCurrStatus == IndexGlobal.mcExp ().detailStatusPreview && dataSrc.expImgData.id == MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG)) {
             props [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         else {
             props.style [MgrDomDefine.STYLE_BACKGROUND_COLOR] = MgrDomDefine.CONFIG_TXT_BG_COLOR;
         };
 
+        // 处理图片参数
         let imgWidth = IndexGlobal.IMG_MINI_SIZE;
         let imgHeight = IndexGlobal.IMG_MINI_SIZE;
-        if (this.props.imgData.expImgData.width < this.props.imgData.expImgData.height) {
-            imgWidth = this.props.imgData.expImgData.width / this.props.imgData.expImgData.height * imgHeight;
+        if (dataSrc.expImgData.width < dataSrc.expImgData.height) {
+            imgWidth = dataSrc.expImgData.width / dataSrc.expImgData.height * imgHeight;
         };
-        if (this.props.imgData.expImgData.height < this.props.imgData.expImgData.width) {
-            imgHeight = this.props.imgData.expImgData.height / this.props.imgData.expImgData.width * imgWidth;
+        if (dataSrc.expImgData.height < dataSrc.expImgData.width) {
+            imgHeight = dataSrc.expImgData.height / dataSrc.expImgData.width * imgWidth;
         };
         let marginX = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgWidth) / 2;
         let marginY = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgHeight) / 2;
@@ -146,7 +150,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
                                 [MgrDomDefine.STYLE_MARGIN_LEFT]: `${marginX}px`,
                                 "imageRendering": `pixelated`,
                             },
-                            src: this.props.imgData.expImgData.dataOrigin,
+                            src: dataSrc.expImgData.dataOrigin,
                             ref: this.ref,
                         }
                     )

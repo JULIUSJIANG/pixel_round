@@ -1,11 +1,8 @@
 import IndexGlobal from "../IndexGlobal.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import MgrData from "../mgr/MgrData.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomExperimentLeftListImg from "./DomExperimentLeftListImg.js";
-import FileColumnRS from "./FileColumnRS.js";
 export default class DomExperimentLeftList extends ReactComponentExtend {
     constructor() {
         super(...arguments);
@@ -13,7 +10,7 @@ export default class DomExperimentLeftList extends ReactComponentExtend {
         this.listChildrenContainer = new Array();
     }
     render() {
-        let rsCurrent = FileColumnRS.mapIdToInst.get(MgrData.inst.get(MgrDataItem.COLUMN_COUNT));
+        let rsCurrent = IndexGlobal.fileColumnRS();
         this.listChildren.length = 0;
         for (let i = 0; i < IndexGlobal.inst.expListImg.length; i += rsCurrent.count) {
             let containerProps = {

@@ -14,6 +14,6 @@ export default class MCRootStatusExperimentDetailStatus {
     }
     onCreate() {
     }
-    onImg(id) {
+    onImg() {
     }
 }

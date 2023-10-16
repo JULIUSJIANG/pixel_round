@@ -69,11 +69,14 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
     }
 
     render (): ReactComponentExtendInstance {
+        // 表现出来的数据源
+        let dataSrc = this.props.dbImg.maskCurrStatus.onGetData ();
+
         // 处理容器参数
         let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
-                MgrData.inst.set (MgrDataItem.DB_CURRENT_IMG, this.props.dbImg.dbImgData.id);
+                IndexGlobal.inst.dbSelect (this.props.dbImg.dbImgData.id);
                 MgrData.inst.callDataChange ();
             },
             style: {
@@ -85,7 +88,7 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
         if (this.props.j != 0) {
             props.style [MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
         };
-        if (MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG) == this.props.dbImg.maskCurrStatus.onGetData().dbImgData.id) {
+        if (MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG) == dataSrc.dbImgData.id) {
             props [MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         else {
@@ -95,11 +98,11 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
         // 处理图片参数
         let imgWidth = IndexGlobal.IMG_MINI_SIZE;
         let imgHeight = IndexGlobal.IMG_MINI_SIZE;
-        if (this.props.dbImg.dbImgData.width < this.props.dbImg.dbImgData.height) {
-            imgWidth = this.props.dbImg.dbImgData.width / this.props.dbImg.dbImgData.height * imgHeight;
+        if (dataSrc.dbImgData.width < dataSrc.dbImgData.height) {
+            imgWidth = dataSrc.dbImgData.width / dataSrc.dbImgData.height * imgHeight;
         };
-        if (this.props.dbImg.dbImgData.height < this.props.dbImg.dbImgData.width) {
-            imgHeight = this.props.dbImg.dbImgData.height / this.props.dbImg.dbImgData.width * imgWidth;
+        if (dataSrc.dbImgData.height < dataSrc.dbImgData.width) {
+            imgHeight = dataSrc.dbImgData.height / dataSrc.dbImgData.width * imgWidth;
         };
         let marginX = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgWidth) / 2;
         let marginY = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgHeight) / 2;
@@ -140,7 +143,7 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend <DomDrawingBoardLe
                                 [MgrDomDefine.STYLE_MARGIN_LEFT]: `${marginX}px`,
                                 "imageRendering": `pixelated`,
                             },
-                            src: this.props.dbImg.dbImgData.dataOrigin,
+                            src: dataSrc.dbImgData.dataOrigin,
                             ref: this.ref,
                         }
                     )

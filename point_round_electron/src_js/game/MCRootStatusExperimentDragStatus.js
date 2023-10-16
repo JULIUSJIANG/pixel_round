@@ -35,7 +35,7 @@ class MCRootStatusExperimentDragStatus {
     /**
      * 拖拽目标离开
      */
-    onTargetEnterLeave() {
+    onTargetLeave() {
     }
 }
 export default MCRootStatusExperimentDragStatus;

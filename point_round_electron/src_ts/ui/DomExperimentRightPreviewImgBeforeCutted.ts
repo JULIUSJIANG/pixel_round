@@ -132,7 +132,7 @@ class DomExperimentRightPreviewImgBeforeCutted extends ReactComponentExtend <num
                     continue;
                 };
                 this.canvas2dCtx.fillStyle = colorInst.colorRel.str2dText;
-                this.canvas2dCtx.fillText (`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, ((argsSmooth.cacheTexHeight - y) - 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
+                this.canvas2dCtx.fillText (`${colorInst.idx}`, (x + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN, (y + 0.5) * IndexGlobal.PIXEL_TEX_TO_SCREEN);
             };
         };
     }

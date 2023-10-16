@@ -33,7 +33,8 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                 IndexGlobal.inst.expDelete(targetIdx);
                 targetIdx = Math.min(targetIdx, IndexGlobal.inst.expListImg.length - 1);
                 if (0 <= targetIdx) {
-                    IndexGlobal.mcExp().detailCurrStatus.onImg(IndexGlobal.inst.expListImg[targetIdx].expImgData.id);
+                    IndexGlobal.inst.expSelect(IndexGlobal.inst.expListImg[targetIdx].expImgData.id);
+                    IndexGlobal.mcExp().detailCurrStatus.onImg();
                 }
                 else {
                     IndexGlobal.mcExp().detailCurrStatus.onCreate();

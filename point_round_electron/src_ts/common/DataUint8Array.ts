@@ -1,4 +1,4 @@
-import ObjectPoolType from "./ObjectPoolType";
+import ObjectPoolType from "./ObjectPoolType.js";
 
 /**
  * 字节数据

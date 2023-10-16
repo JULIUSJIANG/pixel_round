@@ -1,7 +1,7 @@
-import DataUint8Array from "../common/DataUint8Array";
-import objectPool from "../common/ObjectPool";
-import ObjectPoolType from "../common/ObjectPoolType";
-import MgrGlobal from "../mgr/MgrGlobal";
+import DataUint8Array from "../common/DataUint8Array.js";
+import objectPool from "../common/ObjectPool.js";
+import ObjectPoolType from "../common/ObjectPoolType.js";
+import MgrGlobal from "../mgr/MgrGlobal.js";
 
 /**
  * 绘画数据的状态

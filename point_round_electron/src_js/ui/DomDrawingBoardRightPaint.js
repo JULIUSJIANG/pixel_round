@@ -9,22 +9,16 @@ import DomImageSmooth from "./DomImageSmooth.js";
 import ViewRelativeRateRS from "./ViewRelativeRateRS.js";
 export default class DomDrawingBoardRightPaint extends ReactComponentExtend {
     render() {
-        let img;
-        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
-        if (dataSrc.initCurrStatus == dataSrc.initStatusFinished) {
-            img = dataSrc.imgLoaded;
-        }
-        ;
-        let domImageSmoothArgs = DomImageSmooth.Args.create(img, dataSrc.dbImgData.width, dataSrc.dbImgData.height, 0, 0, 0, 0, 1, 1);
         let relativeRS = ViewRelativeRateRS.mapIdToInst.get(MgrData.inst.get(MgrDataItem.VIEW_RELATIVE_RATE));
+        let dataSrc = IndexGlobal.inst.dbCurrent();
         let instLeft;
-        if (relativeRS.isLeftVisiable()) {
+        if (relativeRS.isLeftVisiable() && dataSrc.uint8CurrStatus == dataSrc.uint8StatusLoaded) {
             instLeft = ReactComponentExtend.instantiateComponent(DomDrawingBoardRightPaintCanvas, null);
         }
         ;
         let instRight;
-        if (relativeRS.isRightVisiable()) {
-            instRight = ReactComponentExtend.instantiateComponent(DomImageSmooth, domImageSmoothArgs);
+        if (relativeRS.isRightVisiable() && dataSrc.uint8CurrStatus == dataSrc.uint8StatusLoaded) {
+            instRight = ReactComponentExtend.instantiateComponent(DomImageSmooth, DomImageSmooth.Args.create(dataSrc.statusCurrent().dataBin.bin, dataSrc.statusCurrent().width, dataSrc.statusCurrent().height, 0, 0, 0, 0, 1, 1));
         }
         ;
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {

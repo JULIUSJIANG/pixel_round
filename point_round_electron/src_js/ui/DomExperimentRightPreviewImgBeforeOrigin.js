@@ -4,8 +4,6 @@ import JWebgl from "../common/JWebgl.js";
 import JWebglColor from "../common/JWebglColor.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import MgrData from "../mgr/MgrData.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 const Z_GRID = 0.1;
 const Z_MASK = 0.2;
@@ -36,32 +34,25 @@ class DomExperimentRightPreviewImgBeforeOrigin extends ReactComponentExtend {
         this.jWebgl.release();
     }
     reactComponentExtendOnDraw() {
-        let dataSrc = IndexGlobal.mcExp().detailStatusPreview;
-        let imgMachine = dataSrc.imgMachine;
-        // 没加载完毕，不对画布进行改动
-        if (imgMachine.currStatus == imgMachine.statusIdle) {
-            return;
-        }
-        ;
+        let currImg = IndexGlobal.inst.expCurrent();
         // 清除画面
         this.jWebgl.useFbo(null);
         this.jWebgl.clear();
-        let imgWidth = imgMachine.assetsImg.image.width;
-        let imgHeight = imgMachine.assetsImg.image.height;
-        let paddingTop = Math.max(imgMachine.dataInst.expImgData.paddingTop, 0);
-        let paddingRight = Math.max(imgMachine.dataInst.expImgData.paddingRight, 0);
-        let paddingBottom = Math.max(imgMachine.dataInst.expImgData.paddingBottom, 0);
-        let paddingLeft = Math.max(imgMachine.dataInst.expImgData.paddingLeft, 0);
-        let viewWidth = imgMachine.assetsImg.image.width + paddingRight + paddingLeft;
-        let viewHeight = imgMachine.assetsImg.image.height + paddingTop + paddingBottom;
+        let imgWidth = currImg.expImgData.width;
+        let imgHeight = currImg.expImgData.height;
+        let paddingTop = Math.max(currImg.expImgData.paddingTop, 0);
+        let paddingRight = Math.max(currImg.expImgData.paddingRight, 0);
+        let paddingBottom = Math.max(currImg.expImgData.paddingBottom, 0);
+        let paddingLeft = Math.max(currImg.expImgData.paddingLeft, 0);
+        let viewWidth = imgWidth + paddingRight + paddingLeft;
+        let viewHeight = imgHeight + paddingTop + paddingBottom;
         this.jWebgl.mat4V.setLookAt(viewWidth / 2, viewHeight / 2, 1, viewWidth / 2, viewHeight / 2, 0, 0, 1, 0);
         this.jWebgl.mat4P.setOrtho(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0, 2);
         this.jWebgl.refreshMat4Mvp();
         // 图片
         this.jWebgl.programImg.uMvp.fill(this.jWebgl.mat4Mvp);
-        // this.jWebgl.programImg.uTexture.fillByImg (this.jWebgl.getImg (imgMachine.dataInst.expImgData.dataOrigin));
-        let currExpImg = IndexGlobal.inst.expMapIdToImg.get(MgrData.inst.get(MgrDataItem.EXP_CURRENT_IMG));
-        this.jWebgl.programImg.uTexture.fillByUint8Array(currExpImg.uint8Bin.bin, currExpImg.uint8Width, currExpImg.uint8Height);
+        // 生成图片
+        this.jWebgl.programImg.uTexture.fillByUint8Array(currImg.uint8Bin.bin, currImg.expImgData.width, currImg.expImgData.height);
         this.posImg.elements[0] = imgWidth / 2 + paddingLeft;
         this.posImg.elements[1] = imgHeight / 2 + paddingBottom;
         this.jWebgl.programImg.add(this.posImg, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, imgWidth, imgHeight);
@@ -88,10 +79,10 @@ class DomExperimentRightPreviewImgBeforeOrigin extends ReactComponentExtend {
         this.jWebgl.programLine.draw();
         // 裁切
         this.jWebgl.programTriangle.uMvp.fill(this.jWebgl.mat4Mvp);
-        let posTop = viewHeight + Math.min(imgMachine.dataInst.expImgData.paddingTop, 0);
-        let posRight = viewWidth + Math.min(imgMachine.dataInst.expImgData.paddingRight, 0);
-        let posBottom = -Math.min(imgMachine.dataInst.expImgData.paddingBottom, 0);
-        let posLeft = -Math.min(imgMachine.dataInst.expImgData.paddingLeft, 0);
+        let posTop = viewHeight + Math.min(currImg.expImgData.paddingTop, 0);
+        let posRight = viewWidth + Math.min(currImg.expImgData.paddingRight, 0);
+        let posBottom = -Math.min(currImg.expImgData.paddingBottom, 0);
+        let posLeft = -Math.min(currImg.expImgData.paddingLeft, 0);
         let colorMask = JWebglColor.COLOR_BLUE_ALPHA;
         this.posOutLB.elements[0] = 0;
         this.posOutLB.elements[1] = 0;
@@ -120,7 +111,7 @@ class DomExperimentRightPreviewImgBeforeOrigin extends ReactComponentExtend {
         this.jWebgl.programTriangle.draw();
     }
     render() {
-        let dataSrc = IndexGlobal.mcExp().detailStatusPreview;
+        let currImg = IndexGlobal.inst.expCurrent();
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
@@ -147,8 +138,8 @@ class DomExperimentRightPreviewImgBeforeOrigin extends ReactComponentExtend {
         // 滚动的列表
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${currImg.cWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${currImg.cHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                 [MgrDomDefine.STYLE_FLEX_GROW]: 0,
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -161,11 +152,11 @@ class DomExperimentRightPreviewImgBeforeOrigin extends ReactComponentExtend {
             }
         }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_CANVAS, {
             ref: this.canvasWebglRef,
-            width: dataSrc.imgWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
-            height: dataSrc.imgHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+            width: currImg.cWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+            height: currImg.cHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
             style: {
-                [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_WIDTH]: `${currImg.cWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${currImg.cHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
             }
         })))));

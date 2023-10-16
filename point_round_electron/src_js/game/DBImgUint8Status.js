@@ -1,4 +1,4 @@
-class ExpImgUint8Status {
+class DBImgUint8Status {
     constructor(relImg) {
         this.relImg = relImg;
     }
@@ -23,4 +23,4 @@ class ExpImgUint8Status {
     onDestroy() {
     }
 }
-export default ExpImgUint8Status;
+export default DBImgUint8Status;

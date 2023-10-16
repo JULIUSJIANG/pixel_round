@@ -4,9 +4,4 @@ export default class MCRootStatusExperimentDetailStatusCreateStatusIdle extends 
         this.relMachine.statusUploading.targetUid = uid;
         this.relMachine.enter(this.relMachine.statusUploading);
     }
-    onEnter() {
-        if (this.relMachine.img != null) {
-        }
-        ;
-    }
 }

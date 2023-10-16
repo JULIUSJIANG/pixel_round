@@ -1,5 +1,5 @@
-import JWebgl from "./JWebgl";
-import JWebglEnum from "./JWebglEnum";
+import JWebgl from "./JWebgl.js";
+import JWebglEnum from "./JWebglEnum.js";
 
 /**
  * 纹理

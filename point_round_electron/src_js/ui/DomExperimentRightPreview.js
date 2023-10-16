@@ -1,7 +1,6 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomExperimentRightPreviewImg from "./DomExperimentRightPreviewImg.js";
-import DomExperimentRightPreviewPixelDataCache from "./DomExperimentRightPreviewPixelDataCache.js";
 import DomExperimentRightPreviewProps from "./DomExperimentRightPreviewProps.js";
 export default class DomExperimentRightPreview extends ReactComponentExtend {
     render() {
@@ -12,8 +11,6 @@ export default class DomExperimentRightPreview extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN,
             }
-        }, 
-        // 尽早缓存像素数据
-        ReactComponentExtend.instantiateComponent(DomExperimentRightPreviewPixelDataCache, null), ReactComponentExtend.instantiateComponent(DomExperimentRightPreviewImg, null), ReactComponentExtend.instantiateComponent(DomExperimentRightPreviewProps, null));
+        }, ReactComponentExtend.instantiateComponent(DomExperimentRightPreviewImg, null), ReactComponentExtend.instantiateComponent(DomExperimentRightPreviewProps, null));
     }
 }

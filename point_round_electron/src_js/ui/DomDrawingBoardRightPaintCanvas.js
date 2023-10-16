@@ -45,18 +45,12 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
         this.jWebgl.listenTouch(this.tagDivRef.current);
         this.jWebgl.canvasWebglCtx.disable(JWebglEnum.EnableCap.DEPTH_TEST);
         this.jWebgl.canvasWebglCtx.blendFunc(JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
-        this.textureMain = this.jWebgl.canvasWebglCtx.createTexture();
+        this.textureMain = this.jWebgl.createTexture();
         // 纯色缓冲区
         this.fboPure = this.jWebgl.getFbo(1, 1);
         // 空的帧缓冲区
         this.fboEmpty = this.jWebgl.getFbo(1, 1);
         this.jWebgl.evtTouchStart.on(() => {
-            let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
-            // 该纹理没加载完毕，忽略
-            if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
-                return;
-            }
-            ;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart.fill(this.jWebgl.touchStart.posCanvas[0], this.jWebgl.touchStart.posCanvas[1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onStart(this);
@@ -91,14 +85,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
         // 记录下来，后续要用
         IndexGlobal.inst.mcRoot.statusDrawingBoard.catchDom(this);
         // 获取当前要操作的目标
-        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
-        // 该纹理没加载完毕，忽略
-        if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
-            this.jWebgl.useFbo(null);
-            this.jWebgl.clear();
-            return;
-        }
-        ;
+        let dataSrc = IndexGlobal.inst.dbCurrent();
         // 画笔颜色
         this.colorMark.initByHex(MgrData.inst.get(MgrDataItem.DB_COLOR));
         // 确保缓冲区存在
@@ -124,15 +111,8 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
         this.jWebgl.programPoint.add(JWebglMathVector4.centerO);
         this.jWebgl.programPoint.draw();
         // 同步数据到缓冲区
-        this.jWebgl.canvasWebglCtx.pixelStorei(JWebglEnum.PixelStoreIPName.UNPACK_FLIP_Y_WEBGL, 1);
-        this.jWebgl.canvasWebglCtx.activeTexture(JWebglEnum.ActiveTexture.TEXTURE0);
-        this.jWebgl.canvasWebglCtx.bindTexture(JWebglEnum.BindTexture.TEXTURE_2D, this.textureMain);
-        this.jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MIN_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
-        this.jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MAG_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
-        this.jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_S, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
-        this.jWebgl.canvasWebglCtx.texParameteri(JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_T, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
-        this.jWebgl.canvasWebglCtx.texImage2D(JWebglEnum.BindTexture.TEXTURE_2D, 0, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, dataSrc.imgLoaded);
-        this.jWebgl.fillFboByTex(this.fboCache, this.textureMain);
+        this.textureMain.fillByUint8Array(dataSrc.statusCurrent().dataBin.bin, dataSrc.statusCurrent().width, dataSrc.statusCurrent().height, 0);
+        this.jWebgl.fillFboByTex(this.fboCache, this.textureMain.texture);
         // 先绘制已确定的内容
         this.jWebgl.fillFboByFbo(this.fboScreen, this.fboCache);
         this.jWebgl.fillFboByFbo(null, this.fboScreen);
@@ -188,7 +168,8 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
      * 绘制交叉线
      */
     static doDrawCross(jWebgl, x, y, w, h, colorMark, unitOffset) {
-        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
+        let dataSrc = IndexGlobal.inst.dbCurrent();
+        ;
         // 画布像素单位
         let canvasTextureUnit = 1 / (MgrData.inst.get(MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA);
         // 网格
@@ -236,7 +217,8 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
      * 绘制方块
      */
     static doDrawMark(jWebgl, x, y, w, h, colorMark, unitOffset) {
-        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
+        let dataSrc = IndexGlobal.inst.dbCurrent();
+        ;
         // 画布像素单位
         let canvasTextureUnit = 1 / (MgrData.inst.get(MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA);
         // 网格
@@ -278,7 +260,8 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend {
     }
     render() {
         let relativeRS = ViewRelativeRateRS.mapIdToInst.get(MgrData.inst.get(MgrDataItem.VIEW_RELATIVE_RATE));
-        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache();
+        let dataSrc = IndexGlobal.inst.dbCurrent();
+        ;
         let propsBtnGrid = {
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,

@@ -5,8 +5,8 @@ class DBImgUint8StatusLoaded extends DBImgUint8Status {
 
     onEnter (): void {
         let img = this.relImg.uint8Img.image;
-        let data = MgrGlobal.inst.imageToUint8Arr (img, img.width, img.height);
-        this.relImg.statusPush (data, img.width, img.height);
+        let data = MgrGlobal.inst.imageToUint8Arr (img, this.relImg.dbImgData.width, this.relImg.dbImgData.height);
+        this.relImg.statusPush (data, this.relImg.dbImgData.width, this.relImg.dbImgData.height);
     }
 }
 

@@ -15,7 +15,6 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend {
     constructor() {
         super(...arguments);
         this.ref = NodeModules.react.createRef();
-        this.isListened = false;
     }
     reactComponentExtendOnInit() {
         let tag = this.ref.current;
@@ -41,50 +40,13 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend {
         this.relDbImg = this.props.dbImg;
     }
     render() {
-        let imgInst;
-        // 加载完成再说
-        let imgDataSrc = this.props.dbImg.maskCurrStatus.onGetData();
-        if (imgDataSrc.initCurrStatus == imgDataSrc.initStatusFinished) {
-            let image = imgDataSrc.imgLoaded;
-            let imgWidth = IndexGlobal.IMG_MINI_SIZE;
-            let imgHeight = IndexGlobal.IMG_MINI_SIZE;
-            if (image.width < image.height) {
-                imgWidth = image.width / image.height * imgHeight;
-            }
-            ;
-            if (image.height < image.width) {
-                imgHeight = image.height / image.width * imgWidth;
-            }
-            ;
-            let marginX = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2 - imgWidth) / 2;
-            let marginY = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2 - imgHeight) / 2;
-            imgInst = ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_IMG, {
-                style: {
-                    [MgrDomDefine.STYLE_WIDTH]: `${imgWidth}px`,
-                    [MgrDomDefine.STYLE_HEIGHT]: `${imgHeight}px`,
-                    [MgrDomDefine.STYLE_MARGIN_TOP]: `${marginY}px`,
-                    [MgrDomDefine.STYLE_MARGIN_RIGHT]: `${marginX}px`,
-                    [MgrDomDefine.STYLE_MARGIN_BOTTOM]: `${marginY}px`,
-                    [MgrDomDefine.STYLE_MARGIN_LEFT]: `${marginX}px`,
-                    "imageRendering": `pixelated`,
-                },
-                src: image.src,
-                ref: this.ref,
-            });
-        }
-        else {
-            imgInst = ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_IMG, {
-                style: {
-                    [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_NONE,
-                },
-                ref: this.ref,
-            });
-        }
-        ;
+        // 表现出来的数据源
+        let dataSrc = this.props.dbImg.maskCurrStatus.onGetData();
+        // 处理容器参数
         let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
-                MgrData.inst.set(MgrDataItem.DB_CURRENT_IMG, this.props.dbImg.dbImgData.id);
+                IndexGlobal.inst.dbSelect(this.props.dbImg.dbImgData.id);
                 MgrData.inst.callDataChange();
             },
             style: {
@@ -97,13 +59,26 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend {
             props.style[MgrDomDefine.STYLE_MARGIN_LEFT] = MgrDomDefine.CONFIG_TXT_SPACING;
         }
         ;
-        if (MgrData.inst.get(MgrDataItem.DB_CURRENT_IMG) == this.props.dbImg.maskCurrStatus.onGetData().dbImgData.id) {
+        if (MgrData.inst.get(MgrDataItem.DB_CURRENT_IMG) == dataSrc.dbImgData.id) {
             props[MgrDomDefine.PROPS_TYPE] = MgrDomDefine.PROPS_TYPE_PRIMARY;
         }
         else {
             props.style[MgrDomDefine.STYLE_BACKGROUND_COLOR] = MgrDomDefine.CONFIG_TXT_BG_COLOR;
         }
         ;
+        // 处理图片参数
+        let imgWidth = IndexGlobal.IMG_MINI_SIZE;
+        let imgHeight = IndexGlobal.IMG_MINI_SIZE;
+        if (dataSrc.dbImgData.width < dataSrc.dbImgData.height) {
+            imgWidth = dataSrc.dbImgData.width / dataSrc.dbImgData.height * imgHeight;
+        }
+        ;
+        if (dataSrc.dbImgData.height < dataSrc.dbImgData.width) {
+            imgHeight = dataSrc.dbImgData.height / dataSrc.dbImgData.width * imgWidth;
+        }
+        ;
+        let marginX = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2 - imgWidth) / 2;
+        let marginY = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2 - imgHeight) / 2;
         return ReactComponentExtend.instantiateTag(NodeModules.antd.Button, props, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: 0,
@@ -118,7 +93,19 @@ class DomDrawingBoardLeftListImg extends ReactComponentExtend {
                 [MgrDomDefine.STYLE_LEFT]: `${-eleSize / 2}px`,
                 [MgrDomDefine.STYLE_TOP]: `${-(IndexGlobal.IMG_MINI_SIZE / 2 + MgrDomDefine.CONFIG_NUMBER_SPACING)}px`,
             }
-        }, imgInst)));
+        }, ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_IMG, {
+            style: {
+                [MgrDomDefine.STYLE_WIDTH]: `${imgWidth}px`,
+                [MgrDomDefine.STYLE_HEIGHT]: `${imgHeight}px`,
+                [MgrDomDefine.STYLE_MARGIN_TOP]: `${marginY}px`,
+                [MgrDomDefine.STYLE_MARGIN_RIGHT]: `${marginX}px`,
+                [MgrDomDefine.STYLE_MARGIN_BOTTOM]: `${marginY}px`,
+                [MgrDomDefine.STYLE_MARGIN_LEFT]: `${marginX}px`,
+                "imageRendering": `pixelated`,
+            },
+            src: dataSrc.dbImgData.dataOrigin,
+            ref: this.ref,
+        }))));
     }
 }
 (function (DomDrawingBoardLeftListImg) {

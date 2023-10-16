@@ -1,8 +1,8 @@
 import MgrRes from "../mgr/MgrRes.js";
-import ExpImgUint8Status from "./ExpImgUint8Status.js";
-class ExpImgUint8StatusLoading extends ExpImgUint8Status {
+import DBImgUint8Status from "./DBImgUint8Status.js";
+class DBImgUint8StatusLoading extends DBImgUint8Status {
     onEnter() {
-        this.relImg.uint8Img = MgrRes.inst.getImg(this.relImg.expImgData.dataOrigin);
+        this.relImg.uint8Img = MgrRes.inst.getImg(this.relImg.dbImgData.dataOrigin);
         this.listenIdFinished = this.relImg.uint8Img.evterFinished.on(() => {
             this.relImg.uint8Enter(this.relImg.uint8StatusLoaded);
         });
@@ -19,4 +19,4 @@ class ExpImgUint8StatusLoading extends ExpImgUint8Status {
         this.relImg.uint8Enter(this.relImg.uint8StatusDestroy);
     }
 }
-export default ExpImgUint8StatusLoading;
+export default DBImgUint8StatusLoading;

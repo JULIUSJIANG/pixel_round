@@ -1,63 +1,30 @@
 import IndexGlobal from "../IndexGlobal.js";
-import DBImgInitStatusFinished from "./DBImgInitStatusFinished.js";
-import DBImgInitStatusIdle from "./DBImgInitStatusIdle.js";
+import objectPool from "../common/ObjectPool.js";
+import DBImgStatus from "./DBImgStatus.js";
 import DBImgMaskStatusActive from "./DBImgMaskStatusActive.js";
 import DBImgMaskStatusIdle from "./DBImgMaskStatusIdle.js";
-import DBImgSrcStatusFinished from "./DBImgSrcStatusFinished.js";
-import DBImgSrcStatusLoading from "./DBImgSrcStatusLoading.js";
+import DBImgUint8StatusDestroy from "./DBImgUint8StatusDestroy.js";
+import DBImgUint8StatusIdle from "./DBImgUint8StatusIdle.js";
+import DBImgUint8StatusLoaded from "./DBImgUint8StatusLoaded.js";
+import DBImgUint8StatusLoading from "./DBImgUint8StatusLoading.js";
 /**
  * 画板数据的缓存
  */
 class DBImg {
     constructor(dbImgData) {
         /**
-         * 所有的历史记录
+         * 所有的状态记录
          */
-        this.listStatus = new Array();
-        /**
-         * 当前状态的索引
-         */
-        this.idxStatus = -1;
+        this.statusList = new Array();
         this.dbImgData = dbImgData;
-        this.imgLoading = new Image();
-        this.imgLoaded = new Image();
-        this.initStatusIdle = new DBImgInitStatusIdle(this);
-        this.initStatusFinished = new DBImgInitStatusFinished(this);
-        this.initEnter(this.initStatusIdle);
-        this.srcStatusLoading = new DBImgSrcStatusLoading(this);
-        this.srcStatusFinished = new DBImgSrcStatusFinished(this);
-        this.srcEnter(this.srcStatusLoading);
-        this.backUpStatus(this.dbImgData.dataOrigin, this.dbImgData.width, this.dbImgData.height);
-        this.srcCurrStatus.onSrcChanged();
         this.maskStatusIdle = new DBImgMaskStatusIdle(this);
         this.maskStatusActive = new DBImgMaskStatusActive(this);
         this.maskEnter(this.maskStatusIdle);
-    }
-    /**
-     * 切换状态
-     * @param status
-     */
-    initEnter(status) {
-        let rec = this.initCurrStatus;
-        this.initCurrStatus = status;
-        if (rec) {
-            rec.onExit();
-        }
-        ;
-        this.initCurrStatus.onEnter();
-    }
-    /**
-     * 切换状态
-     * @param status
-     */
-    srcEnter(status) {
-        let rec = this.srcCurrStatus;
-        this.srcCurrStatus = status;
-        if (rec) {
-            rec.onExit();
-        }
-        ;
-        this.srcCurrStatus.onEnter();
+        this.uint8StatusIdle = new DBImgUint8StatusIdle(this);
+        this.uint8StatusLoading = new DBImgUint8StatusLoading(this);
+        this.uint8StatusLoaded = new DBImgUint8StatusLoaded(this);
+        this.uint8StatusDestroy = new DBImgUint8StatusDestroy(this);
+        this.uint8Enter(this.uint8StatusIdle);
     }
     /**
      * 切换状态
@@ -73,25 +40,24 @@ class DBImg {
         this.maskCurrStatus.onEnter();
     }
     /**
-     * 载入数据
-     * @param arrUint8
-     * @param w
-     * @param h
+     * 流 - 切换状态
+     * @param status
      */
-    loadUrl(url, width, height) {
-        // 加载中，且和加载中的目标一致，那么忽略
-        if (this.srcCurrStatus == this.srcStatusLoading && this.imgLoading.src == url) {
-            return;
+    uint8Enter(status) {
+        let rec = this.uint8CurrStatus;
+        this.uint8CurrStatus = status;
+        if (rec) {
+            rec.onExit();
         }
         ;
-        // 加载完毕，且和加载完毕的一致，那么忽略
-        if (this.srcCurrStatus == this.srcStatusFinished && this.imgLoaded.src == url) {
-            return;
-        }
-        ;
-        // 把状态压入队列
-        this.backUpStatus(url, width, height);
-        this.srcCurrStatus.onSrcChanged();
+        this.uint8CurrStatus.onEnter();
+    }
+    /**
+     * 当前状态
+     * @returns
+     */
+    statusCurrent() {
+        return this.statusList[this.statusIdx];
     }
     /**
      * 对状态进行备份
@@ -99,44 +65,52 @@ class DBImg {
      * @param width
      * @param height
      */
-    backUpStatus(url, width, height) {
-        // 核心数据的备份
-        let backup = {
-            id: null,
-            dataOrigin: url,
-            width: width,
-            height: height
-        };
-        // 把当前状态后面的状态都给去了
-        this.listStatus.splice(this.idxStatus + 1);
-        this.listStatus.push(backup);
-        this.idxStatus = this.listStatus.length - 1;
-        // 超量，剔除首个
-        if (IndexGlobal.BACK_UP_COUNT_MAX < this.listStatus.length) {
-            this.listStatus.shift();
-            this.idxStatus = this.listStatus.length - 1;
+    statusPush(bin, width, height) {
+        let status = DBImgStatus.create(bin, width, height);
+        // 清理后面的状态
+        for (let i = this.statusIdx + 1; i < this.statusList.length; i++) {
+            let listStatusI = this.statusList[i];
+            objectPool.push(listStatusI);
         }
         ;
+        this.statusList.splice(this.statusIdx + 1);
+        this.statusList.push(status);
+        // 超量，剔除首个
+        if (IndexGlobal.BACK_UP_COUNT_MAX < this.statusList.length) {
+            let listStatusShift = this.statusList.shift();
+            objectPool.push(listStatusShift);
+        }
+        ;
+        this.statusIdx = this.statusList.length - 1;
+        this.statusOnChanged();
     }
     /**
      * 撤销
      */
-    cancel() {
-        if (0 < this.idxStatus) {
-            this.idxStatus--;
-            this.srcCurrStatus.onSrcChanged();
+    statusCancel() {
+        if (0 < this.statusIdx) {
+            this.statusIdx--;
+            this.statusOnChanged();
         }
         ;
     }
     /**
      * 恢复
      */
-    recovery() {
-        if (this.idxStatus < this.listStatus.length - 1) {
-            this.idxStatus++;
-            this.srcCurrStatus.onSrcChanged();
+    statusRecovery() {
+        if (this.statusIdx < this.statusList.length - 1) {
+            this.statusIdx++;
+            this.statusOnChanged();
         }
         ;
+    }
+    /**
+     * 事件派发 - 状态回调
+     */
+    statusOnChanged() {
+        this.dbImgData.dataOrigin = this.statusCurrent().base64;
+        this.dbImgData.width = this.statusCurrent().width;
+        this.dbImgData.height = this.statusCurrent().height;
     }
 }
 export default DBImg;

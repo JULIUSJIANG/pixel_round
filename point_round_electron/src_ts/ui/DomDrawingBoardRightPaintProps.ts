@@ -330,6 +330,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                             "disabled": imgCurr.statusIdx == 0,
                             onClick: () => {
                                 imgCurr.statusCancel ();
+                                MgrData.inst.callDataChange ();
                             }
                         },
         
@@ -355,6 +356,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                             "disabled": imgCurr.statusIdx == imgCurr.statusList.length - 1,
                             onClick: () => {
                                 imgCurr.statusRecovery ();
+                                MgrData.inst.callDataChange ();
                             }
                         },
         
@@ -472,7 +474,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                                 // 尽量维持选择状态
                                 targetIdx = Math.min (targetIdx, IndexGlobal.inst.dbListImg.length - 1);
                                 if (0 <= targetIdx) {
-                                    MgrData.inst.set (MgrDataItem.DB_CURRENT_IMG, IndexGlobal.inst.dbListImg [targetIdx].dbImgData.id);
+                                    IndexGlobal.inst.dbSelect (IndexGlobal.inst.dbListImg [targetIdx].dbImgData.id);
                                 };
                                 MgrData.inst.callDataChange ();
                             },

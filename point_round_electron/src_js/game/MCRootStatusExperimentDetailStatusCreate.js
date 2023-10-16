@@ -1,6 +1,5 @@
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
 import DomExperimentRightCreate from "../ui/DomExperimentRightCreate.js";
 import MCRootStatusExperimentDetailStatusCreateStatusIdle from "./MCRootStatusExperimentDetailStatusCreateStatusIdle.js";
 import MCRootStatusExperimentDetailStatusCreateStatusLoading from "./MCRootStatusExperimentDetailStatusCreateStatusLoading.js";
@@ -14,8 +13,7 @@ export default class MCRootStatusExperimentDetailStatusCreate extends MCRootStat
         this.statusLoading = new MCRootStatusExperimentDetailStatusCreateStatusLoading(this);
         this.enter(this.statusIdle);
     }
-    onImg(id) {
-        MgrData.inst.set(MgrDataItem.EXP_CURRENT_IMG, id);
+    onImg() {
         this.relMachine.detailEnter(this.relMachine.detailStatusPreview);
     }
     onRender() {

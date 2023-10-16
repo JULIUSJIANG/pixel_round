@@ -160,7 +160,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
 
         // 同步数据到缓冲区
         this.textureMain.fillByUint8Array (dataSrc.statusCurrent ().dataBin.bin, dataSrc.statusCurrent ().width, dataSrc.statusCurrent ().height, 0);
-        this.jWebgl.fillFboByTex (this.fboCache, this.textureMain);
+        this.jWebgl.fillFboByTex (this.fboCache, this.textureMain.texture);
 
         // 先绘制已确定的内容
         this.jWebgl.fillFboByFbo (this.fboScreen, this.fboCache);

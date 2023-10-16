@@ -210,8 +210,8 @@ class ExpImg {
         for (let i = 0; i < length; i++) {
             this.cMiniBinColor.bin [i] = 0;
             for (let j = 0; j < 4; j++) {
-                this.cMiniBinColor.bin [i] << 8;
-                this.cMiniBinColor.bin [i] += this.cMiniBinRGBA [i * 4 + j];
+                this.cMiniBinColor.bin [i] <<= 8;
+                this.cMiniBinColor.bin [i] += this.cMiniBinRGBA.bin [i * 4 + j];
             };
             this.cSetColor.add (this.cMiniBinColor.bin [i]);
         };

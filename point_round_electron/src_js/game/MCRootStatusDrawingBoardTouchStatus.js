@@ -41,25 +41,5 @@ class MCRootStatusDrawingBoardTouchStatus {
      */
     onFocusDraw(dataSrc) {
     }
-    /**
-     * 事件派发 - 拖拽开始
-     */
-    onDragStart(dbImg) {
-    }
-    /**
-     * 事件派发 - 拖拽结束
-     */
-    onDragEnd() {
-    }
-    /**
-     * 事件派发 - 拖拽进入
-     */
-    onDragEnter(dbImg) {
-    }
-    /**
-     * 事件派发 - 拖拽离开
-     */
-    onDragLeave() {
-    }
 }
 export default MCRootStatusDrawingBoardTouchStatus;

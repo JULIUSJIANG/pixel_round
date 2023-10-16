@@ -16,7 +16,7 @@ class JWebglFrameBuffer {
         this.relWebgl.canvasWebglCtx.bindFramebuffer(JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, this.frameBuffer);
         this.relWebgl.canvasWebglCtx.framebufferTexture2D(JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, JWebglEnum.FramebufferTexture2DAttachment.COLOR_ATTACHMENT0, JWebglEnum.BindTexture.TEXTURE_2D, this.renderTexture, 0);
     }
-    toBase64() {
+    cacheToUint8() {
         if (this.fboRev == null) {
             this.fboRev = this.relWebgl.getFbo(this.width, this.height);
         }
@@ -28,6 +28,9 @@ class JWebglFrameBuffer {
         ;
         this.relWebgl.useFbo(this.fboRev);
         this.relWebgl.canvasWebglCtx.readPixels(0, 0, this.width, this.height, JWebglEnum.ReadPixelsFormat.RGBA, JWebglEnum.ReadPixelType.UNSIGNED_BYTE, this.arrUint8);
+    }
+    toBase64() {
+        this.cacheToUint8();
         return MgrGlobal.inst.arrUint8ToBase64(this.arrUint8, this.width, this.height);
     }
 }

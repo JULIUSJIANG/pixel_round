@@ -8,8 +8,6 @@ class MCRootStatusDrawingBoardOpStatusStraw extends MCRootStatusDrawingBoardOpSt
         super(...arguments);
         this.arruint8 = new Uint8Array(4);
     }
-    onDo(dataSrc, x, y, w, h) {
-    }
     onUpdate(dataSrc, x, y, w, h) {
         dataSrc.jWebgl.useFbo(dataSrc.fboCache);
         dataSrc.jWebgl.canvasWebglCtx.readPixels(this.relMachine.touchPosMove.gridXInt, this.relMachine.touchPosMove.gridYInt, 1, 1, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, this.arruint8);

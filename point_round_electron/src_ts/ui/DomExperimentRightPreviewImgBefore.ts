@@ -58,6 +58,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         (val) => {
                             currImg.expImgData.paddingLeft = val;
                             currImg.cCache ();
+                            MgrData.inst.callDataChange ();
                         },
                         null,
                         null
@@ -68,6 +69,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         (val) => {
                             currImg.expImgData.paddingRight = val;
                             currImg.cCache ();
+                            MgrData.inst.callDataChange ();
                         },
                         null,
                         null
@@ -88,6 +90,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         (val) => {
                             currImg.expImgData.paddingTop = val;
                             currImg.cCache ();
+                            MgrData.inst.callDataChange ();
                         },
                         null,
                         null
@@ -98,6 +101,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         (val) => {
                             currImg.expImgData.paddingBottom = val;
                             currImg.cCache ();
+                            MgrData.inst.callDataChange ();
                         },
                         null,
                         null
@@ -122,6 +126,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         (val) => {
                             currImg.expImgData.pixelWidth = val;
                             currImg.cCache ();
+                            MgrData.inst.callDataChange ();
                         },
                         1,
                         null
@@ -132,6 +137,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         (val) => {
                             currImg.expImgData.pixelHeight = val;
                             currImg.cCache ();
+                            MgrData.inst.callDataChange ();
                         },
                         1,
                         null

@@ -1,14 +1,11 @@
 import IndexGlobal from "../IndexGlobal.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import MgrData from "../mgr/MgrData.js";
-import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomExperimentLeftGlobal from "./DomExperimentLeftGlobal.js";
 import DomExperimentLeftList from "./DomExperimentLeftList.js";
-import FileColumnRS from "./FileColumnRS.js";
 export default class DomExperimentLeft extends ReactComponentExtend {
     render() {
-        let rsCurrent = FileColumnRS.mapIdToInst.get(MgrData.inst.get(MgrDataItem.COLUMN_COUNT));
+        let rsCurrent = IndexGlobal.fileColumnRS();
         const imgSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         const width = (MgrDomDefine.CONFIG_NUMBER_HALF_SPACING + MgrDomDefine.CONFIG_NUMBER_SPACING) * 2 + MgrDomDefine.CONFIG_NUMBER_SPACING * 3 + imgSize * rsCurrent.count + MgrDomDefine.CONFIG_NUMBER_SPACING * (rsCurrent.count - 1);
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {

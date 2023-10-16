@@ -1,6 +1,4 @@
 import JWebglEnum from "../common/JWebglEnum.js";
-import JWebglMathVector4 from "../common/JWebglMathVector4.js";
-import objectPool from "../common/ObjectPool.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
@@ -9,11 +7,6 @@ import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus
 class MCRootStatusDrawingBoardOpStatusStraw extends MCRootStatusDrawingBoardOpStatus {
 
     arruint8 = new Uint8Array (4);
-
-    onDo (dataSrc: DomDrawingBoardRightPaintCanvas, x: number, y: number, w: number, h: number): void {
-        
-        
-    }
 
     onUpdate (dataSrc: DomDrawingBoardRightPaintCanvas, x: number, y: number, w: number, h: number): void {
         dataSrc.jWebgl.useFbo (dataSrc.fboCache);

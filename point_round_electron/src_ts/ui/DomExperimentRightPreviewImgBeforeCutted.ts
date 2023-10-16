@@ -126,8 +126,8 @@ class DomExperimentRightPreviewImgBeforeCutted extends ReactComponentExtend <num
         this.canvas2dCtx.textBaseline = `middle`;
         for (let x = 0; x < argsSmooth.cacheTexWidth; x++) {
             for (let y = 0; y < argsSmooth.cacheTexHeight; y++) {
-                let colorId = currImg.miniBinColor.bin [y * argsSmooth.cacheTexWidth + x];
-                let colorInst = currImg.mapIdToColorRecord.get (colorId);
+                let colorId = currImg.cMiniBinColor.bin [y * argsSmooth.cacheTexWidth + x];
+                let colorInst = currImg.cMapIdToColorRecord.get (colorId);
                 if (colorInst == null) {
                     continue;
                 };

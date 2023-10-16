@@ -219,7 +219,7 @@ class DomExperimentRightPreviewImgBeforeOrigin extends ReactComponentExtend <num
     }
 
     render (): ReactComponentExtendInstance {
-        let dataSrc = IndexGlobal.mcExp ().detailStatusPreview;
+        let currImg = IndexGlobal.inst.expCurrent ();
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -256,8 +256,8 @@ class DomExperimentRightPreviewImgBeforeOrigin extends ReactComponentExtend <num
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                            [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                            [MgrDomDefine.STYLE_WIDTH]: `${currImg.cWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                            [MgrDomDefine.STYLE_HEIGHT]: `${currImg.cHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 0,
                         }
                     },
@@ -278,11 +278,11 @@ class DomExperimentRightPreviewImgBeforeOrigin extends ReactComponentExtend <num
                             MgrDomDefine.TAG_CANVAS,
                             {
                                 ref: this.canvasWebglRef,
-                                width: dataSrc.imgWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
-                                height: dataSrc.imgHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+                                width: currImg.cWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
+                                height: currImg.cHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN * IndexGlobal.ANTINA,
                                 style: {
-                                    [MgrDomDefine.STYLE_WIDTH]: `${dataSrc.imgWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
-                                    [MgrDomDefine.STYLE_HEIGHT]: `${dataSrc.imgHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                                    [MgrDomDefine.STYLE_WIDTH]: `${currImg.cWidthShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
+                                    [MgrDomDefine.STYLE_HEIGHT]: `${currImg.cHeightShowAll * IndexGlobal.PIXEL_TEX_TO_SCREEN}px`,
                                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_BLOCK
                                 }
                             }

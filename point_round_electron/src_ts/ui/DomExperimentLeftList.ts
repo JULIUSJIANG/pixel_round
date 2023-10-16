@@ -15,7 +15,7 @@ export default class DomExperimentLeftList extends ReactComponentExtend <number>
     listChildrenContainer = new Array <ReactComponentExtendInstance> ();
 
     render (): ReactComponentExtendInstance {
-        let rsCurrent = FileColumnRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.COLUMN_COUNT));
+        let rsCurrent = IndexGlobal.fileColumnRS ();
         this.listChildren.length = 0;
 
         for (let i = 0; i < IndexGlobal.inst.expListImg.length; i+= rsCurrent.count) {

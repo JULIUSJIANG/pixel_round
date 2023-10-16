@@ -1,6 +1,5 @@
 import MgrRes from "../mgr/MgrRes.js";
 import DBImgUint8Status from "./DBImgUint8Status.js";
-import ExpImgUint8Status from "./ExpImgUint8Status.js";
 
 class DBImgUint8StatusLoading extends DBImgUint8Status {
 

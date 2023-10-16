@@ -11,7 +11,7 @@ import FileColumnRS from "./FileColumnRS.js";
 export default class DomExperimentLeft extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
-        let rsCurrent = FileColumnRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.COLUMN_COUNT));
+        let rsCurrent = IndexGlobal.fileColumnRS ();
         const imgSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         const width = (MgrDomDefine.CONFIG_NUMBER_HALF_SPACING + MgrDomDefine.CONFIG_NUMBER_SPACING) * 2 + MgrDomDefine.CONFIG_NUMBER_SPACING * 3 + imgSize * rsCurrent.count + MgrDomDefine.CONFIG_NUMBER_SPACING * (rsCurrent.count - 1);
         return ReactComponentExtend.instantiateTag (

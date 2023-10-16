@@ -1,5 +1,3 @@
-import DBImg from "./DBImg.js";
-import DBImgMaskStatus from "./DBImgMaskStatus.js";
 import ExpImg from "./ExpImg.js";
 import ExpImgMaskStatus from "./ExpImgMaskStatus.js";
 

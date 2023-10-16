@@ -15,7 +15,7 @@ export default class DomDrawingBoardLeftList extends ReactComponentExtend <numbe
     listChildrenContainer = new Array <ReactComponentExtendInstance> ();
 
     render (): ReactComponentExtendInstance {
-        let rsCurrent = FileColumnRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.COLUMN_COUNT));
+        let rsCurrent = IndexGlobal.fileColumnRS ();
         this.listChildren.length = 0;
         let listImgData = IndexGlobal.inst.dbListImg;
         for (let i = 0; i < listImgData.length; i+= rsCurrent.count) {

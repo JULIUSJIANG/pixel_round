@@ -1,4 +1,3 @@
-import IndexGlobal from "../IndexGlobal.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";

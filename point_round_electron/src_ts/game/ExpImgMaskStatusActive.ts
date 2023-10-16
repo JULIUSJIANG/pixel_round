@@ -1,4 +1,3 @@
-import DBImgMaskStatus from "./DBImgMaskStatus.js";
 import ExpImgMaskStatus from "./ExpImgMaskStatus.js";
 
 class ExpImgMaskStatusActive extends ExpImgMaskStatus {

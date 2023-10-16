@@ -5,6 +5,7 @@ import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanv
 import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus.js";
 
 class MCRootStatusDrawingBoardOpStatusEraser extends MCRootStatusDrawingBoardOpStatus {
+    
     onDo (dataSrc: DomDrawingBoardRightPaintCanvas, x: number, y: number, w: number, h: number): void {
         let currImg = IndexGlobal.inst.dbCurrent ();
         let cameraWidth = currImg.dbImgData.width;

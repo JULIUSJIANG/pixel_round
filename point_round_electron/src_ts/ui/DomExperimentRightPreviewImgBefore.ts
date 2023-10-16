@@ -57,7 +57,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         currImg.expImgData.paddingLeft,
                         (val) => {
                             currImg.expImgData.paddingLeft = val;
-                            currImg.cache ();
+                            currImg.cCache ();
                         },
                         null,
                         null
@@ -67,7 +67,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         currImg.expImgData.paddingRight,
                         (val) => {
                             currImg.expImgData.paddingRight = val;
-                            currImg.cache ();
+                            currImg.cCache ();
                         },
                         null,
                         null
@@ -87,7 +87,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         currImg.expImgData.paddingTop,
                         (val) => {
                             currImg.expImgData.paddingTop = val;
-                            currImg.cache ();
+                            currImg.cCache ();
                         },
                         null,
                         null
@@ -97,7 +97,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         currImg.expImgData.paddingBottom,
                         (val) => {
                             currImg.expImgData.paddingBottom = val;
-                            currImg.cache ();
+                            currImg.cCache ();
                         },
                         null,
                         null
@@ -121,7 +121,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         currImg.expImgData.pixelWidth,
                         (val) => {
                             currImg.expImgData.pixelWidth = val;
-                            currImg.cache ();
+                            currImg.cCache ();
                         },
                         1,
                         null
@@ -131,7 +131,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
                         currImg.expImgData.pixelHeight,
                         (val) => {
                             currImg.expImgData.pixelHeight = val;
-                            currImg.cache ();
+                            currImg.cCache ();
                         },
                         1,
                         null

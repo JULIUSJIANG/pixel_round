@@ -1,5 +1,4 @@
 import IndexGlobal from "../IndexGlobal.js";
-import DataUint8Array from "../common/DataUint8Array.js";
 import objectPool from "../common/ObjectPool.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";

@@ -5,6 +5,7 @@ import MgrSdk from "./mgr/MgrSdk.js";
 import DBImg from "./game/DBImg.js";
 import DomImageSmoothRS from "./ui/DomImageSmoothRS.js";
 import ExpImg from "./game/ExpImg.js";
+import FileColumnRS from "./ui/FileColumnRS.js";
 
 class IndexGlobal {
     /**
@@ -249,6 +250,14 @@ namespace IndexGlobal {
      */
     export function mcExpCreate () {
         return inst.mcRoot.statusExperiment.detailStatusCreate;
+    }
+
+    /**
+     * 当前列数策略
+     */
+    export function fileColumnRS () {
+        let fileColumnRS = FileColumnRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.COLUMN_COUNT));
+        return fileColumnRS;
     }
 
     /**

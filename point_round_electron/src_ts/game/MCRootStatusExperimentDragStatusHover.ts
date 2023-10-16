@@ -1,6 +1,4 @@
-import DBImg from "./DBImg.js";
 import ExpImg from "./ExpImg.js";
-import MCRootStatusDrawingBoardDragStatus from "./MCRootStatusDrawingBoardDragStatus.js";
 import MCRootStatusExperimentDragStatus from "./MCRootStatusExperimentDragStatus.js";
 
 class MCRootStatusExperimentDragStatusHover extends MCRootStatusExperimentDragStatus {

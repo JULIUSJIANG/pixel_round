@@ -1,5 +1,4 @@
 import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
-import DBImg from "./DBImg.js";
 import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";
 
 /**
@@ -60,34 +59,6 @@ class MCRootStatusDrawingBoardTouchStatus {
      * 事件派发 - 绘制
      */
     onFocusDraw (dataSrc: DomDrawingBoardRightPaintCanvas) {
-
-    }
-
-    /**
-     * 事件派发 - 拖拽开始
-     */
-    onDragStart (dbImg: DBImg) {
-
-    }
-
-    /**
-     * 事件派发 - 拖拽结束
-     */
-    onDragEnd () {
-
-    }
-
-    /**
-     * 事件派发 - 拖拽进入
-     */
-    onDragEnter (dbImg: DBImg) {
-
-    }
-
-    /**
-     * 事件派发 - 拖拽离开
-     */
-    onDragLeave () {
 
     }
 }

@@ -131,37 +131,46 @@ class ExpImg {
     /**
      * 缩略图的二进制数据，按照 r、g、b、a 排列
      */
-    miniBinRGBA = new DataUint8Array ();
+    cMiniBinRGBA = new DataUint8Array ();
     /**
      * 缩略图的二进制数据，每个数字代表 rgba
      */
-    miniBinColor = new DataUint32Array ();
+    cMiniBinColor = new DataUint32Array ();
 
     /**
      * 用于去重
      */
-    setColor = new Set <number> ();
+    cSetColor = new Set <number> ();
     /**
      * 颜色记录
      */
-    listColorRecord = new Array <ColorRecord> ();
+    cListColorRecord = new Array <ColorRecord> ();
     /**
      * 标识到颜色记录的映射
      */
-    mapIdToColorRecord = new Map <number, ColorRecord> ();
+    cMapIdToColorRecord = new Map <number, ColorRecord> ();
+
+    /**
+     * 宽度
+     */
+    cWidthShowAll: number;
+    /**
+     * 高度
+     */
+    cHeightShowAll: number;
 
     /**
      * 缓存数据
      */
-    cache () {
+    cCache () {
         // 清除旧的缓存
-        this.setColor.clear ();
-        for (let i = 0; i < this.listColorRecord.length; i++) {
-            let listColorRecordI = this.listColorRecord [i];
+        this.cSetColor.clear ();
+        for (let i = 0; i < this.cListColorRecord.length; i++) {
+            let listColorRecordI = this.cListColorRecord [i];
             objectPool.push (listColorRecordI);
         };
-        this.listColorRecord.length = 0;
-        this.mapIdToColorRecord.clear ();
+        this.cListColorRecord.length = 0;
+        this.cMapIdToColorRecord.clear ();
 
         this.uint8ArgsSmooth.init (
             this.uint8Bin.bin,
@@ -178,6 +187,9 @@ class ExpImg {
             this.expImgData.pixelHeight
         );
 
+        this.cWidthShowAll = (this.expImgData.width + Math.max (this.expImgData.paddingLeft, 0) + Math.max (this.expImgData.paddingRight, 0));
+        this.cHeightShowAll = (this.expImgData.height + Math.max (this.expImgData.paddingBottom, 0) + Math.max (this.expImgData.paddingTop, 0));
+
         // 采集缩略图的数据
         let fbo = MgrGlobal.inst.canvas3dCtx.getFbo (this.uint8ArgsSmooth.cacheTexWidth, this.uint8ArgsSmooth.cacheTexHeight);
         let tex = MgrGlobal.inst.canvas3dCtx.createTexture ();
@@ -188,24 +200,24 @@ class ExpImg {
             tex
         );
         fbo.cacheToUint8 ();
-        this.miniBinRGBA.loadData (fbo.arrUint8);
+        this.cMiniBinRGBA.loadData (fbo.arrUint8);
         MgrGlobal.inst.canvas3dCtx.destroyFbo (fbo);
         MgrGlobal.inst.canvas3dCtx.destroyTex (tex);
 
         // 记录各个位置对应的颜色 id
         let length = this.uint8ArgsSmooth.cacheTexWidth * this.uint8ArgsSmooth.cacheTexHeight;
-        this.miniBinColor.initLength (length);
+        this.cMiniBinColor.initLength (length);
         for (let i = 0; i < length; i++) {
-            this.miniBinColor.bin [i] = 0;
+            this.cMiniBinColor.bin [i] = 0;
             for (let j = 0; j < 4; j++) {
-                this.miniBinColor.bin [i] << 8;
-                this.miniBinColor.bin [i] += this.miniBinRGBA [i * 4 + j];
+                this.cMiniBinColor.bin [i] << 8;
+                this.cMiniBinColor.bin [i] += this.cMiniBinRGBA [i * 4 + j];
             };
-            this.setColor.add (this.miniBinColor.bin [i]);
+            this.cSetColor.add (this.cMiniBinColor.bin [i]);
         };
         
         // 为各个颜色 id 生成记录
-        this.setColor.forEach ((color) => {
+        this.cSetColor.forEach ((color) => {
             let colorBackup = color;
             let colorA = color % 256;
             color >>= 8;
@@ -218,23 +230,23 @@ class ExpImg {
 
             let colorInst = objectPool.pop (ColorRecord.poolType);
             colorInst.init (colorBackup, 0, colorR / 255, colorG / 255, colorB / 255, colorA / 255);
-            this.listColorRecord.push (colorInst);
+            this.cListColorRecord.push (colorInst);
         });
 
         // 更新序号
-        this.listColorRecord.sort ((a, b) => {
+        this.cListColorRecord.sort ((a, b) => {
             return a.id - b.id;
         });
-        for (let i = 0; i < this.listColorRecord.length; i++) {
-            let listColorI = this.listColorRecord [i];
+        for (let i = 0; i < this.cListColorRecord.length; i++) {
+            let listColorI = this.cListColorRecord [i];
             listColorI.idx = i;
         };
 
         // 更新索引
-        this.mapIdToColorRecord.clear ();
-        for (let i = 0; i < this.listColorRecord.length; i++) {
-            let listColorI = this.listColorRecord [i];
-            this.mapIdToColorRecord.set (listColorI.id, listColorI);
+        this.cMapIdToColorRecord.clear ();
+        for (let i = 0; i < this.cListColorRecord.length; i++) {
+            let listColorI = this.cListColorRecord [i];
+            this.cMapIdToColorRecord.set (listColorI.id, listColorI);
         };
     }
 }

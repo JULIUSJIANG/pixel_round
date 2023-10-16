@@ -11,11 +11,9 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
 import DomExperimentLeft from "../ui/DomExperimentLeft.js";
 import ExpImg from "./ExpImg.js";
-import MCRootStatusDrawingBoardDragStatusIdle from "./MCRootStatusDrawingBoardDragStatusIdle.js";
 import MCRootStatusExperimentDragStatusHover from "./MCRootStatusExperimentDragStatusHover.js";
 import MCRootStatusExperimentDragStatusTargeted from "./MCRootStatusExperimentDragStatusTargeted.js";
 import MCRootStatusExperimentDragStatus from "./MCRootStatusExperimentDragStatus.js";
-import MCRootStatusExperimentDetailStatusCreateStatusIdle from "./MCRootStatusExperimentDetailStatusCreateStatusIdle.js";
 import MCRootStatusExperimentDragStatusIdle from "./MCRootStatusExperimentDragStatusIdle.js";
 
 export default class MCRootStatusExperiment extends MCRootStatus {

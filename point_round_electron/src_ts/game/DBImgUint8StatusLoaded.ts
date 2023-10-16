@@ -1,6 +1,5 @@
 import MgrGlobal from "../mgr/MgrGlobal.js";
 import DBImgUint8Status from "./DBImgUint8Status.js";
-import ExpImgUint8Status from "./ExpImgUint8Status.js";
 
 class DBImgUint8StatusLoaded extends DBImgUint8Status {
 

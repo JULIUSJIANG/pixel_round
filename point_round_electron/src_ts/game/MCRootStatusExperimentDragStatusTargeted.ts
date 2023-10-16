@@ -1,6 +1,5 @@
 import IndexGlobal from "../IndexGlobal.js";
 import MgrData from "../mgr/MgrData.js";
-import MCRootStatusDrawingBoardDragStatus from "./MCRootStatusDrawingBoardDragStatus.js";
 import MCRootStatusExperimentDragStatus from "./MCRootStatusExperimentDragStatus.js";
 
 class MCRootStatusExperimentDragStatusTargeted extends MCRootStatusExperimentDragStatus {

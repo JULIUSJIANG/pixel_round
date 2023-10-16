@@ -5,16 +5,14 @@ import JWebglColor from "../common/JWebglColor.js";
 import JWebglEnum from "../common/JWebglEnum.js";
 import JWebglFrameBuffer from "../common/JWebglFrameBuffer.js";
 import JWebglMathVector4 from "../common/JWebglMathVector4.js";
+import JWebglTexture from "../common/JWebglTexture.js";
 import objectPool from "../common/ObjectPool.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
-import MgrGlobal from "../mgr/MgrGlobal.js";
 import MgrSdk from "../mgr/MgrSdk.js";
-import DomImageSmooth from "./DomImageSmooth.js";
-import DomImageSmoothRS from "./DomImageSmoothRS.js";
 import DomInputNumberApplicationHor from "./DomInputNumberApplicationHor.js";
 import ViewRelativeRateRS from "./ViewRelativeRateRS.js";
 
@@ -59,7 +57,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
     /**
      * 主要纹理
      */
-    textureMain: WebGLTexture;
+    textureMain: JWebglTexture;
 
     reactComponentExtendOnInit (): void {
         this.jWebgl = new JWebgl (this.canvasWebglRef.current);
@@ -67,18 +65,13 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
         this.jWebgl.listenTouch (this.tagDivRef.current);
         this.jWebgl.canvasWebglCtx.disable (JWebglEnum.EnableCap.DEPTH_TEST);
         this.jWebgl.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
-        this.textureMain = this.jWebgl.canvasWebglCtx.createTexture ();
+        this.textureMain = this.jWebgl.createTexture ();
         // 纯色缓冲区
         this.fboPure = this.jWebgl.getFbo (1, 1);
         // 空的帧缓冲区
         this.fboEmpty = this.jWebgl.getFbo (1, 1);
 
         this.jWebgl.evtTouchStart.on (() => {
-            let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
-            // 该纹理没加载完毕，忽略
-            if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
-                return;
-            };
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart.fill (this.jWebgl.touchStart.posCanvas [0], this.jWebgl.touchStart.posCanvas [1]);
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrentPos = IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart;
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchCurrStatus.onStart (this);
@@ -130,13 +123,8 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
         IndexGlobal.inst.mcRoot.statusDrawingBoard.catchDom (this);
 
         // 获取当前要操作的目标
-        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
-        // 该纹理没加载完毕，忽略
-        if (dataSrc.initCurrStatus != dataSrc.initStatusFinished) {
-            this.jWebgl.useFbo (null);
-            this.jWebgl.clear ();
-            return;
-        };
+        let dataSrc = IndexGlobal.inst.dbCurrent ();
+
         // 画笔颜色
         this.colorMark.initByHex (MgrData.inst.get (MgrDataItem.DB_COLOR));
 
@@ -171,14 +159,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
         this.jWebgl.programPoint.draw ();
 
         // 同步数据到缓冲区
-        this.jWebgl.canvasWebglCtx.pixelStorei (JWebglEnum.PixelStoreIPName.UNPACK_FLIP_Y_WEBGL, 1);
-        this.jWebgl.canvasWebglCtx.activeTexture (JWebglEnum.ActiveTexture.TEXTURE0);
-        this.jWebgl.canvasWebglCtx.bindTexture (JWebglEnum.BindTexture.TEXTURE_2D, this.textureMain);
-        this.jWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MIN_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
-        this.jWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MAG_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
-        this.jWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_S, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
-        this.jWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_T, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
-        this.jWebgl.canvasWebglCtx.texImage2D (JWebglEnum.BindTexture.TEXTURE_2D, 0, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.TexImage2DFormat.RGBA, JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE, dataSrc.imgLoaded);
+        this.textureMain.fillByUint8Array (dataSrc.statusCurrent ().dataBin.bin, dataSrc.statusCurrent ().width, dataSrc.statusCurrent ().height, 0);
         this.jWebgl.fillFboByTex (this.fboCache, this.textureMain);
 
         // 先绘制已确定的内容
@@ -255,7 +236,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
      * 绘制交叉线
      */
     private static doDrawCross (jWebgl: JWebgl, x: number, y: number, w: number, h: number, colorMark: JWebglColor, unitOffset: number) {
-        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
+        let dataSrc = IndexGlobal.inst.dbCurrent ();;
         // 画布像素单位
         let canvasTextureUnit = 1 / (MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA);
         // 网格
@@ -358,7 +339,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
         unitOffset: number
     ) 
     {
-        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
+        let dataSrc = IndexGlobal.inst.dbCurrent ();;
         // 画布像素单位
         let canvasTextureUnit = 1 / (MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA);
         // 网格
@@ -431,7 +412,7 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
         let relativeRS = ViewRelativeRateRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.VIEW_RELATIVE_RATE));
-        let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard.getCurrentCache ();
+        let dataSrc = IndexGlobal.inst.dbCurrent ();;
         let propsBtnGrid = {
             style: {
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,

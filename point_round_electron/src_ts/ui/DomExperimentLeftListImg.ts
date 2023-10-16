@@ -61,7 +61,7 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
         tag.addEventListener (
             EVT_NAME_DRAG_LEAVE, 
             (event) => {
-                IndexGlobal.mcExp ().dragCurrStatus.onTargetEnterLeave ();
+                IndexGlobal.mcExp ().dragCurrStatus.onTargetLeave ();
             }
         );
     }
@@ -76,52 +76,12 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
     }
 
     render (): ReactComponentExtendInstance {
-        let img = MgrRes.inst.getImg (this.props.imgData.maskCurrStatus.onGetData().expImgData.dataOrigin);
-        let imgInst: ReactComponentExtendInstance;
-        // 加载完成才显示
-        if (img.currStatus == img.statusFinished) {
-            let imgWidth = IndexGlobal.IMG_MINI_SIZE;
-            let imgHeight = IndexGlobal.IMG_MINI_SIZE;
-            if (img.image.width < img.image.height) {
-                imgWidth = img.image.width / img.image.height * imgHeight;
-            };
-            if (img.image.height < img.image.width) {
-                imgHeight = img.image.height / img.image.width * imgWidth;
-            };
-            let marginX = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgWidth) / 2;
-            let marginY = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgHeight) / 2;
-            imgInst = ReactComponentExtend.instantiateTag(
-                MgrDomDefine.TAG_IMG,
-                {
-                    style: {
-                        [MgrDomDefine.STYLE_WIDTH]: `${imgWidth}px`,
-                        [MgrDomDefine.STYLE_HEIGHT]: `${imgHeight}px`,
-                        [MgrDomDefine.STYLE_MARGIN_TOP]: `${marginY}px`,
-                        [MgrDomDefine.STYLE_MARGIN_RIGHT]: `${marginX}px`,
-                        [MgrDomDefine.STYLE_MARGIN_BOTTOM]: `${marginY}px`,
-                        [MgrDomDefine.STYLE_MARGIN_LEFT]: `${marginX}px`,
-                        "imageRendering": `pixelated`,
-                    },
-                    src: img.image.src,
-                    ref: this.ref,
-                }
-            );
-        }
-        else {
-            imgInst = ReactComponentExtend.instantiateTag(
-                MgrDomDefine.TAG_IMG,
-                {
-                    style: {
-                        [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_NONE,
-                    },
-                    ref: this.ref,
-                }
-            );
-        };
+        // 处理容器参数
         let eleSize = IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2;
         let props = {
             onClick: () => {
-                IndexGlobal.mcExp ().detailCurrStatus.onImg (this.props.imgData.expImgData.id);
+                IndexGlobal.inst.expSelect (this.props.imgData.expImgData.id);
+                IndexGlobal.mcExp ().detailCurrStatus.onImg ();
             },
             style: {
                 [MgrDomDefine.STYLE_WIDTH]: `${IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2}px`,
@@ -138,6 +98,17 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
         else {
             props.style [MgrDomDefine.STYLE_BACKGROUND_COLOR] = MgrDomDefine.CONFIG_TXT_BG_COLOR;
         };
+
+        let imgWidth = IndexGlobal.IMG_MINI_SIZE;
+        let imgHeight = IndexGlobal.IMG_MINI_SIZE;
+        if (this.props.imgData.expImgData.width < this.props.imgData.expImgData.height) {
+            imgWidth = this.props.imgData.expImgData.width / this.props.imgData.expImgData.height * imgHeight;
+        };
+        if (this.props.imgData.expImgData.height < this.props.imgData.expImgData.width) {
+            imgHeight = this.props.imgData.expImgData.height / this.props.imgData.expImgData.width * imgWidth;
+        };
+        let marginX = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgWidth) / 2;
+        let marginY = (IndexGlobal.IMG_MINI_SIZE + MgrDomDefine.CONFIG_NUMBER_SPACING * 2  - imgHeight) / 2;
         return ReactComponentExtend.instantiateTag (
             NodeModules.antd.Button,
             props,
@@ -163,7 +134,22 @@ class DomExperimentLeftListImg extends ReactComponentExtend <DomExperimentLeftLi
                             [MgrDomDefine.STYLE_TOP]: `${-(IndexGlobal.IMG_MINI_SIZE / 2 + MgrDomDefine.CONFIG_NUMBER_SPACING)}px`,
                         }
                     },
-                    imgInst
+                    ReactComponentExtend.instantiateTag(
+                        MgrDomDefine.TAG_IMG,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_WIDTH]: `${imgWidth}px`,
+                                [MgrDomDefine.STYLE_HEIGHT]: `${imgHeight}px`,
+                                [MgrDomDefine.STYLE_MARGIN_TOP]: `${marginY}px`,
+                                [MgrDomDefine.STYLE_MARGIN_RIGHT]: `${marginX}px`,
+                                [MgrDomDefine.STYLE_MARGIN_BOTTOM]: `${marginY}px`,
+                                [MgrDomDefine.STYLE_MARGIN_LEFT]: `${marginX}px`,
+                                "imageRendering": `pixelated`,
+                            },
+                            src: this.props.imgData.expImgData.dataOrigin,
+                            ref: this.ref,
+                        }
+                    )
                 )
             )
         );

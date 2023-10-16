@@ -3,11 +3,11 @@ import ObjectPoolType from "./ObjectPoolType";
 /**
  * 字节数据
  */
-export default class DataUint8Array {
+export default class DataUint32Array {
     /**
      * 核心数据
      */
-    bin = new Uint8Array (1);
+    bin = new Uint32Array (1);
 
     /**
      * 确保长度足够
@@ -20,7 +20,7 @@ export default class DataUint8Array {
             while (size < len) {
                 size *= 2;
             };
-            this.bin = new Uint8Array (len);
+            this.bin = new Uint32Array (len);
         };
     }
 
@@ -28,16 +28,16 @@ export default class DataUint8Array {
      * 载入数据
      * @param data 
      */
-    loadData (data: Uint8Array | Uint8ClampedArray) {
+    loadData (data: Uint32Array) {
         this.initLength (data.length);
         for (let i = 0; i < data.length; i++) {
             this.bin [i] = data [i];
         };
     }
 
-    static poolType = new ObjectPoolType <DataUint8Array> ({
+    static poolType = new ObjectPoolType <DataUint32Array> ({
         instantiate: () => {
-            return new DataUint8Array ();
+            return new DataUint32Array ();
         },
         onPop: (t) => {
 

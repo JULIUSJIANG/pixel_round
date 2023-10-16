@@ -11,16 +11,20 @@ import ViewRelativeRateRS from "./ViewRelativeRateRS.js";
 export default class DomExperimentRightPreviewImg extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
-        let dataSrc = IndexGlobal.mcExp ().detailStatusPreview;
         let relativeRS = ViewRelativeRateRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.VIEW_RELATIVE_RATE));
+        let currImg = IndexGlobal.inst.expCurrent ();
+        
         let instLeft: ReactComponentExtendInstance;
-        if (relativeRS.isLeftVisiable ()) {
+        if (relativeRS.isLeftVisiable () && currImg.uint8CurrStatus == currImg.uint8StatusLoaded) {
             instLeft = ReactComponentExtend.instantiateComponent (DomExperimentRightPreviewImgBefore, null);
         };
+
         let instRight: ReactComponentExtendInstance;
-        if (relativeRS.isRightVisiable ()) {
-            instRight = ReactComponentExtend.instantiateComponent (DomImageSmooth, dataSrc.argsSmooth.clone ());
+        if (relativeRS.isRightVisiable () && currImg.uint8CurrStatus == currImg.uint8StatusLoaded) {
+            let dataSrc = IndexGlobal.mcExp ().detailStatusPreview;
+            instRight = ReactComponentExtend.instantiateComponent (DomImageSmooth, currImg.uint8ArgsSmooth);
         };
+        
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {

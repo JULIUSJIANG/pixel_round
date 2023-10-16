@@ -214,8 +214,10 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
                         if (IndexGlobal.mcExpCreate ().currStatus != IndexGlobal.mcExpCreate ().statusIdle) {
                             return NodeModules.antd.message.error (`文件加载中，请稍后`);
                         };
-                        let id = IndexGlobal.inst.expCreate (IndexGlobal.mcExpCreate ().img.src);
-                        IndexGlobal.mcExp ().detailCurrStatus.onImg (id);
+                        let dataSrc = IndexGlobal.mcExpCreate ().img.image;
+                        let id = IndexGlobal.inst.expCreate (dataSrc.src, dataSrc.width, dataSrc.height);
+                        IndexGlobal.inst.expSelect (id);
+                        IndexGlobal.mcExp ().detailCurrStatus.onImg ();
                         MgrData.inst.callDataChange ();
                     }
                 },

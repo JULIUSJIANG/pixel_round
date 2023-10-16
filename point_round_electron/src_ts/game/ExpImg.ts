@@ -1,6 +1,11 @@
+import DataUint32Array from "../common/DataUint32Array.js";
 import DataUint8Array from "../common/DataUint8Array.js";
+import objectPool from "../common/ObjectPool.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
+import MgrGlobal from "../mgr/MgrGlobal.js";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage.js";
+import DomImageSmooth from "../ui/DomImageSmooth.js";
+import ColorRecord from "./ColorRecord.js";
 import ExpImgMaskStatus from "./ExpImgMaskStatus.js";
 import ExpImgMaskStatusActive from "./ExpImgMaskStatusActive.js";
 import ExpImgMaskStatusIdle from "./ExpImgMaskStatusIdle.js";
@@ -72,14 +77,9 @@ class ExpImg {
     uint8Bin = new DataUint8Array ();
 
     /**
-     * 宽度
+     * 平滑所需要的参数
      */
-    uint8Width: number;
-
-    /**
-     * 高度
-     */
-    uint8Height: number;
+    uint8ArgsSmooth = new DomImageSmooth.Args ();
 
     /**
      * 用于加载的 image
@@ -125,7 +125,117 @@ class ExpImg {
      * 销毁
      */
     destroy () {
-        this.uint8CurrStatus.onDestory ();
+        this.uint8CurrStatus.onDestroy ();
+    }
+
+    /**
+     * 缩略图的二进制数据，按照 r、g、b、a 排列
+     */
+    miniBinRGBA = new DataUint8Array ();
+    /**
+     * 缩略图的二进制数据，每个数字代表 rgba
+     */
+    miniBinColor = new DataUint32Array ();
+
+    /**
+     * 用于去重
+     */
+    setColor = new Set <number> ();
+    /**
+     * 颜色记录
+     */
+    listColorRecord = new Array <ColorRecord> ();
+    /**
+     * 标识到颜色记录的映射
+     */
+    mapIdToColorRecord = new Map <number, ColorRecord> ();
+
+    /**
+     * 缓存数据
+     */
+    cache () {
+        // 清除旧的缓存
+        this.setColor.clear ();
+        for (let i = 0; i < this.listColorRecord.length; i++) {
+            let listColorRecordI = this.listColorRecord [i];
+            objectPool.push (listColorRecordI);
+        };
+        this.listColorRecord.length = 0;
+        this.mapIdToColorRecord.clear ();
+
+        this.uint8ArgsSmooth.init (
+            this.uint8Bin.bin,
+
+            this.expImgData.width,
+            this.expImgData.height,
+
+            this.expImgData.paddingTop,
+            this.expImgData.paddingRight,
+            this.expImgData.paddingBottom,
+            this.expImgData.paddingLeft,
+
+            this.expImgData.pixelWidth,
+            this.expImgData.pixelHeight
+        );
+
+        // 采集缩略图的数据
+        let fbo = MgrGlobal.inst.canvas3dCtx.getFbo (this.uint8ArgsSmooth.cacheTexWidth, this.uint8ArgsSmooth.cacheTexHeight);
+        let tex = MgrGlobal.inst.canvas3dCtx.createTexture ();
+        DomImageSmooth.Args.drawImgPadding (
+            this.uint8ArgsSmooth,
+            MgrGlobal.inst.canvas3dCtx,
+            fbo,
+            tex
+        );
+        fbo.cacheToUint8 ();
+        this.miniBinRGBA.loadData (fbo.arrUint8);
+        MgrGlobal.inst.canvas3dCtx.destroyFbo (fbo);
+        MgrGlobal.inst.canvas3dCtx.destroyTex (tex);
+
+        // 记录各个位置对应的颜色 id
+        let length = this.uint8ArgsSmooth.cacheTexWidth * this.uint8ArgsSmooth.cacheTexHeight;
+        this.miniBinColor.initLength (length);
+        for (let i = 0; i < length; i++) {
+            this.miniBinColor.bin [i] = 0;
+            for (let j = 0; j < 4; j++) {
+                this.miniBinColor.bin [i] << 8;
+                this.miniBinColor.bin [i] += this.miniBinRGBA [i * 4 + j];
+            };
+            this.setColor.add (this.miniBinColor.bin [i]);
+        };
+        
+        // 为各个颜色 id 生成记录
+        this.setColor.forEach ((color) => {
+            let colorBackup = color;
+            let colorA = color % 256;
+            color >>= 8;
+            let colorB = color % 256;
+            color >>= 8;
+            let colorG = color % 256;
+            color >>= 8;
+            let colorR = color % 256;
+            color >>= 8;
+
+            let colorInst = objectPool.pop (ColorRecord.poolType);
+            colorInst.init (colorBackup, 0, colorR / 255, colorG / 255, colorB / 255, colorA / 255);
+            this.listColorRecord.push (colorInst);
+        });
+
+        // 更新序号
+        this.listColorRecord.sort ((a, b) => {
+            return a.id - b.id;
+        });
+        for (let i = 0; i < this.listColorRecord.length; i++) {
+            let listColorI = this.listColorRecord [i];
+            listColorI.idx = i;
+        };
+
+        // 更新索引
+        this.mapIdToColorRecord.clear ();
+        for (let i = 0; i < this.listColorRecord.length; i++) {
+            let listColorI = this.listColorRecord [i];
+            this.mapIdToColorRecord.set (listColorI.id, listColorI);
+        };
     }
 }
 

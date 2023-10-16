@@ -28,7 +28,7 @@ class MgrDataItem<T> {
 /**
  * 改这个值，整个存档都会重置
  */
-const VERSION = 21;
+const VERSION = 22;
 
 namespace MgrDataItem {
     /**
@@ -201,6 +201,8 @@ namespace MgrDataItem {
      */
     export interface ExpImgData {
         id: number;
+        width: number;
+        height: number;
         dataOrigin: string;
         paddingTop: number;
         paddingRight: number;

@@ -4,8 +4,7 @@ import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import DomExperimentRightPreview from "../ui/DomExperimentRightPreview.js";
 import MCRootStatusExperimentDetailStatus from "./MCRootStatusExperimentDetailStatus.js";
-import TextureColor from "./TextureColor.js";
-import SmoothMachine from "./SmoothMachine.js";
+import ColorRecord from "./ColorRecord.js";
 import objectPool from "../common/ObjectPool.js";
 import DomImageSmooth from "../ui/DomImageSmooth.js";
 import MCRootStatusExperiment from "./MCRootStatusExperiment.js";
@@ -15,43 +14,19 @@ export default class MCRootStatusExperimentDetailStatusSmooth extends MCRootStat
 
     constructor (machine: MCRootStatusExperiment, id: number) {
         super (machine, id);
-        this.argsSmooth = objectPool.pop (DomImageSmooth.Args.poolType);
     }
 
     onEnter (): void {
-        this.onImg (MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG));
+        
     }
 
     onCreate (): void {
         this.relMachine.detailEnter (this.relMachine.detailStatusCreate);
     }
 
-    /**
-     * 当前控制的图片
-     */
-    imgMachine: SmoothMachine;
-
-    onImg (id: number): void {
-        MgrData.inst.set (MgrDataItem.EXP_CURRENT_IMG, id);
-        let rec = this.imgMachine;
-        this.imgMachine = new SmoothMachine (this, id);
-        if (rec) {
-            rec.onDestroy ();
-        };
-        this.imgMachine.onCreate ();
-
-        let expImg = IndexGlobal.inst.expMapIdToImg.get (id);
-        expImg.uint8CurrStatus.onSelected ();
-    }
-
     onRender (): ReactComponentExtendInstance {
         return ReactComponentExtend.instantiateComponent (DomExperimentRightPreview, null);
     }
-
-    /**
-     * 平滑参数
-     */
-    argsSmooth: DomImageSmooth.Args;
 
     /**
      * 展示裁切内容时候图片宽度
@@ -77,9 +52,9 @@ export default class MCRootStatusExperimentDetailStatusSmooth extends MCRootStat
     /**
      * 所有颜色
      */
-    listColor = new Array <TextureColor> ();
+    listColor = new Array <ColorRecord> ();
     /**
      * 标识到具体颜色的映射
      */
-    mapIdToColor = new Map <number, TextureColor> ();
+    mapIdToColor = new Map <number, ColorRecord> ();
 }

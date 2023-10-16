@@ -1,6 +1,4 @@
-import DBImg from "./DBImg.js";
 import ExpImg from "./ExpImg.js";
-import MCRootStatusDrawingBoard from "./MCRootStatusDrawingBoard.js";
 import MCRootStatusExperiment from "./MCRootStatusExperiment.js";
 
 /**
@@ -54,7 +52,7 @@ class MCRootStatusExperimentDragStatus {
     /**
      * 拖拽目标离开
      */
-    onTargetEnterLeave () {
+    onTargetLeave () {
 
     }
 }

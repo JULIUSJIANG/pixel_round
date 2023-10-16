@@ -38,7 +38,7 @@ class MCRootStatusExperimentDragStatusTargeted extends MCRootStatusExperimentDra
         MgrData.inst.callDataChange ();
     }
 
-    onTargetEnterLeave (): void {
+    onTargetLeave (): void {
         for (let i = 0; i < IndexGlobal.inst.expListImg.length; i++) {
             let expImg = IndexGlobal.inst.expListImg [i];
             expImg.maskCurrStatus.onMaskDisable ();

@@ -31,7 +31,7 @@ export default class MCRootStatusExperimentDetailStatus {
 
     }
 
-    onImg (id: number) {
+    onImg () {
 
     }
 }

@@ -45,7 +45,7 @@ class JWebglFrameBuffer {
 
     private fboRev: JWebglFrameBuffer;
 
-    toBase64 () {
+    cacheToUint8 () {
         if (this.fboRev == null) {
             this.fboRev = this.relWebgl.getFbo (this.width, this.height);
         };
@@ -55,6 +55,10 @@ class JWebglFrameBuffer {
         };
         this.relWebgl.useFbo (this.fboRev);
         this.relWebgl.canvasWebglCtx.readPixels (0, 0, this.width, this.height, JWebglEnum.ReadPixelsFormat.RGBA, JWebglEnum.ReadPixelType.UNSIGNED_BYTE, this.arrUint8);
+    }
+
+    toBase64 () {
+        this.cacheToUint8 ();
         return MgrGlobal.inst.arrUint8ToBase64 (this.arrUint8, this.width, this.height);
     }
 }

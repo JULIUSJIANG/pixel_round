@@ -54,7 +54,8 @@ function offset (dataSrc: MCRootStatusDrawingBoard, imgCurr: DBImg, offsetX: num
     dataSrc.dom.jWebgl.programImg.draw ();
     objectPool.push (posImg);
 
-    imgCurr.loadUrl (fboResize.toBase64 (), imgCurr.dbImgData.width, imgCurr.dbImgData.height);
+    fboResize.cacheToUint8 ();
+    imgCurr.statusPush (fboResize.arrUint8, imgCurr.statusCurrent ().width, imgCurr.statusCurrent ().height);
     dataSrc.dom.jWebgl.destroyFbo (fboResize);
     MgrData.inst.callDataChange ();
 }
@@ -100,7 +101,8 @@ function resizeTo (dataSrc: MCRootStatusDrawingBoard, imgCurr: DBImg, w: number,
     dataSrc.dom.jWebgl.programImg.draw ();
     objectPool.push (posImg);
 
-    imgCurr.loadUrl (fboResize.toBase64 (), w, h);
+    fboResize.cacheToUint8 ();
+    imgCurr.statusPush (fboResize.arrUint8, w, h);
     dataSrc.dom.jWebgl.destroyFbo (fboResize);
     MgrData.inst.callDataChange ();
 }
@@ -113,7 +115,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
 
     render (): ReactComponentExtendInstance {
         let dataSrc = IndexGlobal.inst.mcRoot.statusDrawingBoard;
-        let imgCurr = dataSrc.getCurrentCache ();
+        let imgCurr = IndexGlobal.inst.dbCurrent ();;
 
         this.listChildrenA.length = 0;
         for (let i = 0; i < IndexGlobal.inst.mcRoot.statusDrawingBoard.opListStatus.length; i++) {
@@ -200,10 +202,10 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
         this.listChildrenB.length = 0;
         for (let i = 0; i < IndexGlobal.BACK_UP_COUNT_MAX; i++) {
             let color = JWebglColor.COLOR_GREY.str16;
-            if (i <= imgCurr.idxStatus) {
+            if (i <= imgCurr.statusIdx) {
                 color = JWebglColor.COLOR_WHITE.str16;
             }
-            else if (i < imgCurr.listStatus.length) {
+            else if (i < imgCurr.statusList.length) {
                 color = JWebglColor.COLOR_LIGHT.str16;
             };
             this.listChildrenB.push (ReactComponentExtend.instantiateTag (
@@ -325,9 +327,9 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                             style: {
                                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                             },
-                            "disabled": imgCurr.idxStatus == 0,
+                            "disabled": imgCurr.statusIdx == 0,
                             onClick: () => {
-                                imgCurr.cancel ();
+                                imgCurr.statusCancel ();
                             }
                         },
         
@@ -350,9 +352,9 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                             style: {
                                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                             },
-                            "disabled": imgCurr.idxStatus == imgCurr.listStatus.length - 1,
+                            "disabled": imgCurr.statusIdx == imgCurr.statusList.length - 1,
                             onClick: () => {
-                                imgCurr.recovery ();
+                                imgCurr.statusRecovery ();
                             }
                         },
         

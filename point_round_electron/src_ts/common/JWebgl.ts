@@ -27,6 +27,7 @@ import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea.js";
 import JWebglProgramTypeSmoothDisplayCircle from "./JWebglProgramTypeSmoothDisplayCircle.js";
 import JWebglProgramTypeSmoothAngle from "./JWebglProgramTypeSmoothAngle.js";
 import MgrGlobal from "../mgr/MgrGlobal.js";
+import JWebglTexture from "./JWebglTexture.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -393,6 +394,26 @@ class JWebgl {
             return;
         };
         this.canvasWebglCtx.deleteFramebuffer (fbo.frameBuffer);
+    }
+
+    /**
+     * 销毁纹理
+     * @param tex 
+     * @returns 
+     */
+    destroyTex (tex: JWebglTexture) {
+        if (tex == null) {
+            return;
+        };
+        this.canvasWebglCtx.deleteTexture (tex.texture);
+    }
+
+    /**
+     * 创建纹理
+     * @returns 
+     */
+    createTexture () {
+        return new JWebglTexture (this);
     }
 
     /**

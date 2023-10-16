@@ -13,8 +13,7 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
 
     render (): ReactComponentExtendInstance {
         let relativeRS = ViewRelativeRateRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.VIEW_RELATIVE_RATE));
-        let listImgDataInst = IndexGlobal.inst.expMapIdToImg.get (MgrData.inst.get (MgrDataItem.EXP_CURRENT_IMG));
-
+        let currImg = IndexGlobal.inst.expCurrent ();
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
             {
@@ -55,18 +54,20 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
     
                     ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `左内边距`, 
-                        listImgDataInst.expImgData.paddingLeft,
+                        currImg.expImgData.paddingLeft,
                         (val) => {
-                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPaddingLeft (Math.floor (val));
+                            currImg.expImgData.paddingLeft = val;
+                            currImg.cache ();
                         },
                         null,
                         null
                     )),
                     ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `右内边距`, 
-                        listImgDataInst.expImgData.paddingRight,
+                        currImg.expImgData.paddingRight,
                         (val) => {
-                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPaddingRight (Math.floor (val));
+                            currImg.expImgData.paddingRight = val;
+                            currImg.cache ();
                         },
                         null,
                         null
@@ -83,18 +84,20 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
     
                     ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `上内边距`,
-                        listImgDataInst.expImgData.paddingTop,
+                        currImg.expImgData.paddingTop,
                         (val) => {
-                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPaddingTop (Math.floor (val));
+                            currImg.expImgData.paddingTop = val;
+                            currImg.cache ();
                         },
                         null,
                         null
                     )),
                     ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `下内边距`, 
-                        listImgDataInst.expImgData.paddingBottom,
+                        currImg.expImgData.paddingBottom,
                         (val) => {
-                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPaddingBottom (Math.floor (val));
+                            currImg.expImgData.paddingBottom = val;
+                            currImg.cache ();
                         },
                         null,
                         null
@@ -115,19 +118,20 @@ class DomExperimentRightPreviewImgBefore extends ReactComponentExtend <number> {
     
                     ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `颗粒宽度`, 
-                        listImgDataInst.expImgData.pixelWidth,
+                        currImg.expImgData.pixelWidth,
                         (val) => {
-                            listImgDataInst.expImgData.pixelWidth = Math.floor (val);
-                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPixelWidth (Math.floor (val));
+                            currImg.expImgData.pixelWidth = val;
+                            currImg.cache ();
                         },
                         1,
                         null
                     )),
                     ReactComponentExtend.instantiateComponent (DomInputNumberHor, DomInputNumberHor.Args.create (
                         `颗粒高度`,
-                        listImgDataInst.expImgData.pixelHeight, 
+                        currImg.expImgData.pixelHeight,
                         (val) => {
-                            IndexGlobal.mcExp ().detailStatusPreview.imgMachine.currStatus.onValPixelHeight (Math.floor (val));
+                            currImg.expImgData.pixelHeight = val;
+                            currImg.cache ();
                         },
                         1,
                         null

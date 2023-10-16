@@ -1,7 +1,7 @@
 import JWebglColor from "../common/JWebglColor.js";
 import ObjectPoolType from "../common/ObjectPoolType.js";
 
-class TextureColor {
+class ColorRecord {
     /**
      * 标识
      */
@@ -31,9 +31,9 @@ class TextureColor {
         };
     }
 
-    static poolType = new ObjectPoolType <TextureColor> ({
+    static poolType = new ObjectPoolType <ColorRecord> ({
         instantiate: () => {
-            return new TextureColor ();
+            return new ColorRecord ();
         },
         onPop: (t) => {
 
@@ -44,4 +44,4 @@ class TextureColor {
     });
 }
 
-export default TextureColor;
+export default ColorRecord;

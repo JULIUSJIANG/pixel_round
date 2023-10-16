@@ -1,4 +1,5 @@
 import Eventer from "../common/Eventer.js";
+import JWebgl from "../common/JWebgl.js";
 import MgrGlobalCtxPos from "./MgrGlobalCtxPos.js";
 
 class MgrGlobal {
@@ -39,11 +40,23 @@ class MgrGlobal {
     canvas2dCtx: CanvasRenderingContext2D;
 
     /**
+     * 3d canvas
+     */
+    canvas3d: HTMLCanvasElement;
+    /**
+     * 3d 上下文
+     */
+    canvas3dCtx: JWebgl;
+
+    /**
      * 初始化
      */
     init () {
         this.canvas2d = document.createElement (`canvas`);
         this.canvas2dCtx = this.canvas2d.getContext (`2d`);
+
+        this.canvas3d = document.createElement (`canvas`);
+        this.canvas3dCtx = new JWebgl (this.canvas3d);
 
         document.onmousedown = (evt: MouseEvent) => {
             this.evtTouchStartPos.fill (evt.clientX, evt.clientY);

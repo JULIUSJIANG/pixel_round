@@ -1,13 +1,13 @@
-import ExpImg from "./ExpImg.js";
+import DBImg from "./DBImg";
 
-class ExpImgUint8Status {
+class DBImgUint8Status {
 
     /**
-     * 归属的照图片
+     * 归属的图片
      */
-    relImg: ExpImg;
+    relImg: DBImg;
 
-    constructor (relImg: ExpImg) {
+    constructor (relImg: DBImg) {
         this.relImg = relImg;
     }
 
@@ -40,4 +40,4 @@ class ExpImgUint8Status {
     }
 }
 
-export default ExpImgUint8Status;
+export default DBImgUint8Status;

@@ -4,6 +4,8 @@ import ReactComponentExtend from "../common/ReactComponentExtend.js";
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import MgrGlobal from "../mgr/MgrGlobal.js";
+import DomImageSmooth from "./DomImageSmooth.js";
 export default class DomExperimentRightPreviewProps extends ReactComponentExtend {
     render() {
         return ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
@@ -21,8 +23,20 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
             },
             onClick: () => {
+                let recExp = IndexGlobal.inst.expCurrent();
+                let recDbId = IndexGlobal.inst.dbCreate(recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cacheTexHeight);
+                let fbo = MgrGlobal.inst.canvas3dCtx.getFbo(recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cacheTexHeight);
+                let tex = MgrGlobal.inst.canvas3dCtx.createTexture();
+                DomImageSmooth.Args.drawImgPadding(recExp.uint8ArgsSmooth, MgrGlobal.inst.canvas3dCtx, fbo, tex);
+                let recDb = IndexGlobal.inst.dbMapIdToImg.get(recDbId);
+                recDb.dbImgData.dataOrigin = fbo.toBase64();
+                MgrGlobal.inst.canvas3dCtx.destroyFbo(fbo);
+                MgrGlobal.inst.canvas3dCtx.destroyTex(tex);
+                IndexGlobal.inst.mcRoot.enter(IndexGlobal.inst.mcRoot.statusDrawingBoard);
+                IndexGlobal.inst.dbSelect(recDbId);
+                MgrData.inst.callDataChange();
             },
-        }, `转移到画板`), ReactComponentExtend.instantiateTag(NodeModules.antd.Popconfirm, {
+        }, `把图片添加到画板`), ReactComponentExtend.instantiateTag(NodeModules.antd.Popconfirm, {
             title: "该操作不可撤销，请谨慎操作",
             okText: "确定",
             cancelText: "取消",

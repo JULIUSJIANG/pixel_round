@@ -35,8 +35,8 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                     },
                     onClick: () => {
                         let recExp = IndexGlobal.inst.expCurrent ();
-                        let recDbId = IndexGlobal.inst.dbCreate (recExp.expImgData.width, recExp.expImgData.height);
-                        let fbo = MgrGlobal.inst.canvas3dCtx.getFbo (recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cachePaddingHeight);
+                        let recDbId = IndexGlobal.inst.dbCreate (recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cacheTexHeight);
+                        let fbo = MgrGlobal.inst.canvas3dCtx.getFbo (recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cacheTexHeight);
                         let tex = MgrGlobal.inst.canvas3dCtx.createTexture ();
                         DomImageSmooth.Args.drawImgPadding (recExp.uint8ArgsSmooth, MgrGlobal.inst.canvas3dCtx, fbo, tex);
                         let recDb = IndexGlobal.inst.dbMapIdToImg.get (recDbId);

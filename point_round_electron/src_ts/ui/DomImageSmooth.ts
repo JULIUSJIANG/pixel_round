@@ -260,17 +260,25 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         this.step0Tickness ();
         this.step0Flat ();
 
+        // 生成平滑的源数据
         this.step1CornerData (1, 0);
+        // 剔除明显多余的平滑
         this.step2CornerRemA (2, 0)
+        // 剔除交叉平滑
         this.step3CornerRemX (3, 0);
+        // 剔除 3 向相邻平滑
         this.step4CornerRemT (4, 0);
+        // 剔除 2 向相邻平滑
         this.step5CornerRemI (5, 0);
-        this.step6CornerRemV (6, 0);
-
+        // 剔除多余尖角
+        // this.step6CornerRemV (6, 0);
+        // 让无呼应的平滑趋向于圆润化
         this.step7EnumRound (1, 2);
+        // 扩大平滑距离，让更倾斜的线看起来也自然
         this.step8EnumSide (2, 2);
-
+        // 缓存出尖角的情况
         this.step9Area (3, 2);
+        // 对尖角进行圆角化
         this.step10Angle (3, 3);
         IndexGlobal.smoothRS ().expSmoothCircleTo (this, 5, 2);
 

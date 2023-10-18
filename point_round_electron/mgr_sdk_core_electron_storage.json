@@ -1,5 +1,5 @@
 {
- "VIEW_RELATIVE_RATE_3": 4,
+ "VIEW_RELATIVE_RATE_3": 2,
  "COLUMN_COUNT_3": 3,
  "AUTO_DEBUG_TOOLS_3": false,
  "MC_STATUS_3": 1,
@@ -8,7 +8,7 @@
  "SMOOTH_PIXEL_TO_SCREEN_APPLICATION_3": 16,
  "SMOOTH_PIXEL_TO_SCREEN_TEMP_3": 16,
  "SMOOTH_DRAW_GRID_3": true,
- "SMOOTH_RS_3": 1,
+ "SMOOTH_RS_3": 0,
  "DB_LIST_IMG_DATA_3": [
   {
    "id": 9,
@@ -196,5 +196,5 @@
    "pixelHeight": 2
   }
  ],
- "EXP_CURRENT_IMG_3": 8
+ "EXP_CURRENT_IMG_3": 2
 }

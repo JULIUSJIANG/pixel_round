@@ -13,9 +13,16 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                 [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN,
+                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
             }
-        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Popconfirm, {
+        }, ReactComponentExtend.instantiateTag(NodeModules.antd.Button, {
+            style: {
+                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+            },
+            onClick: () => {
+            },
+        }, `转移到画板`), ReactComponentExtend.instantiateTag(NodeModules.antd.Popconfirm, {
             title: "该操作不可撤销，请谨慎操作",
             okText: "确定",
             cancelText: "取消",

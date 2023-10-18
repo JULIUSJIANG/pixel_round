@@ -5,6 +5,8 @@ import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance
 import MgrData from "../mgr/MgrData.js";
 import MgrDataItem from "../mgr/MgrDataItem.js";
 import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import MgrGlobal from "../mgr/MgrGlobal.js";
+import DomImageSmooth from "./DomImageSmooth.js";
 
 export default class DomExperimentRightPreviewProps extends ReactComponentExtend <number> {
 
@@ -20,9 +22,35 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                     [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
 
                     [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                    [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN,
+                    [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
                 }
             },
+
+            ReactComponentExtend.instantiateTag (
+                NodeModules.antd.Button,
+                {
+                    style: {
+                        [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                    },
+                    onClick: () => {
+                        let recExp = IndexGlobal.inst.expCurrent ();
+                        let recDbId = IndexGlobal.inst.dbCreate (recExp.expImgData.width, recExp.expImgData.height);
+                        let fbo = MgrGlobal.inst.canvas3dCtx.getFbo (recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cachePaddingHeight);
+                        let tex = MgrGlobal.inst.canvas3dCtx.createTexture ();
+                        DomImageSmooth.Args.drawImgPadding (recExp.uint8ArgsSmooth, MgrGlobal.inst.canvas3dCtx, fbo, tex);
+                        let recDb = IndexGlobal.inst.dbMapIdToImg.get (recDbId);
+                        recDb.dbImgData.dataOrigin = fbo.toBase64 ();
+                        MgrGlobal.inst.canvas3dCtx.destroyFbo (fbo);
+                        MgrGlobal.inst.canvas3dCtx.destroyTex (tex);
+                        IndexGlobal.inst.mcRoot.enter (IndexGlobal.inst.mcRoot.statusDrawingBoard);
+                        IndexGlobal.inst.dbSelect (recDbId);
+                        MgrData.inst.callDataChange ();
+                    },                    
+                },
+
+                `把图片添加到画板`
+            ),
 
             ReactComponentExtend.instantiateTag (
                 NodeModules.antd.Popconfirm,

@@ -107,6 +107,14 @@ void main() {
     vec4 posFRColorTickness = getTextureRGBA (${this.uTextureTickness}, posFR);
     vec4 posFRColorMain = getTextureRGBA (${this.uTextureMain}, posFR);
 
+    // 厚度信息
+    float ticknessMain = posCenterColorTickness.r + posForwardColorTickness.r;
+    float ticknessSide = posFLColorTickness.r + posFRColorTickness.r;
+
+    // 明亮
+    float lightMain = (posCenterColorMain.r + posCenterColorMain.g + posCenterColorMain.b) * posCenterColorMain.a;
+    
+    float lightSide = (posFLColorMain.r + posFLColorMain.g + posFLColorMain.b) * posFLColorMain.a;;
     // 发生 4 角互相平滑
     if (
            match (posCenterCornerForward.a, 1.0)
@@ -123,21 +131,13 @@ void main() {
         {
             posCenterCornerForward.a = 0.0;
         }
-        // 自己为唯一不等色对角线，保留平滑
-        else if (
-               !checkEqual (posCenterColorMain, posForwardColorMain)
-            &&  checkEqual (posFLColorMain, posFRColorMain)
-        )
-        {
-
-        }
         // 否则根据厚度信息作出判断
-        else {
-            float ticknessStraight = posCenterColorTickness.r + posForwardColorTickness.r;
-            float ticknessSide = posFLColorTickness.r + posFRColorTickness.r;
-            if (ticknessStraight < ticknessSide) {
-                posCenterCornerForward.a = 0.0;
-            };
+        else if (ticknessMain < ticknessSide) {
+            posCenterCornerForward.a = 0.0;
+        }
+        // 否则谁比较暗，谁就被认为是线条，线条上的平滑取消
+        else if (lightSide < lightMain) {
+            posCenterCornerForward.a = 0.0;
         };
     };
 

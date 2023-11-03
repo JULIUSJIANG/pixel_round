@@ -1,11 +1,11 @@
-import IndexGlobal from "../IndexGlobal.js";
-import NodeModules from "../NodeModules.js";
-import JWebgl from "../common/JWebgl.js";
-import JWebglColor from "../common/JWebglColor.js";
-import JWebglMathMatrix4 from "../common/JWebglMathMatrix4.js";
-import JWebglMathVector4 from "../common/JWebglMathVector4.js";
-import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import MgrDomDefine from "../mgr/MgrDomDefine.js";
+import IndexGlobal from "./IndexGlobal.js";
+import NodeModules from "./NodeModules.js";
+import JWebgl from "./common/JWebgl.js";
+import JWebglColor from "./common/JWebglColor.js";
+import JWebglMathMatrix4 from "./common/JWebglMathMatrix4.js";
+import JWebglMathVector4 from "./common/JWebglMathVector4.js";
+import ReactComponentExtend from "./common/ReactComponentExtend.js";
+import MgrDomDefine from "./mgr/MgrDomDefine.js";
 
 const PIXEL_TO_SCREEN = 16;
 

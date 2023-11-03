@@ -1,6 +1,6 @@
 import NodeModules from "../NodeModules.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import DomRoot from "../ui/DomRoot.js";
+import DomRoot from "../DomRoot.js";
 
 /**
  * 渲染管理器

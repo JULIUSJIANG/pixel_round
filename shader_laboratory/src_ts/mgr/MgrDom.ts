@@ -1,6 +1,6 @@
+import DomRoot from "../DomRoot.js";
 import NodeModules from "../NodeModules.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import DomRoot from "../DomRoot.js";
 
 /**
  * 渲染管理器
@@ -42,6 +42,6 @@ namespace MgrDom {
      * 全局实例
      */
     export const inst = new MgrDom ();
-}
+};
 
 export default MgrDom;

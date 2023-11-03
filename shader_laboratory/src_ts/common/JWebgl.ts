@@ -1,12 +1,34 @@
+import Eventer from "./Eventer.js";
 import JWebglEnum from "./JWebglEnum.js";
+import JWebglFrameBuffer from "./JWebglFrameBuffer.js";
 import JWebglImage from "./JWebglImage.js";
 import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
+import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgram from "./JWebglProgram.js";
-import JWebglProgramTypeBlur from "./JWebglProgramTypeBlur.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
+import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
-import JWebglProgramTypeRound from "./JWebglProgramTypeRound.js";
+import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
+import JWebglProgramTypeSmoothCornerData from "./JWebglProgramTypeSmoothCornerData.js";
+import JWebglProgramTypeSmoothTickness from "./JWebglProgramTypeSmoothTickness.js";
+import JWebglProgramTypeSmoothCornerRemoveT from "./JWebglProgramTypeSmoothCornerRemoveT.js";
+import JWebglProgramTypeSmoothCornerRemoveX from "./JWebglProgramTypeSmoothCornerRemoveX.js";
+import JWebglProgramTypeSmoothDisplayOrdinary from "./JWebglProgramTypeSmoothDisplayOrdinary.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
+import JWebglTouch from "./JWebglTouch.js";
+import objectPool from "./ObjectPool.js";
+import JWebglProgramTypeSmoothFlat from "./JWebglProgramTypeSmoothFlat.js";
+import JWebglProgramTypeSmoothCornerRemoveI from "./JWebglProgramTypeSmoothCornerRemoveI.js";
+import JWebglProgramTypeSmoothCornerRemoveV from "./JWebglProgramTypeSmoothCornerRemoveV.js";
+import JWebglProgramTypeSmoothCornerRemoveA from "./JWebglProgramTypeSmoothCornerRemoveA.js";
+import JWebglProgramTypeSmoothEnumRound from "./JWebglProgramTypeSmoothEnumRound.js";
+import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide.js";
+import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea.js";
+import JWebglProgramTypeSmoothDisplayCircle from "./JWebglProgramTypeSmoothDisplayCircle.js";
+import JWebglProgramTypeSmoothAngle from "./JWebglProgramTypeSmoothAngle.js";
+import MgrGlobal from "../mgr/MgrGlobal.js";
+import JWebglTexture from "./JWebglTexture.js";
+import JWebglProgramTypePosToColor from "./JWebglProgramTypePosToColor.js";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -56,11 +78,20 @@ class JWebgl {
      */
     canvasWebglCtx: WebGLRenderingContext;
 
+    private static _seed = 0;
+
+    id: number;
+
     constructor (
         canvasWebgl: HTMLCanvasElement
     )
     {
         this.canvasWebgl = canvasWebgl;
+        this.touchStart = new JWebglTouch (this);
+        this.touchMove = new JWebglTouch (this);
+        this.touchEnd = new JWebglTouch (this);
+
+        this.id = ++JWebgl._seed;
     }
 
     /**
@@ -69,10 +100,92 @@ class JWebgl {
     private _listProgram = new Array <JWebglProgram> ();
 
     /**
+     * 交互起始位置
+     */
+    touchStart: JWebglTouch;
+    /**
+     * 事件派发 - 交互起始
+     */
+    evtTouchStart = new Eventer ();
+
+    /**
+     * 交互拖拽位置
+     */
+    touchMove: JWebglTouch;
+    /**
+     * 事件派发 - 交互拖拽
+     */
+    evtTouchMove = new Eventer ();
+
+    /**
+     * 交互结束位置
+     */
+    touchEnd: JWebglTouch;
+    /**
+     * 事件派发 - 交互结束
+     */
+    evtTouchEnd = new Eventer ();
+
+    /**
+     * 当前交互位置
+     */
+    currentTouch: JWebglTouch;
+    /**
+     * 事件派发 - 发生交互
+     */
+    evtTouch = new Eventer ();
+
+    /**
+     * 事件派发 - 进入
+     */
+    evtEnter = new Eventer ();
+
+    /**
+     * 事件派发 - 离开
+     */
+    evtLeave = new Eventer ();
+
+    /**
+     * 监听交互
+     */
+    listenTouch (tag: HTMLElement) {
+        tag.onmousedown = (evt: MouseEvent) => {
+            this.touchStart.fillByClientPos (evt.clientX, evt.clientY);
+            this.currentTouch = this.touchStart;
+            this.evtTouch.call (null);
+            this.evtTouchStart.call (null);
+        };
+        tag.onmousemove = (evt: MouseEvent) => {
+            this.touchMove.fillByClientPos (evt.clientX, evt.clientY);
+            this.currentTouch = this.touchMove;
+            this.evtTouch.call (null);
+            this.evtTouchMove.call (null);
+        };
+        tag.onmouseup = (evt: MouseEvent) => {
+            this.touchEnd.fillByClientPos (evt.clientX, evt.clientY);
+            this.currentTouch = this.touchEnd;
+            this.evtTouch.call (null);
+            this.evtTouchEnd.call (null);
+        };
+
+        tag.onmouseenter = () => {
+            this.evtEnter.call (null);
+        };
+        tag.onmouseleave = () => {
+            this.evtLeave.call (null);
+        };
+    }
+
+    /**
      * 初始化
      * @returns 
      */
     init () {
+        this.mat4M.setIdentity ();
+        this.mat4V.setIdentity ();
+        this.mat4P.setIdentity ();
+        this.refreshMat4Mvp ();
+
         this.canvasWebglCtx = this.canvasWebgl.getContext (
             `webgl`,
             {
@@ -106,6 +219,16 @@ class JWebgl {
         });
     }
 
+    /**
+     * 释放掉
+     */
+    release () {
+        let ext = this.canvasWebglCtx.getExtension (`WEBGL_lose_context`);
+        if (ext) {
+            ext.loseContext();
+        };
+    }
+
     private _program: JWebglProgram;
 
     useProgram (program: JWebglProgram) {
@@ -116,10 +239,31 @@ class JWebgl {
         this.canvasWebglCtx.useProgram (this._program.program);
     }
 
+    private _currFbo: JWebglFrameBuffer;
+
+    useFbo (fbo: JWebglFrameBuffer) {
+        let sizeWidth = this.canvasWebgl.width;
+        let sizeHeight = this.canvasWebgl.height;
+        if (this._currFbo != fbo) {
+            this._currFbo = fbo;
+            if (this._currFbo != null) {
+                sizeWidth = fbo.width;
+                sizeHeight = fbo.height;
+                this.canvasWebglCtx.bindFramebuffer (JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, this._currFbo.frameBuffer);
+            };
+            if (this._currFbo == null) {
+                this.canvasWebglCtx.bindFramebuffer (JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, null);
+            };
+        };
+        this.canvasWebglCtx.viewport (0, 0, sizeWidth, sizeHeight);
+    }
+
     clear () {
-        this.canvasWebglCtx.viewport (0, 0, this.canvasWebgl.width, this.canvasWebgl.height);
         this.canvasWebglCtx.clear (JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
     }
+
+    @program (JWebglProgramTypePosToColor)
+    programPosToColor: JWebglProgramTypePosToColor;
 
     @program (JWebglProgramTypeLine)
     programLine: JWebglProgramTypeLine;
@@ -130,16 +274,83 @@ class JWebgl {
     @program (JWebglProgramTypeImg)
     programImg: JWebglProgramTypeImg;
 
-    @program (JWebglProgramTypeBlur)
-    programBlur: JWebglProgramTypeBlur;
+    @program (JWebglProgramTypeImgDyeing)
+    programImgDyeing: JWebglProgramTypeImgDyeing;
 
-    @program (JWebglProgramTypeRound)
-    programRound: JWebglProgramTypeRound;
+    @program (JWebglProgramTypePoint)
+    programPoint: JWebglProgramTypePoint;
+
+    @program (JWebglProgramTypeSmoothTickness)
+    programSmoothTickness: JWebglProgramTypeSmoothTickness;
+
+    @program (JWebglProgramTypeSmoothFlat)
+    programSmoothFlat: JWebglProgramTypeSmoothFlat;
+
+    @program (JWebglProgramTypeSmoothCornerData)
+    programSmoothCornerData: JWebglProgramTypeSmoothCornerData;
+
+    @program (JWebglProgramTypeSmoothCornerRemoveA)
+    programSmoothCornerRemoveA: JWebglProgramTypeSmoothCornerRemoveA;
+
+    @program (JWebglProgramTypeSmoothCornerRemoveX)
+    programSmoothCornerRemoveX: JWebglProgramTypeSmoothCornerRemoveX;
+    
+    @program (JWebglProgramTypeSmoothCornerRemoveT)
+    programSmoothCornerRemoveT: JWebglProgramTypeSmoothCornerRemoveT;
+
+    @program (JWebglProgramTypeSmoothCornerRemoveI)
+    programSmoothCornerRemoveI: JWebglProgramTypeSmoothCornerRemoveI;
+
+    @program (JWebglProgramTypeSmoothCornerRemoveV)
+    programSmoothCornerRemoveV: JWebglProgramTypeSmoothCornerRemoveV;
+
+    @program (JWebglProgramTypeSmoothEnumRound)
+    programSmoothEnumRound: JWebglProgramTypeSmoothEnumRound;
+
+    @program (JWebglProgramTypeSmoothEnumSide)
+    programSmoothEnumSide: JWebglProgramTypeSmoothEnumSide;
+
+    @program (JWebglProgramTypeSmoothArea)
+    programSmoothArea: JWebglProgramTypeSmoothArea;
+
+    @program (JWebglProgramTypeSmoothAngle)
+    programSmoothAngle: JWebglProgramTypeSmoothAngle;
+
+    @program (JWebglProgramTypeSmoothDisplayOrdinary)
+    programSmoothDisplayOrdinary: JWebglProgramTypeSmoothDisplayOrdinary;
+
+    @program (JWebglProgramTypeSmoothDisplayCircle)
+    programSmoothDisplayCircle: JWebglProgramTypeSmoothDisplayCircle;
+
+    /**
+     * 模型矩阵
+     */
+    mat4M = new JWebglMathMatrix4();
+    /**
+     * 视图矩阵
+     */
+    mat4V = new JWebglMathMatrix4();
+    /**
+     * 投影矩阵
+     */
+    mat4P = new JWebglMathMatrix4();
 
     /**
      * mvp 矩阵
      */
     mat4Mvp = new JWebglMathMatrix4;
+
+    /**
+     * 刷新模型 - 视图 - 投影矩阵
+     */
+    refreshMat4Mvp () {
+        JWebglMathMatrix4.multiplayMat4List (
+            this.mat4P,
+            this.mat4V,
+            this.mat4M,
+            this.mat4Mvp
+        );
+    }
 
     /**
      * 顶点数据的缓冲区
@@ -156,11 +367,57 @@ class JWebgl {
      */
     _mapStringToImg = new Map <string, JWebglImage> ();
 
+    /**
+     * 获取图片资源
+     * @param dataUrl 
+     * @returns 
+     */
     getImg (dataUrl: string) {
         if (!this._mapStringToImg.has (dataUrl)) {
             this._mapStringToImg.set (dataUrl, new JWebglImage (this, dataUrl));
         };
         return this._mapStringToImg.get (dataUrl);
+    }
+
+    /**
+     * 获取帧缓冲区
+     * @param width 
+     * @param height 
+     * @returns 
+     */
+    getFbo (width: number, height: number) {
+        return new JWebglFrameBuffer (this, width, height);
+    }
+
+    /**
+     * 销毁帧缓冲区
+     * @param fbo 
+     */
+    destroyFbo (fbo: JWebglFrameBuffer) {
+        if (fbo == null) {
+            return;
+        };
+        this.canvasWebglCtx.deleteFramebuffer (fbo.frameBuffer);
+    }
+
+    /**
+     * 销毁纹理
+     * @param tex 
+     * @returns 
+     */
+    destroyTex (tex: JWebglTexture) {
+        if (tex == null) {
+            return;
+        };
+        this.canvasWebglCtx.deleteTexture (tex.texture);
+    }
+
+    /**
+     * 创建纹理
+     * @returns 
+     */
+    createTexture () {
+        return new JWebglTexture (this);
     }
 
     /**
@@ -176,6 +433,105 @@ class JWebgl {
      */
     error (...args) {
         console.error (...args);
+    }
+
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay 
+     * @param fboSrc 
+     */
+    fillFboByFbo (fboDisplay: JWebglFrameBuffer, fboSrc: JWebglFrameBuffer) {
+        this.fillFboByTex (fboDisplay, fboSrc.renderTexture);
+    }
+
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay 
+     * @param fboSrc 
+     */
+    fillFboByTex (fboDisplay: JWebglFrameBuffer, tex: WebGLTexture) {
+        this.useFbo (fboDisplay);
+        this.clear ();
+
+        let mat4M = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4M.setIdentity ();
+        let mat4V = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4V.setLookAt(
+            0, 0, 1,
+            0, 0, 0,
+            0, 1, 0
+        );
+        let mat4P = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4P.setOrtho (
+            -1, 1,
+            -1, 1,
+             0, 2
+        );
+        let mat4Mvp = objectPool.pop (JWebglMathMatrix4.poolType);
+        JWebglMathMatrix4.multiplayMat4List (
+            mat4P,
+            mat4V,
+            mat4M,
+            mat4Mvp
+        );
+        this.programImg.uMvp.fill (mat4Mvp);
+
+        this.programImg.uTexture.fillByTexture (tex);
+        this.programImg.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.programImg.draw ();
+
+        objectPool.push (mat4M, mat4V, mat4P, mat4Mvp);
+    }
+
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay 
+     * @param fboSrc 
+     */
+    fillFboByTexRev (fboDisplay: JWebglFrameBuffer, tex: WebGLTexture) {
+        this.useFbo (fboDisplay);
+        this.clear ();
+
+        let mat4M = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4M.setIdentity ();
+        let mat4V = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4V.setLookAt(
+            0, 0, -1,
+            0, 0, 0,
+            0, -1, 0
+        );
+        let mat4P = objectPool.pop (JWebglMathMatrix4.poolType);
+        mat4P.setOrtho (
+            -1, 1,
+            -1, 1,
+             0, 2
+        );
+        let mat4Mvp = objectPool.pop (JWebglMathMatrix4.poolType);
+        JWebglMathMatrix4.multiplayMat4List (
+            mat4P,
+            mat4V,
+            mat4M,
+            mat4Mvp
+        );
+        this.programImg.uMvp.fill (mat4Mvp);
+
+        this.programImg.uTexture.fillByTexture (tex);
+        this.programImg.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.programImg.draw ();
+
+        objectPool.push (mat4M, mat4V, mat4P, mat4Mvp);
     }
 }
 

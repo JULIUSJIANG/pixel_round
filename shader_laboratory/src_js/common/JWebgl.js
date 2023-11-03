@@ -4,14 +4,35 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+import Eventer from "./Eventer.js";
 import JWebglEnum from "./JWebglEnum.js";
+import JWebglFrameBuffer from "./JWebglFrameBuffer.js";
 import JWebglImage from "./JWebglImage.js";
 import JWebglMathMatrix4 from "./JWebglMathMatrix4.js";
-import JWebglProgramTypeBlur from "./JWebglProgramTypeBlur.js";
+import JWebglMathVector4 from "./JWebglMathVector4.js";
 import JWebglProgramTypeImg from "./JWebglProgramTypeImg.js";
+import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing.js";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine.js";
-import JWebglProgramTypeRound from "./JWebglProgramTypeRound.js";
+import JWebglProgramTypePoint from "./JWebglProgramTypePoint.js";
+import JWebglProgramTypeSmoothCornerData from "./JWebglProgramTypeSmoothCornerData.js";
+import JWebglProgramTypeSmoothTickness from "./JWebglProgramTypeSmoothTickness.js";
+import JWebglProgramTypeSmoothCornerRemoveT from "./JWebglProgramTypeSmoothCornerRemoveT.js";
+import JWebglProgramTypeSmoothCornerRemoveX from "./JWebglProgramTypeSmoothCornerRemoveX.js";
+import JWebglProgramTypeSmoothDisplayOrdinary from "./JWebglProgramTypeSmoothDisplayOrdinary.js";
 import JWebglProgramTypeTriangle from "./JWebglProgramTypeTriangle.js";
+import JWebglTouch from "./JWebglTouch.js";
+import objectPool from "./ObjectPool.js";
+import JWebglProgramTypeSmoothFlat from "./JWebglProgramTypeSmoothFlat.js";
+import JWebglProgramTypeSmoothCornerRemoveI from "./JWebglProgramTypeSmoothCornerRemoveI.js";
+import JWebglProgramTypeSmoothCornerRemoveV from "./JWebglProgramTypeSmoothCornerRemoveV.js";
+import JWebglProgramTypeSmoothCornerRemoveA from "./JWebglProgramTypeSmoothCornerRemoveA.js";
+import JWebglProgramTypeSmoothEnumRound from "./JWebglProgramTypeSmoothEnumRound.js";
+import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide.js";
+import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea.js";
+import JWebglProgramTypeSmoothDisplayCircle from "./JWebglProgramTypeSmoothDisplayCircle.js";
+import JWebglProgramTypeSmoothAngle from "./JWebglProgramTypeSmoothAngle.js";
+import JWebglTexture from "./JWebglTexture.js";
+import JWebglProgramTypePosToColor from "./JWebglProgramTypePosToColor.js";
 const SYMBOL_KEY = Symbol(`JWebgl.SYMBOL_KEY`);
 /**
  * 获取原型上的缓存
@@ -45,6 +66,42 @@ class JWebgl {
          */
         this._listProgram = new Array();
         /**
+         * 事件派发 - 交互起始
+         */
+        this.evtTouchStart = new Eventer();
+        /**
+         * 事件派发 - 交互拖拽
+         */
+        this.evtTouchMove = new Eventer();
+        /**
+         * 事件派发 - 交互结束
+         */
+        this.evtTouchEnd = new Eventer();
+        /**
+         * 事件派发 - 发生交互
+         */
+        this.evtTouch = new Eventer();
+        /**
+         * 事件派发 - 进入
+         */
+        this.evtEnter = new Eventer();
+        /**
+         * 事件派发 - 离开
+         */
+        this.evtLeave = new Eventer();
+        /**
+         * 模型矩阵
+         */
+        this.mat4M = new JWebglMathMatrix4();
+        /**
+         * 视图矩阵
+         */
+        this.mat4V = new JWebglMathMatrix4();
+        /**
+         * 投影矩阵
+         */
+        this.mat4P = new JWebglMathMatrix4();
+        /**
          * mvp 矩阵
          */
         this.mat4Mvp = new JWebglMathMatrix4;
@@ -53,12 +110,49 @@ class JWebgl {
          */
         this._mapStringToImg = new Map();
         this.canvasWebgl = canvasWebgl;
+        this.touchStart = new JWebglTouch(this);
+        this.touchMove = new JWebglTouch(this);
+        this.touchEnd = new JWebglTouch(this);
+        this.id = ++JWebgl._seed;
+    }
+    /**
+     * 监听交互
+     */
+    listenTouch(tag) {
+        tag.onmousedown = (evt) => {
+            this.touchStart.fillByClientPos(evt.clientX, evt.clientY);
+            this.currentTouch = this.touchStart;
+            this.evtTouch.call(null);
+            this.evtTouchStart.call(null);
+        };
+        tag.onmousemove = (evt) => {
+            this.touchMove.fillByClientPos(evt.clientX, evt.clientY);
+            this.currentTouch = this.touchMove;
+            this.evtTouch.call(null);
+            this.evtTouchMove.call(null);
+        };
+        tag.onmouseup = (evt) => {
+            this.touchEnd.fillByClientPos(evt.clientX, evt.clientY);
+            this.currentTouch = this.touchEnd;
+            this.evtTouch.call(null);
+            this.evtTouchEnd.call(null);
+        };
+        tag.onmouseenter = () => {
+            this.evtEnter.call(null);
+        };
+        tag.onmouseleave = () => {
+            this.evtLeave.call(null);
+        };
     }
     /**
      * 初始化
      * @returns
      */
     init() {
+        this.mat4M.setIdentity();
+        this.mat4V.setIdentity();
+        this.mat4P.setIdentity();
+        this.refreshMat4Mvp();
         this.canvasWebglCtx = this.canvasWebgl.getContext(`webgl`, {
             premultipliedAlpha: false
         });
@@ -86,6 +180,16 @@ class JWebgl {
             this[propsName] = program;
         });
     }
+    /**
+     * 释放掉
+     */
+    release() {
+        let ext = this.canvasWebglCtx.getExtension(`WEBGL_lose_context`);
+        if (ext) {
+            ext.loseContext();
+        }
+        ;
+    }
     useProgram(program) {
         if (program == this._program) {
             return;
@@ -94,16 +198,84 @@ class JWebgl {
         this._program = program;
         this.canvasWebglCtx.useProgram(this._program.program);
     }
+    useFbo(fbo) {
+        let sizeWidth = this.canvasWebgl.width;
+        let sizeHeight = this.canvasWebgl.height;
+        if (this._currFbo != fbo) {
+            this._currFbo = fbo;
+            if (this._currFbo != null) {
+                sizeWidth = fbo.width;
+                sizeHeight = fbo.height;
+                this.canvasWebglCtx.bindFramebuffer(JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, this._currFbo.frameBuffer);
+            }
+            ;
+            if (this._currFbo == null) {
+                this.canvasWebglCtx.bindFramebuffer(JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, null);
+            }
+            ;
+        }
+        ;
+        this.canvasWebglCtx.viewport(0, 0, sizeWidth, sizeHeight);
+    }
     clear() {
-        this.canvasWebglCtx.viewport(0, 0, this.canvasWebgl.width, this.canvasWebgl.height);
         this.canvasWebglCtx.clear(JWebglEnum.ClearMask.COLOR_BUFFER_BIT | JWebglEnum.ClearMask.DEPTH_BUFFER_BIT);
     }
+    /**
+     * 刷新模型 - 视图 - 投影矩阵
+     */
+    refreshMat4Mvp() {
+        JWebglMathMatrix4.multiplayMat4List(this.mat4P, this.mat4V, this.mat4M, this.mat4Mvp);
+    }
+    /**
+     * 获取图片资源
+     * @param dataUrl
+     * @returns
+     */
     getImg(dataUrl) {
         if (!this._mapStringToImg.has(dataUrl)) {
             this._mapStringToImg.set(dataUrl, new JWebglImage(this, dataUrl));
         }
         ;
         return this._mapStringToImg.get(dataUrl);
+    }
+    /**
+     * 获取帧缓冲区
+     * @param width
+     * @param height
+     * @returns
+     */
+    getFbo(width, height) {
+        return new JWebglFrameBuffer(this, width, height);
+    }
+    /**
+     * 销毁帧缓冲区
+     * @param fbo
+     */
+    destroyFbo(fbo) {
+        if (fbo == null) {
+            return;
+        }
+        ;
+        this.canvasWebglCtx.deleteFramebuffer(fbo.frameBuffer);
+    }
+    /**
+     * 销毁纹理
+     * @param tex
+     * @returns
+     */
+    destroyTex(tex) {
+        if (tex == null) {
+            return;
+        }
+        ;
+        this.canvasWebglCtx.deleteTexture(tex.texture);
+    }
+    /**
+     * 创建纹理
+     * @returns
+     */
+    createTexture() {
+        return new JWebglTexture(this);
     }
     /**
      * 输出日志
@@ -119,7 +291,63 @@ class JWebgl {
     error(...args) {
         console.error(...args);
     }
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay
+     * @param fboSrc
+     */
+    fillFboByFbo(fboDisplay, fboSrc) {
+        this.fillFboByTex(fboDisplay, fboSrc.renderTexture);
+    }
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay
+     * @param fboSrc
+     */
+    fillFboByTex(fboDisplay, tex) {
+        this.useFbo(fboDisplay);
+        this.clear();
+        let mat4M = objectPool.pop(JWebglMathMatrix4.poolType);
+        mat4M.setIdentity();
+        let mat4V = objectPool.pop(JWebglMathMatrix4.poolType);
+        mat4V.setLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
+        let mat4P = objectPool.pop(JWebglMathMatrix4.poolType);
+        mat4P.setOrtho(-1, 1, -1, 1, 0, 2);
+        let mat4Mvp = objectPool.pop(JWebglMathMatrix4.poolType);
+        JWebglMathMatrix4.multiplayMat4List(mat4P, mat4V, mat4M, mat4Mvp);
+        this.programImg.uMvp.fill(mat4Mvp);
+        this.programImg.uTexture.fillByTexture(tex);
+        this.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
+        this.programImg.draw();
+        objectPool.push(mat4M, mat4V, mat4P, mat4Mvp);
+    }
+    /**
+     * 把 fbo 的内容绘制出来
+     * @param fboDisplay
+     * @param fboSrc
+     */
+    fillFboByTexRev(fboDisplay, tex) {
+        this.useFbo(fboDisplay);
+        this.clear();
+        let mat4M = objectPool.pop(JWebglMathMatrix4.poolType);
+        mat4M.setIdentity();
+        let mat4V = objectPool.pop(JWebglMathMatrix4.poolType);
+        mat4V.setLookAt(0, 0, -1, 0, 0, 0, 0, -1, 0);
+        let mat4P = objectPool.pop(JWebglMathMatrix4.poolType);
+        mat4P.setOrtho(-1, 1, -1, 1, 0, 2);
+        let mat4Mvp = objectPool.pop(JWebglMathMatrix4.poolType);
+        JWebglMathMatrix4.multiplayMat4List(mat4P, mat4V, mat4M, mat4Mvp);
+        this.programImg.uMvp.fill(mat4Mvp);
+        this.programImg.uTexture.fillByTexture(tex);
+        this.programImg.add(JWebglMathVector4.centerO, JWebglMathVector4.axisZStart, JWebglMathVector4.axisYEnd, 2, 2);
+        this.programImg.draw();
+        objectPool.push(mat4M, mat4V, mat4P, mat4Mvp);
+    }
 }
+JWebgl._seed = 0;
+__decorate([
+    program(JWebglProgramTypePosToColor)
+], JWebgl.prototype, "programPosToColor", void 0);
 __decorate([
     program(JWebglProgramTypeLine)
 ], JWebgl.prototype, "programLine", void 0);
@@ -130,9 +358,51 @@ __decorate([
     program(JWebglProgramTypeImg)
 ], JWebgl.prototype, "programImg", void 0);
 __decorate([
-    program(JWebglProgramTypeBlur)
-], JWebgl.prototype, "programBlur", void 0);
+    program(JWebglProgramTypeImgDyeing)
+], JWebgl.prototype, "programImgDyeing", void 0);
 __decorate([
-    program(JWebglProgramTypeRound)
-], JWebgl.prototype, "programRound", void 0);
+    program(JWebglProgramTypePoint)
+], JWebgl.prototype, "programPoint", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothTickness)
+], JWebgl.prototype, "programSmoothTickness", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothFlat)
+], JWebgl.prototype, "programSmoothFlat", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothCornerData)
+], JWebgl.prototype, "programSmoothCornerData", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothCornerRemoveA)
+], JWebgl.prototype, "programSmoothCornerRemoveA", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothCornerRemoveX)
+], JWebgl.prototype, "programSmoothCornerRemoveX", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothCornerRemoveT)
+], JWebgl.prototype, "programSmoothCornerRemoveT", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothCornerRemoveI)
+], JWebgl.prototype, "programSmoothCornerRemoveI", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothCornerRemoveV)
+], JWebgl.prototype, "programSmoothCornerRemoveV", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothEnumRound)
+], JWebgl.prototype, "programSmoothEnumRound", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothEnumSide)
+], JWebgl.prototype, "programSmoothEnumSide", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothArea)
+], JWebgl.prototype, "programSmoothArea", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothAngle)
+], JWebgl.prototype, "programSmoothAngle", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothDisplayOrdinary)
+], JWebgl.prototype, "programSmoothDisplayOrdinary", void 0);
+__decorate([
+    program(JWebglProgramTypeSmoothDisplayCircle)
+], JWebgl.prototype, "programSmoothDisplayCircle", void 0);
 export default JWebgl;

@@ -2,21 +2,37 @@ import IndexGlobal from "./IndexGlobal.js";
 import NodeModules from "./NodeModules.js";
 import JWebgl from "./common/JWebgl.js";
 import JWebglColor from "./common/JWebglColor.js";
+import JWebglFrameBuffer from "./common/JWebglFrameBuffer.js";
 import JWebglMathMatrix4 from "./common/JWebglMathMatrix4.js";
 import JWebglMathVector4 from "./common/JWebglMathVector4.js";
 import ReactComponentExtend from "./common/ReactComponentExtend.js";
 import MgrDomDefine from "./mgr/MgrDomDefine.js";
+import MgrSdk from "./mgr/MgrSdk.js";
 
-const PIXEL_TO_SCREEN = 16;
+const PIXEL_TO_SCREEN = 1;
 
 /**
  * 宽
  */
-const WIDTH = 49;
+const WIDTH = 128;
 /**
  * 高
  */
-const HEIGHT = 49;
+const HEIGHT = 128;
+
+/**
+ * 绘制网格
+ */
+const DRAW_GRID = false;
+
+/**
+ * 内容宽度
+ */
+const CONTENT_WIDTH = WIDTH * PIXEL_TO_SCREEN;
+/**
+ * 内容高度
+ */
+const CONTENT_HEIGHT = HEIGHT * PIXEL_TO_SCREEN;
 
 /**
  * 根
@@ -39,6 +55,8 @@ export default class DomRoot extends ReactComponentExtend <number> {
 
     posTo = new JWebglMathVector4 ();
 
+    fboScreen: JWebglFrameBuffer;
+
     reactComponentExtendOnInit(): void {
         this.jWebgl = new JWebgl(this.canvasWebglRef.current);
         this.jWebgl.init();
@@ -48,6 +66,7 @@ export default class DomRoot extends ReactComponentExtend <number> {
             0, 0, 0,
             0, 1, 0
         );
+        this.fboScreen = this.jWebgl.getFbo (CONTENT_WIDTH, CONTENT_HEIGHT);
     }
 
     reactComponentExtendOnDraw(): void {
@@ -66,16 +85,32 @@ export default class DomRoot extends ReactComponentExtend <number> {
             this.jWebgl.mat4Mvp
         );
 
-        this.jWebgl.programRound.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programRound.uPixelCount.fill (WIDTH);
-        this.jWebgl.programRound.add (
+        this.jWebgl.useFbo (this.fboScreen);
+        this.jWebgl.programPosToColor.uMvp.fill (this.jWebgl.mat4Mvp);
+        this.jWebgl.programPosToColor.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,
             JWebglMathVector4.axisYEnd,
             WIDTH,
             HEIGHT
         );
-        this.jWebgl.programRound.draw ();
+        this.jWebgl.programPosToColor.draw ();
+
+        this.jWebgl.useFbo (null);
+        this.jWebgl.programImg.uTexture.fillByFbo (this.fboScreen);
+        this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
+        this.jWebgl.programImg.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            WIDTH,
+            HEIGHT
+        );
+        this.jWebgl.programImg.draw ();
+
+        if (!DRAW_GRID || PIXEL_TO_SCREEN < 2) {
+            return;
+        };
 
         this.posFrom.elements [2] = 0.1;
         this.posTo.elements [2] = 0.1;
@@ -134,7 +169,7 @@ export default class DomRoot extends ReactComponentExtend <number> {
                         [MgrDomDefine.STYLE_FLEX_GROW]: 1,
                     
                         [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
                     }
                 },
 
@@ -142,7 +177,7 @@ export default class DomRoot extends ReactComponentExtend <number> {
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
+                            [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
                             [MgrDomDefine.STYLE_FLEX_GROW]: 1,
         
                             [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
@@ -220,7 +255,25 @@ export default class DomRoot extends ReactComponentExtend <number> {
                             )
                         )
                     )
-                )
+                ),
+                ReactComponentExtend.instantiateTag (
+                    NodeModules.antd.Button,
+                    {
+                        style: {
+                            [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                        },
+                        onClick: () => {
+                            console.log (`here`);
+                            MgrSdk.inst.core.saveFile (
+                                `image.png`,
+                                this.fboScreen.toBase64 ()
+                            );
+                        }
+                    },
+    
+                    `导出 png`
+                ),
+
             )
         );
     }

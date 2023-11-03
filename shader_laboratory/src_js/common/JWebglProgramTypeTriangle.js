@@ -35,7 +35,7 @@ void main() {
      * @param color
      * @returns
      */
-    add(posA, posAColor, posB, posBColor, posC, posCColor) {
+    addTriangle(posA, posAColor, posB, posBColor, posC, posCColor) {
         let idxA = this.addAttributeData(posA, posAColor);
         let idxB = this.addAttributeData(posB, posBColor);
         let idxC = this.addAttributeData(posC, posCColor);
@@ -51,7 +51,7 @@ void main() {
      * @param cB
      */
     addAttributeData(pos, color) {
-        return this._addAttributeData(pos.elements[0], pos.elements[1], pos.elements[2], 1, color.data01[0], color.data01[1], color.data01[2], 1);
+        return this._addAttributeData(pos.elements[0], pos.elements[1], pos.elements[2], 1, color.data01[0], color.data01[1], color.data01[2], color.data01[3]);
     }
 }
 __decorate([

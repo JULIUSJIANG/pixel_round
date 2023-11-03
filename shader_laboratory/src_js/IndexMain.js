@@ -1,4 +1,5 @@
 const _electron = require(`electron`);
+const _fs = require(`fs`);
 const { app, BrowserWindow, dialog } = _electron;
 const path = require(`path`);
 /**
@@ -39,7 +40,7 @@ class MgrSdkCoreElectronRequest {
     });
     ;
     ;
-    MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE = new MgrSdkCoreElectronRequest({
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_FILE = new MgrSdkCoreElectronRequest({
         code: 1003,
         analyse: (ctx) => {
             let filters = [
@@ -91,6 +92,43 @@ class MgrSdkCoreElectronRequest {
             return Promise.resolve({});
         }
     });
+    ;
+    ;
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_TXT = new MgrSdkCoreElectronRequest({
+        code: 1005,
+        analyse: (ctx) => {
+            return new Promise((resolve, reject) => {
+                _fs.writeFile(ctx.fileName, ctx.txt, (err) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    ;
+                    resolve({
+                        isSuccessed: true
+                    });
+                });
+            });
+        }
+    });
+    ;
+    ;
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_DEBUG = new MgrSdkCoreElectronRequest({
+        code: 1006,
+        analyse: (ctx) => {
+            win.openDevTools();
+            return Promise.resolve({});
+        }
+    });
+    ;
+    ;
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_DESTORIED = new MgrSdkCoreElectronRequest({
+        code: 1007,
+        analyse: (ctx) => {
+            isDestoried = true;
+            return Promise.resolve({});
+        }
+    });
 })(MgrSdkCoreElectronRequest || (MgrSdkCoreElectronRequest = {}));
 let win;
 let filePath;
@@ -104,7 +142,7 @@ const createWindow = () => {
     win.maximize();
     win.setMenu(null);
     win.loadFile(`./src_js/IndexWindow.html`);
-    win.openDevTools();
+    // win.openDevTools ();
     win.webContents.session.on('will-download', (event, item, webContents) => {
         if (!filePath) {
             return;
@@ -138,14 +176,19 @@ Promise.resolve()
         ;
     });
 });
+let isDestoried = false;
 _electron.ipcMain.on(MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, (evt, args) => {
     // 解析得到具体策略
     let action = MgrSdkCoreElectronRequest.mapCodeToRequest.get(args.code);
     // 让策略处理
     action.analyse(args.data)
         .then((resp) => {
+        if (isDestoried) {
+            return;
+        }
+        ;
         // 返回最终结果
-        win.webContents.send(MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, resp);
+        win.webContents.send(MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, { id: args.id, resp: resp });
     });
 });
 class IndexMain {

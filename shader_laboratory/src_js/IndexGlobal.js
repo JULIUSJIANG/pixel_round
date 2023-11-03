@@ -1,4 +1,7 @@
 class IndexGlobal {
+    /**
+     * 初始化
+     */
     init() {
     }
 }

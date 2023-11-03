@@ -4,6 +4,7 @@ import MgrSdkCtxSet from "./MgrSdkCtxSet.js";
 import NodeModules from "../NodeModules.js";
 import MgrSdkCtxLogToMain from "./MgrSdkCtxLogToMain.js";
 import MgrSdkCtxSaveFile from "./MgrSdkCtxSaveFile.js";
+import Eventer from "../common/Eventer.js";
 
 /**
  * 存档路径
@@ -37,11 +38,17 @@ class MgrSdkCoreElectronRequest <TInput, TOutput> {
     }
 }
 
+let evtResp = new Eventer ();
+
 namespace MgrSdkCoreElectronRequest {
     /**
      * 请求体
      */
     export interface Ctx {
+        /**
+         * 标识
+         */
+        id: number;
         /**
          * 策略代号
          */
@@ -93,7 +100,7 @@ namespace MgrSdkCoreElectronRequest {
     export interface ClientFetchSaveOutput {
 
     };
-    export const CLIENT_FETCH_SAVE = new MgrSdkCoreElectronRequest <ClientFetchSaveInput, ClientFetchSaveOutput> ({
+    export const CLIENT_FETCH_SAVE_FILE = new MgrSdkCoreElectronRequest <ClientFetchSaveInput, ClientFetchSaveOutput> ({
         code: 1003,
         analyse: null
     });
@@ -108,6 +115,40 @@ namespace MgrSdkCoreElectronRequest {
         code: 1004,
         analyse: null
     });
+
+    export interface ClientFetchSaveTxtI {
+        fileName: string;
+        txt: string
+    };
+    export interface ClientFetchSaveTxtO {
+
+    };
+    export const CLIENT_FETCH_SAVE_TXT = new MgrSdkCoreElectronRequest <ClientFetchSaveTxtI, ClientFetchSaveTxtO> ({
+        code: 1005,
+        analyse: null
+    });
+
+    export interface ClientFetchDebugI {
+
+    };
+    export interface ClientFetchDebugO {
+
+    };
+    export const CLIENT_FETCH_DEBUG = new MgrSdkCoreElectronRequest <ClientFetchDebugI, ClientFetchDebugO> ({
+        code: 1006,
+        analyse: null
+    });
+
+    export interface ClientFetchDestoriedI {
+
+    };
+    export interface ClientFetchDestoriedO {
+
+    };
+    export const CLIENT_FETCH_DESTORIED = new MgrSdkCoreElectronRequest <ClientFetchDebugI, ClientFetchDebugO> ({
+        code: 1007,
+        analyse: null
+    }); 
 }
 
 NodeModules.electron.ipcRenderer.on (
@@ -134,65 +175,18 @@ NodeModules.electron.ipcRenderer.on (
 class MgrSdkCoreElectron extends MgrSdkCore {
 
     set (txt: string): Promise<MgrSdkCtxSet> {
-        let folder = NodeModules.path.dirname (STORAGE_PATH);
-        return Promise.resolve ()
-            // 检查文件目录是否存在
+        return this.fetch (
+            MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_TXT,
+            {
+                fileName: STORAGE_PATH,
+                txt: txt
+            }
+        )
             .then (() => {
-                return new Promise ((resolve) => {
-                    NodeModules.fs.stat (
-                        folder,
-                        (err, stat) => {
-                            if (err) {
-                                resolve (false);
-                                return;
-                            };
-                            resolve (true);
-                        }
-                    )
-                });
-            })
-            // 目录不存在的话，就新建一个
-            .then ((isExist) => {
-                if (isExist) {
-                    return;
-                };
-                return new Promise ((resolve, reject) => {
-                    NodeModules.fs.mkdir (
-                        folder,
-                        {
-                            recursive: true
-                        },
-                        (err) => {
-                            if (err) {
-                                reject (err);
-                                return;
-                            };
-                            resolve (null);
-                        }
-                    )
-                });
-            })
-            // 正式写入文件
-            .then (() => {
-                return new Promise<MgrSdkCtxSet> ((resolve, reject) => {
-                    NodeModules.fs.writeFile (STORAGE_PATH, txt, (err) => {
-                        if (err) {
-                            reject (err);
-                            return;
-                        };
-                        resolve ({
-                            isSuccessed: true
-                        });
-                    });
-                });
-            })
-            // 有任何异常，视为执行失败
-            .catch ((err) => {
-                console.log (`存档失败`, err);
-                return Promise.resolve<MgrSdkCtxSet> ({
-                    isSuccessed: false
-                });
-            })
+                return {
+                    isSuccessed: true
+                }
+            }); 
     }
 
     get (): Promise<MgrSdkCtxGet> {
@@ -232,7 +226,7 @@ class MgrSdkCoreElectron extends MgrSdkCore {
 
     saveFile (fileName: string, dataUrl: string): Promise<MgrSdkCtxSaveFile> {
         return this.fetch (
-            MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE,
+            MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_FILE,
             {
                 fileName: fileName,
                 fileUrl: dataUrl
@@ -245,6 +239,26 @@ class MgrSdkCoreElectron extends MgrSdkCore {
             });
     }
 
+    openDebugTools () {
+        this.fetch (
+            MgrSdkCoreElectronRequest.CLIENT_FETCH_DEBUG,
+            {
+
+            }
+        );
+    }
+
+    callDestoried () {
+        this.fetch (
+            MgrSdkCoreElectronRequest.CLIENT_FETCH_DESTORIED,
+            {
+
+            }
+        );
+    }
+
+    seed = 0;
+
     /**
      * 告知服务端
      * @param action 
@@ -255,24 +269,34 @@ class MgrSdkCoreElectron extends MgrSdkCore {
         i: TInput
     ) 
     {
+        let id = ++this.seed;
         let msg: MgrSdkCoreElectronRequest.Ctx = {
+            id: id,
             code: action.code,
             data: i
         };
         NodeModules.electron.ipcRenderer.send (MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, msg);
         return new Promise <TOutput> ((resolve) => {
-            NodeModules.electron.ipcRenderer.once (
-                MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE,
-                (
-                    evt,
-                    resp: TOutput
-                ) =>
-                {
-                    resolve (resp);
-                }
-            );
+            let listenId = evtResp.on ((resp: any) => {
+                if (resp.id != msg.id) {
+                    return;
+                };
+                evtResp.off (listenId);
+                resolve (resp.resp);
+            });
         });
     }
 }
+
+NodeModules.electron.ipcRenderer.on (
+    MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE,
+    (
+        evt,
+        resp
+    ) =>
+    {
+        evtResp.call (resp);
+    }
+);
 
 export default MgrSdkCoreElectron;

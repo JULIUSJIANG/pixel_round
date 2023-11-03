@@ -12,9 +12,17 @@ class MgrDomDefine {
     MgrDomDefine.TAG_INPUT = "input";
     MgrDomDefine.TAG_IMG = "img";
     //【样式名以及具体值】
+    MgrDomDefine.STYLE_LINE_HEIGHT = "lineHeight";
+    MgrDomDefine.STYLE_TEXT_ALIGN = "textAlign";
+    MgrDomDefine.STYLE_TEXT_ALIGN_CENTER = "center";
+    MgrDomDefine.STYLE_TEXT_ALIGN_LEFT = "left";
+    MgrDomDefine.STYLE_TEXT_ALIGN_RIGHT = "right";
+    MgrDomDefine.STYLE_VERTICAL_ALIGN = "verticalAlign";
+    MgrDomDefine.STYLE_VERTICAL_ALIGN_MIDDLE = "middle";
     MgrDomDefine.STYLE_WIDTH = "width";
     MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0 = "0%";
     MgrDomDefine.STYLE_WIDTH_PERCENTAGE_100 = "100%";
+    MgrDomDefine.STYLE_WIDTH_FIT_CONTENT = "fit-content";
     MgrDomDefine.STYLE_TOP = "top";
     MgrDomDefine.STYLE_RIGHT = "right";
     MgrDomDefine.STYLE_BOTTOM = "bottom";
@@ -28,20 +36,27 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_DISPLAY = "display";
     MgrDomDefine.STYLE_DISPLAY_FLEX = "flex";
     MgrDomDefine.STYLE_DISPLAY_BLOCK = "block";
+    MgrDomDefine.STYLE_DISPLAY_INLINE_BLOCK = "inline-block";
     MgrDomDefine.STYLE_DISPLAY_NONE = "none";
     MgrDomDefine.STYLE_FLEX_DIRECTION = "flexDirection";
     MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN = "column";
     MgrDomDefine.STYLE_FLEX_DIRECTION_ROW = "row";
+    MgrDomDefine.STYLE_FLEX_DIRECTION_ROW_REVERSE = "row-reverse";
     MgrDomDefine.STYLE_FLEX_GROW = "flexGrow";
     MgrDomDefine.STYLE_BACKGROUND_COLOR = "backgroundColor";
     MgrDomDefine.STYLE_BACKGROUND_COLOR_WHITE = "white";
     MgrDomDefine.STYLE_BACKGROUND_COLOR_BLACK = "black";
     MgrDomDefine.STYLE_MARGIN = "margin";
+    MgrDomDefine.STYLE_MARGIN_AUTO = "auto";
     MgrDomDefine.STYLE_MARGIN_TOP = "marginTop";
     MgrDomDefine.STYLE_MARGIN_RIGHT = "marginRight";
     MgrDomDefine.STYLE_MARGIN_BOTTOM = "marginBottom";
     MgrDomDefine.STYLE_MARGIN_LEFT = "marginLeft";
     MgrDomDefine.STYLE_PADDING = "padding";
+    MgrDomDefine.STYLE_PADDING_TOP = "paddingTop";
+    MgrDomDefine.STYLE_PADDING_RIGHT = "paddingRight";
+    MgrDomDefine.STYLE_PADDING_BOTTOM = "paddingBottom";
+    MgrDomDefine.STYLE_PADDING_LEFT = "paddingLeft";
     MgrDomDefine.STYLE_FLEX = "flex";
     MgrDomDefine.STYLE_OVERFLOW_X = "overflowX";
     MgrDomDefine.STYLE_OVERFLOW_X_HIDDEN = "hidden";
@@ -51,8 +66,10 @@ class MgrDomDefine {
     MgrDomDefine.STYLE_OVERFLOW_Y_SCROLL = "scroll";
     MgrDomDefine.STYLE_ALIGN_ITEMS = "alignItems";
     MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER = "center";
+    MgrDomDefine.STYLE_ALIGN_ITEMS_STRETCH = "stretch";
     MgrDomDefine.STYLE_JUSTIFY_CONTENT = "justifyContent";
     MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER = "center";
+    MgrDomDefine.STYLE_JUSTIFY_CONTENT_SPACE_BETWEEN = "space-between";
     MgrDomDefine.STYLE_FONT_SIZE = "fontSize";
     MgrDomDefine.STYLE_FONT_SIZE_14 = "14px";
     MgrDomDefine.STYLE_FONT_FAMILY = "fontFamily";
@@ -74,6 +91,10 @@ class MgrDomDefine {
      * 外边距 - 文本形式
      */
     MgrDomDefine.CONFIG_TXT_SPACING = `${MgrDomDefine.CONFIG_NUMBER_SPACING}px`;
+    /**
+     * 外边距 - 一半
+     */
+    MgrDomDefine.CONFIG_NUMBER_HALF_SPACING = MgrDomDefine.CONFIG_NUMBER_SPACING / 2;
     /**
      * 外边距 - 一半
      */

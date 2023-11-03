@@ -35,7 +35,7 @@ void main() {
     impGetnShaderFTxt() {
         return `
 void main() {
-    gl_FragColor = texture2D(${this.uSampler}, ${this.vTexCoord});
+    gl_FragColor = texture2D(${this.uTexture}, ${this.vTexCoord});
 }
         `;
     }
@@ -90,7 +90,7 @@ __decorate([
 ], JWebglProgramTypeImg.prototype, "uMvp", void 0);
 __decorate([
     JWebglProgram.uniform(JWebglProgramUniformSampler2D)
-], JWebglProgramTypeImg.prototype, "uSampler", void 0);
+], JWebglProgramTypeImg.prototype, "uTexture", void 0);
 __decorate([
     JWebglProgram.attribute(JWebglProgramAttributeVec4)
 ], JWebglProgramTypeImg.prototype, "aPosition", void 0);

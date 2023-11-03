@@ -1,5 +1,6 @@
 import MgrSdkCore from "./MgrSdkCore.js";
 import NodeModules from "../NodeModules.js";
+import Eventer from "../common/Eventer.js";
 /**
  * 存档路径
  */
@@ -16,6 +17,7 @@ class MgrSdkCoreElectronRequest {
         MgrSdkCoreElectronRequest.mapCodeToRequest.set(this.code, this);
     }
 }
+let evtResp = new Eventer();
 (function (MgrSdkCoreElectronRequest) {
     ;
     /**
@@ -41,7 +43,7 @@ class MgrSdkCoreElectronRequest {
     });
     ;
     ;
-    MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE = new MgrSdkCoreElectronRequest({
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_FILE = new MgrSdkCoreElectronRequest({
         code: 1003,
         analyse: null
     });
@@ -49,6 +51,24 @@ class MgrSdkCoreElectronRequest {
     ;
     MgrSdkCoreElectronRequest.CLIENT_FETCH_OPEN_CONSOLE = new MgrSdkCoreElectronRequest({
         code: 1004,
+        analyse: null
+    });
+    ;
+    ;
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_TXT = new MgrSdkCoreElectronRequest({
+        code: 1005,
+        analyse: null
+    });
+    ;
+    ;
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_DEBUG = new MgrSdkCoreElectronRequest({
+        code: 1006,
+        analyse: null
+    });
+    ;
+    ;
+    MgrSdkCoreElectronRequest.CLIENT_FETCH_DESTORIED = new MgrSdkCoreElectronRequest({
+        code: 1007,
         analyse: null
     });
 })(MgrSdkCoreElectronRequest || (MgrSdkCoreElectronRequest = {}));
@@ -66,62 +86,19 @@ NodeModules.electron.ipcRenderer.on(MgrSdkCoreElectronRequest.EVT_NAME_SERVER_AC
  * 针对不同运行环境做兼容处理 - 策略 - electron
  */
 class MgrSdkCoreElectron extends MgrSdkCore {
+    constructor() {
+        super(...arguments);
+        this.seed = 0;
+    }
     set(txt) {
-        let folder = NodeModules.path.dirname(STORAGE_PATH);
-        return Promise.resolve()
-            // 检查文件目录是否存在
+        return this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_TXT, {
+            fileName: STORAGE_PATH,
+            txt: txt
+        })
             .then(() => {
-            return new Promise((resolve) => {
-                NodeModules.fs.stat(folder, (err, stat) => {
-                    if (err) {
-                        resolve(false);
-                        return;
-                    }
-                    ;
-                    resolve(true);
-                });
-            });
-        })
-            // 目录不存在的话，就新建一个
-            .then((isExist) => {
-            if (isExist) {
-                return;
-            }
-            ;
-            return new Promise((resolve, reject) => {
-                NodeModules.fs.mkdir(folder, {
-                    recursive: true
-                }, (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    ;
-                    resolve(null);
-                });
-            });
-        })
-            // 正式写入文件
-            .then(() => {
-            return new Promise((resolve, reject) => {
-                NodeModules.fs.writeFile(STORAGE_PATH, txt, (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    ;
-                    resolve({
-                        isSuccessed: true
-                    });
-                });
-            });
-        })
-            // 有任何异常，视为执行失败
-            .catch((err) => {
-            console.log(`存档失败`, err);
-            return Promise.resolve({
-                isSuccessed: false
-            });
+            return {
+                isSuccessed: true
+            };
         });
     }
     get() {
@@ -153,7 +130,7 @@ class MgrSdkCoreElectron extends MgrSdkCore {
         });
     }
     saveFile(fileName, dataUrl) {
-        return this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE, {
+        return this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_FILE, {
             fileName: fileName,
             fileUrl: dataUrl
         })
@@ -163,22 +140,38 @@ class MgrSdkCoreElectron extends MgrSdkCore {
             };
         });
     }
+    openDebugTools() {
+        this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_DEBUG, {});
+    }
+    callDestoried() {
+        this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_DESTORIED, {});
+    }
     /**
      * 告知服务端
      * @param action
      * @param i
      */
     fetch(action, i) {
+        let id = ++this.seed;
         let msg = {
+            id: id,
             code: action.code,
             data: i
         };
         NodeModules.electron.ipcRenderer.send(MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, msg);
         return new Promise((resolve) => {
-            NodeModules.electron.ipcRenderer.once(MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, (evt, resp) => {
-                resolve(resp);
+            let listenId = evtResp.on((resp) => {
+                if (resp.id != msg.id) {
+                    return;
+                }
+                ;
+                evtResp.off(listenId);
+                resolve(resp.resp);
             });
         });
     }
 }
+NodeModules.electron.ipcRenderer.on(MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, (evt, resp) => {
+    evtResp.call(resp);
+});
 export default MgrSdkCoreElectron;

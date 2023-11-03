@@ -209,6 +209,21 @@ class JWebglMathVector4 {
         };
         JWebglMathVector4.copy (this._addVec, listVec [listVec.length - 1]);
     }
+
+    /**
+     * 构造实例
+     * @param x 
+     * @param y 
+     * @param z 
+     */
+    static create (x: number, y: number, z: number) {
+        let inst = objectPool.pop (this.poolType);
+        inst.elements [0] = x;
+        inst.elements [1] = y;
+        inst.elements [2] = z;
+        inst.elements [3] = 1;
+        return inst;
+    }
 }
 
 namespace JWebglMathVector4 {

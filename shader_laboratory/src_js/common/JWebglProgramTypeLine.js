@@ -39,6 +39,13 @@ void main() {
         let idxFrom = this.addAttributeData(argsPosFrom, argsPosFromColor);
         let idxTo = this.addAttributeData(argsPosTo, argsPowToColor);
         this._addIndexData(idxFrom, idxTo);
+        // 可能性：
+        // 1. 传入的顶点索引数量最多为 256 个
+        // 2. 顶点数据缓冲区大小受限
+        if (254 <= idxFrom) {
+            this.draw();
+        }
+        ;
     }
     /**
      * 添加顶点数据

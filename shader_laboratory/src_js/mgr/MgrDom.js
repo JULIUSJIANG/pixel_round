@@ -1,6 +1,6 @@
+import DomRoot from "../DomRoot.js";
 import NodeModules from "../NodeModules.js";
 import ReactComponentExtend from "../common/ReactComponentExtend.js";
-import DomRoot from "../ui/DomRoot.js";
 /**
  * 渲染管理器
  */
@@ -34,4 +34,5 @@ class MgrDom {
      */
     MgrDom.inst = new MgrDom();
 })(MgrDom || (MgrDom = {}));
+;
 export default MgrDom;

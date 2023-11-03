@@ -8,12 +8,6 @@ import MgrResAssetsStatusLoading from "./MgrResAssetsStatusLoading.js";
  */
 export default class MgrResAssets {
     
-    constructor () {
-        this.statusLoading = new MgrResAssetsStatusLoading (this);
-        this.statusFinished = new MgrResAssetsStatusFinished (this);
-        this.enter (this.statusLoading);
-    }
-
     /**
      * 状态 - 加载中
      */
@@ -22,6 +16,12 @@ export default class MgrResAssets {
      * 状态 - 完成
      */
     statusFinished: MgrResAssetsStatusFinished;
+
+    constructor () {
+        this.statusLoading = new MgrResAssetsStatusLoading (this);
+        this.statusFinished = new MgrResAssetsStatusFinished (this);
+        this.enter (this.statusLoading);
+    }
 
     /**
      * 当前状态

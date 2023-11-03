@@ -267,7 +267,7 @@ _electron.ipcMain.on (
                     return;
                 };
                 // 返回最终结果
-                win.webContents.send (MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, resp);
+                win.webContents.send (MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, {id: args.id, resp: resp});
     });
     }
 );

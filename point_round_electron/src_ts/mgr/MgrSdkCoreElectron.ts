@@ -4,6 +4,7 @@ import MgrSdkCtxSet from "./MgrSdkCtxSet.js";
 import NodeModules from "../NodeModules.js";
 import MgrSdkCtxLogToMain from "./MgrSdkCtxLogToMain.js";
 import MgrSdkCtxSaveFile from "./MgrSdkCtxSaveFile.js";
+import Eventer from "../common/Eventer.js";
 
 /**
  * 存档路径
@@ -37,11 +38,17 @@ class MgrSdkCoreElectronRequest <TInput, TOutput> {
     }
 }
 
+let evtResp = new Eventer ();
+
 namespace MgrSdkCoreElectronRequest {
     /**
      * 请求体
      */
     export interface Ctx {
+        /**
+         * 标识
+         */
+        id: number;
         /**
          * 策略代号
          */
@@ -250,6 +257,8 @@ class MgrSdkCoreElectron extends MgrSdkCore {
         );
     }
 
+    seed = 0;
+
     /**
      * 告知服务端
      * @param action 
@@ -260,24 +269,34 @@ class MgrSdkCoreElectron extends MgrSdkCore {
         i: TInput
     ) 
     {
+        let id = ++this.seed;
         let msg: MgrSdkCoreElectronRequest.Ctx = {
+            id: id,
             code: action.code,
             data: i
         };
         NodeModules.electron.ipcRenderer.send (MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, msg);
         return new Promise <TOutput> ((resolve) => {
-            NodeModules.electron.ipcRenderer.once (
-                MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE,
-                (
-                    evt,
-                    resp: TOutput
-                ) =>
-                {
-                    resolve (resp);
-                }
-            );
+            let listenId = evtResp.on ((resp: any) => {
+                if (resp.id != msg.id) {
+                    return;
+                };
+                evtResp.off (listenId);
+                resolve (resp.resp);
+            });
         });
     }
 }
+
+NodeModules.electron.ipcRenderer.on (
+    MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE,
+    (
+        evt,
+        resp
+    ) =>
+    {
+        evtResp.call (resp);
+    }
+);
 
 export default MgrSdkCoreElectron;

@@ -1,5 +1,6 @@
 import MgrSdkCore from "./MgrSdkCore.js";
 import NodeModules from "../NodeModules.js";
+import Eventer from "../common/Eventer.js";
 /**
  * 存档路径
  */
@@ -16,6 +17,7 @@ class MgrSdkCoreElectronRequest {
         MgrSdkCoreElectronRequest.mapCodeToRequest.set(this.code, this);
     }
 }
+let evtResp = new Eventer();
 (function (MgrSdkCoreElectronRequest) {
     ;
     /**
@@ -84,6 +86,10 @@ NodeModules.electron.ipcRenderer.on(MgrSdkCoreElectronRequest.EVT_NAME_SERVER_AC
  * 针对不同运行环境做兼容处理 - 策略 - electron
  */
 class MgrSdkCoreElectron extends MgrSdkCore {
+    constructor() {
+        super(...arguments);
+        this.seed = 0;
+    }
     set(txt) {
         return this.fetch(MgrSdkCoreElectronRequest.CLIENT_FETCH_SAVE_TXT, {
             fileName: STORAGE_PATH,
@@ -146,16 +152,26 @@ class MgrSdkCoreElectron extends MgrSdkCore {
      * @param i
      */
     fetch(action, i) {
+        let id = ++this.seed;
         let msg = {
+            id: id,
             code: action.code,
             data: i
         };
         NodeModules.electron.ipcRenderer.send(MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, msg);
         return new Promise((resolve) => {
-            NodeModules.electron.ipcRenderer.once(MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, (evt, resp) => {
-                resolve(resp);
+            let listenId = evtResp.on((resp) => {
+                if (resp.id != msg.id) {
+                    return;
+                }
+                ;
+                evtResp.off(listenId);
+                resolve(resp.resp);
             });
         });
     }
 }
+NodeModules.electron.ipcRenderer.on(MgrSdkCoreElectronRequest.EVT_NAME_CLIENT_ACTIVE, (evt, resp) => {
+    evtResp.call(resp);
+});
 export default MgrSdkCoreElectron;

@@ -1,4 +1,5 @@
 import MgrDataItem from "./MgrDataItem.js";
+import mgrDataJsonDefault from "./MgrDataJsonDefault.js";
 import MgrSdk from "./MgrSdk.js";
 /**
  * 数据管理
@@ -27,11 +28,11 @@ class MgrData {
             .then((ctx) => {
             // 对象形式的存档
             let dataObject;
-            if (ctx.isSuccessed && ctx.txt != null) {
-                dataObject = JSON.parse(ctx.txt || `{}`);
+            if (ctx.isSuccessed && ctx.txt != null && ctx.txt != ``) {
+                dataObject = JSON.parse(ctx.txt);
             }
             else {
-                dataObject = {};
+                dataObject = mgrDataJsonDefault;
             }
             ;
             for (let i = 0; i < MgrDataItem.listItem.length; i++) {

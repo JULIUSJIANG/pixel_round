@@ -223,7 +223,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                 imgCurr.statusCancel();
                 MgrData.inst.callDataChange();
             }
-        }, `撤销`), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
+        }, `撤销 [4]`), ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {
                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
@@ -237,7 +237,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                 imgCurr.statusRecovery();
                 MgrData.inst.callDataChange();
             }
-        }, `恢复`)), 
+        }, `恢复 [5]`)), 
         // 宽
         ReactComponentExtend.instantiateTag(MgrDomDefine.TAG_DIV, {
             style: {

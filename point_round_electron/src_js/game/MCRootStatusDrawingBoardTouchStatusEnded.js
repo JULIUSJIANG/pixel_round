@@ -1,3 +1,4 @@
+import IndexGlobal from "../IndexGlobal.js";
 import MgrData from "../mgr/MgrData.js";
 import DomDrawingBoardRightPaintCanvas from "../ui/DomDrawingBoardRightPaintCanvas.js";
 import MCRootStatusDrawingBoardTouchStatus from "./MCRootStatusDrawingBoardTouchStatus.js";
@@ -12,6 +13,16 @@ class MCRootStatusDrawingBoardTouchStatusEnded extends MCRootStatusDrawingBoardT
         DomDrawingBoardRightPaintCanvas.drawMark(jWebgl, this.relMachine.touchCurrentPos.gridXInt, this.relMachine.touchCurrentPos.gridYInt, 1, 1, color);
     }
     onCode(code) {
+        if (code == `Digit4`) {
+            IndexGlobal.inst.dbCurrent().statusCancel();
+            MgrData.inst.callDataChange();
+        }
+        ;
+        if (code == `Digit5`) {
+            IndexGlobal.inst.dbCurrent().statusRecovery();
+            MgrData.inst.callDataChange();
+        }
+        ;
         let opStatus = this.relMachine.opMapCodeToStatus.get(code);
         if (opStatus == null) {
             return;

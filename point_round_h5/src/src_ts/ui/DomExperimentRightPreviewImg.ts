@@ -1,0 +1,44 @@
+import IndexGlobal from "../IndexGlobal";
+import ReactComponentExtend from "../common/ReactComponentExtend";
+import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance";
+import MgrData from "../mgr/MgrData";
+import MgrDataItem from "../mgr/MgrDataItem";
+import MgrDomDefine from "../mgr/MgrDomDefine";
+import DomExperimentRightPreviewImgBefore from "./DomExperimentRightPreviewImgBefore";
+import DomImageSmooth from "./DomImageSmooth";
+import ViewRelativeRateRS from "./ViewRelativeRateRS";
+
+export default class DomExperimentRightPreviewImg extends ReactComponentExtend <number> {
+
+    render (): ReactComponentExtendInstance {
+        let relativeRS = ViewRelativeRateRS.mapIdToInst.get (MgrData.inst.get (MgrDataItem.VIEW_RELATIVE_RATE));
+        let currImg = IndexGlobal.inst.expCurrent ();
+        
+        let instLeft: ReactComponentExtendInstance;
+        if (relativeRS.isLeftVisiable () && currImg.uint8CurrStatus == currImg.uint8StatusLoaded) {
+            instLeft = ReactComponentExtend.instantiateComponent (DomExperimentRightPreviewImgBefore, null);
+        };
+
+        let instRight: ReactComponentExtendInstance;
+        if (relativeRS.isRightVisiable () && currImg.uint8CurrStatus == currImg.uint8StatusLoaded) {
+            let dataSrc = IndexGlobal.mcExp ().detailStatusPreview;
+            instRight = ReactComponentExtend.instantiateComponent (DomImageSmooth, currImg.uint8ArgsSmooth);
+        };
+        
+        return ReactComponentExtend.instantiateTag (
+            MgrDomDefine.TAG_DIV,
+            {
+                style: {
+                    [MgrDomDefine.STYLE_HEIGHT]: MgrDomDefine.STYLE_HEIGHT_PERCENTAGE_0,
+                    [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+
+                    [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                    [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                }
+            },
+
+            instLeft,
+            instRight,
+        )
+    };
+}

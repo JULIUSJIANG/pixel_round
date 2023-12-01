@@ -30,6 +30,7 @@ class MgrData {
                 else {
                     dataObject = mgrDataJsonDefault;
                 };
+                console.log (dataObject);
                 for (let i = 0; i < MgrDataItem.listItem.length; i++) {
                     let listItemI = MgrDataItem.listItem [i];
                     let storaged = dataObject [listItemI.key];

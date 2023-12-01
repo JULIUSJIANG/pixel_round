@@ -1,6 +1,6 @@
 import MgrSdkCore from "./MgrSdkCore";
 
-const STORAGE_KEY = `MgrsdkcoreH5`;
+const STORAGE_KEY = `MgrsdkcoreH5_3`;
 
 /**
  * h5 底下的策略

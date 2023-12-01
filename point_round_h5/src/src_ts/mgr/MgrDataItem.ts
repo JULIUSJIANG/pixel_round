@@ -49,7 +49,7 @@ namespace MgrDataItem {
      */
     export const COLUMN_COUNT = new MgrDataItem <number> ({
         key: `COLUMN_COUNT_${VERSION}`,
-        defVal: 1
+        defVal: 0
     });
 
     /**

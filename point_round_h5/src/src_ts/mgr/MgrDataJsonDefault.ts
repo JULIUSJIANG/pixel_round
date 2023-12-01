@@ -1,6 +1,6 @@
 const mgrDataJsonDefault = {
     "VIEW_RELATIVE_RATE_3": 2,
-    "COLUMN_COUNT_3": 1,
+    "COLUMN_COUNT_3": 0,
     "AUTO_DEBUG_TOOLS_3": false,
     "MC_STATUS_3": 0,
     "MC_STATUS_EXP_STATUS_3": 1,

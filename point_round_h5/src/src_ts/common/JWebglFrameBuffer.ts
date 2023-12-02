@@ -6,6 +6,8 @@ class JWebglFrameBuffer {
 
     relWebgl: JWebgl;
 
+    type: JWebglEnum.TexParameteriParam;
+
     width: number;
 
     height: number;
@@ -16,10 +18,11 @@ class JWebglFrameBuffer {
 
     arrUint8: Uint8Array;
 
-    constructor (relWebgl: JWebgl, width: number, height: number) {
+    constructor (relWebgl: JWebgl, width: number, height: number, type: JWebglEnum.TexParameteriParam) {
         this.relWebgl = relWebgl;
         this.width = width;
         this.height = height;
+        this.type = type;
         this.renderTexture = this.relWebgl.canvasWebglCtx.createTexture ();
         this.relWebgl.canvasWebglCtx.bindTexture (JWebglEnum.BindTexture.TEXTURE_2D, this.renderTexture);
         this.relWebgl.canvasWebglCtx.texImage2D (
@@ -33,8 +36,8 @@ class JWebglFrameBuffer {
             JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE,
             null
         );
-        this.relWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MIN_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
-        this.relWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MAG_FILTER, JWebglEnum.TexParameteriParam.NEAREST);
+        this.relWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MIN_FILTER, this.type);
+        this.relWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_MAG_FILTER, this.type);
         this.relWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_S, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
         this.relWebgl.canvasWebglCtx.texParameteri (JWebglEnum.BindTexture.TEXTURE_2D, JWebglEnum.TexParameteriPName.TEXTURE_WRAP_T, JWebglEnum.TexParameteriParam.CLAMP_TO_EDGE);
 
@@ -47,7 +50,7 @@ class JWebglFrameBuffer {
 
     cacheToUint8 () {
         if (this.fboRev == null) {
-            this.fboRev = this.relWebgl.getFbo (this.width, this.height);
+            this.fboRev = this.relWebgl.getFbo (this.width, this.height, this.type);
         };
         this.relWebgl.fillFboByTexRev (this.fboRev, this.renderTexture);
         if (!this.arrUint8) {

@@ -1,5 +1,6 @@
 import DataUint32Array from "../common/DataUint32Array";
 import DataUint8Array from "../common/DataUint8Array";
+import JWebglEnum from "../common/JWebglEnum";
 import objectPool from "../common/ObjectPool";
 import MgrDataItem from "../mgr/MgrDataItem";
 import MgrGlobal from "../mgr/MgrGlobal";
@@ -191,7 +192,7 @@ class ExpImg {
         this.cHeightShowAll = (this.expImgData.height + Math.max (this.expImgData.paddingBottom, 0) + Math.max (this.expImgData.paddingTop, 0));
 
         // 采集缩略图的数据
-        let fbo = MgrGlobal.inst.canvas3dCtx.getFbo (this.uint8ArgsSmooth.cacheTexWidth, this.uint8ArgsSmooth.cacheTexHeight);
+        let fbo = MgrGlobal.inst.canvas3dCtx.getFbo (this.uint8ArgsSmooth.cacheTexWidth, this.uint8ArgsSmooth.cacheTexHeight, JWebglEnum.TexParameteriParam.NEAREST);
         let tex = MgrGlobal.inst.canvas3dCtx.createTexture ();
         DomImageSmooth.Args.drawImgPadding (
             this.uint8ArgsSmooth,

@@ -2,6 +2,7 @@ import IndexGlobal from "../IndexGlobal";
 import NodeModules from "../NodeModules";
 import JWebgl from "../common/JWebgl";
 import JWebglColor from "../common/JWebglColor";
+import JWebglEnum from "../common/JWebglEnum";
 import JWebglFrameBuffer from "../common/JWebglFrameBuffer";
 import JWebglMathVector4 from "../common/JWebglMathVector4";
 import JWebglTexture from "../common/JWebglTexture";
@@ -73,7 +74,7 @@ class DomExperimentRightPreviewImgBeforeCutted extends ReactComponentExtend <num
 
         // 初始化 fbo
         if (this.fbo == null || this.fbo.width != argsSmooth.cacheTexWidth || this.fbo.height != argsSmooth.cacheTexHeight) {
-            this.fbo = this.jWebgl.getFbo (argsSmooth.cacheTexWidth, argsSmooth.cacheTexHeight);
+            this.fbo = this.jWebgl.getFbo (argsSmooth.cacheTexWidth, argsSmooth.cacheTexHeight, JWebglEnum.TexParameteriParam.NEAREST);
         };
         // 得到简略图
         DomImageSmooth.Args.drawImgPadding (argsSmooth, this.jWebgl, this.fbo, this.texSrc);

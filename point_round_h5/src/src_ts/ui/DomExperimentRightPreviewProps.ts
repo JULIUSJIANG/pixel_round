@@ -1,5 +1,6 @@
 import IndexGlobal from "../IndexGlobal";
 import NodeModules from "../NodeModules";
+import JWebglEnum from "../common/JWebglEnum";
 import ReactComponentExtend from "../common/ReactComponentExtend";
 import ReactComponentExtendInstance from "../common/ReactComponentExtendInstance";
 import MgrData from "../mgr/MgrData";
@@ -36,7 +37,7 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                     onClick: () => {
                         let recExp = IndexGlobal.inst.expCurrent ();
                         let recDbId = IndexGlobal.inst.dbCreate (recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cacheTexHeight);
-                        let fbo = MgrGlobal.inst.canvas3dCtx.getFbo (recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cacheTexHeight);
+                        let fbo = MgrGlobal.inst.canvas3dCtx.getFbo (recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cacheTexHeight, JWebglEnum.TexParameteriParam.NEAREST);
                         let tex = MgrGlobal.inst.canvas3dCtx.createTexture ();
                         DomImageSmooth.Args.drawImgPadding (recExp.uint8ArgsSmooth, MgrGlobal.inst.canvas3dCtx, fbo, tex);
                         let recDb = IndexGlobal.inst.dbMapIdToImg.get (recDbId);

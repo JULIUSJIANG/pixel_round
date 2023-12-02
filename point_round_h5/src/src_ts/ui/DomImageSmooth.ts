@@ -183,6 +183,10 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
      * 缓存了
      */
     fboDisplay: JWebglFrameBuffer;
+    /**
+     * 导出专用缓冲区
+     */
+    fboExport: JWebglFrameBuffer;
 
     /**
      * 图片位置
@@ -214,40 +218,45 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         // 绘制 fbo
         if (this.fboTexture == null || this.fboTexture.width != this.props.cacheTexWidth || this.fboTexture.height != this.props.cacheTexHeight) {
             this.jWebgl.destroyFbo (this.fboTexture);
-            this.fboTexture = this.jWebgl.getFbo (this.props.cacheTexWidth, this.props.cacheTexHeight);
+            this.fboTexture = this.jWebgl.getFbo (this.props.cacheTexWidth, this.props.cacheTexHeight, JWebglEnum.TexParameteriParam.NEAREST);
             this.jWebgl.destroyFbo (this.fboTickness);
-            this.fboTickness = this.jWebgl.getFbo (this.props.cacheTexWidth, this.props.cacheTexHeight);
+            this.fboTickness = this.jWebgl.getFbo (this.props.cacheTexWidth, this.props.cacheTexHeight, JWebglEnum.TexParameteriParam.NEAREST);
             this.jWebgl.destroyFbo (this.fboFlat);
-            this.fboFlat = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2);
+            this.fboFlat = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
 
             this.jWebgl.destroyFbo (this.fboCornerData);
-            this.fboCornerData = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2);
+            this.fboCornerData = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
             this.jWebgl.destroyFbo (this.fboCornerDataCache);
-            this.fboCornerDataCache = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2);
+            this.fboCornerDataCache = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
             
             this.jWebgl.destroyFbo (this.fboEnumData);
-            this.fboEnumData = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2);
+            this.fboEnumData = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
             this.jWebgl.destroyFbo (this.fboEnumDataCache);
-            this.fboEnumDataCache = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2);
+            this.fboEnumDataCache = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
 
             this.jWebgl.destroyFbo (this.fboAreaLeft);
-            this.fboAreaLeft = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2);
+            this.fboAreaLeft = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
 
             this.jWebgl.destroyFbo (this.fboAreaRight);
-            this.fboAreaRight = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2);
+            this.fboAreaRight = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
 
             this.jWebgl.destroyFbo (this.fboAngleLeft);
-            this.fboAngleLeft = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2);
+            this.fboAngleLeft = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
 
             this.jWebgl.destroyFbo (this.fboAngleRight);
-            this.fboAngleRight = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2);
+            this.fboAngleRight = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
         };
 
         let fboDisplayWidth = this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA;
         let fboDisplayHeight = this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA;
         if (this.fboDisplay == null || this.fboDisplay.width != fboDisplayWidth || this.fboDisplay.height != fboDisplayHeight) {
             this.jWebgl.destroyFbo (this.fboDisplay);
-            this.fboDisplay = this.jWebgl.getFbo (fboDisplayWidth, fboDisplayHeight);
+            this.fboDisplay = this.jWebgl.getFbo (fboDisplayWidth, fboDisplayHeight, JWebglEnum.TexParameteriParam.LINEAR);
+            this.fboExport = this.jWebgl.getFbo (
+                this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION),
+                this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION),
+                JWebglEnum.TexParameteriParam.LINEAR
+            );
         };
 
         // 清除所有
@@ -888,9 +897,10 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
                                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                             },
                             onClick: () => {
+                                this.jWebgl.fillFboByFbo (this.fboExport, this.fboDisplay);
                                 MgrSdk.inst.core.saveFile (
                                     `image.png`,
-                                    this.fboDisplay.toBase64 ()
+                                    this.fboExport.toBase64 ()
                                 );
                             }
                         },

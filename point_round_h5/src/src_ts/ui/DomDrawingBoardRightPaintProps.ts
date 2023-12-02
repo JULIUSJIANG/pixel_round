@@ -1,6 +1,7 @@
 import IndexGlobal from "../IndexGlobal";
 import NodeModules from "../NodeModules";
 import JWebglColor from "../common/JWebglColor";
+import JWebglEnum from "../common/JWebglEnum";
 import JWebglMathVector4 from "../common/JWebglMathVector4";
 import objectPool from "../common/ObjectPool";
 import ReactComponentExtend from "../common/ReactComponentExtend";
@@ -24,7 +25,7 @@ function offset (dataSrc: MCRootStatusDrawingBoard, imgCurr: DBImg, offsetX: num
     let cameraWidth = imgCurr.dbImgData.width;
     let cameraHeight = imgCurr.dbImgData.height;
 
-    let fboResize = dataSrc.dom.jWebgl.getFbo (cameraWidth, cameraHeight);
+    let fboResize = dataSrc.dom.jWebgl.getFbo (cameraWidth, cameraHeight, JWebglEnum.TexParameteriParam.NEAREST);
     dataSrc.dom.jWebgl.useFbo (fboResize);
     dataSrc.dom.jWebgl.clear ();
     dataSrc.dom.jWebgl.mat4V.setLookAt (
@@ -71,7 +72,7 @@ function resizeTo (dataSrc: MCRootStatusDrawingBoard, imgCurr: DBImg, w: number,
     let cameraWidth = w;
     let cameraHeight = h;
 
-    let fboResize = dataSrc.dom.jWebgl.getFbo (cameraWidth, cameraHeight);
+    let fboResize = dataSrc.dom.jWebgl.getFbo (cameraWidth, cameraHeight, JWebglEnum.TexParameteriParam.NEAREST);
     dataSrc.dom.jWebgl.useFbo (fboResize);
     dataSrc.dom.jWebgl.clear ();
     dataSrc.dom.jWebgl.mat4V.setLookAt (

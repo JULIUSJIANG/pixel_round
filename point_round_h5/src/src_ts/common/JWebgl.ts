@@ -192,9 +192,8 @@ class JWebgl {
             }
         );
     
-        this.canvasWebglCtx.enable (JWebglEnum.EnableCap.DEPTH_TEST);
-        this.canvasWebglCtx.enable (JWebglEnum.EnableCap.BLEND);
-        this.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.SRC_ALPHA, JWebglEnum.BlendFunc.ONE_MINUS_SRC_ALPHA);
+        this.canvasWebglCtx.disable (JWebglEnum.EnableCap.DEPTH_TEST);
+        this.canvasWebglCtx.disable (JWebglEnum.EnableCap.BLEND);
         this.canvasWebglCtx.clearColor (0, 0, 0, 0);
 
         this._attributeBuffer = this.canvasWebglCtx.createBuffer ();
@@ -381,8 +380,8 @@ class JWebgl {
      * @param height 
      * @returns 
      */
-    getFbo (width: number, height: number) {
-        return new JWebglFrameBuffer (this, width, height);
+    getFbo (width: number, height: number, type: JWebglEnum.TexParameteriParam) {
+        return new JWebglFrameBuffer (this, width, height, type);
     }
 
     /**

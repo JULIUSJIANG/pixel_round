@@ -55,6 +55,11 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
     fboScreen: JWebglFrameBuffer;
 
     /**
+     * 导出专用缓冲区
+     */
+    fboExport: JWebglFrameBuffer;
+
+    /**
      * 主要纹理
      */
     textureMain: JWebglTexture;
@@ -63,13 +68,11 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
         this.jWebgl = new JWebgl (this.canvasWebglRef.current);
         this.jWebgl.init ();
         this.jWebgl.listenTouch (this.tagDivRef.current);
-        this.jWebgl.canvasWebglCtx.disable (JWebglEnum.EnableCap.DEPTH_TEST);
-        this.jWebgl.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
         this.textureMain = this.jWebgl.createTexture ();
         // 纯色缓冲区
-        this.fboPure = this.jWebgl.getFbo (1, 1);
+        this.fboPure = this.jWebgl.getFbo (1, 1, JWebglEnum.TexParameteriParam.NEAREST);
         // 空的帧缓冲区
-        this.fboEmpty = this.jWebgl.getFbo (1, 1);
+        this.fboEmpty = this.jWebgl.getFbo (1, 1, JWebglEnum.TexParameteriParam.NEAREST);
 
         this.jWebgl.evtTouchStart.on (() => {
             IndexGlobal.inst.mcRoot.statusDrawingBoard.touchPosStart.fill (this.jWebgl.touchStart.posCanvas [0], this.jWebgl.touchStart.posCanvas [1]);
@@ -130,12 +133,17 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
 
         // 确保缓冲区存在
         if (this.fboCache == null || this.fboCache.width != dataSrc.dbImgData.width || this.fboCache.height != dataSrc.dbImgData.height) {
-            this.fboCache = this.jWebgl.getFbo (dataSrc.dbImgData.width, dataSrc.dbImgData.height);
+            this.fboCache = this.jWebgl.getFbo (dataSrc.dbImgData.width, dataSrc.dbImgData.height, JWebglEnum.TexParameteriParam.NEAREST);
         };
         let screenWidth = dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA;
         let screenHeight = dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA;
         if (this.fboScreen == null || this.fboScreen.width != screenWidth || this.fboScreen.height != screenHeight) {
-            this.fboScreen = this.jWebgl.getFbo (screenWidth, screenHeight);
+            this.fboScreen = this.jWebgl.getFbo (screenWidth, screenHeight, JWebglEnum.TexParameteriParam.LINEAR);
+            this.fboExport = this.jWebgl.getFbo (
+                dataSrc.dbImgData.width * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION),
+                dataSrc.dbImgData.height * MgrData.inst.get (MgrDataItem.DB_PIXEL_TO_SCREEN_APPLICATION),
+                JWebglEnum.TexParameteriParam.LINEAR
+            );
         };
 
         // 准备好颜色
@@ -589,9 +597,10 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
                                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                             },
                             onClick: () => {
+                                this.jWebgl.fillFboByFbo (this.fboExport, this.fboScreen);
                                 MgrSdk.inst.core.saveFile (
                                     `image.png`,
-                                    this.fboScreen.toBase64 ()
+                                    this.fboExport.toBase64 ()
                                 );
                             }
                         },

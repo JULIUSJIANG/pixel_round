@@ -74,7 +74,7 @@
 
 ## 源码本地运行
 
-* round_react_creator_h5 是核心目录，运行环境是 NodeJS，在 nodeJS 环境下安装好依赖后，运行命令 “npm run start” 即可启动程序。
+* round_react_creator_h5 是核心目录，运行环境是 NodeJS，在 NodeJS 环境下安装好依赖后，运行命令 “npm run start” 即可启动程序。
   
 * round_react_creator_electron 是 round_react_creator_h5 对应的 Electron 版本，仅用于发布本地应用，可以忽略。
 

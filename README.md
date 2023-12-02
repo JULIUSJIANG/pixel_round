@@ -1,23 +1,17 @@
 # 抗锯齿画板
 
-## 概览
-
-这是一个能够实时抗锯齿的画板，使用时，用户仅需在画板中绘制出像素风格的图像，那么便可实时得到 Q 版的图像。该应用可用于简单可爱风格的图片制作，下方图片为软件作品示例：
+这是一个能够实时抗锯齿的画板，使用时，用户仅需在画板中绘制出像素风格的图像，那么便可实时得到 Q 版的图像，可用于简单可爱风格的图片制作，下方图片为软件作品示例：
 
 ![image](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/47e9769e-6252-4966-83e5-9bbdef173084)![image (1)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/2a839f56-7a4b-42cf-8673-af55374f435c)![image (2)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/17f00638-5f9c-49b7-b62a-b5be173b18d9)![image (3)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/0828dce6-ac0c-4a9c-8675-aca5d921d232)
 
-开发该应用的重要原因：
+* 开发该应用的初衷：
 
-> 上一个独立游戏中的物体资源是使用 IPad 的 Procreate 绘制出像素图片，导出后再用自制软件进行批量平滑，因而无法在绘制阶段实时查看平滑效果，妨碍效率。（附上该独立游戏 h5 版网址：https://juliusjiang.github.io/slime_war/build/web-desktop/）
+  > 上一个独立游戏中的物体资源是使用 IPad 的 Procreate 绘制出像素图片，导出后再用自制软件进行批量平滑，因而无法在绘制阶段实时查看平滑效果，妨碍效率，另外附上该独立游戏 h5 版网址：https://juliusjiang.github.io/slime_war/build/web-desktop/
 
-> 很多人都喜欢画画，但是一提笔就容易被歪歪扭扭的曲线给劝退，所以如果不用画线也可以进行美术创作，那再好不过了。
+  > 很多人都喜欢画画，但是一提笔就容易被自己刚画的歪歪扭扭的线给打击信心，所以如果不用画线也可以进行美术创作，那对很多人来讲肯定是好事。
 
-打开代码 h5 版本的链接：
-
-https://juliusjiang.github.io/pixel_round/point_round_h5/build/
-
-可直接跳过后面说明，体验具体内容：
-
+* 跳过一切直接体验应用：https://juliusjiang.github.io/pixel_round/point_round_h5/build/
+  
 <img width="1745" alt="微信图片_20231202151740" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/0e120440-6a8d-4be9-ae5f-7727d8d29567">
 
 ## 案例展示
@@ -34,7 +28,7 @@ https://juliusjiang.github.io/pixel_round/point_round_h5/build/
 
 ## 使用说明
 
-该应用由于目前可操作内容不多，所以不设菜单栏，而是把所有操作平铺在界面，由此界面按钮、参数看起来比较多，但最开始要注意的仅是界面左下角的这 6 个操作，上面标注的字母为快捷键：
+强烈建议每 2 个像素作为一个单位，方便在后期细节调整中达到自己想要的平滑效果！该应用由于目前可操作内容不多，所以不设菜单栏，而是把所有操作平铺在界面，由此界面按钮、参数看起来比较多，但最开始要注意的仅是界面左下角的这 6 个操作，其中标注的字母为快捷键：
 
 <img width="642" alt="微信图片_20231202181301" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/3a6ef84a-dfe6-4656-936a-8f3225afd329">
 
@@ -80,9 +74,9 @@ https://juliusjiang.github.io/pixel_round/point_round_h5/build/
 
 ## 源码本地运行
 
-* round_react_creator_h5 是核心目录，运行环境是 nodeJS，在 nodeJS 环境下安装好依赖后，运行命令 “npm run start” 即可启动程序。
+* round_react_creator_h5 是核心目录，运行环境是 NodeJS，在 nodeJS 环境下安装好依赖后，运行命令 “npm run start” 即可启动程序。
   
-* round_react_creator_electron 是 round_react_creator_h5 对应的 electron 版本，仅用于发布本地应用，可以忽略。
+* round_react_creator_electron 是 round_react_creator_h5 对应的 Electron 版本，仅用于发布本地应用，可以忽略。
 
 ## 其他
 

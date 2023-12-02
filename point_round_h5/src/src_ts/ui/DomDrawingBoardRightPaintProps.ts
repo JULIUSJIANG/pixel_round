@@ -296,11 +296,18 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                             },
 
                             [MgrDomDefine.PROPS_VALUE]: `${MgrData.inst.get (MgrDataItem.DB_COLOR)}`,
-                            onChangeComplete: (val) => {
+
+                            onChange: (val) => {
                                 val = val.toHex();
                                 MgrData.inst.set (MgrDataItem.DB_COLOR, val);
                                 MgrData.inst.callDataChange ();
-                            }
+                            },
+
+                            // onChangeComplete: (val) => {
+                            //     val = val.toHex();
+                            //     MgrData.inst.set (MgrDataItem.DB_COLOR, val);
+                            //     MgrData.inst.callDataChange ();
+                            // }
                         }
                     )
                 ),

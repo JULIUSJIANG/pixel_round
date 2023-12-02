@@ -63,7 +63,6 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         this.dragEnter (this.dragStatusIdle);
 
         MgrGlobal.inst.evtKey.on ((evt) => {
-            console.log (evt);
             this.touchCurrStatus.onCode (evt);
         });
     }

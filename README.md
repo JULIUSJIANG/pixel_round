@@ -20,7 +20,7 @@
 
 * 案例 1，时髦发型男：
 
-![image](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/5811ca10-b59a-4a58-8283-738c9c95dfd0)![image (1)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/51a39f22-d5cd-49ab-96b6-95f2bbe34a09)
+![image (4)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/0d19035e-491d-491f-a030-6c012dac7756)![image (5)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/28514900-f02e-41f2-b471-b8ade58bbb02)
 
 * 案例 2，紫袍巫师：
 

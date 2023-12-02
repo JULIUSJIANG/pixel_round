@@ -16,7 +16,7 @@
 
 ## 案例展示
 
-以下是 2 个具体的案例，其中左侧为画板图像，右侧为实时抗锯齿后的图像。可以看出来，经过画板的处理，原图像中的锯齿被抹平为连贯的曲线，图像变得更加柔和。
+以下是 2 个具体的案例，其中左侧为画板图像，右侧为实时抗锯齿后的图像。可以看出来，经过画板的处理，原图像中的锯齿被抹平为连贯的相连直线，图像变得更加柔和。
 
 * 案例 1，时髦发型男：
 
@@ -25,24 +25,6 @@
 * 案例 2，紫袍巫师：
 
 ![image (2)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/b19ca51f-5bc3-40f1-b131-0469ed42764e)![image (2)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/e929e536-16d2-42cd-a7b1-d6e43ad0c608)
-
-## 使用说明
-
-强烈建议每 2 个像素作为一个单位，方便在后期细节调整中达到自己想要的平滑效果！该应用由于目前可操作内容不多，所以不设菜单栏，而是把所有操作平铺在界面，由此界面按钮、参数看起来比较多，但最开始要注意的仅是界面左下角的这 6 个操作，其中标注的字母为快捷键：
-
-<img width="642" alt="微信图片_20231202181301" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/3a6ef84a-dfe6-4656-936a-8f3225afd329">
-
-* 画笔：使用画笔颜色填充鼠标框选的区域
-  
-* 拾色器：吸取画板中已有颜色作为当前画笔颜色
-  
-* 橡皮擦：清除选框内画笔留下的内容
-  
-* 画笔颜色：调整当前画笔颜色
-  
-* 撤销：撤销上一步的操作
-  
-* 恢复：撤销过量的时候，回退 “撤销”
 
 ## 抗锯齿规则
 
@@ -72,9 +54,47 @@
 
 ![image](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/b7864b47-005b-4edb-b3a7-0e0638c761f9)![image (1)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/691acbd2-dac3-49bc-8ba4-54001e400e15)
 
+## 使用说明
+
+* 操作说明：该应用由于目前可操作内容不多，所以不设菜单栏，而是把所有操作平铺在界面，由此界面按钮、参数看起来比较多，但最开始要注意的仅是界面左下角的这 6 个操作，其中标注的字母为快捷键。
+
+  > 画笔：使用画笔颜色填充鼠标框选的区域
+
+  > 拾色器：吸取画板中已有颜色作为当前画笔颜色
+
+  > 橡皮擦：清除选框内画笔留下的内容
+
+  > 画笔颜色：调整当前画笔颜色
+
+  > 撤销：撤销上一步的操作
+
+  > 恢复：撤销过量的时候，回退 “撤销”
+
+<img width="642" alt="微信图片_20231202181301" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/3a6ef84a-dfe6-4656-936a-8f3225afd329">
+
+* 步骤说明：
+
+  > 暂时忽略右侧抗锯齿的效果，每 2 个像素作为 1 个单位，绘制出一个恰当的像素图，如下：
+  >
+  > ![image](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/ca80aefb-b02a-4607-894b-07988ee371fd)
+  
+  > 此时对应的抗锯齿效果图比较扭曲，如下：
+  >
+  > ![image (1)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/36c0e711-db03-4f62-bbe9-2acf96017d5a)
+
+  > 最后，以抗锯齿效果为准，不断调整像素图，直到效果达到预期即完成，最终抗锯齿效果如下：
+  > 
+  > ![image (3)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/110bc0da-c0d0-4b54-82de-aa2136516290)
+
+  > 此时像素图已被修改，对比一开始，很多像素细节已经发生修改，这也是最开始以 2 像素作为 1 个单位的原因，最终像素图如下：
+  > 
+  > ![image (2)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/ac95002b-1608-4c7b-947a-378927ab84f0)
+
 ## 源码本地运行
 
-* round_react_creator_h5 是核心目录，运行环境是 NodeJS，在 NodeJS 环境下安装好依赖后，运行命令 “npm run start” 即可启动程序。
+* 该工程的开发环境为 NodeJS + TypeScript + React + Antd，且涉及大量的 WebGL 内容。
+
+* round_react_creator_h5 是放置源码的核心目录，安装好 NodeJS 后，该目录下运行命令 “npm install” 安装所有依赖项，再运行命令 “npm run start” 即可启动本地调试。
   
 * round_react_creator_electron 是 round_react_creator_h5 对应的 Electron 版本，仅用于发布本地应用，可以忽略。
 

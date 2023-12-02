@@ -40,9 +40,9 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         this.touchPosEnd = new MCRootStatusDrawingBoardTouchPos (this);
         this.touchCurrentPos = this.touchPosMove;
 
-        this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil (this, 0, `画笔 [1]`, `Digit1`);
-        this.opStatusStraw = new MCRootStatusDrawingBoardOpStatusStraw (this, 1, `拾色器 [2]`, `Digit2`);
-        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser (this, 2, `橡皮擦 [3]`, `Digit3`);
+        this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil (this, 0, `画笔 [A]`, `KeyA`);
+        this.opStatusStraw = new MCRootStatusDrawingBoardOpStatusStraw (this, 1, `拾色器 [S]`, `KeyS`);
+        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser (this, 2, `橡皮擦 [D]`, `KeyD`);
 
         this.touchStatusEnded = new MCRootStatusDrawingBoardTouchStatusEnded (this);
         this.touchStatusStarted = new MCRootStatusDrawingBoardTouchStatusStarted (this);
@@ -63,6 +63,7 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         this.dragEnter (this.dragStatusIdle);
 
         MgrGlobal.inst.evtKey.on ((evt) => {
+            console.log (evt);
             this.touchCurrStatus.onCode (evt);
         });
     }

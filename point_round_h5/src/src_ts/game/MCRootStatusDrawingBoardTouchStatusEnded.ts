@@ -17,11 +17,11 @@ class MCRootStatusDrawingBoardTouchStatusEnded extends MCRootStatusDrawingBoardT
     }
 
     onCode (code: string): void {
-        if (code == `KeyF`) {
+        if (code == `KeyR`) {
             IndexGlobal.inst.dbCurrent ().statusCancel ();
             MgrData.inst.callDataChange ();
         };
-        if (code == `KeyG`) {
+        if (code == `KeyT`) {
             IndexGlobal.inst.dbCurrent ().statusRecovery ();
             MgrData.inst.callDataChange ();
         };

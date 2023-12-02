@@ -334,7 +334,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                             }
                         },
         
-                        `撤销 [F]`
+                        `撤销 [R]`
                     ),
                     ReactComponentExtend.instantiateTag (
                         MgrDomDefine.TAG_DIV,
@@ -360,7 +360,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                             }
                         },
         
-                        `恢复 [G]`
+                        `恢复 [T]`
                     )
                 ),
 

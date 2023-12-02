@@ -40,9 +40,9 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         this.touchPosEnd = new MCRootStatusDrawingBoardTouchPos (this);
         this.touchCurrentPos = this.touchPosMove;
 
-        this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil (this, 0, `画笔 [A]`, `KeyA`);
-        this.opStatusStraw = new MCRootStatusDrawingBoardOpStatusStraw (this, 1, `拾色器 [S]`, `KeyS`);
-        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser (this, 2, `橡皮擦 [D]`, `KeyD`);
+        this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil (this, 0, `画笔 [Q]`, `KeyQ`);
+        this.opStatusStraw = new MCRootStatusDrawingBoardOpStatusStraw (this, 1, `拾色器 [W]`, `KeyW`);
+        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser (this, 2, `橡皮擦 [E]`, `KeyE`);
 
         this.touchStatusEnded = new MCRootStatusDrawingBoardTouchStatusEnded (this);
         this.touchStatusStarted = new MCRootStatusDrawingBoardTouchStatusStarted (this);

@@ -68,7 +68,7 @@
   >
   > <img width="69" alt="微信图片_20231202164910" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/dc021b5d-3eaa-4a99-9c60-5adb009cea39">
 
-以上 2 个规则为最核心的抗锯齿规则，按照以上规则，就能够理解下方图像的变化，那么在使用的时候就知道如何得到自己想要的效果，其中左图为抗锯齿前的原图，右图为抗锯齿后的效果：
+以上 2 个规则为最核心的抗锯齿规则，而且对于旋转、镜像的情况也同样适用。按照以上规则，就能够理解下方图像的变化，那么在使用的时候就知道如何得到自己想要的效果，其中左图为抗锯齿前的原图，右图为抗锯齿后的效果：
 
 ![image](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/b7864b47-005b-4edb-b3a7-0e0638c761f9)![image (1)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/691acbd2-dac3-49bc-8ba4-54001e400e15)
 

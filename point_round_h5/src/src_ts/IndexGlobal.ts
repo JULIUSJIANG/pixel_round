@@ -304,7 +304,25 @@ namespace IndexGlobal {
     /**
      * 步骤存储数量
      */
-    export const BACK_UP_COUNT_MAX = 10;
+    export const BACK_UP_COUNT_MAX = 40;
+
+    export const TIPS_PENCIL = `Q`;
+    export const TIPS_PENCIL_KEY = `Key${TIPS_PENCIL}`;
+
+    export const TIPS_PAINT_BUCKET = `W`;
+    export const TIPS_PAINT_BUCKET_KEY = `Key${TIPS_PAINT_BUCKET}`;
+
+    export const TIPS_COLOR_PICKER = `E`;
+    export const TIPS_COLOR_PICKER_KEY = `Key${TIPS_COLOR_PICKER}`;
+
+    export const TIPS_ERASER = `R`;
+    export const TIPS_ERASER_KEY = `Key${TIPS_ERASER}`;
+
+    export const TIPS_CANCEL = `T`;
+    export const TIPS_CANCEL_KEY = `Key${TIPS_CANCEL}`;
+
+    export const TIPS_RECOVERY = `Y`;
+    export const TIPS_RECOVERY_KEY = `Key${TIPS_RECOVERY}`;
 }
 
 export default IndexGlobal;

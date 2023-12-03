@@ -237,265 +237,174 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                 {
                     style: {
                         [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                    },
+                        [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_COLUMN
+                    }
                 },
 
-                // 板块 - 操作
                 ReactComponentExtend.instantiateTag (
                     MgrDomDefine.TAG_DIV,
                     {
                         style: {
-                            [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
-
                             [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                             [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                            [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
-                            [MgrDomDefine.STYLE_JUSTIFY_CONTENT]: MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER,
-                        }
+                        },
                     },
-
-                    ...this.listChildrenA,
-                ),
-                
-                // 板块 - 颜色
-                ReactComponentExtend.instantiateTag (
-                    MgrDomDefine.TAG_DIV,
-                    {
-                        style: {
-                            [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
-
-                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                            [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
-                            [MgrDomDefine.STYLE_JUSTIFY_CONTENT]: MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER,
-                        }
-                    },
-
+    
+                    // 板块 - 操作
                     ReactComponentExtend.instantiateTag (
                         MgrDomDefine.TAG_DIV,
                         {
                             style: {
+                                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                                [MgrDomDefine.STYLE_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
-                                [MgrDomDefine.STYLE_FONT_SIZE]: MgrDomDefine.STYLE_FONT_SIZE_14,
-                            }
-                        },
-                        `画笔颜色`
-                    ),
-                    ReactComponentExtend.instantiateTag (
-                        NodeModules.antd.ColorPicker,
-                        {
-                            showText: true,
-                            style: {
-                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            },
-
-                            [MgrDomDefine.PROPS_VALUE]: `${MgrData.inst.get (MgrDataItem.DB_COLOR)}`,
-
-                            onChange: (val) => {
-                                // 自动转为画笔
-                                IndexGlobal.inst.mcRoot.statusDrawingBoard.opEnter (IndexGlobal.inst.mcRoot.statusDrawingBoard.opStatusPencil);
-                                val = val.toHex();
-                                MgrData.inst.set (MgrDataItem.DB_COLOR, val);
-                                MgrData.inst.callDataChange ();
-                            },
-
-                            // onChangeComplete: (val) => {
-                            //     val = val.toHex();
-                            //     MgrData.inst.set (MgrDataItem.DB_COLOR, val);
-                            //     MgrData.inst.callDataChange ();
-                            // }
-                        }
-                    )
-                ),
-
-                // 撤销 - 恢复
-                ReactComponentExtend.instantiateTag (
-                    MgrDomDefine.TAG_DIV,
-                    {
-                        style: {
-                            [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
-            
-                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                            [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_STRETCH,
-                            [MgrDomDefine.STYLE_JUSTIFY_CONTENT]: MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER,
-                        }
-                    },
-            
-                    ReactComponentExtend.instantiateTag (
-                        NodeModules.antd.Button,
-                        {
-                            style: {
-                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            },
-                            "disabled": imgCurr.statusIdx == 0,
-                            onClick: () => {
-                                imgCurr.statusCancel ();
-                                MgrData.inst.callDataChange ();
-                            }
-                        },
-        
-                        `撤销 [R]`
-                    ),
-                    ReactComponentExtend.instantiateTag (
-                        MgrDomDefine.TAG_DIV,
-                        {
-                            style: {
+                                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+    
                                 [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
                                 [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                                [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
+                                [MgrDomDefine.STYLE_JUSTIFY_CONTENT]: MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER,
                             }
                         },
-
-                        ...this.listChildrenB
+    
+                        ...this.listChildrenA,
                     ),
+                    
+                    // 板块 - 颜色
                     ReactComponentExtend.instantiateTag (
-                        NodeModules.antd.Button,
+                        MgrDomDefine.TAG_DIV,
                         {
                             style: {
+                                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
                                 [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            },
-                            "disabled": imgCurr.statusIdx == imgCurr.statusList.length - 1,
-                            onClick: () => {
-                                imgCurr.statusRecovery ();
-                                MgrData.inst.callDataChange ();
+                                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+    
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                                [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
+                                [MgrDomDefine.STYLE_JUSTIFY_CONTENT]: MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER,
                             }
                         },
-        
-                        `恢复 [T]`
-                    )
-                ),
-
-                // 宽
-                ReactComponentExtend.instantiateTag (
-                    MgrDomDefine.TAG_DIV,
-                    {
-                        style: {
-                            [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-
-                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                        }
-                    },
-
-                    ReactComponentExtend.instantiateComponent (
-                        DomInputNumberApplicationHor,
-                        argsWidth,
-                    ),
-                ),
-                
-                // 高
-                ReactComponentExtend.instantiateTag (
-                    MgrDomDefine.TAG_DIV,
-                    {
-                        style: {
-                            [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-
-                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                        }
-                    },
-                    
-                    ReactComponentExtend.instantiateComponent (
-                        DomInputNumberApplicationHor,
-                        argsHeight,
-                    ),
-                ),
-
-                // 水平移动
-                ReactComponentExtend.instantiateTag (
-                    MgrDomDefine.TAG_DIV,
-                    {
-                        style: {
-                            [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-            
-                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                        }
-                    },
-            
-                    ReactComponentExtend.instantiateComponent (
-                        DomInputNumberApplicationHor,
-                        argsOffsetX,
-                    ),
-                ),
-                
-                // 垂直移动
-                ReactComponentExtend.instantiateTag (
-                    MgrDomDefine.TAG_DIV,
-                    {
-                        style: {
-                            [MgrDomDefine.STYLE_FLEX_GROW]: 0,
-            
-                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
-                        }
-                    },
-                    
-                    ReactComponentExtend.instantiateComponent (
-                        DomInputNumberApplicationHor,
-                        argsOffsetY,
-                    ),
-                ),
-
-                ReactComponentExtend.instantiateTag (
-                    MgrDomDefine.TAG_DIV,
-                    {
-                        style: {
-                            [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
-
-                            [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
-                            [MgrDomDefine.STYLE_FLEX_GROW]: 1,
-                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
-                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW_REVERSE,
-                            [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
-                        }
-                    },
-
-                    // 板块 - 删除
-                    ReactComponentExtend.instantiateTag (
-                        NodeModules.antd.Popconfirm,
-                        {
-                            title: "该操作不可撤销，请谨慎操作",
-                            okText: "确定",
-                            cancelText: "取消",
-                            onConfirm: () => {
-                                let targetIdx: number;
-                                for (let i = 0; i < IndexGlobal.inst.dbListImg.length; i++) {
-                                    let imgData = IndexGlobal.inst.dbListImg [i];
-                                    if (imgData.dbImgData.id == MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG)) {
-                                        targetIdx = i;
-                                        break;
+    
+                        ReactComponentExtend.instantiateTag (
+                            MgrDomDefine.TAG_DIV,
+                            {
+                                style: {
+                                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                    [MgrDomDefine.STYLE_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
+                                    [MgrDomDefine.STYLE_FONT_SIZE]: MgrDomDefine.STYLE_FONT_SIZE_14,
+                                }
+                            },
+                            `颜色`
+                        ),
+                        ReactComponentExtend.instantiateTag (
+                            NodeModules.antd.ColorPicker,
+                            {
+                                showText: true,
+                                style: {
+                                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                },
+    
+                                [MgrDomDefine.PROPS_VALUE]: `${MgrData.inst.get (MgrDataItem.DB_COLOR)}`,
+    
+                                onChange: (val) => {
+                                    // 为拾色器的时候自动转为画笔
+                                    if (IndexGlobal.inst.mcRoot.statusDrawingBoard.opCurrStatus == IndexGlobal.inst.mcRoot.statusDrawingBoard.opStatusStraw) {
+                                        IndexGlobal.inst.mcRoot.statusDrawingBoard.opEnter (IndexGlobal.inst.mcRoot.statusDrawingBoard.opStatusPencil);
                                     };
-                                };
-                                // 删除该索引上的单位
-                                IndexGlobal.inst.dbDelete (targetIdx);
-                            
-                                // 尽量维持选择状态
-                                targetIdx = Math.min (targetIdx, IndexGlobal.inst.dbListImg.length - 1);
-                                if (0 <= targetIdx) {
-                                    IndexGlobal.inst.dbSelect (IndexGlobal.inst.dbListImg [targetIdx].dbImgData.id);
-                                };
-                                MgrData.inst.callDataChange ();
-                            },
-                            onCancel: () => {
-        
-                            },
+                                    val = val.toHex();
+                                    MgrData.inst.set (MgrDataItem.DB_COLOR, val);
+                                    MgrData.inst.callDataChange ();
+                                },
+                            }
+                        )
+                    ),
+    
+                    // 撤销 - 恢复
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+                
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                                [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_STRETCH,
+                                [MgrDomDefine.STYLE_JUSTIFY_CONTENT]: MgrDomDefine.STYLE_JUSTIFY_CONTENT_CENTER,
+                            }
                         },
+                
+                        ReactComponentExtend.instantiateTag (
+                            NodeModules.antd.Button,
+                            {
+                                style: {
+                                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                },
+                                "disabled": imgCurr.statusIdx == 0,
+                                onClick: () => {
+                                    imgCurr.statusCancel ();
+                                    MgrData.inst.callDataChange ();
+                                }
+                            },
+            
+                            `撤销 [${IndexGlobal.TIPS_CANCEL}]`
+                        ),
+                        ReactComponentExtend.instantiateTag (
+                            MgrDomDefine.TAG_DIV,
+                            {
+                                style: {
+                                    [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                    [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                                }
+                            },
+    
+                            ...this.listChildrenB
+                        ),
+                        ReactComponentExtend.instantiateTag (
+                            NodeModules.antd.Button,
+                            {
+                                style: {
+                                    [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                },
+                                "disabled": imgCurr.statusIdx == imgCurr.statusList.length - 1,
+                                onClick: () => {
+                                    imgCurr.statusRecovery ();
+                                    MgrData.inst.callDataChange ();
+                                }
+                            },
+            
+                            `恢复 [${IndexGlobal.TIPS_RECOVERY}]`
+                        )
+                    ),
+
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+    
+                                [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
+                                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW_REVERSE,
+                                [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
+                            }
+                        },
+    
+                        // 板块 - 备份
                         ReactComponentExtend.instantiateTag (
                             NodeModules.antd.Button,
                             {
                                 onClick: () => {
-                                    
+                                    let dataSrc = IndexGlobal.inst.dbCurrent ();
+                                    let recDbId = IndexGlobal.inst.dbCreate (dataSrc.dbImgData.width, dataSrc.dbImgData.height);
+                                    let recDb = IndexGlobal.inst.dbMapIdToImg.get (recDbId);
+                                    recDb.dbImgData.dataOrigin = dataSrc.dbImgData.dataOrigin;
+                                    IndexGlobal.inst.dbMove (IndexGlobal.inst.dbListImg.indexOf (recDb), IndexGlobal.inst.dbListImg.indexOf (dataSrc) + 1);
+                                    MgrData.inst.callDataChange ();
                                 },
                                 style: {
                                     [MgrDomDefine.STYLE_FLEX_GROW]: 1,
@@ -503,11 +412,156 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                                 }
                             },
                 
-                            `删除当前文档`
+                            `备份`
+                        )
+                    )
+                ),
+
+                ReactComponentExtend.instantiateTag (
+                    MgrDomDefine.TAG_DIV,
+                    {
+                        style: {
+                            [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                            [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW
+                        }
+                    },
+    
+                    // 宽
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_FLEX_GROW]: 0,
+    
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                            }
+                        },
+    
+                        ReactComponentExtend.instantiateComponent (
+                            DomInputNumberApplicationHor,
+                            argsWidth,
+                        ),
+                    ),
+                    
+                    // 高
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_FLEX_GROW]: 0,
+    
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                            }
+                        },
+                        
+                        ReactComponentExtend.instantiateComponent (
+                            DomInputNumberApplicationHor,
+                            argsHeight,
+                        ),
+                    ),
+    
+                    // 水平移动
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_FLEX_GROW]: 0,
+                
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                            }
+                        },
+                
+                        ReactComponentExtend.instantiateComponent (
+                            DomInputNumberApplicationHor,
+                            argsOffsetX,
+                        ),
+                    ),
+                    
+                    // 垂直移动
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_FLEX_GROW]: 0,
+                
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW,
+                            }
+                        },
+                        
+                        ReactComponentExtend.instantiateComponent (
+                            DomInputNumberApplicationHor,
+                            argsOffsetY,
+                        ),
+                    ),
+    
+                    ReactComponentExtend.instantiateTag (
+                        MgrDomDefine.TAG_DIV,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_PADDING]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.CONFIG_TXT_BG_COLOR,
+    
+                                [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.STYLE_WIDTH_PERCENTAGE_0,
+                                [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                                [MgrDomDefine.STYLE_DISPLAY]: MgrDomDefine.STYLE_DISPLAY_FLEX,
+                                [MgrDomDefine.STYLE_FLEX_DIRECTION]: MgrDomDefine.STYLE_FLEX_DIRECTION_ROW_REVERSE,
+                                [MgrDomDefine.STYLE_ALIGN_ITEMS]: MgrDomDefine.STYLE_ALIGN_ITEMS_CENTER,
+                            }
+                        },
+    
+                        // 板块 - 删除
+                        ReactComponentExtend.instantiateTag (
+                            NodeModules.antd.Popconfirm,
+                            {
+                                title: "该操作不可撤销，请谨慎操作",
+                                okText: "确定",
+                                cancelText: "取消",
+                                onConfirm: () => {
+                                    let targetIdx: number;
+                                    for (let i = 0; i < IndexGlobal.inst.dbListImg.length; i++) {
+                                        let imgData = IndexGlobal.inst.dbListImg [i];
+                                        if (imgData.dbImgData.id == MgrData.inst.get (MgrDataItem.DB_CURRENT_IMG)) {
+                                            targetIdx = i;
+                                            break;
+                                        };
+                                    };
+                                    // 删除该索引上的单位
+                                    IndexGlobal.inst.dbDelete (targetIdx);
+                                
+                                    // 尽量维持选择状态
+                                    targetIdx = Math.min (targetIdx, IndexGlobal.inst.dbListImg.length - 1);
+                                    if (0 <= targetIdx) {
+                                        IndexGlobal.inst.dbSelect (IndexGlobal.inst.dbListImg [targetIdx].dbImgData.id);
+                                    };
+                                    MgrData.inst.callDataChange ();
+                                },
+                                onCancel: () => {
+            
+                                },
+                            },
+                            ReactComponentExtend.instantiateTag (
+                                NodeModules.antd.Button,
+                                {
+                                    onClick: () => {
+                                        
+                                    },
+                                    style: {
+                                        [MgrDomDefine.STYLE_FLEX_GROW]: 1,
+                                        [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                                    }
+                                },
+                    
+                                `删除当前文档`
+                            )
                         )
                     )
                 )
-            )
+            ),
         );
     }
 }

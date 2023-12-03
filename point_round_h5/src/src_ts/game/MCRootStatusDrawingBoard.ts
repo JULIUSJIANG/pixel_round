@@ -19,6 +19,7 @@ import MCRootStatusDrawingBoardHoverStatusEntered from "./MCRootStatusDrawingBoa
 import MCRootStatusDrawingBoardHoverStatusLeaved from "./MCRootStatusDrawingBoardHoverStatusLeaved";
 import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus";
 import MCRootStatusDrawingBoardOpStatusEraser from "./MCRootStatusDrawingBoardOpStatusEraser";
+import MCRootStatusDrawingBoardOpStatusPaintBucket from "./MCRootStatusDrawingBoardOpStatusPaintBucket";
 import MCRootStatusDrawingBoardOpStatusPencil from "./MCRootStatusDrawingBoardOpStatusPencil";
 import MCRootStatusDrawingBoardOpStatusStraw from "./MCRootStatusDrawingBoardOpStatusStraw";
 import MCRootStatusDrawingBoardTouchPos from "./MCRootStatusDrawingBoardTouchPos";
@@ -40,9 +41,10 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
         this.touchPosEnd = new MCRootStatusDrawingBoardTouchPos (this);
         this.touchCurrentPos = this.touchPosMove;
 
-        this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil (this, 0, `画笔 [Q]`, `KeyQ`);
-        this.opStatusStraw = new MCRootStatusDrawingBoardOpStatusStraw (this, 1, `拾色器 [W]`, `KeyW`);
-        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser (this, 2, `橡皮擦 [E]`, `KeyE`);
+        this.opStatusPencil = new MCRootStatusDrawingBoardOpStatusPencil (this, 0, `画笔 [${IndexGlobal.TIPS_PENCIL}]`, IndexGlobal.TIPS_PENCIL_KEY);
+        this.opStatusPaintBucket = new MCRootStatusDrawingBoardOpStatusPaintBucket (this, 1, `油漆桶 [${IndexGlobal.TIPS_PAINT_BUCKET}]`, IndexGlobal.TIPS_PAINT_BUCKET_KEY);
+        this.opStatusStraw = new MCRootStatusDrawingBoardOpStatusStraw (this, 2, `拾色器 [${IndexGlobal.TIPS_COLOR_PICKER}]`, IndexGlobal.TIPS_COLOR_PICKER_KEY);
+        this.opStatusEraser = new MCRootStatusDrawingBoardOpStatusEraser (this, 3, `橡皮擦 [${IndexGlobal.TIPS_ERASER}]`, IndexGlobal.TIPS_ERASER_KEY);
 
         this.touchStatusEnded = new MCRootStatusDrawingBoardTouchStatusEnded (this);
         this.touchStatusStarted = new MCRootStatusDrawingBoardTouchStatusStarted (this);
@@ -72,6 +74,8 @@ class MCRootStatusDrawingBoard extends MCRootStatus {
     opMapIdToStatus = new Map <number, MCRootStatusDrawingBoardOpStatus> ();
 
     opStatusPencil: MCRootStatusDrawingBoardOpStatusPencil;
+
+    opStatusPaintBucket: MCRootStatusDrawingBoardOpStatusPaintBucket;
 
     opStatusEraser: MCRootStatusDrawingBoardOpStatusEraser;
 

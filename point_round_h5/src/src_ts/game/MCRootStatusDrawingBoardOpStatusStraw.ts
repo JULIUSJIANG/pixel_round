@@ -6,7 +6,7 @@ import MCRootStatusDrawingBoardOpStatus from "./MCRootStatusDrawingBoardOpStatus
 
 class MCRootStatusDrawingBoardOpStatusStraw extends MCRootStatusDrawingBoardOpStatus {
 
-    arruint8 = new Uint8Array (4);
+    arrUint8 = new Uint8Array (4);
 
     onUpdate (dataSrc: DomDrawingBoardRightPaintCanvas, x: number, y: number, w: number, h: number): void {
         dataSrc.jWebgl.useFbo (dataSrc.fboCache);
@@ -20,9 +20,9 @@ class MCRootStatusDrawingBoardOpStatusStraw extends MCRootStatusDrawingBoardOpSt
             JWebglEnum.TexImage2DFormat.RGBA, 
             JWebglEnum.VertexAttriPointerType.UNSIGNED_BYTE,
 
-            this.arruint8
+            this.arrUint8
         );
-        let colorHex = `${this.parseNumberToHex (this.arruint8 [0])}${this.parseNumberToHex (this.arruint8 [1])}${this.parseNumberToHex (this.arruint8 [2])}${this.parseNumberToHex (this.arruint8 [3])}`;
+        let colorHex = `${this.parseNumberToHex (this.arrUint8 [0])}${this.parseNumberToHex (this.arrUint8 [1])}${this.parseNumberToHex (this.arrUint8 [2])}${this.parseNumberToHex (this.arrUint8 [3])}`;
         MgrData.inst.set (MgrDataItem.DB_COLOR, colorHex);
     }
 

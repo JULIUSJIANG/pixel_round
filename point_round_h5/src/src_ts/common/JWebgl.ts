@@ -194,6 +194,8 @@ class JWebgl {
     
         this.canvasWebglCtx.disable (JWebglEnum.EnableCap.DEPTH_TEST);
         this.canvasWebglCtx.disable (JWebglEnum.EnableCap.BLEND);
+        // this.canvasWebglCtx.enable (JWebglEnum.EnableCap.BLEND);
+        // this.canvasWebglCtx.blendFunc (JWebglEnum.BlendFunc.ONE, JWebglEnum.BlendFunc.ZERO);
         this.canvasWebglCtx.clearColor (0, 0, 0, 0);
 
         this._attributeBuffer = this.canvasWebglCtx.createBuffer ();
@@ -527,6 +529,19 @@ class JWebgl {
         this.programImg.draw ();
 
         objectPool.push (mat4M, mat4V, mat4P, mat4Mvp);
+    }
+
+    _fillFboByUint8ArrTex: JWebglTexture;
+
+    fillFboByUint8Arr (fboDisplay: JWebglFrameBuffer, dataBin: Uint8Array, width: number, height: number) {
+        let fbo = this.getFbo (width, height, JWebglEnum.TexParameteriParam.NEAREST);
+        if (this._fillFboByUint8ArrTex == null) {
+            this._fillFboByUint8ArrTex = this.createTexture ();
+        };
+        this._fillFboByUint8ArrTex.fillByUint8Array (dataBin, width, height, 0);
+        this.fillFboByTexRev (fbo, this._fillFboByUint8ArrTex.texture);
+        this.fillFboByFbo (fboDisplay, fbo);
+        this.destroyFbo (fbo);
     }
 }
 

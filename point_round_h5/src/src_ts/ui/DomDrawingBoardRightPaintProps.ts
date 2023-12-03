@@ -298,6 +298,8 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                             [MgrDomDefine.PROPS_VALUE]: `${MgrData.inst.get (MgrDataItem.DB_COLOR)}`,
 
                             onChange: (val) => {
+                                // 自动转为画笔
+                                IndexGlobal.inst.mcRoot.statusDrawingBoard.opEnter (IndexGlobal.inst.mcRoot.statusDrawingBoard.opStatusPencil);
                                 val = val.toHex();
                                 MgrData.inst.set (MgrDataItem.DB_COLOR, val);
                                 MgrData.inst.callDataChange ();

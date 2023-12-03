@@ -90,6 +90,12 @@
   > 
   > ![image (2)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/ac95002b-1608-4c7b-947a-378927ab84f0)
 
+## 未来计划
+
+* 扩大抗锯齿的检测范围，兼容更多的角度需要
+
+* 给画板添加更多的操作选项
+
 ## 源码本地运行
 
 * 该工程的开发环境为 NodeJS + TypeScript + React + Antd，且涉及大量的 WebGL 内容。

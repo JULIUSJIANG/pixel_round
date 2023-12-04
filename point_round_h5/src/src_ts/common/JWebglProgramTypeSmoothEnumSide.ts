@@ -117,26 +117,52 @@ void main() {
 
     vec4 colorResult = posCenterEnumForward;
     // 仅针对有平滑的情况
+    // if (match (posCenterCornerForward.a, 1.0)) {
+    //     // 不是小平滑，才可能进行变化
+    //     if (!match (colorResult.r, 1.0)) {
+    //         // 向左倾斜
+    //         if (
+    //                 checkEqual (posLeftColor, posFLColor)
+    //             &&  checkEqual (posFLColor, posFRColor)
+    //             && !match (posCenterCornerLeft.a, 1.0)
+    //             && !match (posCenterCornerRight.a, 1.0)
+    //         ) 
+    //         {
+    //             colorResult.g = 1.0;
+    //         };
+    //         // 向右倾斜
+    //         if (
+    //                 checkEqual (posFLColor, posFRColor)
+    //             &&  checkEqual (posFRColor, posRightColor)
+    //             && !match (posCenterCornerLeft.a, 1.0)
+    //             && !match (posCenterCornerRight.a, 1.0)
+    //         ) 
+    //         {
+    //             colorResult.b = 1.0;
+    //         };
+    //     };
+    // };
+
+    // 仅针对有平滑的情况
     if (match (posCenterCornerForward.a, 1.0)) {
         // 不是小平滑，才可能进行变化
         if (!match (colorResult.r, 1.0)) {
             // 向左倾斜
             if (
                     checkEqual (posLeftColor, posFLColor)
-                &&  checkEqual (posFLColor, posFRColor)
                 && !match (posCenterCornerLeft.a, 1.0)
                 && !match (posCenterCornerRight.a, 1.0)
+                && match (posCenterCornerForward.r, 1.0)
             ) 
             {
                 colorResult.g = 1.0;
             };
-
             // 向右倾斜
             if (
-                    checkEqual (posFLColor, posFRColor)
-                &&  checkEqual (posFRColor, posRightColor)
+                    checkEqual (posRightColor, posFRColor)
                 && !match (posCenterCornerLeft.a, 1.0)
                 && !match (posCenterCornerRight.a, 1.0)
+                && match (posCenterCornerForward.g, 1.0)
             ) 
             {
                 colorResult.b = 1.0;

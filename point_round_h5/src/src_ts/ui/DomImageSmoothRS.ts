@@ -31,10 +31,6 @@ class DomImageSmoothRS {
      */
     expSmoothOrdinaryTo: (com: DomImageSmooth, x: number, y: number) => void;
     /**
-     * 把圆角平滑绘制到某位置
-     */
-    expSmoothCircleTo: (com: DomImageSmooth, x: number, y: number) => void;
-    /**
      * 绘制准星
      */
     expDrawFocus: (com: DomImageSmooth) => void;
@@ -56,7 +52,6 @@ class DomImageSmoothRS {
 
         expDrawFbo: (com: DomImageSmooth, fbo: JWebglFrameBuffer, x: number, y: number) => void,
         expSmoothOrdinaryTo: (com: DomImageSmooth, x: number, y: number) => void,
-        expSmoothCircleTo: (com: DomImageSmooth, x: number, y: number) => void,
         expDrawFocus: (com: DomImageSmooth) => void,
 
         commonHorCount: number,
@@ -70,7 +65,6 @@ class DomImageSmoothRS {
 
         this.expDrawFbo = args.expDrawFbo;
         this.expSmoothOrdinaryTo = args.expSmoothOrdinaryTo;
-        this.expSmoothCircleTo = args.expSmoothCircleTo;
         this.expDrawFocus = args.expDrawFocus;
 
         this.commonHorCount = args.commonHorCount;
@@ -107,10 +101,6 @@ namespace DomImageSmoothRS {
             com.jWebgl.programSmoothDisplayCircle.uTextureSize.fill (com.props.cacheTexWidth, com.props.cacheTexHeight);
             com.jWebgl.programSmoothDisplayCircle.uTextureCorner.fillByFbo (com.fboCornerData);
             com.jWebgl.programSmoothDisplayCircle.uTextureEnum.fillByFbo (com.fboEnumData);
-            com.jWebgl.programSmoothDisplayCircle.uTextureAreaLeft.fillByFbo (com.fboAreaLeft);
-            com.jWebgl.programSmoothDisplayCircle.uTextureAreaRight.fillByFbo (com.fboAreaRight);
-            com.jWebgl.programSmoothDisplayCircle.uTextureAngleLeft.fillByFbo (com.fboAngleLeft);
-            com.jWebgl.programSmoothDisplayCircle.uTextureAngleRight.fillByFbo (com.fboAngleRight);
             com.jWebgl.programSmoothDisplayCircle.add (
                 JWebglMathVector4.centerO,
                 JWebglMathVector4.axisZStart,
@@ -126,9 +116,6 @@ namespace DomImageSmoothRS {
 
         },
         expSmoothOrdinaryTo: (com, x, y) => {
-
-        },
-        expSmoothCircleTo: (com, x, y) => {
 
         },
         expDrawFocus: (com) => {
@@ -194,29 +181,6 @@ namespace DomImageSmoothRS {
                 2
             );
             com.jWebgl.programSmoothDisplayOrdinary.draw ();
-            IndexGlobal.smoothRS ().expDrawFbo (com, com.fboDisplay, x, y);
-        },
-        expSmoothCircleTo: (com, x, y) => {
-            // 最终结果
-            com.jWebgl.useFbo (com.fboDisplay);
-            com.jWebgl.clear ();
-            com.jWebgl.programSmoothDisplayCircle.uMvp.fill (com.mat4Mvp);
-            com.jWebgl.programSmoothDisplayCircle.uTextureMain.fillByFbo (com.fboTexture);
-            com.jWebgl.programSmoothDisplayCircle.uTextureSize.fill (com.props.cacheTexWidth, com.props.cacheTexHeight);
-            com.jWebgl.programSmoothDisplayCircle.uTextureCorner.fillByFbo (com.fboCornerData);
-            com.jWebgl.programSmoothDisplayCircle.uTextureEnum.fillByFbo (com.fboEnumData);
-            com.jWebgl.programSmoothDisplayCircle.uTextureAreaLeft.fillByFbo (com.fboAreaLeft);
-            com.jWebgl.programSmoothDisplayCircle.uTextureAreaRight.fillByFbo (com.fboAreaRight);
-            com.jWebgl.programSmoothDisplayCircle.uTextureAngleLeft.fillByFbo (com.fboAngleLeft);
-            com.jWebgl.programSmoothDisplayCircle.uTextureAngleRight.fillByFbo (com.fboAngleRight);
-            com.jWebgl.programSmoothDisplayCircle.add (
-                JWebglMathVector4.centerO,
-                JWebglMathVector4.axisZStart,
-                JWebglMathVector4.axisYEnd,
-                2,
-                2
-            );
-            com.jWebgl.programSmoothDisplayCircle.draw ();
             IndexGlobal.smoothRS ().expDrawFbo (com, com.fboDisplay, x, y);
         },
         expDrawFocus: (com) => {

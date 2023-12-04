@@ -35,14 +35,6 @@ export default class JWebglProgramTypeSmoothDisplayCircle extends JWebglProgram 
     uTextureCorner: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureEnum: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureAreaLeft: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureAreaRight: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureAngleLeft: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureAngleRight: JWebglProgramUniformSampler2D;
 
     @JWebglProgram.attribute (JWebglProgramAttributeVec4)
     aPosition: JWebglProgramAttributeVec4;
@@ -110,30 +102,6 @@ vec4 getEnumCache (vec2 posTex, vec2 dir) {
     return getTextureRGBA (${this.uTextureEnum}, posCorner);
 }
 
-// 获取平滑区域的缓存数据 - 左
-vec4 getAreaCacheLeft (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureAreaLeft}, posCorner);
-}
-
-// 获取平滑区域的缓存数据 - 右
-vec4 getAreaCacheRight (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureAreaRight}, posCorner);
-}
-
-// 获取角度区域的缓存数据 - 左
-vec4 getAngleCacheLeft (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureAngleLeft}, posCorner);
-}
-
-// 获取角度区域的缓存数据 - 右
-vec4 getAngleCacheRight (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureAngleRight}, posCorner);
-}
-
 // 进行平滑
 void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 smoothColor) {
     // 向量: p1 -> p2
@@ -160,10 +128,6 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 posCenter = floor (pos) + vec2 (0.5, 0.5);
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
     vec4 posCenterEnumForward = getEnumCache (posCenter, vecForward);
-    vec4 posCenterAreaForwardLeft = getAreaCacheLeft (posCenter, vecForward);
-    vec4 posCenterAreaForwardRight = getAreaCacheRight (posCenter, vecForward);
-    vec4 posCenterAngleForwardLeft = getAngleCacheLeft (posCenter, vecForward);
-    vec4 posCenterAngleForwardRight = getAngleCacheRight (posCenter, vecForward);
     vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
 
     vec2 posLeft = posCenter - vecRight;
@@ -189,66 +153,24 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
         colorSmooth = posFRColor;
     };
 
-    // 涉猎左管制区域
-    bool matchLeft = match (posCenterAngleForwardLeft.a, 1.0)
-        && posCenterAngleForwardLeft.r <= posAngle
-        && posAngle <= posCenterAngleForwardLeft.g;
+    // 需要平滑
+    if (match (posCenterCornerForward.a, 1.0)) {
+        // 小平滑
+        connect (colorSum, pos, posFL, posFR, ${this.dForwardSmall}, colorSmooth);
 
-    // 涉猎右管制区域
-    bool matchRight = match (posCenterAngleForwardRight.a, 1.0)
-        && posCenterAngleForwardRight.r <= posAngle
-        && posAngle <= posCenterAngleForwardRight.g;
-
-    // 涉猎管制区
-    if (
-           matchLeft
-        || matchRight
-    ) 
-    {
-        // 相对圆心的偏离值
-        vec4 circleDataSrc = posCenterAreaForwardRight;
-        // 是左管制区
-        if (matchLeft)
-        {
-            circleDataSrc = posCenterAreaForwardLeft;
+        // 经典平滑
+        if (match (posCenterEnumForward.r, 0.0)) {
+            connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorSmooth);
         };
 
-        // 还原数据
-        circleDataSrc.r = (circleDataSrc.r - 0.5) * 2.0;
-        circleDataSrc.g = (circleDataSrc.g - 0.5) * 2.0;
-        circleDataSrc *= ${this.dScale};
-        circleDataSrc.a = 1.0;
-
-        // 圆心位置
-        vec2 circleCenter = posCenter + circleDataSrc.r * vecRightNormalized + circleDataSrc.g * vecForwardNormalized;
-        // 与圆心距离
-        float distance = length (pos - circleCenter);
-        // 超出半径，取平滑颜色
-        if (circleDataSrc.b <= distance) {
-            colorSum = colorSmooth;
+        // 左倾平滑
+        if (match (posCenterEnumForward.g, 1.0)) {
+            connect (colorSum, pos, posLeft, posFR, ${this.dSide}, colorSmooth);
         };
-    }
-    // 否则采纳默认平滑
-    else {
-        // 需要平滑
-        if (match (posCenterCornerForward.a, 1.0)) {
-            // 小平滑
-            connect (colorSum, pos, posFL, posFR, ${this.dForwardSmall}, colorSmooth);
-    
-            // 经典平滑
-            if (match (posCenterEnumForward.r, 0.0)) {
-                connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorSmooth);
-            };
-    
-            // 左倾平滑
-            if (match (posCenterEnumForward.g, 1.0)) {
-                connect (colorSum, pos, posLeft, posFR, ${this.dSide}, colorSmooth);
-            };
-    
-            // 右倾平滑
-            if (match (posCenterEnumForward.b, 1.0)) {
-                connect (colorSum, pos, posFL, posRight, ${this.dSide}, colorSmooth);
-            };
+
+        // 右倾平滑
+        if (match (posCenterEnumForward.b, 1.0)) {
+            connect (colorSum, pos, posFL, posRight, ${this.dSide}, colorSmooth);
         };
     };
 }

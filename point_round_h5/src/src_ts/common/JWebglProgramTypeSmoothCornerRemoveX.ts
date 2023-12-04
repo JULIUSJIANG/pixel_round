@@ -21,8 +21,6 @@ export default class JWebglProgramTypeSmoothCornerRemoveX extends JWebglProgram 
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureMain: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureTickness: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureCorner: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformFloat)
     uRight: JWebglProgramUniformFloat;
@@ -89,27 +87,19 @@ void main() {
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
-    vec4 posCenterColorTickness = getTextureRGBA (${this.uTextureTickness}, posCenter);
     vec4 posCenterColorMain = getTextureRGBA (${this.uTextureMain}, posCenter);
 
     vec2 posForward = posCenter + vecForward;
     vec4 posForwardCornerBack = getCornerCache (posForward, - vecForward);
-    vec4 posForwardColorTickness = getTextureRGBA (${this.uTextureTickness}, posForward);
     vec4 posForwardColorMain = getTextureRGBA (${this.uTextureMain}, posForward);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
     vec4 posFLCornerRight = getCornerCache (posFL, vecRight);
-    vec4 posFLColorTickness = getTextureRGBA (${this.uTextureTickness}, posFL);
     vec4 posFLColorMain = getTextureRGBA (${this.uTextureMain}, posFL);
 
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRCornerLeft = getCornerCache (posFR, - vecRight);
-    vec4 posFRColorTickness = getTextureRGBA (${this.uTextureTickness}, posFR);
     vec4 posFRColorMain = getTextureRGBA (${this.uTextureMain}, posFR);
-
-    // 厚度信息
-    float ticknessMain = posCenterColorTickness.r + posForwardColorTickness.r;
-    float ticknessSide = posFLColorTickness.r + posFRColorTickness.r;
 
     // 明亮
     float lightMain = (posCenterColorMain.r + posCenterColorMain.g + posCenterColorMain.b) * posCenterColorMain.a;
@@ -129,10 +119,6 @@ void main() {
             && !checkEqual (posFLColorMain, posFRColorMain)
         ) 
         {
-            posCenterCornerForward.a = 0.0;
-        }
-        // 否则根据厚度信息作出判断
-        else if (ticknessMain < ticknessSide) {
             posCenterCornerForward.a = 0.0;
         }
         // 否则谁比较暗，谁就被认为是线条，线条上的平滑取消

@@ -533,15 +533,20 @@ class JWebgl {
 
     _fillFboByUint8ArrTex: JWebglTexture;
 
+    _fillFboByUint8ArrFbo: JWebglFrameBuffer;
+
     fillFboByUint8Arr (fboDisplay: JWebglFrameBuffer, dataBin: Uint8Array, width: number, height: number) {
-        let fbo = this.getFbo (width, height, JWebglEnum.TexParameteriParam.NEAREST);
         if (this._fillFboByUint8ArrTex == null) {
             this._fillFboByUint8ArrTex = this.createTexture ();
         };
         this._fillFboByUint8ArrTex.fillByUint8Array (dataBin, width, height, 0);
-        this.fillFboByTexRev (fbo, this._fillFboByUint8ArrTex.texture);
-        this.fillFboByFbo (fboDisplay, fbo);
-        this.destroyFbo (fbo);
+        if (this._fillFboByUint8ArrFbo == null || this._fillFboByUint8ArrFbo.width != width || this._fillFboByUint8ArrFbo.height != height) {
+            this.destroyFbo (this._fillFboByUint8ArrFbo);
+            this._fillFboByUint8ArrFbo = this.getFbo (width, height, JWebglEnum.TexParameteriParam.NEAREST);
+        };
+        // 直接把纹理填充到 fboDisplay 的话，效果不正确，最后也没找到问题在哪，但是这样套一层问题就不存在，暂时先这么处理
+        this.fillFboByTexRev (this._fillFboByUint8ArrFbo, this._fillFboByUint8ArrTex.texture);
+        this.fillFboByFbo (fboDisplay, this._fillFboByUint8ArrFbo);
     }
 }
 

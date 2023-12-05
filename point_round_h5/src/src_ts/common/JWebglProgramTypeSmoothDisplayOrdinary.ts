@@ -136,17 +136,17 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     // 需要平滑
     if (match (posTexCornerForward.a, 1.0)) {
         // 经典平滑
-        if (match (posTexEnumForward.r, 0.0)) {
+        if (match (posTexEnumForward.r, 0.0) && match (posTexEnumForward.g, 0.0)) {
             connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorSmooth);
         };
 
         // 左倾平滑
-        if (match (posTexEnumForward.g, 1.0)) {
+        if (match (posTexEnumForward.r, 1.0)) {
             connect (colorSum, pos, posLeft, posFR, ${this.dSide}, colorSmooth);
         };
 
         // 右倾平滑
-        if (match (posTexEnumForward.b, 1.0)) {
+        if (match (posTexEnumForward.g, 1.0)) {
             connect (colorSum, pos, posFL, posRight, ${this.dSide}, colorSmooth);
         };
     };

@@ -24,9 +24,7 @@ import JWebglProgramTypeSmoothCornerRemoveA from "./JWebglProgramTypeSmoothCorne
 import JWebglProgramTypeSmoothEnumRound from "./JWebglProgramTypeSmoothEnumRound";
 import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide";
 import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea";
-import JWebglProgramTypeSmoothDisplayCircle from "./JWebglProgramTypeSmoothDisplayCircle";
 import JWebglProgramTypeSmoothAngle from "./JWebglProgramTypeSmoothAngle";
-import MgrGlobal from "../mgr/MgrGlobal";
 import JWebglTexture from "./JWebglTexture";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
@@ -315,10 +313,7 @@ class JWebgl {
 
     @program (JWebglProgramTypeSmoothDisplayOrdinary)
     programSmoothDisplayOrdinary: JWebglProgramTypeSmoothDisplayOrdinary;
-
-    @program (JWebglProgramTypeSmoothDisplayCircle)
-    programSmoothDisplayCircle: JWebglProgramTypeSmoothDisplayCircle;
-
+    
     /**
      * 模型矩阵
      */

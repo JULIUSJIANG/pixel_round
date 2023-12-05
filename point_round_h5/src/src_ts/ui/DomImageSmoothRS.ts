@@ -96,19 +96,19 @@ namespace DomImageSmoothRS {
             // 最终结果
             com.jWebgl.useFbo (com.fboDisplay);
             com.jWebgl.clear ();
-            com.jWebgl.programSmoothDisplayCircle.uMvp.fill (com.mat4Mvp);
-            com.jWebgl.programSmoothDisplayCircle.uTextureMain.fillByFbo (com.fboTexture);
-            com.jWebgl.programSmoothDisplayCircle.uTextureSize.fill (com.props.cacheTexWidth, com.props.cacheTexHeight);
-            com.jWebgl.programSmoothDisplayCircle.uTextureCorner.fillByFbo (com.fboCornerData);
-            com.jWebgl.programSmoothDisplayCircle.uTextureEnum.fillByFbo (com.fboEnumData);
-            com.jWebgl.programSmoothDisplayCircle.add (
+            com.jWebgl.programSmoothDisplayOrdinary.uMvp.fill (com.mat4Mvp);
+            com.jWebgl.programSmoothDisplayOrdinary.uTextureMain.fillByFbo (com.fboTexture);
+            com.jWebgl.programSmoothDisplayOrdinary.uTextureSize.fill (com.props.cacheTexWidth, com.props.cacheTexHeight);
+            com.jWebgl.programSmoothDisplayOrdinary.uTextureCorner.fillByFbo (com.fboCornerData);
+            com.jWebgl.programSmoothDisplayOrdinary.uTextureEnum.fillByFbo (com.fboEnumData);
+            com.jWebgl.programSmoothDisplayOrdinary.add (
                 JWebglMathVector4.centerO,
                 JWebglMathVector4.axisZStart,
                 JWebglMathVector4.axisYEnd,
                 2,
                 2
             );
-            com.jWebgl.programSmoothDisplayCircle.draw ();
+            com.jWebgl.programSmoothDisplayOrdinary.draw ();
             com.jWebgl.fillFboByFbo (null, com.fboDisplay);
         },
 
@@ -231,7 +231,7 @@ namespace DomImageSmoothRS {
             com.jWebgl.programLine.draw ();
         },
 
-        commonHorCount: 7,
+        commonHorCount: 5,
         commonVerCount: 4,
     });
 }

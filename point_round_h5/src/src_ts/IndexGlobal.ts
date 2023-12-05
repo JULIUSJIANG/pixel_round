@@ -296,7 +296,7 @@ namespace IndexGlobal {
     /**
      * 像素尺寸到屏幕尺寸的转换 - 最小值
      */
-    export const DB_PIXEL_TO_SCREEN_MIN = 2;
+    export const DB_PIXEL_TO_SCREEN_MIN = 1;
     /**
      * 像素尺寸到屏幕尺寸的转换 - 最大值
      */

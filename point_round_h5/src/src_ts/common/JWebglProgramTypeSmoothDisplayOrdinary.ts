@@ -16,8 +16,6 @@ export default class JWebglProgramTypeSmoothDisplayOrdinary extends JWebglProgra
 
     @JWebglProgram.define (JWEbglProgramDefine, `0.3535`)
     dForward: JWEbglProgramDefine;
-    @JWebglProgram.define (JWEbglProgramDefine, `0.2071`)
-    dForwardSmall: JWEbglProgramDefine;
     @JWebglProgram.define (JWEbglProgramDefine, `0.2236`)
     dSide: JWEbglProgramDefine;
 
@@ -61,7 +59,7 @@ vec4 getTextureRGBA (sampler2D tex, vec2 uv) {
         || 1.0 < pos.y
     )
     {
-        return vec4 (0, 0, 0, 0);
+        return vec4 (0, 0, 0, 0); 
     };
     return texture2D (tex, pos);
 }
@@ -81,6 +79,18 @@ bool checkEqual (vec4 colorA, vec4 colorB) {
     ) <= 0.01;
 }
 
+// 获取角的缓存数据
+vec4 getCornerCache (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureCorner}, posCorner);
+}
+
+// 获取平滑类型的缓存数据
+vec4 getEnumCache (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureEnum}, posCorner);
+}
+
 // 进行平滑
 void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 smoothColor) {
     // 向量: p1 -> p2
@@ -95,18 +105,6 @@ void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 sm
     float l = step (shadow, tickness);
     // 根据权重，进行取色
     sum = mix (sum, smoothColor, l); 
-}
-
-// 获取角的缓存数据
-vec4 getCornerCache (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureCorner}, posCorner);
-}
-
-// 获取平滑类型的缓存数据
-vec4 getEnumCache (vec2 posTex, vec2 dir) {
-    vec2 posCorner = posTex + dir / 4.0;
-    return getTextureRGBA (${this.uTextureEnum}, posCorner);
 }
 
 // 使用一个角对总颜色进行影响
@@ -134,11 +132,9 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     if (match (posTexCornerForward.g, 1.0)) {
         colorSmooth = posFRColor;
     };
+
     // 需要平滑
     if (match (posTexCornerForward.a, 1.0)) {
-        // 小平滑
-        connect (colorSum, pos, posFL, posFR, ${this.dForwardSmall}, colorSmooth);
-
         // 经典平滑
         if (match (posTexEnumForward.r, 0.0)) {
             connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorSmooth);

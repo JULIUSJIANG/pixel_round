@@ -234,21 +234,21 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
 
         // 得到要处理的源纹理
         this.step0Texture ();
-        // 对于每个像素点按照 4 个角分成 4 个像素，每个像素的 r、g 分别记录左、右边界是否平坦
+        // 对于每个像素点按照 4 个角分成 4 个像素，每个像素的 r、g 分别记录左、右边界是否平坦，每个角绝不会为平坦的一侧进行平滑
         this.step0Flat ();
 
-        // 根据平坦情况，确定哪些角需要进行平滑，且确定平滑的颜色取该角的哪一方
+        // 对于每个像素点按照 4 个角分成 4 个像素，a 为 1 的时候，说明该角会被平滑掉，此时 r 为 1 的时候，说明平滑颜色取左侧，g 为 1 对应右侧
         this.step1CornerData (1, 0);
         // 剔除明显多余的平滑
         this.step2CornerRemA (2, 0);
-        // 剔除交叉平滑
+        // 剔除 4 相邻平滑
         this.step3CornerRemX (3, 0);
         // 剔除 3 向相邻平滑
         this.step4CornerRemT (4, 0);
         // 剔除 2 向相邻平滑
-        this.step5CornerRemI (5, 0);
-        // 扩大平滑距离，让更倾斜的线看起来也自然
-        this.step6EnumSide (6, 0);
+        this.step5CornerRemI (0, 2);
+        // 扩大检测范围，让线可以更加倾斜
+        this.step6EnumSide (1, 2);
 
         IndexGlobal.smoothRS ().dbFinally (this);
 
@@ -500,6 +500,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothEnumSide.draw ();
+
         IndexGlobal.smoothRS ().expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);
         IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);

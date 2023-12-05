@@ -249,6 +249,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         this.step5CornerRemI (0, 2);
         // 扩大检测范围，让线可以更加倾斜
         this.step6EnumSide (1, 2);
+        // 修补部分缺口
+        this.step7EnumSideConnect (2, 2);
 
         IndexGlobal.smoothRS ().dbFinally (this);
 
@@ -500,6 +502,32 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothEnumSide.draw ();
+
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
+        this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);
+        IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
+    }
+
+    /**
+     * 平滑数据纹理 -> 平滑数据纹理
+     */
+    step7EnumSideConnect (posX: number, posY: number) {
+        this.jWebgl.useFbo (this.fboEnumDataCache);
+        this.jWebgl.clear ();
+        this.jWebgl.programSmoothEnumSideConnect.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmoothEnumSideConnect.uTextureSize.fill (this.props.cacheTexWidth, this.props.cacheTexHeight);
+        this.jWebgl.programSmoothEnumSideConnect.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothEnumSideConnect.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothEnumSideConnect.uTextureEnum.fillByFbo (this.fboEnumData);
+        this.jWebgl.programSmoothEnumSideConnect.uRight.fill (1);
+        this.jWebgl.programSmoothEnumSideConnect.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.jWebgl.programSmoothEnumSideConnect.draw ();
 
         IndexGlobal.smoothRS ().expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);

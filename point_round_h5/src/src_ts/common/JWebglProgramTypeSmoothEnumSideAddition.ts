@@ -135,6 +135,7 @@ void main() {
     // 自己左倾平滑，但是左后方格前方不平滑
     if (
            match (posCenterEnumForward.r, 1.0)
+        && match (posCenterEnumForward.g, 0.0)
         && match (posBLCornerForward.a, 0.0)
         && match (posLeftCornerBack.a, 0.0)
     )
@@ -146,6 +147,7 @@ void main() {
     if (
            match (posCenterCornerForward.a, 0.0)
         && match (posFREnumForward.r, 1.0)
+        && match (posFREnumForward.g, 0.0)
         && match (posFLCornerBack.a, 0.0)
     )
     {
@@ -155,6 +157,7 @@ void main() {
     // 自己右倾平滑，但是右后方格前方不平滑
     if (
            match (posCenterEnumForward.g, 1.0)
+        && match (posCenterEnumForward.r, 0.0)
         && match (posBRCornerForward.a, 0.0)
         && match (posRightCornerBack.a, 0.0)
     )
@@ -166,6 +169,7 @@ void main() {
     if (
            match (posCenterCornerForward.a, 0.0)
         && match (posFLEnumForward.g, 1.0)
+        && match (posFLEnumForward.r, 0.0)
         && match (posFRCornerBack.a, 0.0)
     )
     {

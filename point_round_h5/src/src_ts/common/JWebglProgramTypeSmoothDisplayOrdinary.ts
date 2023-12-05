@@ -13,11 +13,18 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2";
  * 正式平滑 - 经典款，绝大部分交界处不可导
  */
 export default class JWebglProgramTypeSmoothDisplayOrdinary extends JWebglProgram {
-
+    // 经典平滑厚度
     @JWebglProgram.define (JWEbglProgramDefine, `0.3535`)
     dForward: JWEbglProgramDefine;
-    @JWebglProgram.define (JWEbglProgramDefine, `0.2236`)
+    // 侧边平滑厚度
+    @JWebglProgram.define (JWEbglProgramDefine, `0.4472`)
     dSide: JWEbglProgramDefine;
+    // 大倾斜厚度
+    @JWebglProgram.define (JWEbglProgramDefine, `0.4743`)
+    dL: JWEbglProgramDefine;
+    // 小倾斜厚度
+    @JWebglProgram.define (JWEbglProgramDefine, `0.1581`)
+    dS: JWEbglProgramDefine;
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
@@ -29,6 +36,8 @@ export default class JWebglProgramTypeSmoothDisplayOrdinary extends JWebglProgra
     uTextureCorner: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureEnum: JWebglProgramUniformSampler2D;
+    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
+    uTextureColorSelect: JWebglProgramUniformSampler2D;
 
     @JWebglProgram.attribute (JWebglProgramAttributeVec4)
     aPosition: JWebglProgramAttributeVec4;
@@ -91,6 +100,12 @@ vec4 getEnumCache (vec2 posTex, vec2 dir) {
     return getTextureRGBA (${this.uTextureEnum}, posCorner);
 }
 
+// 获取平滑颜色
+vec4 getColorSelectCache (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureColorSelect}, posCorner);
+}
+
 // 进行平滑
 void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 smoothColor) {
     // 向量: p1 -> p2
@@ -98,7 +113,7 @@ void connect (inout vec4 sum, vec2 uv, vec2 p1, vec2 p2, float tickness, vec4 sm
     // 向量: p1 -> p2 顺时针旋转 90 度
     dir = normalize (vec2 (dir.y, -dir.x));
     // 向量: p1 像素点中心 -> uv
-    vec2 lp = uv - (floor (p1) + 0.5);
+    vec2 lp = uv - p1;
     // lp 在 dir 上的投影，取值 0 - 1.4142135623730951;
     float shadow = dot (lp, dir);
     // 准线以内，对颜色进行替换
@@ -112,9 +127,13 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 posTex = floor (pos) + vec2 (0.5, 0.5);
     vec4 posTexCornerForward = getCornerCache (posTex, vecForward);
     vec4 posTexEnumForward = getEnumCache (posTex, vecForward);
+    vec4 colorSmooth = getColorSelectCache (posTex, vecForward);
     vec4 posTexColor = getTextureRGBA (${this.uTextureMain}, posTex);
     
     vec2 vecRight = vec2 (vecForward.y, -vecForward.x);
+
+    vec2 posForward = posTex + vecForward;
+    vec2 posBack = posTex - vecForward;
 
     vec2 posLeft = posTex - vecRight;
     vec2 posRight = posTex + vecRight;
@@ -125,29 +144,44 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 posFR = posTex + vecForward / 2.0 + vecRight / 2.0;
     vec4 posFRColor = getTextureRGBA (${this.uTextureMain}, posFR);
 
-    vec4 colorSmooth = posTexColor;
-    if (match (posTexCornerForward.r, 1.0)) {
-        colorSmooth = posFLColor;
-    };
-    if (match (posTexCornerForward.g, 1.0)) {
-        colorSmooth = posFRColor;
-    };
+    vec2 posBL = posTex + vecForward / 2.0 - vecRight / 2.0;
+    vec2 posBR = posTex + vecForward / 2.0 + vecRight / 2.0;
 
     // 需要平滑
-    if (match (posTexCornerForward.a, 1.0)) {
+    if (match (posTexEnumForward.a, 1.0)) {
+        // 向量起始位置
+        vec2 posStart = posTex + vecForward / 2.0;
         // 经典平滑
         if (match (posTexEnumForward.r, 0.0) && match (posTexEnumForward.g, 0.0)) {
-            connect (colorSum, pos, posFL, posFR, ${this.dForward}, colorSmooth);
+            connect (colorSum, pos, posStart, posStart + vecRight, ${this.dForward}, colorSmooth);
         };
-
         // 左倾平滑
         if (match (posTexEnumForward.r, 1.0)) {
-            connect (colorSum, pos, posLeft, posFR, ${this.dSide}, colorSmooth);
+            connect (colorSum, pos, posStart, posStart + vecRight / 2.0 * 3.0 + vecForward / 2.0, ${this.dSide}, colorSmooth);
         };
-
         // 右倾平滑
         if (match (posTexEnumForward.g, 1.0)) {
-            connect (colorSum, pos, posFL, posRight, ${this.dSide}, colorSmooth);
+            connect (colorSum, pos, posStart, posStart + vecRight / 2.0 * 3.0 - vecForward / 2.0, ${this.dSide}, colorSmooth);
+        };
+        // 大左倾正 y 方向
+        vec2 posEndLeft = posStart + vecRight / 2.0 * 2.0 + vecForward / 2.0 * 1.0;
+        // 大左倾平滑
+        if (match (posTexEnumForward.r, 0.7)) {
+            connect (colorSum, pos, posStart, posEndLeft, ${this.dL}, colorSmooth);
+        };
+        // 小左倾平滑
+        if (match (posTexEnumForward.r, 0.3)) {
+            connect (colorSum, pos, posStart, posEndLeft, ${this.dS}, colorSmooth);
+        };
+        // 大右倾正 y 方向
+        vec2 posEndRight = posStart + vecRight / 2.0 * 2.0 - vecForward / 2.0 * 1.0;
+        // 大右倾平滑
+        if (match (posTexEnumForward.g, 0.7)) {
+            connect (colorSum, pos, posStart, posEndRight, ${this.dL}, colorSmooth);
+        };
+        // 小右倾平滑
+        if (match (posTexEnumForward.g, 0.3)) {
+            connect (colorSum, pos, posStart, posEndRight, ${this.dS}, colorSmooth);
         };
     };
 }

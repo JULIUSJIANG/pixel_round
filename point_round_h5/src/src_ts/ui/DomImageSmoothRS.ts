@@ -101,6 +101,7 @@ namespace DomImageSmoothRS {
             com.jWebgl.programSmoothDisplayOrdinary.uTextureSize.fill (com.props.cacheTexWidth, com.props.cacheTexHeight);
             com.jWebgl.programSmoothDisplayOrdinary.uTextureCorner.fillByFbo (com.fboCornerData);
             com.jWebgl.programSmoothDisplayOrdinary.uTextureEnum.fillByFbo (com.fboEnumData);
+            com.jWebgl.programSmoothDisplayOrdinary.uTextureColorSelect.fillByFbo (com.fboColorSelect);
             com.jWebgl.programSmoothDisplayOrdinary.add (
                 JWebglMathVector4.centerO,
                 JWebglMathVector4.axisZStart,
@@ -173,6 +174,7 @@ namespace DomImageSmoothRS {
             com.jWebgl.programSmoothDisplayOrdinary.uTextureSize.fill (com.props.cacheTexWidth, com.props.cacheTexHeight);
             com.jWebgl.programSmoothDisplayOrdinary.uTextureCorner.fillByFbo (com.fboCornerData);
             com.jWebgl.programSmoothDisplayOrdinary.uTextureEnum.fillByFbo (com.fboEnumData);
+            com.jWebgl.programSmoothDisplayOrdinary.uTextureColorSelect.fillByFbo (com.fboColorSelect);
             com.jWebgl.programSmoothDisplayOrdinary.add (
                 JWebglMathVector4.centerO,
                 JWebglMathVector4.axisZStart,

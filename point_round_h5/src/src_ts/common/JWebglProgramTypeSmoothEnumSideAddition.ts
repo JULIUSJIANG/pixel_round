@@ -12,7 +12,7 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2";
 /**
  * 替换某些短距平滑为长距平滑
  */
-export default class JWebglProgramTypeSmoothEnumSide extends JWebglProgram {
+export default class JWebglProgramTypeSmoothEnumSideAddition extends JWebglProgram {
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
@@ -94,52 +94,82 @@ void main() {
     vec2 posCenter = floor (pos) + vec2 (0.5, 0.5);
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
+    vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
     vec4 posCenterCornerLeft = getCornerCache (posCenter, - vecRight);
     vec4 posCenterCornerRight = getCornerCache (posCenter, vecRight);
     vec4 posCenterEnumForward = getEnumCache (posCenter, vecForward);
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
-    vec4 posFLCornerBack = getCornerCache (posFL, - vecForward);
     vec4 posFLColor = getTextureRGBA (${this.uTextureMain}, posFL);
+    vec4 posFLCornerForward = getCornerCache (posFL, vecForward);
+    vec4 posFLCornerBack = getCornerCache (posFL, - vecForward);
+    vec4 posFLEnumBack = getEnumCache (posFL, - vecForward);
+    vec4 posFLEnumForward = getEnumCache (posFL, vecForward);
 
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
-    vec4 posFRCornerBack = getCornerCache (posFR, - vecForward);
     vec4 posFRColor = getTextureRGBA (${this.uTextureMain}, posFR);
+    vec4 posFRCornerForward = getCornerCache (posFR, vecForward);
+    vec4 posFRCornerBack = getCornerCache (posFR, - vecForward);
+    vec4 posFREnumBack = getEnumCache (posFR, - vecForward);
+    vec4 posFREnumForward = getEnumCache (posFR, vecForward);
 
     vec2 posLeft = posCenter - vecRight;
-    vec4 posLeftCornerBack = getCornerCache (posLeft, - vecForward);
     vec4 posLeftColor = getTextureRGBA (${this.uTextureMain}, posLeft);
+    vec4 posLeftCornerBack = getCornerCache (posLeft, - vecForward);
+    vec4 posLeftEnumBack = getEnumCache (posLeft, - vecForward);
 
     vec2 posRight = posCenter + vecRight;
-    vec4 posRightCornerBack = getCornerCache (posRight, - vecForward);
     vec4 posRightColor = getTextureRGBA (${this.uTextureMain}, posRight);
+    vec4 posRightCornerBack = getCornerCache (posRight, - vecForward);
+    vec4 posRightEnumBack = getEnumCache (posRight, - vecForward);
+
+    vec2 posBL = posCenter - vecForward / 2.0 - vecRight / 2.0;
+    vec4 posBLCornerForward = getCornerCache (posBL, vecForward);
+
+    vec2 posBR = posCenter - vecForward / 2.0 + vecRight / 2.0;
+    vec4 posBRCornerForward = getCornerCache (posBR, vecForward);
 
     vec4 colorResult = posCenterEnumForward;
 
-    // 仅针对有平滑的情况
-    if (match (posCenterCornerForward.a, 1.0)) {
-        // 向左倾斜
-        if (
-                checkEqual (posLeftColor, posFLColor)
-            && !match (posCenterCornerLeft.a, 1.0)
-            && !match (posCenterCornerRight.a, 1.0)
-            && match (posCenterCornerForward.r, 1.0)
-        ) 
-        {
-            colorResult.r = 1.0;
-        };
-        // 向右倾斜
-        if (
-                checkEqual (posRightColor, posFRColor)
-            && !match (posCenterCornerLeft.a, 1.0)
-            && !match (posCenterCornerRight.a, 1.0)
-            && match (posCenterCornerForward.g, 1.0)
-        ) 
-        {
-            colorResult.g = 1.0;
-        };
-
+    // 自己左倾平滑，但是左后方格前方不平滑
+    if (
+           match (posCenterEnumForward.r, 1.0)
+        && match (posBLCornerForward.a, 0.0)
+        && match (posLeftCornerBack.a, 0.0)
+    )
+    {
+        colorResult.r = 0.7;
+        colorResult.a = 1.0;
+    };
+    // 相对的情况
+    if (
+           match (posCenterCornerForward.a, 0.0)
+        && match (posFREnumForward.r, 1.0)
+        && match (posFLCornerBack.a, 0.0)
+    )
+    {
+        colorResult.r = 0.3;
+        colorResult.a = 1.0;
+    };
+    // 自己右倾平滑，但是右后方格前方不平滑
+    if (
+           match (posCenterEnumForward.g, 1.0)
+        && match (posBRCornerForward.a, 0.0)
+        && match (posRightCornerBack.a, 0.0)
+    )
+    {
+        colorResult.g = 0.7;
+        colorResult.a = 1.0;
+    };
+    // 相对的情况
+    if (
+           match (posCenterCornerForward.a, 0.0)
+        && match (posFLEnumForward.g, 1.0)
+        && match (posFRCornerBack.a, 0.0)
+    )
+    {
+        colorResult.g = 0.3;
         colorResult.a = 1.0;
     };
 

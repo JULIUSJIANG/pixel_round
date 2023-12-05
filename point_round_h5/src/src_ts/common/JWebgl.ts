@@ -23,6 +23,8 @@ import JWebglProgramTypeSmoothCornerRemoveA from "./JWebglProgramTypeSmoothCorne
 import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide";
 import JWebglTexture from "./JWebglTexture";
 import JWebglProgramTypeSmoothEnumSideConnect from "./JWebglProgramTypeSmoothEnumSideConnect";
+import JWebglProgramTypeSmoothEnumSideAddition from "./JWebglProgramTypeSmoothEnumSideAddition";
+import JWebglProgramTypeSmoothColorSelect from "./JWebglProgramTypeSmoothColorSelect";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -298,6 +300,12 @@ class JWebgl {
 
     @program (JWebglProgramTypeSmoothEnumSideConnect)
     programSmoothEnumSideConnect: JWebglProgramTypeSmoothEnumSideConnect;
+
+    @program (JWebglProgramTypeSmoothEnumSideAddition)
+    programSmoothEnumSideAddition: JWebglProgramTypeSmoothEnumSideAddition;
+
+    @program (JWebglProgramTypeSmoothColorSelect)
+    programSmoothColorSelect: JWebglProgramTypeSmoothColorSelect;
 
     @program (JWebglProgramTypeSmoothDisplayOrdinary)
     programSmoothDisplayOrdinary: JWebglProgramTypeSmoothDisplayOrdinary;

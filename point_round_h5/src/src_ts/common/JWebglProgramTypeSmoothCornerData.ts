@@ -154,6 +154,12 @@ void main() {
         colorResult.a = 0.0;
     };
 
+    // 同步 r、g
+    if (match (colorResult.a, 0.0)) {
+        colorResult.r = 0.0;
+        colorResult.g = 0.0;
+    };
+
     gl_FragColor = colorResult;
 }
         `;

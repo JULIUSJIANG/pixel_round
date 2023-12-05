@@ -18,6 +18,16 @@ class DomImageSmoothRS {
     name: string;
 
     /**
+     * 水平数量
+     */
+    commonHorCount: number;
+
+    /**
+     * 垂直数量
+     */
+    commonVerCount: number;
+
+    /**
      * 最终结果
      */
     dbFinally: (com: DomImageSmooth) => void;
@@ -34,41 +44,45 @@ class DomImageSmoothRS {
      * 绘制准星
      */
     expDrawFocus: (com: DomImageSmooth) => void;
+    /**
+     * 刷新平滑类型
+     */
+    expUpdateEnum: (com: DomImageSmooth) => void;
 
     /**
-     * 水平数量
+     * 高清值
      */
-    commonHorCount: number;
-    /**
-     * 垂直数量
-     */
-    commonVerCount: number;
+    getAntina: () => number;
 
     constructor (args: {
         id: number,
         name: string,
+        commonHorCount: number,
+        commonVerCount: number,
 
         dbFinally: (com: DomImageSmooth) => void,
 
         expDrawFbo: (com: DomImageSmooth, fbo: JWebglFrameBuffer, x: number, y: number) => void,
         expSmoothOrdinaryTo: (com: DomImageSmooth, x: number, y: number) => void,
         expDrawFocus: (com: DomImageSmooth) => void,
+        expUpdateEnum: (com: DomImageSmooth) => void,
 
-        commonHorCount: number,
-        commonVerCount: number,
+        getAntina: () => number,
     }) 
     {
         this.id = args.id;
         this.name = args.name;
+        this.commonHorCount = args.commonHorCount;
+        this.commonVerCount = args.commonVerCount;
 
         this.dbFinally = args.dbFinally;
 
         this.expDrawFbo = args.expDrawFbo;
         this.expSmoothOrdinaryTo = args.expSmoothOrdinaryTo;
         this.expDrawFocus = args.expDrawFocus;
+        this.expUpdateEnum = args.expUpdateEnum;
 
-        this.commonHorCount = args.commonHorCount;
-        this.commonVerCount = args.commonVerCount;
+        this.getAntina = args.getAntina;
 
         DomImageSmoothRS.listInst.push (this);
         DomImageSmoothRS.mapIdToInst.set (this.id, this);
@@ -91,9 +105,12 @@ namespace DomImageSmoothRS {
     export const db = new DomImageSmoothRS ({
         id: 0,
         name: `正常模式`,
-
+        commonHorCount: 1,
+        commonVerCount: 1,
+        
         dbFinally: (com) => {
             // 最终结果
+            com.updateFboSelect ();
             com.jWebgl.useFbo (com.fboDisplay);
             com.jWebgl.clear ();
             com.jWebgl.programSmoothDisplayOrdinary.uMvp.fill (com.mat4Mvp);
@@ -122,9 +139,13 @@ namespace DomImageSmoothRS {
         expDrawFocus: (com) => {
 
         },
+        expUpdateEnum: (com) => {
+            
+        },
 
-        commonHorCount: 1,
-        commonVerCount: 1,
+        getAntina: () => {
+            return IndexGlobal.ANTINA;
+        },
     });
     /**
      * 实验模式
@@ -132,6 +153,8 @@ namespace DomImageSmoothRS {
     export const exp = new DomImageSmoothRS ({
         id: 1,
         name: `调试模式`,
+        commonHorCount: 5,
+        commonVerCount: 4,
 
         dbFinally: (com) => {
 
@@ -167,6 +190,7 @@ namespace DomImageSmoothRS {
         },
         expSmoothOrdinaryTo: (com, x, y) => {
             // 最终结果
+            com.updateFboSelect ();
             com.jWebgl.useFbo (com.fboDisplay);
             com.jWebgl.clear ();
             com.jWebgl.programSmoothDisplayOrdinary.uMvp.fill (com.mat4Mvp);
@@ -232,9 +256,13 @@ namespace DomImageSmoothRS {
             };
             com.jWebgl.programLine.draw ();
         },
+        expUpdateEnum: (com) => {
+            com.updateEnum ();
+        },
 
-        commonHorCount: 5,
-        commonVerCount: 4,
+        getAntina: () => {
+            return IndexGlobal.ANTINA;
+        },
     });
 }
 

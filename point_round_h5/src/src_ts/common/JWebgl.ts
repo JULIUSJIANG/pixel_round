@@ -25,6 +25,7 @@ import JWebglTexture from "./JWebglTexture";
 import JWebglProgramTypeSmoothEnumSideConnect from "./JWebglProgramTypeSmoothEnumSideConnect";
 import JWebglProgramTypeSmoothEnumSideAddition from "./JWebglProgramTypeSmoothEnumSideAddition";
 import JWebglProgramTypeSmoothColorSelect from "./JWebglProgramTypeSmoothColorSelect";
+import JWebglProgramTypeSmoothEnumInit from "./JWebglProgramTypeSmoothEnumInit";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -251,8 +252,8 @@ class JWebgl {
             if (this._currFbo == null) {
                 this.canvasWebglCtx.bindFramebuffer (JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, null);
             };
+            this.canvasWebglCtx.viewport (0, 0, sizeWidth, sizeHeight);
         };
-        this.canvasWebglCtx.viewport (0, 0, sizeWidth, sizeHeight);
     }
 
     clear () {
@@ -294,6 +295,9 @@ class JWebgl {
 
     @program (JWebglProgramTypeSmoothCornerRemoveV)
     programSmoothCornerRemoveV: JWebglProgramTypeSmoothCornerRemoveV;
+
+    @program (JWebglProgramTypeSmoothEnumInit)
+    programSmoothEnumInit: JWebglProgramTypeSmoothEnumInit;
 
     @program (JWebglProgramTypeSmoothEnumSide)
     programSmoothEnumSide: JWebglProgramTypeSmoothEnumSide;
@@ -524,20 +528,12 @@ class JWebgl {
 
     _fillFboByUint8ArrTex: JWebglTexture;
 
-    _fillFboByUint8ArrFbo: JWebglFrameBuffer;
-
     fillFboByUint8Arr (fboDisplay: JWebglFrameBuffer, dataBin: Uint8Array, width: number, height: number) {
         if (this._fillFboByUint8ArrTex == null) {
             this._fillFboByUint8ArrTex = this.createTexture ();
         };
         this._fillFboByUint8ArrTex.fillByUint8Array (dataBin, width, height, 0);
-        if (this._fillFboByUint8ArrFbo == null || this._fillFboByUint8ArrFbo.width != width || this._fillFboByUint8ArrFbo.height != height) {
-            this.destroyFbo (this._fillFboByUint8ArrFbo);
-            this._fillFboByUint8ArrFbo = this.getFbo (width, height, JWebglEnum.TexParameteriParam.NEAREST);
-        };
-        // 直接把纹理填充到 fboDisplay 的话，效果不正确，最后也没找到问题在哪，但是这样套一层问题就不存在，暂时先这么处理
-        this.fillFboByTexRev (this._fillFboByUint8ArrFbo, this._fillFboByUint8ArrTex.texture);
-        this.fillFboByFbo (fboDisplay, this._fillFboByUint8ArrFbo);
+        this.fillFboByTexRev (fboDisplay, this._fillFboByUint8ArrTex.texture);
     }
 }
 

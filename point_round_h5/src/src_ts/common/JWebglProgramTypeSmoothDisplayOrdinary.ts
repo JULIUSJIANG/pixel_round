@@ -148,7 +148,7 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
     vec2 posBR = posTex + vecForward / 2.0 + vecRight / 2.0;
 
     // 需要平滑
-    if (match (posTexEnumForward.a, 1.0)) {
+    if (match (posTexCornerForward.a, 1.0) || match (posTexEnumForward.a, 1.0)) {
         // 向量起始位置
         vec2 posStart = posTex + vecForward / 2.0;
         // 经典平滑

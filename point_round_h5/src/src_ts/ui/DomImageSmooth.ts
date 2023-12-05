@@ -218,8 +218,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             this.fboEnumDataCache = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
         };
 
-        let fboDisplayWidth = this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA;
-        let fboDisplayHeight = this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.ANTINA;
+        let fboDisplayWidth = this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.smoothRS ().getAntina ();
+        let fboDisplayHeight = this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.smoothRS ().getAntina ();
         if (this.fboDisplay == null || this.fboDisplay.width != fboDisplayWidth || this.fboDisplay.height != fboDisplayHeight) {
             this.jWebgl.destroyFbo (this.fboDisplay);
             this.fboDisplay = this.jWebgl.getFbo (fboDisplayWidth, fboDisplayHeight, JWebglEnum.TexParameteriParam.LINEAR);
@@ -232,6 +232,14 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
 
         // 清除所有
         this.jWebgl.useFbo (null);
+        this.jWebgl.clear ();
+        this.jWebgl.useFbo (this.fboTexture);
+        this.jWebgl.clear ();
+        this.jWebgl.useFbo (this.fboFlat);
+        this.jWebgl.clear ();
+        this.jWebgl.useFbo (this.fboColorSelect);
+        this.jWebgl.clear ();
+        this.jWebgl.useFbo (this.fboCornerData);
         this.jWebgl.clear ();
         this.jWebgl.useFbo (this.fboEnumData);
         this.jWebgl.clear ();
@@ -254,9 +262,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         // 扩大检测范围，让线可以更加倾斜
         this.step6EnumSide (1, 2);
         // 修补部分缺口
-        this.step7EnumSideConnect (2, 2);
-        // 让边缘更平滑
-        this.step8EnumSideConnect (3, 2);
+        this.step7EnumFix (2, 2);
+        // 让部分拐角更加平滑
+        this.step8EnumSmooth (3, 2);
         // 确定个平滑区域要用的颜色
         this.step9ColorSelect (4, 2);
 
@@ -368,6 +376,7 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerData.draw ();
+        IndexGlobal.smoothRS ().expUpdateEnum (this);
         IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerData, posX, posY + 1);
         IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
     }
@@ -391,8 +400,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveA.draw ();
-        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
+        IndexGlobal.smoothRS ().expUpdateEnum (this);
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
@@ -415,8 +425,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveX.draw ();
-        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
+        IndexGlobal.smoothRS ().expUpdateEnum (this);
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
@@ -438,8 +449,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveT.draw ();
-        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
+        IndexGlobal.smoothRS ().expUpdateEnum (this);
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
@@ -461,8 +473,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveI.draw ();
-        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
+        IndexGlobal.smoothRS ().expUpdateEnum (this);
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
     }
     
@@ -485,8 +498,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothCornerRemoveV.draw ();
-        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboCornerData, this.fboCornerDataCache);
+        IndexGlobal.smoothRS ().expUpdateEnum (this);
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboCornerDataCache, posX, posY + 1);
         IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
@@ -510,16 +524,15 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothEnumSide.draw ();
-
-        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
         IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
     /**
      * 平滑数据纹理 -> 平滑数据纹理
      */
-    step7EnumSideConnect (posX: number, posY: number) {
+    step7EnumFix (posX: number, posY: number) {
         this.jWebgl.useFbo (this.fboEnumDataCache);
         this.jWebgl.clear ();
         this.jWebgl.programSmoothEnumSideConnect.uMvp.fill (this.mat4Mvp);
@@ -536,16 +549,15 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothEnumSideConnect.draw ();
-
-        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
         IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
     /**
      * 平滑数据纹理 -> 平滑数据纹理
      */
-    step8EnumSideConnect (posX: number, posY: number) {
+    step8EnumSmooth (posX: number, posY: number) {
         this.jWebgl.useFbo (this.fboEnumDataCache);
         this.jWebgl.clear ();
         this.jWebgl.programSmoothEnumSideAddition.uMvp.fill (this.mat4Mvp);
@@ -562,12 +574,9 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothEnumSideAddition.draw ();
-
-        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
         this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboEnumDataCache, posX, posY + 1);
         IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
-
-        
     }
 
     /**
@@ -576,6 +585,37 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
      * @param posY 
      */
     step9ColorSelect (posX: number, posY: number) {
+        IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboColorSelect, posX, posY + 1);
+    }
+
+    /**
+     * 平滑数据纹理 -> 平滑数据纹理
+     */
+    updateEnum () {
+        this.jWebgl.useFbo (this.fboEnumDataCache);
+        this.jWebgl.clear ();
+        this.jWebgl.programSmoothEnumInit.uMvp.fill (this.mat4Mvp);
+        this.jWebgl.programSmoothEnumInit.uTextureSize.fill (this.props.cacheTexWidth, this.props.cacheTexHeight);
+        this.jWebgl.programSmoothEnumInit.uTextureMain.fillByFbo (this.fboTexture);
+        this.jWebgl.programSmoothEnumInit.uTextureCorner.fillByFbo (this.fboCornerData);
+        this.jWebgl.programSmoothEnumInit.uTextureEnum.fillByFbo (this.fboEnumData);
+        this.jWebgl.programSmoothEnumInit.uRight.fill (1);
+        this.jWebgl.programSmoothEnumInit.add (
+            JWebglMathVector4.centerO,
+            JWebglMathVector4.axisZStart,
+            JWebglMathVector4.axisYEnd,
+            2,
+            2
+        );
+        this.jWebgl.programSmoothEnumInit.draw ();
+        this.jWebgl.fillFboByFbo (this.fboEnumData, this.fboEnumDataCache);
+    }
+
+    /**
+     * 更新一下颜色选择
+     */
+    updateFboSelect () {
         this.jWebgl.useFbo (this.fboColorSelect);
         this.jWebgl.clear ();
         this.jWebgl.programSmoothColorSelect.uMvp.fill (this.mat4Mvp);
@@ -592,9 +632,6 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             2
         );
         this.jWebgl.programSmoothColorSelect.draw ();
-
-        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboColorSelect, posX, posY + 1);
-        IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
     }
 
     private listChildren = new Array <ReactComponentExtendInstance> ();
@@ -710,8 +747,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
                                 MgrDomDefine.TAG_CANVAS,
                                 {
                                     ref: this.canvasWebglRef,
-                                    width: this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.smoothRS ().commonHorCount * IndexGlobal.ANTINA,
-                                    height: this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.smoothRS ().commonVerCount * IndexGlobal.ANTINA,
+                                    width: this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.smoothRS ().commonHorCount * IndexGlobal.smoothRS ().getAntina (),
+                                    height: this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.smoothRS ().commonVerCount * IndexGlobal.smoothRS ().getAntina (),
                                     style: {
                                         [MgrDomDefine.STYLE_WIDTH]: `${this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.smoothRS ().commonHorCount}px`,
                                         [MgrDomDefine.STYLE_HEIGHT]: `${this.props.cacheTexHeight * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.smoothRS ().commonVerCount}px`,

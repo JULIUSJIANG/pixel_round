@@ -10,7 +10,6 @@ import JWebglProgramTypeImgDyeing from "./JWebglProgramTypeImgDyeing";
 import JWebglProgramTypeLine from "./JWebglProgramTypeLine";
 import JWebglProgramTypePoint from "./JWebglProgramTypePoint";
 import JWebglProgramTypeSmoothCornerData from "./JWebglProgramTypeSmoothCornerData";
-import JWebglProgramTypeSmoothTickness from "./JWebglProgramTypeSmoothTickness";
 import JWebglProgramTypeSmoothCornerRemoveT from "./JWebglProgramTypeSmoothCornerRemoveT";
 import JWebglProgramTypeSmoothCornerRemoveX from "./JWebglProgramTypeSmoothCornerRemoveX";
 import JWebglProgramTypeSmoothDisplayOrdinary from "./JWebglProgramTypeSmoothDisplayOrdinary";
@@ -21,10 +20,7 @@ import JWebglProgramTypeSmoothFlat from "./JWebglProgramTypeSmoothFlat";
 import JWebglProgramTypeSmoothCornerRemoveI from "./JWebglProgramTypeSmoothCornerRemoveI";
 import JWebglProgramTypeSmoothCornerRemoveV from "./JWebglProgramTypeSmoothCornerRemoveV";
 import JWebglProgramTypeSmoothCornerRemoveA from "./JWebglProgramTypeSmoothCornerRemoveA";
-import JWebglProgramTypeSmoothEnumRound from "./JWebglProgramTypeSmoothEnumRound";
 import JWebglProgramTypeSmoothEnumSide from "./JWebglProgramTypeSmoothEnumSide";
-import JWebglProgramTypeSmoothArea from "./JWebglProgramTypeSmoothArea";
-import JWebglProgramTypeSmoothAngle from "./JWebglProgramTypeSmoothAngle";
 import JWebglTexture from "./JWebglTexture";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
@@ -275,9 +271,6 @@ class JWebgl {
     @program (JWebglProgramTypePoint)
     programPoint: JWebglProgramTypePoint;
 
-    @program (JWebglProgramTypeSmoothTickness)
-    programSmoothTickness: JWebglProgramTypeSmoothTickness;
-
     @program (JWebglProgramTypeSmoothFlat)
     programSmoothFlat: JWebglProgramTypeSmoothFlat;
 
@@ -299,21 +292,12 @@ class JWebgl {
     @program (JWebglProgramTypeSmoothCornerRemoveV)
     programSmoothCornerRemoveV: JWebglProgramTypeSmoothCornerRemoveV;
 
-    @program (JWebglProgramTypeSmoothEnumRound)
-    programSmoothEnumRound: JWebglProgramTypeSmoothEnumRound;
-
     @program (JWebglProgramTypeSmoothEnumSide)
     programSmoothEnumSide: JWebglProgramTypeSmoothEnumSide;
 
-    @program (JWebglProgramTypeSmoothArea)
-    programSmoothArea: JWebglProgramTypeSmoothArea;
-
-    @program (JWebglProgramTypeSmoothAngle)
-    programSmoothAngle: JWebglProgramTypeSmoothAngle;
-
     @program (JWebglProgramTypeSmoothDisplayOrdinary)
     programSmoothDisplayOrdinary: JWebglProgramTypeSmoothDisplayOrdinary;
-    
+
     /**
      * 模型矩阵
      */

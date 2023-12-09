@@ -151,8 +151,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                 MgrData.inst.set (MgrDataItem.DB_WIDTH, val);
             },
             () => {
-                if (MgrData.inst.get (MgrDataItem.DB_WIDTH) < 1 || IndexGlobal.DB_SIZE_MAX < MgrData.inst.get (MgrDataItem.DB_WIDTH)) {
-                    NodeModules.antd.message.error(`宽度范围为 1 - ${IndexGlobal.DB_SIZE_MAX}，当前为 ${MgrData.inst.get (MgrDataItem.DB_WIDTH)}`);
+                if (IndexGlobal.SizeBan (MgrData.inst.get (MgrDataItem.DB_WIDTH), MgrData.inst.get (MgrDataItem.DB_WIDTH))) {
                     return;
                 };
                 resizeTo (dataSrc, imgCurr, MgrData.inst.get (MgrDataItem.DB_WIDTH), imgCurr.dbImgData.height);
@@ -167,8 +166,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                 MgrData.inst.set (MgrDataItem.DB_HEIGHT, val);
             },
             () => {
-                if (MgrData.inst.get (MgrDataItem.DB_HEIGHT) < 1 || IndexGlobal.DB_SIZE_MAX < MgrData.inst.get (MgrDataItem.DB_HEIGHT)) {
-                    NodeModules.antd.message.error(`高度范围为 1 - ${IndexGlobal.DB_SIZE_MAX}，当前为 ${MgrData.inst.get (MgrDataItem.DB_HEIGHT)}`);
+                if (IndexGlobal.SizeBan (MgrData.inst.get (MgrDataItem.DB_WIDTH), MgrData.inst.get (MgrDataItem.DB_WIDTH))) {
                     return;
                 };
                 resizeTo (dataSrc, imgCurr, imgCurr.dbImgData.width, MgrData.inst.get (MgrDataItem.DB_HEIGHT));
@@ -412,7 +410,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                                 }
                             },
                 
-                            `备份`
+                            `备份当前文件`
                         )
                     )
                 ),
@@ -556,7 +554,7 @@ export default class DomDrawingBoardRightPaintProps extends ReactComponentExtend
                                     }
                                 },
                     
-                                `删除当前文档`
+                                `删除当前文件`
                             )
                         )
                     )

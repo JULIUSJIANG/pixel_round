@@ -28,7 +28,7 @@ class MgrDataItem<T> {
 /**
  * 改这个值，整个存档都会重置
  */
-const VERSION = 3;
+const VERSION = 5;
 
 namespace MgrDataItem {
     /**

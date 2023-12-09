@@ -34,6 +34,10 @@ abstract class MgrSdkCore {
      * 通知服务端已被销毁
      */
     abstract callDestoried ();
+    /**
+     * 控制台可控
+     */
+    abstract consoleCtrlAble ();
 }
 
 export default MgrSdkCore;

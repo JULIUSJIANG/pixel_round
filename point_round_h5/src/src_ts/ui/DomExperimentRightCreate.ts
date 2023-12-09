@@ -50,7 +50,8 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
         this.jWebgl.useFbo (null);
         this.jWebgl.clear ();
         this.jWebgl.programImg.uMvp.fill (this.jWebgl.mat4Mvp);
-        this.jWebgl.programImg.uTexture.fillByImg (this.jWebgl.getImg (IndexGlobal.mcExpCreate ().img.src));
+        let srcImg = this.jWebgl.getImg (IndexGlobal.mcExpCreate ().img.src);
+        this.jWebgl.programImg.uTexture.fillByImg (srcImg);
         this.jWebgl.programImg.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,
@@ -178,7 +179,7 @@ export default class DomExperimentRightCreate extends ReactComponentExtend<numbe
                                 IndexGlobal.mcExpCreate ().currStatus.onDone(file.uid, dataBase64);
                             });
                             reader.readAsDataURL(file);
-                            return true;
+                            return false;
                         },
                         onChange: (info) => {
 

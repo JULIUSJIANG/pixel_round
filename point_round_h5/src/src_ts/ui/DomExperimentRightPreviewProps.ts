@@ -36,6 +36,9 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                     },
                     onClick: () => {
                         let recExp = IndexGlobal.inst.expCurrent ();
+                        if (IndexGlobal.SizeBan (recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cacheTexHeight)) {
+                            return;
+                        };
                         let recDbId = IndexGlobal.inst.dbCreate (recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cacheTexHeight);
                         let fbo = MgrGlobal.inst.canvas3dCtx.getFbo (recExp.uint8ArgsSmooth.cacheTexWidth, recExp.uint8ArgsSmooth.cacheTexHeight, JWebglEnum.TexParameteriParam.NEAREST);
                         let tex = MgrGlobal.inst.canvas3dCtx.createTexture ();
@@ -94,7 +97,7 @@ export default class DomExperimentRightPreviewProps extends ReactComponentExtend
                         }
                     },
         
-                    `删除当前文档`
+                    `删除当前文件`
                 )
             ),
         );

@@ -605,7 +605,24 @@ class DomDrawingBoardRightPaintCanvas extends ReactComponentExtend <number> {
                             }
                         },
         
-                        `导出 png`
+                        `导出当前内容为 png`
+                    ),
+                    ReactComponentExtend.instantiateTag (
+                        NodeModules.antd.Button,
+                        {
+                            style: {
+                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                            },
+                            onClick: () => {
+                                this.jWebgl.fillFboByFbo (this.fboExport, this.fboScreen);
+                                MgrSdk.inst.core.saveFile (
+                                    `image.png`,
+                                    this.fboCache.toBase64 ()
+                                );
+                            }
+                        },
+        
+                        `导出像素图为 png`
                     ),
                 ),
             ),

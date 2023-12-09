@@ -20,6 +20,8 @@ export default class DomRoot extends ReactComponentExtend <number> {
 
     listChildrenC = new Array <ReactComponentExtendInstance> ();
 
+    listChildrenD = new Array <ReactComponentExtendInstance> ();
+
     render () {
         let propsBtnAuto = {
             onClick: () => {
@@ -112,6 +114,44 @@ export default class DomRoot extends ReactComponentExtend <number> {
             ));
         };
 
+        this.listChildrenD.length = 0;
+        if (MgrSdk.inst.core.consoleCtrlAble ()) {
+            this.listChildrenD.push (
+                // 分割线
+                ReactComponentExtend.instantiateTag (
+                    MgrDomDefine.TAG_DIV,
+                    {
+                        style: {
+                            [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.CONFIG_TXT_SPACING,
+                            [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                            [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
+                        }
+                    }
+                ),
+            
+                ReactComponentExtend.instantiateTag (
+                    NodeModules.antd.Button,
+                    {
+                        onClick: () => {
+                            MgrSdk.inst.core.openDebugTools ();
+                        },
+                        style: {
+                            [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
+                        }
+                    },
+                
+                    `打开控制台`
+                ),
+            
+                ReactComponentExtend.instantiateTag (
+                    NodeModules.antd.Button,
+                    propsBtnAuto,
+                
+                    `启动时自动打开控制台`
+                )
+            );
+        };
+
         // 根容器
         return ReactComponentExtend.instantiateTag (
             MgrDomDefine.TAG_DIV,
@@ -196,6 +236,7 @@ export default class DomRoot extends ReactComponentExtend <number> {
                         `窗口比例`,
                     ),
                     ...this.listChildrenC,
+                    ...this.listChildrenD,
                     // 分割线
                     ReactComponentExtend.instantiateTag (
                         MgrDomDefine.TAG_DIV,
@@ -207,40 +248,6 @@ export default class DomRoot extends ReactComponentExtend <number> {
                             }
                         }
                     ),
-
-                    ReactComponentExtend.instantiateTag (
-                        NodeModules.antd.Button,
-                        {
-                            onClick: () => {
-                                MgrSdk.inst.core.openDebugTools ();
-                            },
-                            style: {
-                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                            }
-                        },
-            
-                        `打开控制台`
-                    ),
-
-                    ReactComponentExtend.instantiateTag (
-                        NodeModules.antd.Button,
-                        propsBtnAuto,
-            
-                        `启动时自动打开控制台`
-                    ),
-
-                    // 分割线
-                    ReactComponentExtend.instantiateTag (
-                        MgrDomDefine.TAG_DIV,
-                        {
-                            style: {
-                                [MgrDomDefine.STYLE_WIDTH]: MgrDomDefine.CONFIG_TXT_SPACING,
-                                [MgrDomDefine.STYLE_MARGIN]: MgrDomDefine.CONFIG_TXT_HALF_SPACING,
-                                [MgrDomDefine.STYLE_BACKGROUND_COLOR]: MgrDomDefine.STYLE_COLOR_WHITE,
-                            }
-                        }
-                    ),
-
                     // 模式开关
                     ReactComponentExtend.instantiateTag (
                         MgrDomDefine.TAG_DIV,

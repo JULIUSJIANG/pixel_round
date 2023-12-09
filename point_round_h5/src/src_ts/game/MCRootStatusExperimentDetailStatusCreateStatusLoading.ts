@@ -1,3 +1,4 @@
+import IndexGlobal from "../IndexGlobal";
 import MgrRes from "../mgr/MgrRes";
 import MgrResAssetsImage from "../mgr/MgrResAssetsImage";
 import MCRootStatusExperimentDetailStatusCreateStatus from "./MCRootStatusExperimentDetailStatusCreateStatus";
@@ -23,7 +24,9 @@ export default class MCRootStatusExperimentDetailStatusCreateStatusLoading exten
     }
 
     transfer () {
-        this.relMachine.img = this.img;
+        if (!IndexGlobal.SizeBan (this.img.image.width, this.img.image.height)) {
+            this.relMachine.img = this.img;
+        };  
         this.relMachine.enter (this.relMachine.statusIdle);
     }
 

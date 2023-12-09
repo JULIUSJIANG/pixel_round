@@ -1,12 +1,13 @@
 import MgrSdkCore from "./MgrSdkCore";
 
-const STORAGE_KEY = `MgrsdkcoreH5_3`;
+const STORAGE_KEY = `MgrsdkcoreH5_5`;
 
 /**
  * h5 底下的策略
  */
 class MgrsdkcoreH5 extends MgrSdkCore {
     set (txt: string) {
+        localStorage.clear ();
         localStorage.setItem (STORAGE_KEY, txt);
         return Promise.resolve ({
             isSuccessed: true
@@ -41,6 +42,9 @@ class MgrsdkcoreH5 extends MgrSdkCore {
     }
     callDestoried () {
 
+    }
+    consoleCtrlAble() {
+        return false;
     }
 }
 

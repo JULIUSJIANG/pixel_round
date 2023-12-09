@@ -240,20 +240,34 @@ class JWebgl {
 
     private _currFbo: JWebglFrameBuffer;
 
+    private _currFboWidth: number;
+
+    private _currFboHeight: number;
+
     useFbo (fbo: JWebglFrameBuffer) {
         let sizeWidth = this.canvasWebgl.width;
         let sizeHeight = this.canvasWebgl.height;
-        if (this._currFbo != fbo) {
+        if (fbo != null) {
+            sizeWidth = fbo.width;
+            sizeHeight = fbo.height;
+        };
+
+        // 接下来 fbo 会变，所以先缓存信号量
+        let isFboChanged = fbo != this._currFbo;
+        if (fbo != this._currFbo) {
             this._currFbo = fbo;
-            if (this._currFbo != null) {
-                sizeWidth = fbo.width;
-                sizeHeight = fbo.height;
+            if (this. _currFbo == null) {
+                this.canvasWebglCtx.bindFramebuffer (JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, null);
+            }
+            else {
                 this.canvasWebglCtx.bindFramebuffer (JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, this._currFbo.frameBuffer);
             };
-            if (this._currFbo == null) {
-                this.canvasWebglCtx.bindFramebuffer (JWebglEnum.BindFramebufferTarget.FRAMEBUFFER, null);
-            };
-            this.canvasWebglCtx.viewport (0, 0, sizeWidth, sizeHeight);
+        };
+
+        if (isFboChanged || this._currFboWidth != sizeWidth || this._currFboHeight != sizeHeight) {
+            this._currFboWidth = sizeWidth;
+            this._currFboHeight = sizeHeight;
+            this.canvasWebglCtx.viewport (0, 0, this._currFboWidth, this._currFboHeight);
         };
     }
 

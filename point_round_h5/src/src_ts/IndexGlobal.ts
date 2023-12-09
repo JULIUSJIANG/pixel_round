@@ -6,6 +6,7 @@ import DBImg from "./game/DBImg";
 import DomImageSmoothRS from "./ui/DomImageSmoothRS";
 import ExpImg from "./game/ExpImg";
 import FileColumnRS from "./ui/FileColumnRS";
+import NodeModules from "./NodeModules";
 
 class IndexGlobal {
     /**
@@ -291,7 +292,25 @@ namespace IndexGlobal {
     /**
      * 最大的画板尺寸
      */
-    export const DB_SIZE_MAX = 256;
+    export const DB_SIZE_MAX = 512;
+
+    /**
+     * 判断尺寸是否超弦，并且给出提示
+     * @param width 
+     * @param height 
+     * @returns 
+     */
+    export function SizeBan (width: number, height: number) {
+        if (width < 1 || IndexGlobal.DB_SIZE_MAX < width) {
+            NodeModules.antd.message.error(`宽度范围为 1 - ${IndexGlobal.DB_SIZE_MAX}，当前为 ${width}`);
+            return true;
+        };
+        if (height < 1 || IndexGlobal.DB_SIZE_MAX < height) {
+            NodeModules.antd.message.error(`高度范围为 1 - ${IndexGlobal.DB_SIZE_MAX}，当前为 ${height}`);
+            return true;
+        };
+        return false;
+    }
 
     /**
      * 像素尺寸到屏幕尺寸的转换 - 最小值

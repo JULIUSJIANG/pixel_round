@@ -261,7 +261,7 @@ namespace DomImageSmoothRS {
         },
 
         getAntina: () => {
-            return IndexGlobal.ANTINA;
+            return 1;
         },
     });
 }

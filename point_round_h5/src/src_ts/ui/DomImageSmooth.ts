@@ -163,6 +163,14 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
      * 存储了平滑类型的帧缓冲区
      */
     fboEnumDataCache: JWebglFrameBuffer;
+    /**
+     * 记录当前角是否指向圆心
+     */
+    fboDirection: JWebglFrameBuffer;
+    /**
+     * 记录当前角是否指向圆心 - 备份
+     */
+    fboDirectionCache: JWebglFrameBuffer;
 
     /**
      * 缓存了
@@ -216,6 +224,10 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
             this.fboEnumData = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
             this.jWebgl.destroyFbo (this.fboEnumDataCache);
             this.fboEnumDataCache = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
+            this.jWebgl.destroyFbo (this.fboDirection);
+            this.fboDirection = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
+            this.jWebgl.destroyFbo (this.fboDirectionCache);
+            this.fboDirectionCache = this.jWebgl.getFbo (this.props.cacheTexWidth * 2, this.props.cacheTexHeight * 2, JWebglEnum.TexParameteriParam.NEAREST);
         };
 
         let fboDisplayWidth = this.props.cacheTexWidth * MgrData.inst.get (MgrDataItem.SMOOTH_PIXEL_TO_SCREEN_APPLICATION) * IndexGlobal.smoothRS ().getAntina ();
@@ -267,6 +279,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         this.step8EnumSmooth (3, 2);
         // 确定个平滑区域要用的颜色
         this.step9ColorSelect (4, 2);
+        // 确定各个角的方向
+        // this.step8Direction (3, 2);
 
         IndexGlobal.smoothRS ().dbFinally (this);
 
@@ -580,12 +594,44 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
     }
 
     /**
+     * 迭代方向纹理
+     * @param posX 
+     * @param posY 
+     */
+    step8Direction (posX: number, posY: number) {
+        this.jWebgl.useFbo (this.fboDirection);
+        this.jWebgl.clear ();
+        let countIterator = Math.ceil (Math.max (this.props.cacheTexWidth, this.props.cacheTexHeight) / 2);
+        // let countIterator = 1;
+        for (let i = 0; i < countIterator; i++) {
+            this.jWebgl.useFbo (this.fboDirectionCache);
+            this.jWebgl.clear ();
+            this.jWebgl.programSmoothDirection.uMvp.fill (this.mat4Mvp);
+            this.jWebgl.programSmoothDirection.uTextureSize.fill (this.props.cacheTexWidth, this.props.cacheTexHeight);
+            this.jWebgl.programSmoothDirection.uTextureCorner.fillByFbo (this.fboCornerData);
+            this.jWebgl.programSmoothDirection.uTextureEnum.fillByFbo (this.fboEnumData);
+            this.jWebgl.programSmoothDirection.uTextureDirection.fillByFbo (this.fboDirection);
+            this.jWebgl.programSmoothDirection.add (
+                JWebglMathVector4.centerO,
+                JWebglMathVector4.axisZStart,
+                JWebglMathVector4.axisYEnd,
+                2,
+                2
+            );
+            this.jWebgl.programSmoothDirection.draw ();
+            this.jWebgl.fillFboByFbo (this.fboDirection, this.fboDirectionCache);
+        };
+        IndexGlobal.smoothRS ().expDrawFbo (this, this.fboDirection, posX, posY + 1);
+        IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
+    }
+
+    /**
      * 确定各平滑区域要用的颜色
      * @param posX 
      * @param posY 
      */
     step9ColorSelect (posX: number, posY: number) {
-        IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
+        // IndexGlobal.smoothRS ().expSmoothOrdinaryTo (this, posX, posY + 0);
         IndexGlobal.smoothRS ().expDrawFbo (this, this.fboColorSelect, posX, posY + 1);
     }
 
@@ -597,10 +643,8 @@ class DomImageSmooth extends ReactComponentExtend <DomImageSmooth.Args> {
         this.jWebgl.clear ();
         this.jWebgl.programSmoothEnumInit.uMvp.fill (this.mat4Mvp);
         this.jWebgl.programSmoothEnumInit.uTextureSize.fill (this.props.cacheTexWidth, this.props.cacheTexHeight);
-        this.jWebgl.programSmoothEnumInit.uTextureMain.fillByFbo (this.fboTexture);
         this.jWebgl.programSmoothEnumInit.uTextureCorner.fillByFbo (this.fboCornerData);
         this.jWebgl.programSmoothEnumInit.uTextureEnum.fillByFbo (this.fboEnumData);
-        this.jWebgl.programSmoothEnumInit.uRight.fill (1);
         this.jWebgl.programSmoothEnumInit.add (
             JWebglMathVector4.centerO,
             JWebglMathVector4.axisZStart,

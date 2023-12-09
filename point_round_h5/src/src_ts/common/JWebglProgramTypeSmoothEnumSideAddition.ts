@@ -1,3 +1,4 @@
+import JWebglDefine from "./JWebglDefine";
 import JWebglEnum from "./JWebglEnum";
 import JWebglMathVector4 from "./JWebglMathVector4";
 import JWebglProgram from "./JWebglProgram";
@@ -140,7 +141,13 @@ void main() {
         && match (posLeftCornerBack.a, 0.0)
     )
     {
-        colorResult.r = 0.7;
+        vec4 enumData = getEnumCache (posBL - vecRight, - vecForward);
+        if (enumData.a == 1.0 && enumData.r == 1.0) {
+            colorResult.r = ${JWebglDefine.SIDE_3_L};
+        }
+        else {
+            colorResult.r = ${JWebglDefine.SIDE_4_L};
+        };
         colorResult.a = 1.0;
     };
     // 相对的情况
@@ -151,9 +158,15 @@ void main() {
         && match (posFLCornerBack.a, 0.0)
     )
     {
-        colorResult.r = 0.3;
+        if (posLeftEnumBack.a == 1.0 && posLeftEnumBack.r == 1.0) {
+            colorResult.r = ${JWebglDefine.SIDE_3_S};
+        }
+        else {
+            colorResult.r = ${JWebglDefine.SIDE_4_S};
+        };
         colorResult.a = 1.0;
     };
+
     // 自己右倾平滑，但是右后方格前方不平滑
     if (
            match (posCenterEnumForward.g, 1.0)
@@ -162,7 +175,13 @@ void main() {
         && match (posRightCornerBack.a, 0.0)
     )
     {
-        colorResult.g = 0.7;
+        vec4 enumData = getEnumCache (posBR + vecRight, - vecForward);
+        if (enumData.a == 1.0 && enumData.g == 1.0) {
+            colorResult.g = ${JWebglDefine.SIDE_3_L};
+        }
+        else {
+            colorResult.g = ${JWebglDefine.SIDE_4_L};
+        };
         colorResult.a = 1.0;
     };
     // 相对的情况
@@ -173,7 +192,12 @@ void main() {
         && match (posFRCornerBack.a, 0.0)
     )
     {
-        colorResult.g = 0.3;
+        if (posRightEnumBack.a == 1.0 && posRightEnumBack.g == 1.0) {
+            colorResult.g = ${JWebglDefine.SIDE_3_S};
+        }
+        else {
+            colorResult.g = ${JWebglDefine.SIDE_4_S};
+        };
         colorResult.a = 1.0;
     };
 

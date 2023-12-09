@@ -1,3 +1,4 @@
+import JWebglDefine from "./JWebglDefine";
 import JWebglEnum from "./JWebglEnum";
 import JWebglMathVector4 from "./JWebglMathVector4";
 import JWebglProgram from "./JWebglProgram";
@@ -15,16 +16,25 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2";
 export default class JWebglProgramTypeSmoothDisplayOrdinary extends JWebglProgram {
     // 经典平滑厚度
     @JWebglProgram.define (JWEbglProgramDefine, `0.3535`)
-    dForward: JWEbglProgramDefine;
+    d1: JWEbglProgramDefine;
+
     // 侧边平滑厚度
     @JWebglProgram.define (JWEbglProgramDefine, `0.4472`)
-    dSide: JWEbglProgramDefine;
-    // 大倾斜厚度
+    d2: JWEbglProgramDefine;
+
+    // 3 格大倾斜厚度
     @JWebglProgram.define (JWEbglProgramDefine, `0.4743`)
-    dL: JWEbglProgramDefine;
-    // 小倾斜厚度
+    d3L: JWEbglProgramDefine;
+    // 3 格小倾斜厚度
     @JWebglProgram.define (JWEbglProgramDefine, `0.1581`)
-    dS: JWEbglProgramDefine;
+    d3S: JWEbglProgramDefine;
+
+    // 4 格大倾斜厚度
+    @JWebglProgram.define (JWEbglProgramDefine, `0.4850`)
+    d4L: JWEbglProgramDefine;
+    // 4 格小倾斜厚度
+    @JWebglProgram.define (JWEbglProgramDefine, `0.2425`)
+    d4S: JWEbglProgramDefine;
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
@@ -153,35 +163,60 @@ void colorCorner (inout vec4 colorSum, vec2 pos, vec2 vecForward) {
         vec2 posStart = posTex + vecForward / 2.0;
         // 经典平滑
         if (match (posTexEnumForward.r, 0.0) && match (posTexEnumForward.g, 0.0)) {
-            connect (colorSum, pos, posStart, posStart + vecRight, ${this.dForward}, colorSmooth);
+            connect (colorSum, pos, posStart, posStart + vecRight, ${this.d1}, colorSmooth);
         };
+        
         // 左倾平滑
         if (match (posTexEnumForward.r, 1.0)) {
-            connect (colorSum, pos, posStart, posStart + vecRight / 2.0 * 3.0 + vecForward / 2.0, ${this.dSide}, colorSmooth);
+            connect (colorSum, pos, posStart, posStart + vecRight / 2.0 * 3.0 + vecForward / 2.0, ${this.d2}, colorSmooth);
         };
         // 右倾平滑
         if (match (posTexEnumForward.g, 1.0)) {
-            connect (colorSum, pos, posStart, posStart + vecRight / 2.0 * 3.0 - vecForward / 2.0, ${this.dSide}, colorSmooth);
+            connect (colorSum, pos, posStart, posStart + vecRight / 2.0 * 3.0 - vecForward / 2.0, ${this.d2}, colorSmooth);
         };
-        // 大左倾正 y 方向
-        vec2 posEndLeft = posStart + vecRight / 2.0 * 2.0 + vecForward / 2.0 * 1.0;
+
+        // 3 格大左倾正 y 方向
+        vec2 g3posEndLeft = posStart + vecRight / 2.0 * 2.0 + vecForward / 2.0 * 1.0;
         // 大左倾平滑
-        if (match (posTexEnumForward.r, 0.7)) {
-            connect (colorSum, pos, posStart, posEndLeft, ${this.dL}, colorSmooth);
+        if (match (posTexEnumForward.r, ${JWebglDefine.SIDE_3_L})) {
+            connect (colorSum, pos, posStart, g3posEndLeft, ${this.d3L}, colorSmooth);
         };
-        // 小左倾平滑
-        if (match (posTexEnumForward.r, 0.3)) {
-            connect (colorSum, pos, posStart, posEndLeft, ${this.dS}, colorSmooth);
+        // 3 格小左倾平滑
+        if (match (posTexEnumForward.r, ${JWebglDefine.SIDE_3_S})) {
+            connect (colorSum, pos, posStart, g3posEndLeft, ${this.d3S}, colorSmooth);
         };
-        // 大右倾正 y 方向
-        vec2 posEndRight = posStart + vecRight / 2.0 * 2.0 - vecForward / 2.0 * 1.0;
+
+        // 3 格大右倾正 y 方向
+        vec2 g3posEndRight = posStart + vecRight / 2.0 * 2.0 - vecForward / 2.0 * 1.0;
         // 大右倾平滑
-        if (match (posTexEnumForward.g, 0.7)) {
-            connect (colorSum, pos, posStart, posEndRight, ${this.dL}, colorSmooth);
+        if (match (posTexEnumForward.g, ${JWebglDefine.SIDE_3_L})) {
+            connect (colorSum, pos, posStart, g3posEndRight, ${this.d3L}, colorSmooth);
         };
-        // 小右倾平滑
-        if (match (posTexEnumForward.g, 0.3)) {
-            connect (colorSum, pos, posStart, posEndRight, ${this.dS}, colorSmooth);
+        // 3 格小右倾平滑
+        if (match (posTexEnumForward.g, ${JWebglDefine.SIDE_3_S})) {
+            connect (colorSum, pos, posStart, g3posEndRight, ${this.d3S}, colorSmooth);
+        };
+
+        // 4 格大左倾正 y 方向
+        vec2 g4posEndLeft = posStart + vecRight / 2.0 * 2.5 + vecForward / 2.0 * 1.5;
+        // 大左倾平滑
+        if (match (posTexEnumForward.r, ${JWebglDefine.SIDE_4_L})) {
+            connect (colorSum, pos, posStart, g4posEndLeft, ${this.d4L}, colorSmooth);
+        };
+        // 4 格小左倾平滑
+        if (match (posTexEnumForward.r, ${JWebglDefine.SIDE_4_S})) {
+            connect (colorSum, pos, posStart, g4posEndLeft, ${this.d4S}, colorSmooth);
+        };
+
+        // 4 格大右倾正 y 方向
+        vec2 g4posEndRight = posStart + vecRight / 2.0 * 2.5 - vecForward / 2.0 * 1.5;
+        // 大右倾平滑
+        if (match (posTexEnumForward.g, ${JWebglDefine.SIDE_4_L})) {
+            connect (colorSum, pos, posStart, g4posEndRight, ${this.d4L}, colorSmooth);
+        };
+        // 4 格小右倾平滑
+        if (match (posTexEnumForward.g, ${JWebglDefine.SIDE_4_S})) {
+            connect (colorSum, pos, posStart, g4posEndRight, ${this.d4S}, colorSmooth);
         };
     };
 }

@@ -1,4 +1,3 @@
-import JWebglDefine from "./JWebglDefine";
 import JWebglEnum from "./JWebglEnum";
 import JWebglMathVector4 from "./JWebglMathVector4";
 import JWebglProgram from "./JWebglProgram";
@@ -13,20 +12,18 @@ import JWebglProgramVaryingVec2 from "./JWebglProgramVaryingVec2";
 /**
  * 替换某些短距平滑为长距平滑
  */
-export default class JWebglProgramTypeSmoothColorSelect extends JWebglProgram {
+export default class JWebglProgramTypeSmoothDirection extends JWebglProgram {
 
     @JWebglProgram.uniform (JWebglProgramUniformMat4)
     uMvp: JWebglProgramUniformMat4;
     @JWebglProgram.uniform (JWebglProgramUniformVec2)
     uTextureSize: JWebglProgramUniformVec2;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureMain: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureCorner: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureEnum: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformFloat)
-    uRight: JWebglProgramUniformFloat;
+    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
+    uTextureDirection: JWebglProgramUniformSampler2D;
 
     @JWebglProgram.attribute (JWebglProgramAttributeVec4)
     aPosition: JWebglProgramAttributeVec4;
@@ -49,7 +46,7 @@ void main() {
         return `
 // 2 个数是否匹配
 bool match (float current, float target) {
-    return abs (current - target) < 0.1;
+    return abs (current - target) < 0.5;
 }
 
 // 检查 2 个颜色是否一致
@@ -89,83 +86,107 @@ vec4 getEnumCache (vec2 posTex, vec2 dir) {
     return getTextureRGBA (${this.uTextureEnum}, posCorner);
 }
 
+// 获取平滑的缓存数据
+vec4 getDirectionCache (vec2 posTex, vec2 dir) {
+    vec2 posCorner = posTex + dir / 4.0;
+    return getTextureRGBA (${this.uTextureDirection}, posCorner);
+}
+
 void main() {
     vec2 pos = ${this.vTexCoord} * ${this.uTextureSize};
 
     vec2 posCenter = floor (pos) + vec2 (0.5, 0.5);
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
-    vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
-    vec4 posCenterColor = getTextureRGBA (${this.uTextureMain}, posCenter);
+    vec2 vecRight = vec2 (vecForward.y, - vecForward.x);
+    
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
-    vec4 posCenterCornerLeft = getCornerCache (posCenter, - vecRight);
-    vec4 posCenterCornerRight = getCornerCache (posCenter, vecRight);
     vec4 posCenterEnumForward = getEnumCache (posCenter, vecForward);
+    vec4 posCenterDirectionForward = getDirectionCache (posCenter, vecForward);
+
+    // 不是平滑角、已经初始化，忽略
+    if (posCenterEnumForward.a == 0.0 || posCenterDirectionForward.a == 1.0) {
+        gl_FragColor = posCenterDirectionForward;
+        return;
+    };
 
     vec2 posFL = posCenter + vecForward / 2.0 - vecRight / 2.0;
-    vec4 posFLColor = getTextureRGBA (${this.uTextureMain}, posFL);
-    vec4 posFLCornerForward = getCornerCache (posFL, vecForward);
     vec4 posFLCornerBack = getCornerCache (posFL, - vecForward);
     vec4 posFLEnumBack = getEnumCache (posFL, - vecForward);
-    vec4 posFLEnumForward = getEnumCache (posFL, vecForward);
+    vec4 posFLDirectionBack = getDirectionCache (posFL, - vecForward);
 
     vec2 posFR = posCenter + vecForward / 2.0 + vecRight / 2.0;
-    vec4 posFRColor = getTextureRGBA (${this.uTextureMain}, posFR);
-    vec4 posFRCornerForward = getCornerCache (posFR, vecForward);
     vec4 posFRCornerBack = getCornerCache (posFR, - vecForward);
     vec4 posFREnumBack = getEnumCache (posFR, - vecForward);
-    vec4 posFREnumForward = getEnumCache (posFR, vecForward);
+    vec4 posFRDirectionBack = getDirectionCache (posFR, - vecForward);
 
     vec2 posLeft = posCenter - vecRight;
-    vec4 posLeftColor = getTextureRGBA (${this.uTextureMain}, posLeft);
     vec4 posLeftCornerBack = getCornerCache (posLeft, - vecForward);
     vec4 posLeftEnumBack = getEnumCache (posLeft, - vecForward);
+    vec4 posLeftDirectionBack = getDirectionCache (posLeft, - vecForward);
 
     vec2 posRight = posCenter + vecRight;
-    vec4 posRightColor = getTextureRGBA (${this.uTextureMain}, posRight);
     vec4 posRightCornerBack = getCornerCache (posRight, - vecForward);
     vec4 posRightEnumBack = getEnumCache (posRight, - vecForward);
+    vec4 posRightDirectionBack = getDirectionCache (posRight, - vecForward);
 
-    vec2 posBL = posCenter - vecForward / 2.0 - vecRight / 2.0;
-    vec4 posBLCornerForward = getCornerCache (posBL, vecForward);
-
-    vec2 posBR = posCenter - vecForward / 2.0 + vecRight / 2.0;
-    vec4 posBRCornerForward = getCornerCache (posBR, vecForward);
-
-    vec4 smoothColor = posCenterColor;
-    // 有平滑要求
-    if (match (posCenterEnumForward.a, 1.0)) {
-        // 先根据 corner 数据判断取的颜色
-        if (match (posCenterCornerForward.r, 1.0)) {
-            smoothColor = posFLColor;
-        };
-        if (match (posCenterCornerForward.g, 1.0)) {
-            smoothColor = posFRColor;
-        };
-        // 取的右方的颜色
-        if (match (posCenterEnumForward.r, ${JWebglDefine.SIDE_3_S}) || match (posCenterEnumForward.r, ${JWebglDefine.SIDE_4_S})) {
-            if (match (posFRCornerForward.r, 1.0)) 
-            {
-                smoothColor = getTextureRGBA (${this.uTextureMain}, posCenter + vecForward);
-            };
-            if (match (posFRCornerForward.g, 1.0)) 
-            {
-                smoothColor = getTextureRGBA (${this.uTextureMain}, posCenter + vecForward + vecRight);
-            };
-        };
-        // 取的左方的颜色
-        if (match (posCenterEnumForward.g, ${JWebglDefine.SIDE_3_S}) || match (posCenterEnumForward.g, ${JWebglDefine.SIDE_4_S})) {
-            if (match (posFLCornerForward.g, 1.0)) 
-            {
-                smoothColor = getTextureRGBA (${this.uTextureMain}, posCenter + vecForward);
-            };
-            if (match (posFLCornerForward.r, 1.0)) 
-            {
-                smoothColor = getTextureRGBA (${this.uTextureMain}, posCenter + vecForward - vecRight);
+    // 经典平滑 - 初始化
+    if (posCenterEnumForward.r == 0.0 && posCenterEnumForward.g == 0.0) {
+        // 非夹心情况
+        if (!(posFLEnumBack.a == 1.0 && posFLEnumBack.r == 0.0 && posFLEnumBack.g == 0.0 && posFREnumBack.a == 1.0 && posFREnumBack.r == 0.0 && posFREnumBack.g == 0.0)) 
+        {
+            posCenterDirectionForward.a = 1.0;
+            if (posFLEnumBack.g == 1.0 || posFREnumBack.r == 1.0) {
+                posCenterDirectionForward.rgb = vec3 (1.0, 1.0, 1.0);
+            }
+            else {
+                posCenterDirectionForward.rgb = vec3 (0.0, 0.0, 0.0);
             };
         };
     };
 
-    gl_FragColor = smoothColor;
+    // 左平滑 - 初始化
+    if (posCenterEnumForward.r == 1.0) {
+        // 非夹心情况
+        if (!(posLeftEnumBack.a == 1.0 && posLeftEnumBack.r == 1.0 && posFREnumBack.a == 1.0 && posFREnumBack.r == 1.0)) 
+        {
+            posCenterDirectionForward.a = 1.0;
+            if (posFREnumBack.a == 1.0 && posFREnumBack.r == 0.0 && posFREnumBack.g == 0.0 || posLeftEnumBack.a == 0.0) {
+                posCenterDirectionForward.rgb = vec3 (0.0, 0.0, 0.0);
+            }
+            else {
+                posCenterDirectionForward.rgb = vec3 (1.0, 1.0, 1.0); 
+            };
+        };
+    };
+
+    // 右平滑 - 初始化
+    if (posCenterEnumForward.g == 1.0) {
+        // 非夹心情况
+        if (!(posRightEnumBack.a == 1.0 && posRightEnumBack.g == 1.0 && posFLEnumBack.a == 1.0 && posFLEnumBack.g == 1.0)) 
+        {
+            posCenterDirectionForward.a = 1.0;
+            if (posFLEnumBack.a == 1.0 && posFLEnumBack.r == 0.0 && posFLEnumBack.g == 0.0 || posRightEnumBack.a == 0.0) {
+                posCenterDirectionForward.rgb = vec3 (0.0, 0.0, 0.0);
+            }
+            else {
+                posCenterDirectionForward.rgb = vec3 (1.0, 1.0, 1.0);
+            };
+        };
+    };
+
+    // 传染 - 来源左前
+    if (posFLDirectionBack.a == 1.0) {
+        posCenterDirectionForward.a = 1.0;
+        posCenterDirectionForward.rgb = 1.0 - posFLDirectionBack.rgb;
+    };
+    
+    // 传染 - 来源右前
+    if (posFRDirectionBack.a == 1.0) {
+        posCenterDirectionForward.a = 1.0;
+        posCenterDirectionForward.rgb = 1.0 - posFRDirectionBack.rgb;
+    };
+
+    gl_FragColor = posCenterDirectionForward;
 }
         `;
     }

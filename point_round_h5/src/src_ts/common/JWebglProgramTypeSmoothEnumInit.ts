@@ -19,13 +19,9 @@ export default class JWebglProgramTypeSmoothEnumInit extends JWebglProgram {
     @JWebglProgram.uniform (JWebglProgramUniformVec2)
     uTextureSize: JWebglProgramUniformVec2;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
-    uTextureMain: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureCorner: JWebglProgramUniformSampler2D;
     @JWebglProgram.uniform (JWebglProgramUniformSampler2D)
     uTextureEnum: JWebglProgramUniformSampler2D;
-    @JWebglProgram.uniform (JWebglProgramUniformFloat)
-    uRight: JWebglProgramUniformFloat;
 
     @JWebglProgram.attribute (JWebglProgramAttributeVec4)
     aPosition: JWebglProgramAttributeVec4;

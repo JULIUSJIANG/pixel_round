@@ -26,6 +26,7 @@ import JWebglProgramTypeSmoothEnumSideConnect from "./JWebglProgramTypeSmoothEnu
 import JWebglProgramTypeSmoothEnumSideAddition from "./JWebglProgramTypeSmoothEnumSideAddition";
 import JWebglProgramTypeSmoothColorSelect from "./JWebglProgramTypeSmoothColorSelect";
 import JWebglProgramTypeSmoothEnumInit from "./JWebglProgramTypeSmoothEnumInit";
+import JWebglProgramTypeSmoothDirection from "./JWebglProgramTypeSmoothDirection";
 
 const SYMBOL_KEY = Symbol (`JWebgl.SYMBOL_KEY`);
 
@@ -307,6 +308,9 @@ class JWebgl {
 
     @program (JWebglProgramTypeSmoothEnumSideAddition)
     programSmoothEnumSideAddition: JWebglProgramTypeSmoothEnumSideAddition;
+
+    @program (JWebglProgramTypeSmoothDirection)
+    programSmoothDirection: JWebglProgramTypeSmoothDirection;
 
     @program (JWebglProgramTypeSmoothColorSelect)
     programSmoothColorSelect: JWebglProgramTypeSmoothColorSelect;

@@ -94,6 +94,7 @@ void main() {
     vec2 posCenter = floor (pos) + vec2 (0.5, 0.5);
     vec2 vecForward = vec2 (pos - posCenter) * 4.0;
     vec2 vecRight = vec2 (vecForward.y, - vecForward.x) * ${this.uRight};
+    
     vec4 posCenterCornerForward = getCornerCache (posCenter, vecForward);
     vec4 posCenterCornerLeft = getCornerCache (posCenter, - vecRight);
     vec4 posCenterCornerRight = getCornerCache (posCenter, vecRight);

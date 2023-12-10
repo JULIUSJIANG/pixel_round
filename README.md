@@ -2,7 +2,7 @@
 
 这是一个能够实时对图像内容进行平滑的画板，使用时，用户仅需在画板中绘制出像素风格的图像，那么便可实时得到 Q 版的图像，可用于简单可爱风格的图片制作，下方图片为软件作品示例：
 
-![image](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/47e9769e-6252-4966-83e5-9bbdef173084)![image (1)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/2a839f56-7a4b-42cf-8673-af55374f435c)![image (2)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/17f00638-5f9c-49b7-b62a-b5be173b18d9)![image (3)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/0828dce6-ac0c-4a9c-8675-aca5d921d232)
+![4_1](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/ab768439-8c4c-400b-9565-c12efb315610)![4_2](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/71c7e0fb-37b4-4c20-9c10-2ceb5cc50b74)![4_3](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/6d6f3643-4616-4566-a67a-e7a5ad0b3866)![4_4](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/1c915d1f-ab3c-43ca-b73e-69647522dff6)
 
 * 开发该应用的初衷：
 
@@ -12,7 +12,7 @@
 
 * 跳过一切直接体验应用：https://juliusjiang.github.io/pixel_round/point_round_h5/build/
   
-<img width="1745" alt="微信图片_20231202151740" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/0e120440-6a8d-4be9-ae5f-7727d8d29567">
+<img width="1920" alt="1702189214551" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/67fb84f8-692c-48f4-abaf-c4f07873a140">
 
 ## 案例展示
 
@@ -20,11 +20,11 @@
 
 * 案例 1，时髦发型男：
 
-![image (4)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/0d19035e-491d-491f-a030-6c012dac7756)![image (5)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/28514900-f02e-41f2-b471-b8ade58bbb02)
+![image (1)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/fec03d71-5f17-4059-9afb-22c73efe80e6)![image](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/732d9d45-2b6d-4088-aed4-592fb7456a45)
 
 * 案例 2，紫袍巫师：
 
-![image (2)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/b19ca51f-5bc3-40f1-b131-0469ed42764e)![image (2)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/e929e536-16d2-42cd-a7b1-d6e43ad0c608)
+![image (2)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/5c5b434a-5da2-45a8-8d2a-a0f2a7dc732e)![image (3)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/e000559b-6a28-418a-9834-e555247a61c5)
 
 ## 平滑规则
 
@@ -84,12 +84,11 @@
 
   > 最后，以平滑效果为准，不断调整像素图，直到效果达到预期即完成，最终平滑效果如下：
   > 
-  > ![image (3)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/110bc0da-c0d0-4b54-82de-aa2136516290)
+  > ![image (4)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/58df5484-2de4-4594-9ae9-76975b228979)
 
   > 此时像素图已被修改，对比一开始，很多像素细节已经发生修改，这也是最开始以 2 像素作为 1 个单位的原因，最终像素图如下：
   > 
-  > ![image (2)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/ac95002b-1608-4c7b-947a-378927ab84f0)
-  
+
 * 空间限制：目前应用数据存储在浏览器本地，所以存储空间大小取决于浏览器，一般使用不会出现问题，但是长时间积累的话会有不确定性，所以有重要成果的时候记得及时导出、备份。
 
 ## 未来计划

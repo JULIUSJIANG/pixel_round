@@ -34,21 +34,21 @@
 
   > 原图中红色块左下角俩侧均为蓝色块：
   >
-  > <img width="95" alt="微信图片_20231202164858" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/7de544dc-402c-4baf-b261-19ada96b763d">
+  > <img width="93" alt="1702190200906" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/e4850043-c4ba-4001-b30b-f911b02d178d">
   
   > 红色块左下角被移除：
   >
-  > <img width="71" alt="微信图片_20231202164903" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/a4e54b8c-925e-40a9-b39f-5f0082ffbcd4">
+  > <img width="47" alt="1702190340925" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/6343db13-a46c-4cef-9c58-4f1252083a7f">
 
 * 规则 2：如果尖角俩侧颜色一致的同时，排列形如 “L”，那么移除尖角的切口随之倾斜。
 
   > 原图中红色块左下角被呈 “L” 排布的蓝色块包围：
   >
-  > <img width="94" alt="微信图片_20231202164907" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/5c304df1-e5ac-413b-a0bb-3584c4e2fd0b">
+  > <img width="140" alt="1702190694134" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/b2844cbc-374e-432a-85c1-be5861d91c06">
 
   > 红色块左下角被斜切移除：
   >
-  > <img width="69" alt="微信图片_20231202164910" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/dc021b5d-3eaa-4a99-9c60-5adb009cea39">
+  > <img width="47" alt="1702190594122" src="https://github.com/JULIUSJIANG/pixel_round/assets/33363444/8b121bd1-6ca5-4fc6-a748-caf8bdcab464">
 
 以上 2 个规则为最核心的平滑规则，而且对于旋转、镜像的情况也同样适用。按照以上规则，就能够理解下方图像的变化，那么在使用的时候就知道如何得到自己想要的效果，其中左图为平滑前的原图，右图为平滑后的效果：
 
@@ -87,7 +87,8 @@
   > ![image (4)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/58df5484-2de4-4594-9ae9-76975b228979)
 
   > 此时像素图已被修改，对比一开始，很多像素细节已经发生修改，这也是最开始以 2 像素作为 1 个单位的原因，最终像素图如下：
-  > 
+  >
+  > ![image (5)](https://github.com/JULIUSJIANG/pixel_round/assets/33363444/d11380c6-1616-43fd-850b-aff6d8010c79)
 
 * 空间限制：目前应用数据存储在浏览器本地，所以存储空间大小取决于浏览器，一般使用不会出现问题，但是长时间积累的话会有不确定性，所以有重要成果的时候记得及时导出、备份。
 
